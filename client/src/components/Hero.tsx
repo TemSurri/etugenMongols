@@ -1,16 +1,37 @@
+import heroBg from "../assets/landingpage.webp";
+
 export default function Hero() {
   return (
     <section
-      className="h-screen flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/hero.jpg')" }}
+      className="relative h-[90vh] w-full flex items-center justify-center bg-center bg-cover"
+      style={{ backgroundImage: `url(${heroBg})` }}
     >
-      <div className="bg-black/60 p-10 rounded-xl text-center text-white">
-        <h2 className="text-5xl font-bold mb-4">
+      <div className="absolute inset-0 bg-black/50"></div>
+
+      <div className="relative text-center text-white px-6">
+        <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight uppercase">
           Preserving Mongolian Heritage
         </h2>
-        <p className="text-xl max-w-xl mx-auto">
-          Celebrating the spirit, history, and unity of the Mongol people.
+
+        <p className="text-lg md:text-2xl max-w-2xl mx-auto mt-4 leading-relaxed">
+          Celebrating the spirit, history, and unity of the Mongol people here in Calgary.
         </p>
+
+        {/* tuff button */}
+        <a
+          href="#gallery"
+          className="
+            inline-block mt-10 px-10 py-4
+            text-lg font-semibold uppercase tracking-wide
+            text-white
+            bg-black/40 backdrop-blur-sm
+            border border-white/30
+            hover:bg-black/60 hover:border-[#293305]
+            transition duration-300
+          "
+        >
+          Learn More
+        </a>
       </div>
     </section>
   );
