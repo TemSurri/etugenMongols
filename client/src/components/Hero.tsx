@@ -10,11 +10,14 @@ export default function Hero() {
 
       <div className="relative text-center text-white px-6">
         <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight uppercase">
-          Preserving Mongolian Heritage
+          Etugen Mongols
         </h2>
 
-        <p className="text-lg md:text-2xl max-w-2xl mx-auto mt-4 leading-relaxed">
-          Celebrating the spirit, history, and unity of the Mongol people here in Calgary.
+        {/* Sleek Divider Line */}
+        <div className="w-60 h-0.5 bg-white/60 mx-auto mt-4 mb-6 rounded-full"></div>
+
+        <p className="text-lg md:text-2xl max-w-2xl mx-auto leading-relaxed">
+          Celebrating the spirit, history, and culture of the Mongol people here in Calgary.
         </p>
 
         {/* tuff button */}
