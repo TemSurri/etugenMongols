@@ -11,6 +11,17 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollWithOffset = (id: string) => {
+    const el = document.getElementById(id);
+    const headerHeight = 63; 
+
+    if (el) {
+      const y =
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
   return (
     <header
       className={`px-8 py-4 fixed w-full z-50 backdrop-blur transition-colors duration-300
@@ -18,24 +29,23 @@ export default function Header() {
     >
       <div className="max-w-6xl mx-auto flex justify-between items-center">
 
-        {/* Click to Scroll to Top */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="hover:text-blue-400"
         >
           <h1 className="text-2xl font-bold tracking-wide">
-            Etügen Mongols
+            Etugen Mongols
           </h1>
         </button>
 
-        {/* Desktop Menu */}
         <nav className="hidden md:flex gap-6 text-lg">
-          <a href="#about" className="hover:text-blue-400">About</a>
-          <a href="#gallery" className="hover:text-blue-400">Gallery</a>
-          <a href="#contact" className="hover:text-blue-400">Join Us</a>
+          <button onClick={() => scrollWithOffset("upcoming")} className="hover:text-blue-400">Events</button>
+          <button onClick={() => scrollWithOffset("about")} className="hover:text-blue-400">About</button>
+          <button onClick={() => scrollWithOffset("gallery")} className="hover:text-blue-400">Gallery</button>
+          <button onClick={() => scrollWithOffset("contact")} className="hover:text-blue-400">Contact</button>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* mobile view btn */}
         <button
           className="md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -53,15 +63,15 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* mobile view */}
       {menuOpen && (
         <div className="md:hidden flex flex-col text-center gap-6 text-lg px-6 py-6 bg-black/80 backdrop-blur border-t border-white/10 mt-4">
-          <a href="#about" onClick={() => setMenuOpen(false)} className="hover:text-blue-400 transition">About</a>
-          <a href="#gallery" onClick={() => setMenuOpen(false)} className="hover:text-blue-400 transition">Gallery</a>
-          <a href="#contact" onClick={() => setMenuOpen(false)} className="hover:text-blue-400 transition">Join Us</a>
+          <button onClick={() => { scrollWithOffset("upcoming"); setMenuOpen(false); }} className="hover:text-blue-400 transition">Events</button>
+          <button onClick={() => { scrollWithOffset("about"); setMenuOpen(false); }} className="hover:text-blue-400 transition">About</button>
+          <button onClick={() => { scrollWithOffset("gallery"); setMenuOpen(false); }} className="hover:text-blue-400 transition">Gallery</button>
+          <button onClick={() => { scrollWithOffset("contact"); setMenuOpen(false); }} className="hover:text-blue-400 transition">Contact</button>
         </div>
       )}
     </header>
   );
 }
-

@@ -8,15 +8,14 @@ const eventItems = [
   { img: "/gallery/nomadsday.jpg", title: "Nomads Day", desc: "Celebrating nomadic culture.", link: "/nomadsday" }
 ];
 
-export default function Gallery() {
+export default function Upcoming() {
   return (
-    <section id="gallery" className="py-16 bg-white">
+    <section id="upcoming" className="py-16 bg-white">
       <h3 className="text-center text-3xl sm:text-4xl font-bold mb-10 text-[#0033A0] uppercase">
-        Event Gallery
+        Upcoming Events
       </h3>
 
       <div className="max-w-7xl mx-auto px-4">
-      
         <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 scrollbar-none">
           {eventItems.map((item, i) => (
             <a
@@ -50,4 +49,3 @@ export default function Gallery() {
     </section>
   );
 }
-
