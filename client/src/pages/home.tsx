@@ -5,6 +5,7 @@ import CTA from "../components/CTA";
 import About from "../components/About"
 import Upcoming from "../components/Upcoming"
 import Footer from "../components/Footer"
+import Dashboard from "../components/Dashboard"
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Upcoming />
+      <Dashboard/>
       <About />
       <Gallery />
       <CTA />

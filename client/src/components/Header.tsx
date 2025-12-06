@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function Header() {
@@ -13,11 +14,14 @@ export default function Header() {
 
   const scrollWithOffset = (id: string) => {
     const el = document.getElementById(id);
-    const headerHeight = 63; 
+    const headerHeight = 63;
 
     if (el) {
+      const extraOffset = id === "contact" || id === "about" ? 13 : 0;
       const y =
-        el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        el.getBoundingClientRect().top +
+        window.pageYOffset -
+        (headerHeight + extraOffset);
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
@@ -28,10 +32,9 @@ export default function Header() {
       ${isTop ? "bg-transparent" : "bg-black/70 text-white"}`}
     >
       <div className="max-w-6xl mx-auto flex justify-between items-center">
-
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="hover:text-blue-400"
+          className="hover:opacity-90 transition"
         >
           <h1 className="text-2xl font-bold tracking-wide">
             Etugen Mongols
@@ -45,7 +48,6 @@ export default function Header() {
           <button onClick={() => scrollWithOffset("contact")} className="hover:text-blue-400">Contact</button>
         </nav>
 
-        {/* mobile view btn */}
         <button
           className="md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -63,7 +65,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* mobile view */}
       {menuOpen && (
         <div className="md:hidden flex flex-col text-center gap-6 text-lg px-6 py-6 bg-black/80 backdrop-blur border-t border-white/10 mt-4">
           <button onClick={() => { scrollWithOffset("upcoming"); setMenuOpen(false); }} className="hover:text-blue-400 transition">Events</button>

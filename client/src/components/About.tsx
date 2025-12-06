@@ -1,71 +1,117 @@
-import React from "react";
+"use client";
 
-type AboutProps = {
-  orgName?: string;
+import { useState, useEffect } from "react";
+import { motion, useAnimation, easeOut } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import landingImage from "../assets/landingpage.webp";
+
+const reveal = {
+  hidden: { y: 40, scale: 0.98 },
+  show: {
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.45, ease: easeOut }
+  }
 };
 
-const About: React.FC<AboutProps> = ({
-  orgName = "Mongolian-Canadian Cultural Network",
-}) => {
+function AnimateOnView({ children }: { children: React.ReactNode }) {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ threshold: 0.2 });
+
+  useEffect(() => {
+    controls.start(inView ? "show" : "hidden");
+  }, [inView, controls]);
+
   return (
-    <section id = "about"
-      style={{
-        maxWidth: "800px",
-        margin: "0 auto",
-        padding: "2rem 1.5rem",
-        fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        lineHeight: 1.6,
-      }}
+    <motion.div ref={ref} variants={reveal} initial="hidden" animate={controls}>
+      {children}
+    </motion.div>
+  );
+}
+
+export default function About({ orgName = "About Us" }) {
+  const [lang, setLang] = useState<"en" | "mn">("mn");
+
+  const TXT = {
+    title: lang === "en" ? orgName : "Бидний тухай",
+    intro:
+      lang === "en"
+        ? "A Mongolian cultural organization dedicated to preserving heritage, uniting communities, and celebrating the spirit of Mongolia here in Calgary."
+        : "Калгари хотноо монгол өв соёлыг хадгалж, олон нийтийг нэгтгэн, Монголын үзэл санааг түгээн дэлгэрүүлэхэд зориулагдсан соёлын байгууллага юм.",
+    purpose: lang === "en" ? "Our Purpose & Initiatives" : "Бидний зорилго ба үйл ажиллагаа",
+    purposeText:
+      lang === "en"
+        ? "We connect Mongolian and Canadian communities through cultural, educational, and community-driven initiatives that inspire pride, preserve identity, and build meaningful relationships."
+        : "Бид Монгол, Канадын иргэдийг соёлын, боловсролын болон хамтын ажиллагааны хүрээнд холбон өв соёлоо түгээж, утга учиртай харилцааг дэмждэг.",
+    serve: lang === "en" ? "Who We Serve" : "Хэнийг дэмждэг вэ",
+    serveText:
+      lang === "en"
+        ? "We welcome Mongolian-Canadians, friends of Mongolia, and anyone who values cultural connection and shared heritage."
+        : "Бид Монгол-Канадын иргэд болон Монгол соёлыг сонирхогч бүх хүнд нээлттэй.",
+    events: lang === "en" ? "Explore Our Past Events" : "Өмнөх арга хэмжээнүүд",
+    eventsText:
+      lang === "en"
+        ? "Scroll below to explore a gallery of past events. Each event card opens to reveal photos, stories, and more."
+        : "Доорх хэсэгт байрлах арга хэмжээний карт дээр дарж зураг болон дэлгэрэнгүй мэдээллийг үзнэ үү."
+  };
+
+  return (
+    <section
+      id="about"
+      className="relative bg-cover bg-center bg-fixed text-black py-24 sm:py-32"
+      style={{ backgroundImage: `url(${landingImage})` }}
     >
-      <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{orgName}</h1>
-      <p style={{ fontSize: "0.95rem", color: "#555", marginBottom: "1.5rem" }}>
-        A Mongolian-Canadian non-profit organization celebrating culture, community,
-        and connection through year-round events.
-      </p>
+      <div className="space-y-32 sm:space-y-40">
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>Our Mission</h2>
-        <p>
-          Our mission is to bring together Mongolian and Canadian communities by
-          organizing cultural, educational, and social events. We aim to support
-          newcomers, preserve Mongolian heritage, and create inclusive spaces where
-          everyone feels welcome.
-        </p>
-      </section>
+        <AnimateOnView>
+          <div className="relative px-4 py-16 text-center bg-white/60 border-y border-[#D4AF37]/40 rounded-md shadow-md">
+            <button
+              onClick={() => setLang(lang === "en" ? "mn" : "en")}
+              className="absolute right-4 top-4 px-3 py-1.5 text-sm font-semibold uppercase bg-black text-white hover:bg-[#D4AF37] hover:text-black rounded transition"
+            >
+              {lang === "en" ? "Монгол" : "English"}
+            </button>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>What We Do</h2>
-        <ul style={{ paddingLeft: "1.2rem", margin: 0 }}>
-          <li>Host cultural festivals, concerts, and holiday celebrations</li>
-          <li>Organize workshops on language, music, and traditional arts</li>
-          <li>Support newcomers with community networking events</li>
-          <li>Partner with local organizations on diversity and inclusion projects</li>
-        </ul>
-      </section>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight">
+              {TXT.title}
+            </h1>
 
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>Who We Serve</h2>
-        <p>
-          We welcome Mongolian-Canadians, friends of Mongolia, and anyone interested in
-          learning more about Mongolian culture. Our events are family-friendly and open
-          to people of all ages and backgrounds.
-        </p>
-      </section>
+            <div className="h-[3px] bg-[#D4AF37] w-20 mx-auto mt-6 mb-8" />
 
-      <section>
-        <h2 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>Get Involved</h2>
-        <p>
-          Whether you want to volunteer, collaborate on an event, or simply join our
-          next gathering, we’d love to hear from you.
-        </p>
-        <p style={{ marginTop: "0.75rem" }}>
-          <strong>Email:</strong> info@mongolian-canadian-npo.ca
-          <br />
-          <strong>Social:</strong> @mongoliancanadiannpo on major platforms
-        </p>
-      </section>
+            <p className="text-gray-700 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed">
+              {TXT.intro}
+            </p>
+          </div>
+        </AnimateOnView>
+
+        <AnimateOnView>
+          <div className="py-16 bg-white/60 border-y border-[#D4AF37]/40 text-center px-6 rounded-md shadow-md">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase">{TXT.purpose}</h2>
+            <p className="text-gray-700 max-w-4xl mx-auto mt-6 text-base sm:text-lg leading-relaxed">
+              {TXT.purposeText}
+            </p>
+          </div>
+        </AnimateOnView>
+
+        <AnimateOnView>
+          <div className="py-16 bg-white/60 border-y border-[#D4AF37]/40 text-center px-6 rounded-md shadow-md">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase">{TXT.serve}</h2>
+            <p className="text-gray-700 max-w-3xl mx-auto mt-6 text-base sm:text-lg leading-relaxed">
+              {TXT.serveText}
+            </p>
+          </div>
+        </AnimateOnView>
+
+        <AnimateOnView>
+          <div className="py-16 bg-white/60 border-y border-[#D4AF37]/40 text-center px-6 rounded-md shadow-md">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase">{TXT.events}</h2>
+            <p className="text-gray-700 max-w-4xl mx-auto mt-6 text-base sm:text-lg leading-relaxed">
+              {TXT.eventsText}
+            </p>
+          </div>
+        </AnimateOnView>
+
+      </div>
     </section>
   );
-};
-
-export default About;
+}
