@@ -4,14 +4,11 @@ export type EventItem = {
   date: string;
   location?: string;
   description: string;
+  description_en: string;
   image: string;
-
-  whatWeNeed: string;
   whoWeWant?: string;
-
   contactEmail?: string;
   contactPhone?: string;
-  applyLink?: string;
 };
 
 export type CardItem = {
@@ -23,55 +20,43 @@ export type CardItem = {
 
 export const events: EventItem[] = [
   {
-    id: "nssgskbajkdam-2024",
-    title: "Naadam Celebration 2026",
-    date: "July 11, 2024",
-    location: "Calgary, Alberta",
-    description:
-      "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
-    image: 
-      'naadam.jpg',
-    whatWeNeed:
-      "Volunteers for setup/cleanup, ushers, registration help, donation of traditional food and drinks, and small prizes for games.",
-    whoWeWant:
-      "Community volunteers (16+), performers (singers, dancers), sponsors, and local vendors interested in Mongolian culture.",
+    id: "nssgskbajkdam-2025",
+    title: "Winter Party 2025",
+    date: "December 26 — 5:30 PM",
+    location: "5811 46 St SE",
 
-    // NEW FIELDS 👇
-    contactEmail: "events@mongoliancalgary.ca",
-    contactPhone: "403-555-1234",
-    applyLink: "https://forms.gle/naadam-application-form"
+    description:
+      "🎄🥂 🍾 🇲🇳 🏆 Улиран одож буй 2025 он Монгол хүн бүрийн сэтгэлд Монгол өв соёл Монгол ахуй, зүгээр л Монголоороо Дэлхийд гайхуулсан бахархсан онцгой сайхан жил боллоо. Одоо зөвхөн монголчууд бид хамтдаа бахархалын их найр хийх үлдэж.\n\n" +
+      "Дайчид мориндоо. Тиймээс дайчид зүгээр өөрийгөө л бэлдээд ирэхэд хангалттай! Бүжгийн талбайг донсолтол бүжиж, дуу хуур, хөгжимийн аялгуутай бас нэгэн шинэхэн дурсамж нэмэх боломжийг бүү алдаарай!\n\n" +
+      "Энэ жил АНХ УДАА тусгайлан бэлдсэн Нийслэл цэсээр баярын зоогийг өргөж байгааг дуулгахад таатай байна.\n\n" +
+      "📌 ТАСАЛБАРЫН МЭДЭЭЛЭЛ\n" +
+      "Үнэ: $88\n" +
+      "Худалдан авах: e-transfer → calgarymongolians@gmail.com\n\n" +
+      "*** E-transfer Note дээрээ тасалбараа хүлээн авах овогнэр, e mail хаяг болон утасны дугаараа бичээрэй! ",
+
+    description_en:
+      "As 2025 ends, it has been a year filled with pride for Mongolians worldwide. Now it’s time to celebrate together!\n\n" +
+      "Dress up, enjoy music, dancing, and create warm memories. This year, for the first time, we are serving a special Holiday Menu.\n\n" +
+      "📌 TICKET INFORMATION\n" +
+      "Price: $88\n" +
+      "To purchase: Send e-transfer > calgarymongolians@gmail.com\n\n" +
+      "*** Make sure to include your phone number, email address and full name in the e-transfer.",
+    image: "winterparty.png",
+    contactEmail: "calgarymongolians@gmail.com",
+    contactPhone: "587 435-4494",
   },
-
-  {
-    id: "tsagaan-sar-2023",
-    title: "Tsagaan Sar 2023",
-    date: "February 18, 2023",
-    location: "Calgary Cultural Centre",
-    description:
-      "Our annual Lunar New Year celebration with performances, traditional clothing, dances, and festive foods.",
-    image: "/images/events/tsagaan1.jpg",
-    whatWeNeed:
-      "Help with event decoration, seating organization, kids activities, photography, and setup of food stations.",
-    whoWeWant:
-      "Families, youth volunteers, photographers, cultural ambassadors, and partners who want to support community events.",
-
-    // NEW FIELDS 👇
-    contactEmail: "info@mongoliancalgary.ca",
-    contactPhone: "403-555-9876",
-    applyLink: "https://forms.gle/tsagaan-sar-volunteers"
-  }
 ];
 
 export function getCardInfos(events: EventItem[]) {
-  let cardInfo :CardItem[] = []
-  for (let i =0; i < events.length; i++){
-    const dict :CardItem = {
-      'img' : events[i].image,
-      'title' : events[i].title,
-      'desc' : events[i].date,
-      'link' : `/events/${events[i].id}`
-    }
+  let cardInfo: CardItem[] = [];
+  for (let i = 0; i < events.length; i++) {
+    const dict: CardItem = {
+      img: events[i].image,
+      title: events[i].title,
+      desc: events[i].date,
+      link: `/events/${events[i].id}`,
+    };
     cardInfo.push(dict);
   }
   return cardInfo;
-};
+}
