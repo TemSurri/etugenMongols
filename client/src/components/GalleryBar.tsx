@@ -1,10 +1,6 @@
-const eventItems = [
-  { img: "NadaamCover", title: "Naadam Festival", desc: "Traditional games and celebration.", link: "/naadam" },
-  { img: "/gallery/christmas.jpg", title: "Christmas Celebration", desc: "Warm festive holiday event.", link: "/christmas" },
-  { img: "/gallery/newyear.jpg", title: "New Year Gathering", desc: "A joyful start to the year.", link: "/newyear" },
-  { img: "/gallery/lunarnewyear.jpg", title: "Tsagaan Sar", desc: "Mongolian Lunar New Year.", link: "/tsagaansar" },
-  { img: "/gallery/nomadsday.jpg", title: "Nomads Day", desc: "Celebrating nomadic culture.", link: "/nomadsday" }
-];
+import {events, getCardInfos} from "../static_gallery";
+
+const eventItems = getCardInfos(events);
 
 export default function Gallery() {
   return (
@@ -33,7 +29,7 @@ export default function Gallery() {
               "
             >
               <img
-                src={item.img}
+                src={`/event_assets/${item.img}`}
                 alt={item.title}
                 className="h-40 w-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

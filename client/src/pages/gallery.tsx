@@ -1,5 +1,5 @@
-import Event from "../components/EventItem";
-import {events} from "../static_events"
+import GalleryItem from "../components/GalleryItem";
+import {events} from "../static_gallery"
 import { useParams } from "react-router-dom";;
 
 export default function EventPage() {
@@ -10,5 +10,5 @@ export default function EventPage() {
     return <p className="text-center mt-10 text-xl">Event not found</p>;
   }
 
-  return <Event {...event} />;
+  return <GalleryItem {...event} />;
 }

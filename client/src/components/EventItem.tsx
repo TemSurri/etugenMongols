@@ -17,7 +17,6 @@ export default function Event({
   applyLink,
 }: EventItem) {
   const eventImage = image;
-
   return (
     <article
       className="min-h-screen w-full pt-10 pb-16 px-4 sm:px-6 lg:px-0"

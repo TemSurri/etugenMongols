@@ -1,11 +1,11 @@
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import Gallery from "../components/Gallery";
+import Gallery from "../components/GalleryBar";
 import CTA from "../components/CTA";
 import About from "../components/About"
-import Upcoming from "../components/Upcoming"
+import Upcoming from "../components/UpcomingBar"
 import Footer from "../components/Footer"
-import Dashboard from "../components/Dashboard"
+//import Dashboard from "../components/Dashboard"
 
 export default function Home() {
   return (
@@ -13,7 +13,6 @@ export default function Home() {
       <Header />
       <Hero />
       <Upcoming />
-      <Dashboard/>
       <About />
       <Gallery />
       <CTA />
