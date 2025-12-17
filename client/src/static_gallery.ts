@@ -22,20 +22,25 @@ export type CardItem = {
 
 export const events: GalleryItem[] = [
   {
+    //identifier
     id: "nssgskbajkdam-2024",
+    //basic info
     title: "Naadam Celebration 2026",
     date: "July 11, 2024",
     location: "Calgary, Alberta",
     description:
       "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
+    //img
     image: 
       'naadam.jpg',
+
+    
     whatWeNeed:
       "Volunteers for setup/cleanup, ushers, registration help, donation of traditional food and drinks, and small prizes for games.",
     whoWeWant:
       "Community volunteers (16+), performers (singers, dancers), sponsors, and local vendors interested in Mongolian culture.",
 
-    // NEW FIELDS 👇
+    
     contactEmail: "events@mongoliancalgary.ca",
     contactPhone: "403-555-1234",
   },

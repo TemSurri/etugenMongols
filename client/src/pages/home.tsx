@@ -1,9 +1,9 @@
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Gallery from "../components/GalleryBar";
-import CTA from "../components/CTA";
+import CTA from "../components/Contact";
 import About from "../components/About"
-import Upcoming from "../components/UpcomingBar"
+import Upcoming from "../components/EventBar"
 import Footer from "../components/Footer"
 //import Dashboard from "../components/Dashboard"
 
