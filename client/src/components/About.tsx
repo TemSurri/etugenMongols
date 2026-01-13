@@ -1,117 +1,172 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, useAnimation, easeOut } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import landingImage from "../assets/landingpage.webp";
+import logo from "../assets/logo.webp";
 
-const reveal = {
-  hidden: { y: 40, scale: 0.98 },
+/* ---------- Motion ---------- */
+
+const container: Variants = {
+  hidden: {},
   show: {
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.45, ease: easeOut }
-  }
+    transition: { staggerChildren: 0.08 },
+  },
 };
 
-function AnimateOnView({ children }: { children: React.ReactNode }) {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({ threshold: 0.2 });
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+};
 
-  useEffect(() => {
-    controls.start(inView ? "show" : "hidden");
-  }, [inView, controls]);
-
-  return (
-    <motion.div ref={ref} variants={reveal} initial="hidden" animate={controls}>
-      {children}
-    </motion.div>
-  );
-}
-
-export default function About({ orgName = "About Us" }) {
+export default function About() {
   const [lang, setLang] = useState<"en" | "mn">("mn");
 
-  const TXT = {
-    title: lang === "en" ? orgName : "Бидний тухай",
-    intro:
-      lang === "en"
-        ? "A Mongolian cultural organization dedicated to preserving heritage, uniting communities, and celebrating the spirit of Mongolia here in Calgary."
-        : "Калгари хотноо монгол өв соёлыг хадгалж, олон нийтийг нэгтгэн, Монголын үзэл санааг түгээн дэлгэрүүлэхэд зориулагдсан соёлын байгууллага юм.",
-    purpose: lang === "en" ? "Our Purpose & Initiatives" : "Бидний зорилго ба үйл ажиллагаа",
-    purposeText:
-      lang === "en"
-        ? "We connect Mongolian and Canadian communities through cultural, educational, and community-driven initiatives that inspire pride, preserve identity, and build meaningful relationships."
-        : "Бид Монгол, Канадын иргэдийг соёлын, боловсролын болон хамтын ажиллагааны хүрээнд холбон өв соёлоо түгээж, утга учиртай харилцааг дэмждэг.",
-    serve: lang === "en" ? "Who We Serve" : "Хэнийг дэмждэг вэ",
-    serveText:
-      lang === "en"
-        ? "We welcome Mongolian-Canadians, friends of Mongolia, and anyone who values cultural connection and shared heritage."
-        : "Бид Монгол-Канадын иргэд болон Монгол соёлыг сонирхогч бүх хүнд нээлттэй.",
-    events: lang === "en" ? "Explore Our Past Events" : "Өмнөх арга хэмжээнүүд",
-    eventsText:
-      lang === "en"
-        ? "Scroll below to explore a gallery of past events. Each event card opens to reveal photos, stories, and more."
-        : "Доорх хэсэгт байрлах арга хэмжээний карт дээр дарж зураг болон дэлгэрэнгүй мэдээллийг үзнэ үү."
+  const TEXT =
+    lang === "en"
+      ? "Etugen Mongols is a Calgary-based, registered non-profit organization focused on building the Mongolian community. We host programs, events, and gatherings that bring people together and keep our culture alive."
+      : "Этүгэн Монголчууд нь Калгари хотод төвтэй, албан ёсоор бүртгэлтэй ашгийн бус байгууллага юм. Бид Монголын нийгэмлэгийг нэгтгэх зорилготой хөтөлбөр, арга хэмжээ, уулзалтуудыг зохион байгуулдаг.";
+
+  const scrollToGallery = () => {
+    const el = document.getElementById("gallery");
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  const scrollToContact = () => {
+    const el = document.getElementById("contact");
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
+    window.scrollTo({ top: y, behavior: "smooth" });
   };
 
   return (
     <section
       id="about"
-      className="relative bg-cover bg-center bg-fixed text-black py-24 sm:py-32"
+      className="relative w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${landingImage})` }}
     >
-      <div className="space-y-32 sm:space-y-40">
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/90" />
 
-        <AnimateOnView>
-          <div className="relative px-4 py-16 text-center bg-white/60 border-y border-[#D4AF37]/40 rounded-md shadow-md">
-            <button
-              onClick={() => setLang(lang === "en" ? "mn" : "en")}
-              className="absolute right-4 top-4 px-3 py-1.5 text-sm font-semibold uppercase bg-black text-white hover:bg-[#D4AF37] hover:text-black rounded transition"
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.35 }}
+        className="relative z-10 max-w-6xl mx-auto px-6 py-28"
+      >
+        <div className="relative bg-white px-6 sm:px-10 py-14 overflow-hidden">
+
+          {/* Subtle decor */}
+          <div className="absolute left-0 top-0 h-full w-px bg-black/10" />
+          <div className="absolute right-0 bottom-0 w-6 h-6 border-r border-b border-black/20" />
+
+          {/* Language toggle */}
+          <motion.button
+            variants={fadeUp}
+            onClick={() => setLang(lang === "en" ? "mn" : "en")}
+            className="absolute right-4 top-4 text-xs uppercase tracking-wide text-black/50 hover:text-black transition"
+          >
+            {lang === "en" ? "Монгол" : "English"}
+          </motion.button>
+
+          {/* MAIN LAYOUT */}
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-10 items-start">
+
+            {/* Logo */}
+            <motion.img
+              variants={fadeUp}
+              src={logo}
+              alt="Etugen Mongols Logo"
+              className="w-24 sm:w-28 md:w-32 opacity-95"
+            />
+
+            {/* Text */}
+            <motion.div variants={fadeUp}>
+              <h2 className="text-sm uppercase tracking-widest text-black/50">
+                About Us
+              </h2>
+
+              <div className="mt-4 h-0.5 w-14 bg-black" />
+
+              <p className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-black/75">
+                {TEXT}
+              </p>
+            </motion.div>
+
+            {/* Desktop album images */}
+            <motion.div
+              variants={fadeUp}
+              className="relative hidden md:block w-64 h-44"
             >
-              {lang === "en" ? "Монгол" : "English"}
-            </button>
-
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight">
-              {TXT.title}
-            </h1>
-
-            <div className="h-[3px] bg-[#D4AF37] w-20 mx-auto mt-6 mb-8" />
-
-            <p className="text-gray-700 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed">
-              {TXT.intro}
-            </p>
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${landingImage})` }}
+              />
+              <div
+                className="absolute -bottom-6 -left-6 w-36 h-24 bg-cover bg-center border border-white"
+                style={{ backgroundImage: `url(${landingImage})` }}
+              />
+            </motion.div>
           </div>
-        </AnimateOnView>
 
-        <AnimateOnView>
-          <div className="py-16 bg-white/60 border-y border-[#D4AF37]/40 text-center px-6 rounded-md shadow-md">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase">{TXT.purpose}</h2>
-            <p className="text-gray-700 max-w-4xl mx-auto mt-6 text-base sm:text-lg leading-relaxed">
-              {TXT.purposeText}
+          {/* Mobile album images */}
+          <motion.div
+            variants={fadeUp}
+            className="mt-8 grid grid-cols-1 gap-4 md:hidden"
+          >
+            <div
+              className="h-44 bg-cover bg-center"
+              style={{ backgroundImage: `url(${landingImage})` }}
+            />
+            <div
+              className="h-44 bg-cover bg-center"
+              style={{ backgroundImage: `url(${landingImage})` }}
+            />
+          </motion.div>
+
+          {/* MOBILE EVENT INFO (SMOOTH ADDITION) */}
+          <motion.div
+            variants={fadeUp}
+            className="mt-10 md:hidden"
+          >
+            <p className="text-sm leading-relaxed text-black/70">
+              We host two primary community events each year — a Christmas & New
+              Year celebration in the winter, followed by Naadam in the summer.
             </p>
-          </div>
-        </AnimateOnView>
 
-        <AnimateOnView>
-          <div className="py-16 bg-white/60 border-y border-[#D4AF37]/40 text-center px-6 rounded-md shadow-md">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase">{TXT.serve}</h2>
-            <p className="text-gray-700 max-w-3xl mx-auto mt-6 text-base sm:text-lg leading-relaxed">
-              {TXT.serveText}
+            <p className="mt-4 text-sm leading-relaxed text-black/70">
+              Этүгэн Монголчууд жил бүр үндсэн хоёр арга хэмжээ зохион
+              байгуулдаг. Өвлийн улиралд Зул сар, Шинэ жилийн баяр, зуны
+              улиралд Наадам болдог.
             </p>
-          </div>
-        </AnimateOnView>
 
-        <AnimateOnView>
-          <div className="py-16 bg-white/60 border-y border-[#D4AF37]/40 text-center px-6 rounded-md shadow-md">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase">{TXT.events}</h2>
-            <p className="text-gray-700 max-w-4xl mx-auto mt-6 text-base sm:text-lg leading-relaxed">
-              {TXT.eventsText}
-            </p>
-          </div>
-        </AnimateOnView>
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={scrollToContact}
+                className="w-fit px-6 py-3 text-xs font-semibold uppercase tracking-widest text-black border border-black/30 hover:border-black transition"
+              >
+                Contact Us
+              </button>
 
-      </div>
+              <button
+                onClick={scrollToGallery}
+                className="w-fit px-6 py-3 text-xs font-semibold uppercase tracking-widest text-black border border-black/30 hover:border-black transition"
+              >
+                View Event Gallery
+              </button>
+            </div>
+          </motion.div>
+
+        </div>
+      </motion.div>
     </section>
   );
 }

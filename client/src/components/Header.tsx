@@ -7,8 +7,18 @@ export default function Header() {
   const [isTop, setIsTop] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const lastScrollY = useRef(0);
 
+  /* ---------- Detect desktop ---------- */
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  /* ---------- Scroll behavior ---------- */
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
@@ -27,16 +37,19 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollWithOffset = (id: string) => {
-    const el = document.getElementById(id);
-    const headerHeight = 63;
+  const scrollWithOffset = (id: string, offset: number = 13) => {
+    
+    const targetId =
+      id;
+
+    const el = document.getElementById(targetId);
 
     if (el) {
-      const extraOffset = id === "contact" || id === "about" ? 13 : 0;
       const y =
         el.getBoundingClientRect().top +
         window.pageYOffset -
-        (headerHeight + extraOffset);
+        (offset);
+
       window.scrollTo({ top: y, behavior: "smooth" });
     }
 
@@ -53,7 +66,6 @@ export default function Header() {
       `}
     >
       <div className="max-w-6xl mx-auto flex justify-between items-center relative">
-        
         <button
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -107,12 +119,15 @@ export default function Header() {
 
       {menuOpen && (
         <>
+          {/* MOBILE MENU — unchanged */}
           <div className="md:hidden flex flex-col text-center gap-6 text-lg px-6 py-6 bg-black/80 border-t border-white/10 mt-4">
             <button onClick={() => scrollWithOffset("upcoming")} className="hover:text-blue-400 transition">Events</button>
             <button onClick={() => scrollWithOffset("about")} className="hover:text-blue-400 transition">About</button>
             <button onClick={() => scrollWithOffset("gallery")} className="hover:text-blue-400 transition">Gallery</button>
             <button onClick={() => scrollWithOffset("contact")} className="hover:text-blue-400 transition">Contact</button>
           </div>
+
+          {/* DESKTOP DROPDOWN — About routes to Events */}
           <div
             className="
               hidden md:block
@@ -126,9 +141,9 @@ export default function Header() {
             "
           >
             <button onClick={() => scrollWithOffset("upcoming")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Events</button>
-            <button onClick={() => scrollWithOffset("about")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">About</button>
+            <button onClick={() => scrollWithOffset("upcoming")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">About</button>
             <button onClick={() => scrollWithOffset("gallery")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Gallery</button>
-            <button onClick={() => scrollWithOffset("contact")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Contact</button>
+            <button onClick={() => scrollWithOffset("upcoming",-600)} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Contact</button>
           </div>
         </>
       )}

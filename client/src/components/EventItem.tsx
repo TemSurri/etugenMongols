@@ -2,8 +2,24 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import type { EventItem } from "../static_events";
 import landingImage from "../assets/landingpage.webp";
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05 } },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.25, ease: "easeOut" },
+  },
+};
 
 export default function Event({
   title,
@@ -18,101 +34,150 @@ export default function Event({
 }: EventItem) {
   const [lang, setLang] = useState<"mn" | "en">("mn");
 
+  const googleMapsUrl = location
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        location
+      )}`
+    : null;
+
   return (
     <article
-      className="min-h-screen w-full pt-10 pb-16 px-4 sm:px-6 lg:px-0"
-      style={{
-        backgroundImage: `url(${landingImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
+      className="relative h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${landingImage})` }}
     >
-      <div className="max-w-6xl mx-auto mb-6 flex justify-center">
-        <Link
-          to="/"
-          className="px-4 py-2 rounded-full bg-white/80 text-gray-900 border border-gray-300 shadow hover:bg-white transition font-medium text-sm flex items-center gap-2"
+
+      <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/90" />
+
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 h-full max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col min-h-0"
+      >
+
+        <motion.div variants={fadeUp} className="mb-2 shrink-0">
+          <Link
+            to="/"
+            className="text-xs uppercase tracking-widest text-white/70 hover:text-white transition"
+          >
+            ← Back
+          </Link>
+        </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          className="
+            bg-white
+            flex-1
+            min-h-0
+            overflow-y-auto
+            px-6 sm:px-8
+            py-6
+            relative
+          "
         >
-          <span className="text-lg">←</span> Back to Home
-        </Link>
-      </div>
+          <button
+            onClick={() => setLang(lang === "mn" ? "en" : "mn")}
+            className="absolute right-4 top-4 text-xs uppercase tracking-widest text-black/50 hover:text-black"
+          >
+            {lang === "mn" ? "English" : "Монгол"}
+          </button>
+          <header className="mb-5 max-w-3xl">
+            <h1 className="text-2xl sm:text-3xl font-semibold uppercase tracking-wide text-black">
+              {title}
+            </h1>
 
-      <div className="max-w-6xl mx-auto bg-white/90 backdrop-blur-sm border border-[#D4AF37]/30 shadow-xl rounded-2xl px-6 sm:px-10 py-10 space-y-12">
+            <div className="mt-2 h-px w-14 bg-black" />
 
-        <header className="space-y-5 text-center border-b border-gray-200 pb-6">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-tight text-gray-900">
-            {title}
-          </h1>
+            <div className="mt-3 flex flex-wrap gap-4 text-sm text-black/70">
+              {date && <span>{date}</span>}
+              {location && <span>{location}</span>}
+            </div>
+          </header>
 
-          <div className="flex flex-wrap gap-3 justify-center text-xs sm:text-sm text-gray-700">
-            {date && (
-              <span className="px-3 py-1 bg-gray-100 border border-gray-200 rounded-full">
-                <span className="font-semibold">Date:</span> {date}
-              </span>
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8 items-start">
+            <div>
+              <div className="border border-black/10 p-2">
+                <img
+                  src={`/event_assets/${image}`}
+                  alt={title}
+                  className="w-full max-h-[36vh] object-contain"
+                />
+              </div>
 
-            {location && (
-              <span className="px-3 py-1 bg-gray-100 border border-gray-200 rounded-full">
-                <span className="font-semibold">Location:</span> {location}
-              </span>
-            )}
+              {googleMapsUrl && (
+                <div className="mt-4 border-l-2 border-black/20 pl-4">
+                  <a
+                    href={googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      block
+                      text-sm font-medium
+                      text-black
+                      hover:underline
+                    "
+                  >
+                    View location on Google Maps
+                  </a>
+                </div>
+              )}
+
+              {whoWeWant && (
+                <div className="hidden lg:block mt-6">
+                  <p className="text-xs uppercase tracking-widest text-black/50">
+                    Help Needed
+                  </p>
+                  <div className="mt-2 h-px w-10 bg-black/30" />
+                  <p className="mt-3 text-sm text-black/80">
+                    {whoWeWant}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="max-w-xl">
+              <p className="text-xs uppercase tracking-widest text-black/50">
+                About this event
+              </p>
+
+              <div className="mt-2 h-px w-10 bg-black/30" />
+
+              <p className="mt-4 text-sm sm:text-base leading-relaxed text-black/80 whitespace-pre-line">
+                {lang === "mn" ? description : description_en}
+              </p>
+
+              {whoWeWant && (
+                <div className="lg:hidden mt-6">
+                  <p className="text-xs uppercase tracking-widest text-black/50">
+                    Help Needed
+                  </p>
+                  <div className="mt-2 h-px w-10 bg-black/30" />
+                  <p className="mt-3 text-sm text-black/80">
+                    {whoWeWant}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        </header>
 
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold uppercase text-gray-900">Event Photo</h2>
-
-          <div className="aspect-3/2 rounded-xl overflow-hidden shadow-md">
-            <img src={`/event_assets/${image}`} alt={title} className="w-full h-full object-cover" />
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold uppercase text-gray-900">Description</h2>
-
-            <button
-              onClick={() => setLang(lang === "mn" ? "en" : "mn")}
-              className="px-4 py-1 rounded-full text-sm font-semibold bg-[#0033A0] text-white hover:bg-[#002670] transition"
-            >
-              {lang === "mn" ? "English" : "Монгол"}
-            </button>
-          </div>
-
-          <p className="text-sm whitespace-pre-line sm:text-base leading-relaxed text-gray-800">
-            {lang === "mn" ? description : description_en}
-          </p>
-        </section>
-
-        <div className="w-full h-1 bg-linear-to-r from-[#0033A0] via-[#D4AF37] to-[#0033A0] rounded-full opacity-70" />
-
-        {whoWeWant && (
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold uppercase text-[#0033A0]">Help Needed</h2>
-            <p className="text-sm sm:text-base text-gray-800">{whoWeWant}</p>
-          </section>
-        )}
-
-        {(contactEmail || contactPhone) && (
-          <aside className="rounded-xl border border-gray-200 bg-white/95 shadow px-5 py-6 space-y-4">
-            <h3 className="text-sm font-semibold uppercase text-gray-700">Contact Info</h3>
-
-            <p className="text-xs sm:text-sm text-gray-700">
-              <a
-                href={`mailto:${contactEmail}`}
-                className="underline decoration-[#D4AF37]/60 hover:text-[#D4AF37] transition"
-              >
-                {contactEmail}
-              </a>
-            </p>
-
-            {contactPhone && (
-              <p className="text-xs sm:text-sm text-gray-700">{contactPhone}</p>
-            )}
-          </aside>
-        )}
-      </div>
+          {(contactEmail || contactPhone) && (
+            <footer className="mt-6 pt-4 border-t border-black/10 max-w-xl">
+              <p className="text-xs uppercase tracking-widest text-black/50">
+                Contact
+              </p>
+              <div className="mt-2 text-sm text-black/75 space-y-1">
+                {contactEmail && (
+                  <a href={`mailto:${contactEmail}`} className="block">
+                    {contactEmail}
+                  </a>
+                )}
+                {contactPhone && <p>{contactPhone}</p>}
+              </div>
+            </footer>
+          )}
+        </motion.div>
+      </motion.div>
     </article>
   );
 }

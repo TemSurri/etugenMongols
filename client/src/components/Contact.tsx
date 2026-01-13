@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import heroBg from "../assets/landingpage.webp";
-import { FaFacebook, FaEnvelope } from "react-icons/fa";
+import { FaFacebook, FaEnvelope, FaPhone } from "react-icons/fa";
 
 export default function CTA() {
   const container = {
@@ -14,6 +15,18 @@ export default function CTA() {
     hidden: { opacity: 0, y: 25 },
     show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
+
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Only show on mobile
+  if (isDesktop) return null;
 
   return (
     <section
@@ -51,6 +64,7 @@ export default function CTA() {
         </motion.p>
 
         <div className="space-y-6">
+          {/* Email */}
           <motion.a
             variants={fadeChild}
             href="mailto:info@etugenmongols.ca"
@@ -70,10 +84,32 @@ export default function CTA() {
             <span className="truncate">info@etugenmongols.ca</span>
           </motion.a>
 
+          {/* Phone */}
+          <motion.a
+            variants={fadeChild}
+            href="tel:+14031234567"
+            className="
+              flex items-center justify-center gap-3
+              px-8 sm:px-10 py-3 sm:py-4
+              text-sm sm:text-base md:text-lg font-semibold uppercase tracking-wide
+              whitespace-nowrap overflow-hidden text-ellipsis max-w-full
+              text-white bg-black/40 backdrop-blur-sm
+              border border-white/30
+              hover:bg-black/60 hover:border-[#293305]
+              transition duration-300
+              w-full md:w-auto
+            "
+          >
+            <FaPhone size={18} className="shrink-0" />
+            <span className="truncate">+1 (403) 123-4567</span>
+          </motion.a>
+
+          {/* Facebook */}
           <motion.a
             variants={fadeChild}
             href="https://www.facebook.com/profile.php?id=61584273744310"
             target="_blank"
+            rel="noopener noreferrer"
             className="
               flex items-center justify-center gap-3
               px-8 sm:px-10 py-3 sm:py-4
@@ -94,4 +130,3 @@ export default function CTA() {
     </section>
   );
 }
-
