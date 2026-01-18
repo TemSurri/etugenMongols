@@ -1,21 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+
+
+import { useState, useEffect, useMemo } from "react";
 import { motion, cubicBezier } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { FaFacebookF } from "react-icons/fa";
 import heroBg from "../assets/landingpage.webp";
 import logo from "../assets/logo.webp";
-import { events, getCardInfos } from "../static_events";
+import { events, getCardInfos, getListings} from "../static_events";
+import type {OrganizedListing} from "../static_events";
 import About from "./About";
 
-const eventItems = getCardInfos(events);
-const hasEvents = eventItems.length > 0;
 const CONTACT_EMAIL = "etugenmongols@gmail.com";
 const CONTACT_PHONE = "+1 403 123 4567";
-const HELP_WANTED:string[] = [
-  
-];
+
+// all animation variants
+
+const noEventsVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
@@ -56,13 +67,22 @@ const panelMotion: Variants = {
 export default function Upcoming() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [lang, setLang] = useState<"en" | "mn">("mn");
-  const [eventsLang, setEventsLang] = useState<"en" | "mn">("en");
+  const [eventsLang, setEventsLang] = useState<"en" | "mn">("mn");
 
   const [isDesktop, setIsDesktop] = useState(false);
 
+  const eventItems= useMemo(() => getCardInfos(events), []);
+  const Listings:OrganizedListing[] = useMemo(() => getListings(events), []);
+  const hasEvents = eventItems.length > 0;
 
+
+//use effect check for mobile view or nah
   useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 768);
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsDesktop(window.innerWidth >= 768);
+      }
+    };
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -70,7 +90,7 @@ export default function Upcoming() {
 
   const displayItems =
     isDesktop && eventItems.length > 1
-      ? [...eventItems, eventItems[0]]
+      ? [...eventItems]
       : eventItems;
 
   const ABOUT_TEXT =
@@ -104,7 +124,7 @@ export default function Upcoming() {
       >
         <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/65 to-black/90" />
 
-        {/* WHITE SIDE PANEL */}
+        {/* White side panel (right half of desktop view) */}
         <motion.div
           variants={panelMotion}
           initial="hidden"
@@ -129,7 +149,7 @@ export default function Upcoming() {
               flex flex-col
             "
           >
-
+            {/* about segment */}
             <div className="relative max-w-sm">
               <button
                 onClick={() => setLang(lang === "en" ? "mn" : "en")}
@@ -162,7 +182,7 @@ export default function Upcoming() {
                 </div>
               </div>
             </div>
-             {/* GALLERY AD*/}
+             {/* our work segment */}
             <div className="mt-12 max-w-sm">
 
               <p className="text-[11px] uppercase tracking-[0.25em] text-black/50 mb-3">
@@ -190,7 +210,7 @@ export default function Upcoming() {
             </div>
 
 
-            {/* CONTACT US */}
+            {/* contact segment*/}
             <div className="mt-5 max-w-sm">
               <div className="h-px w-full bg-black/10 mb-4" />
 
@@ -243,7 +263,7 @@ export default function Upcoming() {
               <div className="h-px w-full bg-black/10 mt-5" />
             </div>
 
-            {/* CONNECT WITH US */}
+            {/* social media segment */}
             <div className="mt-auto pt-2 max-w-sm text-center">
               <p className="text-sm uppercase tracking-widest text-black/60">
                 Connect with us
@@ -271,7 +291,7 @@ export default function Upcoming() {
           </div>
         </motion.div>
 
-        {/* MAIN CONTENT */}
+        {/* main content (left side of desktop view) */}
         <div
           className="
             relative z-10
@@ -314,7 +334,6 @@ export default function Upcoming() {
           )}
         </motion.div>
 
-
           <motion.div
             variants={containerVariants}
             className="
@@ -340,7 +359,7 @@ export default function Upcoming() {
                   <div className="group w-full md:min-w-[300px] lg:min-w-[340px] bg-black/40 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                     <div className="relative h-56 overflow-hidden">
                       <img
-                        src={`/event_assets/${item.img}`}
+                        src={`/upcoming_event_assets/${item.img}`}
                         alt={item.title}
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
@@ -354,13 +373,14 @@ export default function Upcoming() {
               ))
             ) : (
               <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                variants={noEventsVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: false, amount: 0.35 }}
                 className="min-h-[100px] md:min-h-[100px] flex items-center"
               >
+
                 <div className="max-w-md w-full">
-                  {/* PREVIOUS DESCRIPTION (KEPT) */}
                   <p className="text-white/80 text-sm">
                     No upcoming events are planned at the moment.
                   </p>
@@ -372,14 +392,14 @@ export default function Upcoming() {
 
                   <div className="mt-4 h-px w-12 bg-white/30" />
 
-                  {/* LATEST EVENT */}
                   <p className="mt-4 text-white/80 text-sm">
                     Look at our latest event
                   </p>
 
-                  {/* VIDEO PLACEHOLDER */}
+                  {/* placeholder rn, will add real one soon */}
                   <div className="mt-4 aspect-video w-full overflow-hidden border border-white/25">
                     <iframe
+                      loading="lazy"
                       className="h-full w-full"
                       src="https://www.youtube.com/embed/9bZkp7q19f0"
                       title="Latest Event Video"
@@ -388,8 +408,6 @@ export default function Upcoming() {
                       allowFullScreen
                     />
                   </div>
-
-                  {/* CTA */}
                   <button
                     onClick={scrollToGallery}
                     className="
@@ -407,12 +425,7 @@ export default function Upcoming() {
                 </div>
               </motion.div>
             )}
-
-
-
-
           </motion.div>
-
           <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -431,29 +444,25 @@ export default function Upcoming() {
               {eventsLang === "en" ? "Монгол" : "English"}
             </button>
 
-          <div className="min-h-[96px]">
-            <motion.p variants={textVariants} className="text-white/75 text-sm">
-              {eventsLang === "en"
-                ? "We host two primary community events each year — a Christmas & New Year celebration in the winter time, followed by Naadam in the summer time. Be sure to stay tuned with our socials."
-                : "Этүгэн Монголчууд жил бүр үндсэн хоёр арга хэмжээ зохион байгуулдаг. Өвлийн улиралд Зул сар, Шинэ жилийн баяр, зуны улиралд Наадам болдог."}
-            </motion.p>
+            <div className="min-h-24">
+              <motion.p variants={textVariants} className="text-white/75 text-sm">
+                {eventsLang === "en"
+                  ? "We host two primary community events each year — a Christmas & New Year celebration in the winter time, followed by Naadam in the summer time. Be sure to stay tuned with our socials."
+                  : "Этүгэн Монголчууд жил бүр үндсэн хоёр арга хэмжээ зохион байгуулдаг. Өвлийн улиралд Зул сар, Шинэ жилийн баяр, зуны улиралд Наадам болдог."}
+              </motion.p>
 
-            <motion.p variants={textVariants} className="mt-4 text-white/75 text-sm">
-              {eventsLang === "en"
-                ? "We often require help from the community for our events. See current volunteer opportunities below."
-                : "Бид арга хэмжээнүүддээ олон нийтийн дэмжлэгийг тогтмол шаарддаг. Одоогийн сайн дурын ажлын боломжуудыг доороос үзнэ үү."}
-            </motion.p>
-          </div>
-
-
-          </div>
-
-           
-            <p className="mt-4 text-white/60 text-sm uppercase tracking-widest">
+              <motion.p variants={textVariants} className="mt-4 text-white/75 text-sm">
+                {eventsLang === "en"
+                  ? "We often require help from the community for our events. See current volunteer opportunities below."
+                  : "Бид арга хэмжээнүүддээ олон нийтийн дэмжлэгийг тогтмол шаарддаг. Одоогийн сайн дурын ажлын боломжуудыг доороос үзнэ үү."}
+              </motion.p>
+            </div>
+          </div>     
+            <p className="mt-15 text-white/60 text-sm uppercase tracking-widest">
               Event volunteer listings
             </p>
 
-          {HELP_WANTED.length > 0 ? (
+          {Listings.length > 0 ? (          
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -470,11 +479,14 @@ export default function Upcoming() {
                 scrollbar-track-transparent
               "
             >
-              {HELP_WANTED.map((item, i) => (
+              {Listings.map((item, i) => (
                 <button
                   key={i}
-                  onClick={scrollToContact}
+                  onMouseEnter={() => setHoveredIndex(i)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  //onClick={() => navigate(`/events/${item.id}`)}
                   className="
+                    relative
                     w-full
                     text-left
                     text-sm
@@ -486,7 +498,28 @@ export default function Upcoming() {
                     transition
                   "
                 >
-                  {item}
+                  <span className="block truncate">
+                    {item.listing.title}
+                  </span>
+                  <span
+                    className={`
+                      pointer-events-none
+                      absolute
+                      right-3
+                      top-1/2
+                      -translate-y-1/2
+                      max-w-[55%]
+                      text-xs
+                      text-white/60
+                      text-right
+                      truncate
+                      transition-opacity
+                      duration-200
+                      ${hoveredIndex === i ? "opacity-100" : "opacity-0"}
+                    `}
+                  >
+                    {item.listing.description}
+                  </span>
                 </button>
               ))}
             </motion.div>
@@ -519,16 +552,12 @@ export default function Upcoming() {
               </p>
             </motion.div>
 
-          )}
-
-
-
-            
+          )}            
           </motion.div>
         </div>
       </motion.section>
 
-      {/* MOBILE: VOLUNTEER INFO */}
+      {/* Mobile view */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -536,7 +565,6 @@ export default function Upcoming() {
         viewport={{ once: false, amount: 0.2 }}
         className="md:hidden px-6 pb-20"
       >
-        {/* Header + language toggle */}
         <div className="relative mb-6">
           <button
             onClick={() =>
@@ -549,10 +577,9 @@ export default function Upcoming() {
           </button>
         </div>
 
-        {/* Description */}
         <motion.p
           variants={textVariants}
-          className="text-white/75 text-sm"
+          className="mt-10 text-white/75 text-sm"
         >
           {eventsLang === "en"
             ? "We host two primary community events each year — a Christmas & New Year celebration in the winter time, followed by Naadam in the summer time."
@@ -568,15 +595,13 @@ export default function Upcoming() {
             : "Бид арга хэмжээнүүддээ олон нийтийн дэмжлэгийг тогтмол шаарддаг. Одоогийн сайн дурын ажлын боломжуудыг доороос үзнэ үү."}
         </motion.p>
 
-        {/* Listing title */}
-        <p className="mt-6 text-white/60 text-sm uppercase tracking-widest">
+        <p className="mt-15 text-white/60 text-sm uppercase tracking-widest">
           Event volunteer listings
         </p>
 
-        {/* Listings */}
-        {HELP_WANTED.length > 0 ? (
+        {Listings.length > 0 ? (
           <div className="mt-3 space-y-2">
-            {HELP_WANTED.map((item, i) => (
+            {Listings.map((item, i) => (
               <button
                 key={i}
                 onClick={scrollToContact}
@@ -592,7 +617,7 @@ export default function Upcoming() {
                   transition
                 "
               >
-                {item}
+                {item.listing.title}
               </button>
             ))}
           </div>
@@ -602,9 +627,6 @@ export default function Upcoming() {
           </p>
         )}
       </motion.div>
-
-
-
       <div className="md:hidden">
         <About />
       </div>

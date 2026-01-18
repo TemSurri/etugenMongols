@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 
 export default function Footer() {
   const [isDesktop, setIsDesktop] = useState(false);
-
-  /* ---------- Detect desktop ---------- */
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
     check();
@@ -14,7 +12,6 @@ export default function Footer() {
   }, []);
 
   const scrollWithOffset = (id: string) => {
-    // 🔑 Desktop-only: About → Events
     const targetId =
       isDesktop && id === "about" ? "upcoming" : id;
 

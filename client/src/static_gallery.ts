@@ -6,13 +6,15 @@ export type GalleryItem = {
   description: string;
   cover_image: string;
   albumImageCount: number;
+  activities: string[];
 };
 
 export type CardItem = {
-  cover_img: string;
+  id: string;
   title: string;
   desc: string;
   link: string;
+  
 };
 
 export const events: GalleryItem[] = [
@@ -30,6 +32,16 @@ export const events: GalleryItem[] = [
       "/gallery/naadam2022/covernaadam.jpg",
     albumImageCount:
     10,
+    activities: [
+      'hwllo',
+      'hwllo',
+      'monwy',
+      'hwllo',
+      'hwllo',
+      'monwy',
+      'hwllo',
+      'monwy'
+    ]
     
   },
 ];
@@ -38,7 +50,7 @@ export function getCardInfos(events: GalleryItem[]) {
   let cardInfo :CardItem[] = []
   for (let i =0; i < events.length; i++){
     const dict :CardItem = {
-      'cover_img' : events[i].cover_image,
+      'id' : events[i].id,
       'title' : events[i].title,
       'desc' : events[i].date,
       'link' : `/gallery/${events[i].id}`

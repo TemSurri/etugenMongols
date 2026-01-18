@@ -23,7 +23,7 @@ export default function Hero() {
     }
   };
 
-  /* ---------- Motion ---------- */
+  // motion variants
 
   const textContainer = {
     hidden: { opacity: 0, y: 32 },
@@ -61,10 +61,9 @@ export default function Hero() {
       className="relative h-screen w-full overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: `url(${heroBg})` }}
     >
-      {/* Visual overlay */}
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
 
-      {/* LEFT CONTENT */}
+      {/* Title and descriptions + btn (left side) */}
       <div className="relative z-10 h-full max-w-7xl mx-auto px-6 md:px-10 md:pr-[35%] flex items-center">
         <motion.div
           variants={textContainer}
@@ -91,7 +90,6 @@ export default function Hero() {
             </h2>
           </motion.div>
 
-          {/* Desktop title */}
           <motion.h2
             variants={textItem}
             className="hidden md:block text-4xl md:text-6xl xl:text-7xl font-extrabold tracking-[0.15em] uppercase"
@@ -99,13 +97,11 @@ export default function Hero() {
             Etugen Mongols
           </motion.h2>
 
-          {/* Divider */}
           <motion.div
             variants={textItem}
             className="w-40 h-px bg-white/50 mt-7 mb-7"
           />
 
-          {/* Body text */}
           <motion.p
             variants={textItem}
             className="text-base md:text-xl xl:text-2xl leading-relaxed text-white/90"
@@ -121,7 +117,7 @@ export default function Hero() {
             арга хэмжээнүүдийг зохион байгуулдаг.
           </motion.p>
 
-          {/* CTA */}
+
           <motion.button
             variants={textItem}
             onClick={() => scrollWithOffset("upcoming")}
@@ -139,7 +135,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* WHITE PANEL */}
+      {/* white panel (right side)*/}
       <motion.div
         variants={panelMotion}
         initial="hidden"
@@ -163,7 +159,7 @@ export default function Hero() {
             className="w-64 xl:w-72 mb-12"
           />
 
-          {/* Login form (moved up + tighter) */}
+          {/* current login view NOT FUNCTIONAL RN */}
           <div className="w-full max-w-sm space-y-6">
             <div>
               <label className="block text-[11px] font-semibold tracking-widest text-neutral-600 uppercase mb-2">
@@ -211,7 +207,7 @@ export default function Hero() {
               />
             </div>
 
-            {/* Login button */}
+            {/* Login button NOT FUNCTIONL RN */}
             <button
               type="button"
               className="
@@ -232,7 +228,7 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* MOBILE BACKGROUND LOGO */}
+      {/* mobile background logo add on */}
       <div className="absolute inset-0 flex items-center justify-center md:hidden pointer-events-none">
         <img
           src={logo}

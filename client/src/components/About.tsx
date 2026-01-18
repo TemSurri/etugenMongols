@@ -6,7 +6,7 @@ import type { Variants } from "framer-motion";
 import landingImage from "../assets/landingpage.webp";
 import logo from "../assets/logo.webp";
 
-/* ---------- Motion ---------- */
+// motion and animation variants
 
 const container: Variants = {
   hidden: {},
@@ -52,7 +52,6 @@ export default function About() {
       className="relative w-full bg-cover bg-center"
       style={{ backgroundImage: `url(${landingImage})` }}
     >
-      {/* Dark overlay */}
       <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/90" />
 
       <motion.div
@@ -64,11 +63,9 @@ export default function About() {
       >
         <div className="relative bg-white px-6 sm:px-10 py-14 overflow-hidden">
 
-          {/* Subtle decor */}
           <div className="absolute left-0 top-0 h-full w-px bg-black/10" />
           <div className="absolute right-0 bottom-0 w-6 h-6 border-r border-b border-black/20" />
 
-          {/* Language toggle */}
           <motion.button
             variants={fadeUp}
             onClick={() => setLang(lang === "en" ? "mn" : "en")}
@@ -77,7 +74,6 @@ export default function About() {
             {lang === "en" ? "Монгол" : "English"}
           </motion.button>
 
-          {/* MAIN LAYOUT */}
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-10 items-start">
 
             {/* Logo */}
@@ -88,7 +84,6 @@ export default function About() {
               className="w-24 sm:w-28 md:w-32 opacity-95"
             />
 
-            {/* Text */}
             <motion.div variants={fadeUp}>
               <h2 className="text-sm uppercase tracking-widest text-black/50">
                 About Us
@@ -101,7 +96,7 @@ export default function About() {
               </p>
             </motion.div>
 
-            {/* Desktop album images */}
+            {/* IMAGES */}
             <motion.div
               variants={fadeUp}
               className="relative hidden md:block w-64 h-44"
@@ -117,7 +112,7 @@ export default function About() {
             </motion.div>
           </div>
 
-          {/* Mobile album images */}
+          {/* IMAGES on mobile */}
           <motion.div
             variants={fadeUp}
             className="mt-8 grid grid-cols-1 gap-4 md:hidden"
@@ -131,23 +126,10 @@ export default function About() {
               style={{ backgroundImage: `url(${landingImage})` }}
             />
           </motion.div>
-
-          {/* MOBILE EVENT INFO (SMOOTH ADDITION) */}
           <motion.div
             variants={fadeUp}
             className="mt-10 md:hidden"
           >
-            <p className="text-sm leading-relaxed text-black/70">
-              We host two primary community events each year — a Christmas & New
-              Year celebration in the winter, followed by Naadam in the summer.
-            </p>
-
-            <p className="mt-4 text-sm leading-relaxed text-black/70">
-              Этүгэн Монголчууд жил бүр үндсэн хоёр арга хэмжээ зохион
-              байгуулдаг. Өвлийн улиралд Зул сар, Шинэ жилийн баяр, зуны
-              улиралд Наадам болдог.
-            </p>
-
             <div className="mt-6 flex flex-col gap-3">
               <button
                 onClick={scrollToContact}

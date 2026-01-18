@@ -7,7 +7,7 @@ import { events, getCardInfos } from "../static_gallery";
 
 const eventItems = getCardInfos(events);
 
-/* ---------- Motion ---------- */
+// motion and animation variants
 
 const container: Variants = {
   hidden: {},
@@ -32,7 +32,7 @@ export default function Gallery() {
       className="relative bg-cover bg-center overflow-hidden"
       style={{ backgroundImage: `url(${heroBg})` }}
     >
-      {/* Dark overlay */}
+      {/* cool dark overlay */}
       <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/90" />
 
       <motion.div
@@ -42,15 +42,14 @@ export default function Gallery() {
         viewport={{ once: true, amount: 0.25 }}
         className="relative z-10 max-w-7xl mx-auto px-6 py-24"
       >
-        {/* Header */}
         <motion.div variants={fadeUp} className="mb-10">
           <h3 className="text-white text-2xl md:text-3xl font-medium tracking-wide">
             Gallery
           </h3>
-          <div className="mt-3 h-[2px] w-14 bg-white/70" />
+          <div className="mt-3 h-0.5 w-14 bg-white/70" />
         </motion.div>
 
-        {/* MOBILE INDEX — PRIMARY */}
+        {/* mobile index */}
         <motion.div
           variants={fadeUp}
           className="md:hidden bg-white px-6 py-6 mb-12"
@@ -77,10 +76,9 @@ export default function Gallery() {
           </div>
         </motion.div>
 
-        {/* MAIN LAYOUT */}
         <div className="relative flex gap-12">
 
-          {/* DESKTOP INDEX — VERTICAL */}
+          {/* index */}
           <motion.div
             variants={fadeUp}
             className="hidden md:flex bg-white px-6 py-8 flex-col gap-5 shrink-0"
@@ -106,7 +104,6 @@ export default function Gallery() {
             ))}
           </motion.div>
 
-          {/* ALBUM STRIP */}
           <motion.div
             variants={container}
             className="
@@ -141,7 +138,7 @@ export default function Gallery() {
                       `}
                     >
                       <img
-                        src={item.cover_img}
+                        src={`/gallery/${item.id}/albumphotos/1.png`}
                         alt={item.title}
                         className="
                           h-full w-full object-cover
@@ -149,8 +146,8 @@ export default function Gallery() {
                           group-hover:scale-105
                         "
                       />
-                      <div className="absolute inset-0 bg-black/25" />
                     </div>
+
                     <div className="max-w-[280px]">
                       <h4 className="text-sm font-medium text-white/90">
                         {item.title}

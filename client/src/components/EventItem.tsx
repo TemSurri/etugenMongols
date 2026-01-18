@@ -28,7 +28,6 @@ export default function Event({
   description,
   description_en,
   image,
-  whoWeWant,
   contactEmail,
   contactPhone,
 }: EventItem) {
@@ -99,7 +98,7 @@ export default function Event({
             <div>
               <div className="border border-black/10 p-2">
                 <img
-                  src={`/event_assets/${image}`}
+                  src={`/upcoming_event_assets/${image}`}
                   alt={title}
                   className="w-full max-h-[36vh] object-contain"
                 />
@@ -122,18 +121,6 @@ export default function Event({
                   </a>
                 </div>
               )}
-
-              {whoWeWant && (
-                <div className="hidden lg:block mt-6">
-                  <p className="text-xs uppercase tracking-widest text-black/50">
-                    Help Needed
-                  </p>
-                  <div className="mt-2 h-px w-10 bg-black/30" />
-                  <p className="mt-3 text-sm text-black/80">
-                    {whoWeWant}
-                  </p>
-                </div>
-              )}
             </div>
 
             <div className="max-w-xl">
@@ -146,18 +133,6 @@ export default function Event({
               <p className="mt-4 text-sm sm:text-base leading-relaxed text-black/80 whitespace-pre-line">
                 {lang === "mn" ? description : description_en}
               </p>
-
-              {whoWeWant && (
-                <div className="lg:hidden mt-6">
-                  <p className="text-xs uppercase tracking-widest text-black/50">
-                    Help Needed
-                  </p>
-                  <div className="mt-2 h-px w-10 bg-black/30" />
-                  <p className="mt-3 text-sm text-black/80">
-                    {whoWeWant}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
 

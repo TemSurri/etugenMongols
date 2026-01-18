@@ -10,7 +10,6 @@ export default function Header() {
   const [isDesktop, setIsDesktop] = useState(false);
   const lastScrollY = useRef(0);
 
-  /* ---------- Detect desktop ---------- */
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
     check();
@@ -18,7 +17,6 @@ export default function Header() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  /* ---------- Scroll behavior ---------- */
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;

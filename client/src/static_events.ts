@@ -1,3 +1,8 @@
+export type Listing = {
+  title: string;
+  description: string;
+}
+
 export type EventItem = {
   id: string;
   title: string;
@@ -6,7 +11,7 @@ export type EventItem = {
   description: string;
   description_en: string;
   image: string;
-  whoWeWant?: string;
+  whoWeWant: Listing[];
   contactEmail?: string;
   contactPhone?: string;
 };
@@ -18,10 +23,15 @@ export type CardItem = {
   link: string;
 };
 
+export type OrganizedListing = {
+  listing: Listing;
+  id: string;
+}
 export const events: EventItem[] = [
- {
+
+  {
     //basic info
-    id: "nssgskbajkdam-2025",
+    id: "id15",
     title: "Winter Party 2025",
     date: "December 26 — 5:30 PM",
     location: "5811 46 St SE",
@@ -50,10 +60,24 @@ export const events: EventItem[] = [
     contactPhone: "587 435-4494",
 
     //whoWeWant
-    whoWeWant: "your mom"
-
-  },
+    whoWeWant: [
+      {
+      title: "dancer",
+      description: "dacer",
+      },
+      {
+      title: "dancer1",
+      description: "dance for the christmas event.",
+      },
+      {
+      title: "cleaners",
+      description: "pack food, prepare food, clean up afterwards",
+      }
   
+    ]
+
+  }
+ 
 ];
 
 export function getCardInfos(events: EventItem[]) {
@@ -68,4 +92,21 @@ export function getCardInfos(events: EventItem[]) {
     cardInfo.push(dict);
   }
   return cardInfo;
+}
+
+export function getListings(events: EventItem[]) {
+
+  let listings: OrganizedListing[] = []
+  for (let i = 0; i< events.length; i++ ){
+    for (let j = 0; j < events[i].whoWeWant.length; j++ ){
+      let data: OrganizedListing = {
+        id: events[i].id,
+        listing: events[i].whoWeWant[j]
+      }
+      listings.push(
+        data
+      )  
+    }
+  }
+  return listings
 }

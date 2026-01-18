@@ -10,11 +10,11 @@ import landingImage from "../assets/landingpage.webp";
 /* ---------- Motion ---------- */
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: "easeOut" },
+    transition: { duration: 0.35, ease: "easeOut" },
   },
 };
 
@@ -24,16 +24,23 @@ const overlayFade: Variants = {
   exit: { opacity: 0 },
 };
 
+
+
+/* ---------- Gallery Pagination ---------- */
+
+const IMAGES_PER_PAGE = 6;
+
 export default function GalleryItem({
   id,
   title,
   date,
   location,
-  description,
   albumImageCount,
+  activities,
 }: GalleryItemType) {
   const albumBasePath = `/gallery/${id}/albumphotos`;
 
+  const TIMELINE_ITEMS = activities
   const images =
     albumImageCount > 0
       ? Array.from(
@@ -43,6 +50,13 @@ export default function GalleryItem({
       : [];
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
+
+  const pageCount = Math.ceil(images.length / IMAGES_PER_PAGE);
+  const pagedImages = images.slice(
+    page * IMAGES_PER_PAGE,
+    page * IMAGES_PER_PAGE + IMAGES_PER_PAGE
+  );
 
   const next = () =>
     setActiveIndex((i) => (i === null ? 0 : (i + 1) % images.length));
@@ -60,9 +74,14 @@ export default function GalleryItem({
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/95" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-10">
         {/* Back */}
-        <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-6">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="mb-6"
+        >
           <Link
             to="/"
             className="text-xs uppercase tracking-widest text-white/70 hover:text-white transition"
@@ -76,83 +95,105 @@ export default function GalleryItem({
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="bg-white shadow-2xl overflow-hidden"
+          className="bg-white shadow-2xl"
         >
-          {/* VIDEO HERO */}
-          <div className="relative aspect-video bg-black">
-            <iframe
-              className="absolute inset-0 w-full h-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              title="Event video"
-              allowFullScreen
-            />
-          </div>
-
-          {/* CONTENT */}
-          <div className="px-6 sm:px-10 py-10">
+          <div className="px-6 sm:px-10 py-8">
             {/* HEADER */}
-            <header className="max-w-3xl mb-8">
+            <header className="max-w-3xl mb-10">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase tracking-wider text-black">
                 {title}
               </h1>
 
-              <div className="mt-4 h-px w-16 bg-black" />
-
-              <div className="mt-4 flex flex-wrap gap-4 text-xs uppercase tracking-widest text-black/60">
+              <div className="mt-3 flex flex-wrap gap-3 text-xs uppercase tracking-widest text-black/50">
                 {date && <span>{date}</span>}
                 {location && <span>• {location}</span>}
               </div>
             </header>
 
-            {/* DESCRIPTION */}
-            {description && (
-              <div className="max-w-3xl mb-12">
-                <div className="flex gap-6">
-                  <div className="w-px bg-black/20" />
-                  <p className="text-sm sm:text-base leading-relaxed text-black/70">
-                    {description}
-                  </p>
+            {/* MAIN CONTENT */}
+            <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12">
+              {/* LEFT: VIDEO + TIMELINE */}
+              <div>
+                {/* VIDEO */}
+                <div className="relative aspect-video bg-black overflow-hidden">
+                  <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                    title="Event video"
+                    allowFullScreen
+                  />
+                </div>
+
+                {/* TIMELINE (clean, no bullets) */}
+                <div className="mt-10 space-y-4">
+                  {TIMELINE_ITEMS.map((item, i) => (
+                    <p
+                      key={i}
+                      className="text-sm sm:text-base text-black/70 leading-relaxed"
+                    >
+                      {item}
+                    </p>
+                  ))}
                 </div>
               </div>
-            )}
 
-            {/* PHOTO ALBUM */}
-            {images.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {images.map((img, i) => {
-                  const layout =
-                    i === 0
-                      ? "col-span-2 row-span-2"
-                      : i === 3
-                      ? "col-span-2"
-                      : "col-span-1";
+              {/* RIGHT: GALLERY */}
+              {images.length > 0 && (
+                <div>
+                  <div className="grid grid-cols-3 gap-4">
+                    {pagedImages.map((img, i) => {
+                      const realIndex = page * IMAGES_PER_PAGE + i;
+                      return (
+                        <button
+                          key={img}
+                          onClick={() => setActiveIndex(realIndex)}
+                          className="relative aspect-square overflow-hidden group"
+                        >
+                          <img
+                            src={img}
+                            alt={`${title} photo ${realIndex + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition" />
+                        </button>
+                      );
+                    })}
+                  </div>
 
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => setActiveIndex(i)}
-                      className={`relative overflow-hidden group ${layout}`}
-                    >
-                      <img
-                        src={img}
-                        alt={`${title} photo ${i + 1}`}
-                        className="
-                          w-full h-full object-cover
-                          transition-transform duration-500
-                          group-hover:scale-105
-                        "
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+                  {/* PAGINATION (larger cap, calmer) */}
+                  {pageCount > 1 && (
+                    <div className="mt-10 pt-6 border-t border-black/10 flex items-center justify-between text-xs uppercase tracking-widest text-black/50">
+                      <button
+                        onClick={() => setPage((p) => Math.max(0, p - 1))}
+                        disabled={page === 0}
+                        className="hover:text-black transition disabled:opacity-30"
+                      >
+                        ← Previous
+                      </button>
+
+                      <span className="text-[11px]">
+                        Page {page + 1} of {pageCount}
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          setPage((p) => Math.min(pageCount - 1, p + 1))
+                        }
+                        disabled={page === pageCount - 1}
+                        className="hover:text-black transition disabled:opacity-30"
+                      >
+                        Next →
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>
 
-      {/* FOCUS / SLIDESHOW */}
+      {/* SLIDESHOW OVERLAY (unchanged) */}
       <AnimatePresence>
         {activeIndex !== null && images.length > 0 && (
           <motion.div
@@ -164,7 +205,7 @@ export default function GalleryItem({
             onClick={() => setActiveIndex(null)}
           >
             <motion.div
-              initial={{ scale: 0.97, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.25 }}
               className="relative"
