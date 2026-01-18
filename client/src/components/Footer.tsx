@@ -73,6 +73,17 @@ export default function Footer() {
                 About
               </button>
             </li>
+            
+            {!isDesktop && (
+              <li>
+                <button
+                  onClick={() => scrollWithOffset("gallery")}
+                  className="text-white/70 hover:text-white transition"
+                >
+                  Gallery
+                </button>
+              </li>
+            )}
           </ul>
         </div>
 

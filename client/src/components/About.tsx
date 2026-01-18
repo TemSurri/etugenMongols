@@ -6,21 +6,24 @@ import type { Variants } from "framer-motion";
 import landingImage from "../assets/landingpage.webp";
 import logo from "../assets/logo.webp";
 
-// motion and animation variants
+/* motion and animation variants */
 
 const container: Variants = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.08 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0, y: 8 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.35, ease: "easeOut" },
+    transition: {
+      duration: 0.22,
+      ease: [0.22, 1, 0.36, 1],
+    },
   },
 };
 
@@ -49,7 +52,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative w-full bg-cover bg-center"
+      className="relative w-full bg-cover bg-center overflow-hidden"
       style={{ backgroundImage: `url(${landingImage})` }}
     >
       <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/90" />
@@ -58,25 +61,37 @@ export default function About() {
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.35 }}
+        viewport={{ once: true, amount: 0.25 }}
         className="relative z-10 max-w-6xl mx-auto px-6 py-28"
       >
-        <div className="relative bg-white px-6 sm:px-10 py-14 overflow-hidden">
-
-          <div className="absolute left-0 top-0 h-full w-px bg-black/10" />
-          <div className="absolute right-0 bottom-0 w-6 h-6 border-r border-b border-black/20" />
+        <div
+          className="
+            relative
+            bg-white
+            px-6 sm:px-10
+            py-14
+            overflow-hidden
+            shadow-[0_30px_80px_rgba(0,0,0,0.25)]
+          "
+        >
+          {/* Decor lines */}
+          <div className="absolute inset-y-6 left-0 w-px bg-black/10" />
+          <div className="absolute bottom-4 right-4 w-8 h-8 border-r border-b border-black/20" />
 
           <motion.button
             variants={fadeUp}
             onClick={() => setLang(lang === "en" ? "mn" : "en")}
-            className="absolute right-4 top-4 text-xs uppercase tracking-wide text-black/50 hover:text-black transition"
+            className="
+              absolute right-4 top-4
+              w-[72px] text-right
+              text-xs uppercase tracking-wide
+              text-black/50 hover:text-black transition
+            "
           >
             {lang === "en" ? "Монгол" : "English"}
           </motion.button>
 
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-10 items-start">
-
-            {/* Logo */}
             <motion.img
               variants={fadeUp}
               src={logo}
@@ -84,71 +99,97 @@ export default function About() {
               className="w-24 sm:w-28 md:w-32 opacity-95"
             />
 
-            <motion.div variants={fadeUp}>
+            <motion.div
+              variants={fadeUp}
+              className="min-h-[150px] sm:min-h-[130px]"
+            >
               <h2 className="text-sm uppercase tracking-widest text-black/50">
                 About Us
               </h2>
 
               <div className="mt-4 h-0.5 w-14 bg-black" />
 
-              <p className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-black/75">
+              <p className="mt-6 max-w-xl text-sm sm:text-base leading-[1.75] text-black/70">
                 {TEXT}
               </p>
             </motion.div>
 
-            {/* IMAGES */}
+            {/* Images */}
             <motion.div
               variants={fadeUp}
-              className="relative hidden md:block w-64 h-44"
+              className="relative hidden md:block w-64 h-44 shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
             >
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${landingImage})` }}
               />
+              <div className="absolute inset-0 bg-black/10" />
+
               <div
-                className="absolute -bottom-6 -left-6 w-36 h-24 bg-cover bg-center border border-white"
+                className="absolute -bottom-6 -left-6 w-36 h-24 bg-cover bg-center border border-white shadow-lg"
                 style={{ backgroundImage: `url(${landingImage})` }}
-              />
+              >
+                <div className="absolute inset-0 bg-black/10" />
+              </div>
             </motion.div>
           </div>
-
-          {/* IMAGES on mobile */}
           <motion.div
             variants={fadeUp}
             className="mt-8 grid grid-cols-1 gap-4 md:hidden"
           >
             <div
-              className="h-44 bg-cover bg-center"
+              className="h-44 bg-cover bg-center shadow-md"
               style={{ backgroundImage: `url(${landingImage})` }}
             />
             <div
-              className="h-44 bg-cover bg-center"
+              className="h-44 bg-cover bg-center shadow-md"
               style={{ backgroundImage: `url(${landingImage})` }}
             />
           </motion.div>
-          <motion.div
-            variants={fadeUp}
-            className="mt-10 md:hidden"
-          >
-            <div className="mt-6 flex flex-col gap-3">
-              <button
-                onClick={scrollToContact}
-                className="w-fit px-6 py-3 text-xs font-semibold uppercase tracking-widest text-black border border-black/30 hover:border-black transition"
-              >
-                Contact Us
-              </button>
 
-              <button
-                onClick={scrollToGallery}
-                className="w-fit px-6 py-3 text-xs font-semibold uppercase tracking-widest text-black border border-black/30 hover:border-black transition"
-              >
-                View Event Gallery
-              </button>
+          <motion.div variants={fadeUp} className="mt-10 md:hidden">
+            <div className="flex flex-col gap-6">
+              <div>
+                <p className="mb-2 text-xs uppercase tracking-widest text-black/50">
+                  See Our Work
+                </p>
+                <button
+                  onClick={scrollToGallery}
+                  className="
+                    px-6 py-3
+                    text-xs font-semibold uppercase tracking-widest
+                    text-black
+                    border border-black/30
+                    hover:border-black
+                    transition
+                  "
+                >
+                  View Event Gallery
+                </button>
+              </div>
+              <div>
+                <p className="mb-2 text-xs uppercase tracking-widest text-black/50">
+                  Inquiries?
+                </p>
+                <button
+                  onClick={scrollToContact}
+                  className="
+                    px-6 py-3
+                    text-xs font-semibold uppercase tracking-widest
+                    text-black
+                    border border-black/30
+                    hover:border-black
+                    transition
+                  "
+                >
+                  Contact Us
+                </button>
+              </div>
             </div>
           </motion.div>
-
         </div>
       </motion.div>
     </section>
   );
 }
+
