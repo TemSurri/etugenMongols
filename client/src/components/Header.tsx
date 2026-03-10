@@ -12,6 +12,7 @@ export default function Header() {
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
+    console.log(isDesktop)
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);

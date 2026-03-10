@@ -3,6 +3,7 @@
 
 
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { FaFacebookF } from "react-icons/fa";
@@ -12,8 +13,7 @@ import { events, getCardInfos, getListings} from "../static_events";
 import type {OrganizedListing} from "../static_events";
 import About from "./About";
 
-const CONTACT_EMAIL = "etugenmongols@gmail.com";
-const CONTACT_PHONE = "+1 403 123 4567";
+const CONTACT_EMAIL = "calgarymongolians@gmail.com";
 
 // all animation variants
 
@@ -71,6 +71,8 @@ export default function Upcoming() {
 
   const [isDesktop, setIsDesktop] = useState(false);
 
+  const navigate = useNavigate();
+
   const eventItems= useMemo(() => getCardInfos(events), []);
   const Listings:OrganizedListing[] = useMemo(() => getListings(events), []);
   const hasEvents = eventItems.length > 0;
@@ -105,12 +107,13 @@ export default function Upcoming() {
     window.scrollTo({ top: y, behavior: "smooth" });
   };
 
-  const scrollToContact = () => {
-    const el = document.getElementById("contact");
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  };
+  
+  //const scrollToContact = () => {
+  //  const el = document.getElementById("contact");
+  //  if (!el) return;
+  //  const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
+  //  window.scrollTo({ top: y, behavior: "smooth" });
+  //};
 
   return (
     <>
@@ -123,6 +126,10 @@ export default function Upcoming() {
         style={{ backgroundImage: `url(${heroBg})` }}
       >
         <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/65 to-black/90" />
+
+
+        
+
 
         {/* White side panel (right half of desktop view) */}
         <motion.div
@@ -209,6 +216,20 @@ export default function Upcoming() {
               </button>
             </div>
 
+            {/* donate notice segment */}
+            <div className="h-px w-full bg-black/10 mt-5" />
+            <div className="mt-5 max-w-sm">
+          
+
+              <p className="text-[11px] uppercase tracking-[0.25em] text-black/50 mb-3">
+                Donate Notice
+              </p>
+
+              <p className="text-sm leading-relaxed text-black/70">
+                Donation support details will be available here soon. Your support helps us continue organizing cultural programs, events, and community gatherings.
+              </p>
+            </div>
+
 
             {/* contact segment*/}
             <div className="mt-5 max-w-sm">
@@ -232,32 +253,6 @@ export default function Upcoming() {
                   "
                 >
                   Email · {CONTACT_EMAIL}
-                </a>
-                <a
-                  href={`sms:${CONTACT_PHONE.replace(/\s+/g, "")}`}
-                  className="
-                    inline-flex items-center
-                    text-xs
-                    px-4 py-2
-                    border border-black/30
-                    text-black/70
-                    hover:border-black
-                    transition
-                  "
-                >
-                  Text · {CONTACT_PHONE}
-                </a>
-                <a
-                  href={`tel:${CONTACT_PHONE.replace(/\s+/g, "")}`}
-                  className="
-                    text-[11px]
-                    text-black/50
-                    hover:text-black
-                    transition
-                    pl-1
-                  "
-                >
-                  Or call instead
                 </a>
               </div>
               <div className="h-px w-full bg-black/10 mt-5" />
@@ -376,7 +371,7 @@ export default function Upcoming() {
                 variants={noEventsVariants}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: false, amount: 0.35 }}
+                viewport={{ once: true, amount: 0.35 }}
                 className="min-h-[100px] md:min-h-[100px] flex items-center"
               >
 
@@ -484,7 +479,7 @@ export default function Upcoming() {
                   key={i}
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  //onClick={() => navigate(`/events/${item.id}`)}
+                  onClick={() => navigate(`/events/${item.id}`)}
                   className="
                     relative
                     w-full
@@ -518,7 +513,7 @@ export default function Upcoming() {
                       ${hoveredIndex === i ? "opacity-100" : "opacity-0"}
                     `}
                   >
-                    {item.listing.description}
+                    {item.listing.title_mn}
                   </span>
                 </button>
               ))}
@@ -604,7 +599,7 @@ export default function Upcoming() {
             {Listings.map((item, i) => (
               <button
                 key={i}
-                onClick={scrollToContact}
+                onClick={() => navigate(`/events/${item.id}`)}
                 className="
                   w-full
                   text-left

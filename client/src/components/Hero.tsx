@@ -62,7 +62,7 @@ export default function Hero() {
       style={{ backgroundImage: `url(${heroBg})` }}
     >
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
-
+      
       {/* Title and descriptions + btn (left side) */}
       <div className="relative z-10 h-full max-w-7xl mx-auto px-6 md:px-10 md:pr-[35%] flex items-center">
         <motion.div

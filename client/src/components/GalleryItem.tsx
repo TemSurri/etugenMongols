@@ -1,20 +1,24 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import type { GalleryItem as GalleryItemType } from "../static_gallery";
-import landingImage from "../assets/landingpage.webp";
 
 /* ---------- Motion ---------- */
+
+const pageFade: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
+};
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.35, ease: "easeOut" },
+    transition: { duration: 0.3, ease: "easeOut" },
   },
 };
 
@@ -24,10 +28,6 @@ const overlayFade: Variants = {
   exit: { opacity: 0 },
 };
 
-
-
-/* ---------- Gallery Pagination ---------- */
-
 const IMAGES_PER_PAGE = 6;
 
 export default function GalleryItem({
@@ -36,166 +36,232 @@ export default function GalleryItem({
   date,
   location,
   albumImageCount,
-  activities,
+  description,
+  activities = [],
 }: GalleryItemType) {
   const albumBasePath = `/gallery/${id}/albumphotos`;
 
-  const TIMELINE_ITEMS = activities
-  const images =
-    albumImageCount > 0
-      ? Array.from(
-          { length: albumImageCount },
-          (_, i) => `${albumBasePath}/${i + 1}.png`
-        )
-      : [];
+  /* ---------- Data ---------- */
+
+  const images = useMemo(
+    () =>
+      Array.from({ length: albumImageCount }, (_, i) =>
+        `${albumBasePath}/${i + 1}.png`
+      ),
+    [albumImageCount, albumBasePath]
+  );
+
+  const backgroundImage = images[0];
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [page, setPage] = useState(0);
 
   const pageCount = Math.ceil(images.length / IMAGES_PER_PAGE);
-  const pagedImages = images.slice(
-    page * IMAGES_PER_PAGE,
-    page * IMAGES_PER_PAGE + IMAGES_PER_PAGE
+
+  const pagedImages = useMemo(
+    () =>
+      images.slice(
+        page * IMAGES_PER_PAGE,
+        page * IMAGES_PER_PAGE + IMAGES_PER_PAGE
+      ),
+    [images, page]
   );
 
-  const next = () =>
-    setActiveIndex((i) => (i === null ? 0 : (i + 1) % images.length));
+  /* ---------- Slideshow navigation ---------- */
 
-  const prev = () =>
+  const next = useCallback(() => {
+    setActiveIndex((i) => (i === null ? 0 : (i + 1) % images.length));
+  }, [images.length]);
+
+  const prev = useCallback(() => {
     setActiveIndex((i) =>
       i === null ? 0 : (i - 1 + images.length) % images.length
     );
+  }, [images.length]);
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "Escape") setActiveIndex(null);
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeIndex, next, prev]);
+
+  /* ---------- Shared Info Card ---------- */
+  const InfoCard = (
+    <div
+      className="
+        backdrop-blur-lg bg-white/65
+        border border-white/40
+        rounded-md
+        shadow-lg
+        ring-1 ring-white/30
+        p-6 space-y-8
+      "
+    >
+      {/* Video */}
+      <div className="relative aspect-video bg-black rounded-sm overflow-hidden shadow-md">
+        <iframe
+          className="absolute inset-0 w-full h-full"
+          loading="lazy"
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          allowFullScreen
+        />
+      </div>
+
+      {/* Event Summary */}
+      {description && (
+        <div className="space-y-2">
+          <div className="text-[11px] uppercase tracking-widest text-black/55">
+            Event Summary
+          </div>
+          <div className="text-sm text-black/75 leading-relaxed">
+            {description}
+          </div>
+        </div>
+      )}
+
+      {/* Activities */}
+      {activities.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-[11px] uppercase tracking-widest text-black/55">
+            Activities & Amenities
+          </div>
+          <div className="max-h-36 overflow-y-auto pr-2 text-sm text-black/70 space-y-2">
+            {activities.map((a, i) => (
+              <p key={i}>{a}</p>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <article
-      className="relative min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${landingImage})` }}
+    <motion.article
+      variants={pageFade}
+      initial="hidden"
+      animate="show"
+      className="relative min-h-screen"
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/95" />
+      {/* Background */}
+      {backgroundImage && (
+        <img
+          src={backgroundImage}
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+        />
+      )}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        {/* Back */}
+        {/* Main panel */}
         <motion.div
           variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="mb-6"
+          className="bg-white/70 border border-white/30 shadow-xl"
         >
-          <Link
-            to="/"
-            className="text-xs uppercase tracking-widest text-white/70 hover:text-white transition"
-          >
-            ← Back to events
-          </Link>
-        </motion.div>
+          <div className="px-6 sm:px-10 py-10">
+            {/* Back */}
+            <Link
+              to="/"
+              className="block mb-6 text-xs uppercase tracking-widest text-black/60 hover:text-black"
+            >
+              ← Back to home
+            </Link>
 
-        {/* WHITE PANEL */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          className="bg-white shadow-2xl"
-        >
-          <div className="px-6 sm:px-10 py-8">
-            {/* HEADER */}
+            {/* Header */}
             <header className="max-w-3xl mb-10">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase tracking-wider text-black">
+              <h1 className="text-3xl sm:text-4xl font-semibold uppercase tracking-wider text-black">
                 {title}
               </h1>
-
-              <div className="mt-3 flex flex-wrap gap-3 text-xs uppercase tracking-widest text-black/50">
+              <div className="mt-3 flex gap-3 text-[11px] uppercase tracking-widest text-black/60">
                 {date && <span>{date}</span>}
                 {location && <span>• {location}</span>}
               </div>
             </header>
 
-            {/* MAIN CONTENT */}
-            <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12">
-              {/* LEFT: VIDEO + TIMELINE */}
-              <div>
-                {/* VIDEO */}
-                <div className="relative aspect-video bg-black overflow-hidden">
-                  <iframe
-                    className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                    title="Event video"
-                    allowFullScreen
-                  />
-                </div>
+            {/* MOBILE INFO CARD */}
+            <div className="md:hidden mb-12">
+              {InfoCard}
+            </div>
 
-                {/* TIMELINE (clean, no bullets) */}
-                <div className="mt-10 space-y-4">
-                  {TIMELINE_ITEMS.map((item, i) => (
-                    <p
-                      key={i}
-                      className="text-sm sm:text-base text-black/70 leading-relaxed"
-                    >
-                      {item}
-                    </p>
-                  ))}
+            {/* Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] gap-14">
+              {/* DESKTOP STICKY CARD */}
+              <aside className="hidden md:block relative">
+                <div className="relative h-full">
+                  <div className="h-[41.5vh]" />
+                  <div className="md:sticky md:top-[calc(50%-30px)] md:-translate-y-1/2">
+                    {InfoCard}
+                  </div>
                 </div>
-              </div>
+              </aside>
 
-              {/* RIGHT: GALLERY */}
-              {images.length > 0 && (
-                <div>
-                  <div className="grid grid-cols-3 gap-4">
-                    {pagedImages.map((img, i) => {
-                      const realIndex = page * IMAGES_PER_PAGE + i;
-                      return (
-                        <button
-                          key={img}
-                          onClick={() => setActiveIndex(realIndex)}
-                          className="relative aspect-square overflow-hidden group"
-                        >
+              {/* ALBUM */}
+              <div className="space-y-16">
+                <div className="grid grid-cols-1 lg:grid-cols-2 auto-rows-[260px] gap-1.5">
+                  {pagedImages.map((img, i) => {
+                    const realIndex = page * IMAGES_PER_PAGE + i;
+                    const pattern = i % 6;
+
+                    const variety =
+                      pattern === 0
+                        ? "lg:col-span-2 lg:row-span-2"
+                        : pattern === 2
+                        ? "lg:row-span-2"
+                        : pattern === 4
+                        ? "lg:col-span-2"
+                        : "";
+
+                    return (
+                      <button
+                        key={img}
+                        onClick={() => setActiveIndex(realIndex)}
+                        className={`relative overflow-hidden bg-white rounded-sm shadow-md ${variety}`}
+                      >
+                        <div className="absolute inset-0 p-1.5 bg-white">
                           <img
                             src={img}
-                            alt={`${title} photo ${realIndex + 1}`}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                            className="w-full h-full object-cover"
                           />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition" />
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* PAGINATION (larger cap, calmer) */}
-                  {pageCount > 1 && (
-                    <div className="mt-10 pt-6 border-t border-black/10 flex items-center justify-between text-xs uppercase tracking-widest text-black/50">
-                      <button
-                        onClick={() => setPage((p) => Math.max(0, p - 1))}
-                        disabled={page === 0}
-                        className="hover:text-black transition disabled:opacity-30"
-                      >
-                        ← Previous
+                        </div>
                       </button>
+                    );
+                  })}
+                </div>
 
-                      <span className="text-[11px]">
-                        Page {page + 1} of {pageCount}
-                      </span>
-
-                      <button
-                        onClick={() =>
-                          setPage((p) => Math.min(pageCount - 1, p + 1))
-                        }
-                        disabled={page === pageCount - 1}
-                        className="hover:text-black transition disabled:opacity-30"
-                      >
-                        Next →
-                      </button>
-                    </div>
+                {/* Pagination */}
+                <div className="flex justify-between text-[11px] uppercase tracking-widest text-black/60">
+                  {page > 0 && (
+                    <button onClick={() => setPage(page - 1)}>
+                      ← Previous Page
+                    </button>
+                  )}
+                  {page < pageCount - 1 && (
+                    <button
+                      className="ml-auto"
+                      onClick={() => setPage(page + 1)}
+                    >
+                      Next Page →
+                    </button>
                   )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* SLIDESHOW OVERLAY (unchanged) */}
+      {/* Slideshow */}
       <AnimatePresence>
-        {activeIndex !== null && images.length > 0 && (
+        {activeIndex !== null && (
           <motion.div
             variants={overlayFade}
             initial="hidden"
@@ -204,39 +270,21 @@ export default function GalleryItem({
             className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
             onClick={() => setActiveIndex(null)}
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.25 }}
-              className="relative"
+            <div
+              className="flex items-center gap-10"
               onClick={(e) => e.stopPropagation()}
             >
+              <button onClick={prev} className="text-white text-5xl">‹</button>
               <img
                 src={images[activeIndex]}
-                alt="Focused view"
-                className="max-w-[90vw] max-h-[85vh] object-contain"
+                className="max-w-[88vw] max-h-[82vh] object-contain"
+                draggable={false}
               />
-
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs uppercase tracking-widest text-white/70">
-                {activeIndex + 1} / {images.length}
-              </div>
-
-              <button
-                onClick={prev}
-                className="absolute left-0 top-1/2 -translate-y-1/2 text-white text-4xl px-4"
-              >
-                ‹
-              </button>
-              <button
-                onClick={next}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-white text-4xl px-4"
-              >
-                ›
-              </button>
-            </motion.div>
+              <button onClick={next} className="text-white text-5xl">›</button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </article>
+    </motion.article>
   );
 }

@@ -4,7 +4,7 @@ export type GalleryItem = {
   date: string;
   location?: string;
   description: string;
-  cover_image: string;
+
   albumImageCount: number;
   activities: string[];
 };
@@ -28,22 +28,38 @@ export const events: GalleryItem[] = [
     description:
       "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
     //img
-    cover_image: 
-      "/gallery/naadam2022/covernaadam.jpg",
     albumImageCount:
     10,
     activities: [
-      'hwllo',
-      'hwllo',
-      'monwy',
-      'hwllo',
-      'hwllo',
-      'monwy',
-      'hwllo',
-      'monwy'
+      'wrestling',
+      'fetival',
+      'celbtefef',
+      'wdadadada',
     ]
     
   },
+  {
+    //identifier
+    id: "childrenswp2024",
+    //basic info
+    title: "Childrens Winter Party 2024",
+    date: "July 11, 2022",
+    location: "Calgary, Alberta",
+    description:
+      "//",
+    //img
+    
+    albumImageCount:
+    10,
+    activities: [
+      'wrestling',
+      'fetival',
+      'celbtefef',
+      'wdadadada',
+    ]
+    
+  },
+ 
 ];
 
 export function getCardInfos(events: GalleryItem[]) {

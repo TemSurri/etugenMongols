@@ -39,7 +39,7 @@ export default function Gallery() {
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.25 }}
+        viewport={{ once: false, amount: 0.25 }}
         className="relative z-10 max-w-7xl mx-auto px-6 py-24"
       >
         <motion.div variants={fadeUp} className="mb-10">

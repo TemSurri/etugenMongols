@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import heroBg from "../assets/landingpage.webp";
-import { FaFacebook, FaEnvelope, FaPhone } from "react-icons/fa";
+import { FaFacebook, FaEnvelope } from "react-icons/fa";
 
 export default function CTA() {
   const container = {
@@ -67,7 +67,7 @@ export default function CTA() {
           {/* Email */}
           <motion.a
             variants={fadeChild}
-            href="mailto:info@etugenmongols.ca"
+            href="mailto:calgarymongolians@gmail.com"
             className="
               flex items-center justify-center gap-3
               px-8 sm:px-10 py-3 sm:py-4
@@ -81,27 +81,7 @@ export default function CTA() {
             "
           >
             <FaEnvelope size={18} className="shrink-0" />
-            <span className="truncate">info@etugenmongols.ca</span>
-          </motion.a>
-
-          {/* Phone */}
-          <motion.a
-            variants={fadeChild}
-            href="tel:+14031234567"
-            className="
-              flex items-center justify-center gap-3
-              px-8 sm:px-10 py-3 sm:py-4
-              text-sm sm:text-base md:text-lg font-semibold uppercase tracking-wide
-              whitespace-nowrap overflow-hidden text-ellipsis max-w-full
-              text-white bg-black/40 backdrop-blur-sm
-              border border-white/30
-              hover:bg-black/60 hover:border-[#293305]
-              transition duration-300
-              w-full md:w-auto
-            "
-          >
-            <FaPhone size={18} className="shrink-0" />
-            <span className="truncate">+1 (403) 123-4567</span>
+            <span className="truncate">calgarymongolians@gmail</span>
           </motion.a>
 
           {/* Facebook */}
