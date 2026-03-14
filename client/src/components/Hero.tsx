@@ -118,20 +118,24 @@ export default function Hero() {
           </motion.p>
 
 
-          <motion.button
-            variants={textItem}
-            onClick={() => scrollWithOffset("upcoming")}
-            className="
-              inline-flex mt-16 px-12 py-4
-              text-base font-semibold uppercase tracking-widest
-              text-white bg-black/40 backdrop-blur-sm
-              border border-white/30
-              hover:bg-black/60
-              transition-all duration-300
-            "
-          >
-            See Upcoming Events
-          </motion.button>
+          <motion.div variants={textItem} className="mt-16">
+            <button
+              onClick={() => scrollWithOffset("upcoming")}
+              className="
+                inline-flex px-12 py-4
+                text-base font-semibold uppercase tracking-widest
+                text-white bg-black/40
+                border border-white/30
+              "
+            >
+              See Upcoming Events
+            </button>
+
+          </motion.div>
+
+
+
+
         </motion.div>
       </div>
 

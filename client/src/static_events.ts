@@ -51,117 +51,100 @@ export type OrganizedListing = {
 //LIST OF EVENTS
 export const events: EventItem[] = [
 
-/* ---------------- NAADAM FESTIVAL ---------------- */
-
 {
-  id: "naadam2026-main",
-  title: "Naadam Festival 2026",
-  date: "July 12, 2026",
-  time: "11:00 AM - 7:00 PM",
-  location: "Prince's Island Park, Calgary",
+  id: "mongolian-cultural-night-2026",
+  title: "Mongolian Cultural Night",
+  date: "September 20, 2026",
+  time: "6:30 PM - 9:30 PM",
+  location: "University of Calgary Community Hall",
 
-  onlinePay: false,
-  donate: true,
+  onlinePay: true,
+  donate: false,
 
   description:
-`Манай зуны хамгийн том баяр болох Наадамд хүрэлцэн ирэхийг урьж байна.
-Энэхүү баяр нь Монголын уламжлалт соёл, спорт, урлагийг танилцуулах зорилготой.
+`Монгол соёлын үдэшлэгт хүрэлцэн ирээрэй.
 
-Арга хэмжээнд дараах зүйлс багтана:
-• Монгол бөхийн барилдаан
-• Сур харваа
+Энэ үдэш Монголын урлаг, дуу хөгжим, бүжиг болон уламжлалт соёлыг танилцуулна.
+
+Хөтөлбөр:
 • Морин хуурын тоглолт
-• Монгол хоолны асрууд
-• Хүүхдийн тоглоом наадам
+• Уртын дуу
+• Монгол бүжгийн үзүүлбэр
+• Соёлын танилцуулга
 
-Наадам нь гэр бүл, найз нөхөд, олон нийт цуглаж Монгол соёлоо хуваалцах сайхан боломж юм.`,
+Арга хэмжээ нь Монгол соёлыг олон нийтэд таниулах зорилготой.`,
 
   description_en:
-`Join us for Calgary's annual Mongolian Naadam Festival — the largest gathering of the Mongolian community in the region.
+`Experience an evening dedicated to Mongolian culture and artistic expression.
 
-The event will feature traditional sports, cultural performances, food vendors, and family activities including:
+This event will feature live performances and presentations showcasing traditional Mongolian music, dance, and storytelling.
 
-• Mongolian wrestling matches
-• Archery demonstrations
-• Live morin khuur performances
-• Authentic Mongolian food stalls
-• Children's games and cultural workshops
+Program highlights include:
 
-This event is free to attend and open to everyone interested in learning about Mongolian culture.`,
+• Morin khuur instrumental performances
+• Traditional long song (Urtiin Duu)
+• Mongolian folk dance
+• Cultural presentations about Mongolian history and traditions
+
+This event is ideal for anyone interested in learning more about Mongolia's cultural heritage.`,
 
   description_ticket:
-`Тасалбар шаардахгүй.
-Хандив өгөх боломжтой.
+`Тасалбар: $20
 
-Сайн дурын хандив нь:
-• Тайзны төхөөрөмж
+Суудал хязгаартай тул урьдчилан бүртгүүлэх шаардлагатай.
+
+Тасалбарын орлого нь:
 • Соёлын хөтөлбөрүүд
-• Хүүхдийн үйл ажиллагаа
-• Нийгэмлэгийн үйл ажиллагаанд
+• Уран бүтээлчдийн зардал
+• Ирээдүйн арга хэмжээнүүдэд
 
 зарцуулагдана.`,
 
   description_ticket_en:
-`No ticket required.
+`Ticket price: $20
 
-Donations are welcome and help support:
+Seats are limited. Advance registration is recommended.
 
-• Cultural performances
-• Community programming
-• Equipment and logistics
-• Youth activities and workshops`,
+Ticket revenue supports:
 
-  image: "naadam2026.png",
+• Cultural programming
+• Artist travel and performance costs
+• Future community events.`,
+
+  image: "winterparty.png",
 
   contactEmail: "calgarymongolians@gmail.com",
-  contactPhone: ["403-921-8821", "587-435-4494"],
+  contactPhone: ["587-435-4494"],
 
   whoWeWant: [
 
     {
-      title: "Entrance Coordination",
-      title_mn: "Орох хэсгийн зохион байгуулалт",
+      title: "Backstage Assistant",
+      title_mn: "Тайзны арын туслах",
       description:
-      "Welcome visitors, provide basic event information, and guide guests to the correct areas inside the festival grounds.",
-      contact: "403-921-8821",
-    },
-
-    {
-      title: "Children's Games Assistant",
-      title_mn: "Хүүхдийн тоглоомын туслах",
-      description:
-      "Help organize traditional games for children and supervise activity areas.",
-      contact: "403-921-8821",
-    },
-
-    {
-      title: "Food Area Coordinator",
-      title_mn: "Хоолны хэсгийн зохицуулагч",
-      description:
-      "Assist food vendors, organize food lines, and help maintain cleanliness in the food area.",
+      "Help performers prepare and move between backstage and stage areas.",
       contact: "587-435-4494",
     },
 
     {
-      title: "Stage Crew",
-      title_mn: "Тайзны баг",
+      title: "Stage Manager",
+      title_mn: "Тайзны зохицуулагч",
       description:
-      "Help coordinate performances, assist performers backstage, and manage stage transitions.",
+      "Coordinate performance order and help manage stage timing.",
       contact: "587-435-4494",
     },
 
     {
-      title: "Clean-up Team",
-      title_mn: "Цэвэрлэгээний баг",
+      title: "Photography Volunteer",
+      title_mn: "Зураг авалтын сайн дурын ажилтан",
       description:
-      "Help collect waste, pack equipment, and restore the park area after the event concludes.",
-      contact: "403-921-8821",
+      "Capture photos and short video clips for community archives and social media.",
+      contact: "587-435-4494",
     }
 
   ],
-},
 
-/* ---------------- CULTURAL NIGHT ---------------- */
+},
 
 {
   id: "mongolian-cultural-night-2026",
@@ -223,7 +206,7 @@ Ticket revenue supports:
 • Artist travel and performance costs
 • Future community events.`,
 
-  image: "culturalnight2026.png",
+  image: "winterparty.png",
 
   contactEmail: "calgarymongolians@gmail.com",
   contactPhone: ["587-435-4494"],
@@ -255,76 +238,102 @@ Ticket revenue supports:
     }
 
   ],
+
 },
 
-/* ---------------- WINTER CELEBRATION ---------------- */
-
 {
-  id: "winter-celebration-2026",
-  title: "Mongolian Winter Celebration",
-  date: "December 28, 2026",
-  time: "5:00 PM - 10:00 PM",
-  location: "Calgary Community Cultural Centre",
+  id: "mongolian-cultural-night-2026",
+  title: "Mongolian Cultural Night",
+  date: "September 20, 2026",
+  time: "6:30 PM - 9:30 PM",
+  location: "University of Calgary Community Hall",
 
   onlinePay: true,
-  donate: true,
+  donate: false,
 
   description:
-`Өвлийн баярын арга хэмжээнд та бүхнийг урьж байна.
+`Монгол соёлын үдэшлэгт хүрэлцэн ирээрэй.
 
-Энэхүү арга хэмжээ нь:
-• Зул сар
-• Шинэ жил
-• Монгол нийгэмлэгийн уулзалт
+Энэ үдэш Монголын урлаг, дуу хөгжим, бүжиг болон уламжлалт соёлыг танилцуулна.
 
-зэрэг баяруудыг хамтад нь тэмдэглэх зорилготой.`,
+Хөтөлбөр:
+• Морин хуурын тоглолт
+• Уртын дуу
+• Монгол бүжгийн үзүүлбэр
+• Соёлын танилцуулга
+
+Арга хэмжээ нь Монгол соёлыг олон нийтэд таниулах зорилготой.`,
 
   description_en:
-`Celebrate the winter season together with the Mongolian community in Calgary.
+`Experience an evening dedicated to Mongolian culture and artistic expression.
 
-This event combines holiday festivities, community celebration, and cultural programming in a warm indoor setting.`,
+This event will feature live performances and presentations showcasing traditional Mongolian music, dance, and storytelling.
+
+Program highlights include:
+
+• Morin khuur instrumental performances
+• Traditional long song (Urtiin Duu)
+• Mongolian folk dance
+• Cultural presentations about Mongolian history and traditions
+
+This event is ideal for anyone interested in learning more about Mongolia's cultural heritage.`,
 
   description_ticket:
-`Тасалбар: $15
+`Тасалбар: $20
 
-Хүүхдүүдэд үнэгүй.`,
+Суудал хязгаартай тул урьдчилан бүртгүүлэх шаардлагатай.
+
+Тасалбарын орлого нь:
+• Соёлын хөтөлбөрүүд
+• Уран бүтээлчдийн зардал
+• Ирээдүйн арга хэмжээнүүдэд
+
+зарцуулагдана.`,
 
   description_ticket_en:
-`Tickets: $15
-Children under 12 attend free.`,
+`Ticket price: $20
 
-  image: "wintercelebration2026.png",
+Seats are limited. Advance registration is recommended.
+
+Ticket revenue supports:
+
+• Cultural programming
+• Artist travel and performance costs
+• Future community events.`,
+
+  image: "winterparty.png",
 
   contactEmail: "calgarymongolians@gmail.com",
-  contactPhone: ["403-921-8821"],
+  contactPhone: ["587-435-4494"],
 
   whoWeWant: [
 
     {
-      title: "Decoration Team",
-      title_mn: "Чимэглэлийн баг",
+      title: "Backstage Assistant",
+      title_mn: "Тайзны арын туслах",
       description:
-      "Help decorate the venue with holiday and Mongolian themed decorations.",
-      contact: "403-921-8821",
+      "Help performers prepare and move between backstage and stage areas.",
+      contact: "587-435-4494",
     },
 
     {
-      title: "Food Preparation Assistant",
-      title_mn: "Хоол бэлтгэлийн туслах",
+      title: "Stage Manager",
+      title_mn: "Тайзны зохицуулагч",
       description:
-      "Assist with preparing and organizing food for guests.",
-      contact: "403-921-8821",
+      "Coordinate performance order and help manage stage timing.",
+      contact: "587-435-4494",
     },
 
     {
-      title: "Event Setup Crew",
-      title_mn: "Арга хэмжээний бэлтгэл",
+      title: "Photography Volunteer",
+      title_mn: "Зураг авалтын сайн дурын ажилтан",
       description:
-      "Help arrange tables, chairs, and stage equipment before the event.",
-      contact: "403-921-8821",
+      "Capture photos and short video clips for community archives and social media.",
+      contact: "587-435-4494",
     }
 
   ],
+
 }
 
 ];

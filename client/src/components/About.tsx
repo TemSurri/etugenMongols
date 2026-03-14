@@ -99,19 +99,18 @@ export default function About() {
               className="w-24 sm:w-28 md:w-32 opacity-95"
             />
 
-            <motion.div
-              variants={fadeUp}
-              className="min-h-[150px] sm:min-h-[130px]"
-            >
+            <motion.div variants={fadeUp}>
               <h2 className="text-sm uppercase tracking-widest text-black/50">
                 About Us
               </h2>
 
               <div className="mt-4 h-0.5 w-14 bg-black" />
 
-              <p className="mt-6 max-w-xl text-sm sm:text-base leading-[1.75] text-black/70">
-                {TEXT}
-              </p>
+              <div className="mt-6 max-w-xl min-h-[130px] sm:min-h-40">
+                <p className="text-sm sm:text-base leading-[1.75] text-black/70">
+                  {TEXT}
+                </p>
+              </div>
             </motion.div>
 
             {/* Images */}

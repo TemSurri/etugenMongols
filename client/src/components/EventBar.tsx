@@ -173,9 +173,11 @@ export default function Upcoming() {
 
               <div className="mt-4 h-0.5 w-14 bg-black" />
 
-              <p className="mt-6 text-sm leading-relaxed text-black/75">
-                {ABOUT_TEXT}
-              </p>
+              <div className="mt-6 min-h-[140px]">
+                <p className="text-sm leading-relaxed text-black/75">
+                  {ABOUT_TEXT}
+                </p>
+              </div>
 
               <div className="mt-10 grid grid-cols-2 gap-3">
                 <div className="h-28 overflow-hidden bg-black/10">
@@ -351,7 +353,7 @@ export default function Upcoming() {
                   transition={{ type: "spring", stiffness: 260, damping: 24 }}
                   className="w-full md:w-auto md:shrink-0 md:snap-start"
                 >
-                  <div className="group w-full md:min-w-[300px] lg:min-w-[340px] bg-black/40 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                  <div className="group w-full max-w-[400px] md:min-w-[400px] lg:min-w-[340px] bg-black/40 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                     <div className="relative h-56 overflow-hidden">
                       <img
                         src={`/upcoming_event_assets/${item.img}`}
@@ -439,7 +441,7 @@ export default function Upcoming() {
               {eventsLang === "en" ? "Монгол" : "English"}
             </button>
 
-            <div className="min-h-24">
+            <div className="h-[120px]">
               <motion.p variants={textVariants} className="text-white/75 text-sm">
                 {eventsLang === "en"
                   ? "We host two primary community events each year — a Christmas & New Year celebration in the winter time, followed by Naadam in the summer time. Be sure to stay tuned with our socials."
@@ -572,23 +574,25 @@ export default function Upcoming() {
           </button>
         </div>
 
-        <motion.p
-          variants={textVariants}
-          className="mt-10 text-white/75 text-sm"
-        >
-          {eventsLang === "en"
-            ? "We host two primary community events each year — a Christmas & New Year celebration in the winter time, followed by Naadam in the summer time."
-            : "Этүгэн Монголчууд жил бүр үндсэн хоёр арга хэмжээ зохион байгуулдаг. Өвлийн улиралд Зул сар, Шинэ жилийн баяр, зуны улиралд Наадам болдог."}
-        </motion.p>
+        <div className="mt-10 h-[120px] overflow-hidden">
+          <motion.p
+            variants={textVariants}
+            className="text-white/75 text-sm"
+          >
+            {eventsLang === "en"
+              ? "We host two primary community events each year — a Christmas & New Year celebration in the winter time, followed by Naadam in the summer time."
+              : "Этүгэн Монголчууд жил бүр үндсэн хоёр арга хэмжээ зохион байгуулдаг. Өвлийн улиралд Зул сар, Шинэ жилийн баяр, зуны улиралд Наадам болдог."}
+          </motion.p>
 
-        <motion.p
-          variants={textVariants}
-          className="mt-4 text-white/75 text-sm"
-        >
-          {eventsLang === "en"
-            ? "We often require help from the community for our events. See current volunteer opportunities below."
-            : "Бид арга хэмжээнүүддээ олон нийтийн дэмжлэгийг тогтмол шаарддаг. Одоогийн сайн дурын ажлын боломжуудыг доороос үзнэ үү."}
-        </motion.p>
+          <motion.p
+            variants={textVariants}
+            className="mt-4 text-white/75 text-sm"
+          >
+            {eventsLang === "en"
+              ? "We often require help from the community for our events. See current volunteer opportunities below."
+              : "Бид арга хэмжээнүүддээ олон нийтийн дэмжлэгийг тогтмол шаарддаг. Одоогийн сайн дурын ажлын боломжуудыг доороос үзнэ үү."}
+          </motion.p>
+        </div>
 
         <p className="mt-15 text-white/60 text-sm uppercase tracking-widest">
           Event volunteer listings

@@ -191,15 +191,14 @@ export default function GalleryItem({
 
             {/* Layout */}
             <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] gap-14">
-              {/* DESKTOP STICKY CARD */}
+
+                            {/* DESKTOP STICKY CARD */}
               <aside className="hidden md:block relative">
-                <div className="relative h-full">
-                  <div className="h-[41.5vh]" />
-                  <div className="md:sticky md:top-[calc(50%-30px)] md:-translate-y-1/2">
-                    {InfoCard}
-                  </div>
+                <div className="md:sticky md:top-10">
+                  {InfoCard}
                 </div>
               </aside>
+
 
               {/* ALBUM */}
               <div className="space-y-16">
