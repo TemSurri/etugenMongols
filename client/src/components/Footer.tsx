@@ -1,44 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 export default function Footer() {
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  const scrollWithOffset = (id: string) => {
-    const targetId =
-      isDesktop && id === "about" ? "upcoming" : id;
-
-    const el = document.getElementById(targetId);
-    const headerHeight = 6;
-
-    if (el) {
-      const y =
-        el.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
-
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <footer className="bg-black text-white border-t border-white/10">
-      <div
-        className="
-          max-w-7xl mx-auto px-6
-          py-16
-          grid gap-12
-          md:grid-cols-3
-        "
-      >
-        {/* Brand */}
+      <div className="max-w-7xl mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
         <div>
           <h4 className="text-lg font-semibold tracking-[0.15em] uppercase">
             Etugen Mongols
@@ -49,7 +20,6 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Navigation */}
         <div>
           <h5 className="text-xs uppercase tracking-widest text-white/50 mb-5">
             Navigation
@@ -58,34 +28,48 @@ export default function Footer() {
           <ul className="space-y-3 text-sm">
             <li>
               <button
-                onClick={() => scrollWithOffset("upcoming")}
+                type="button"
+                onClick={() => scrollToSection("upcoming")}
                 className="text-white/70 hover:text-white transition"
               >
                 Events
               </button>
             </li>
 
-            <li>
+            {/* Mobile About */}
+            <li className="md:hidden">
               <button
-                onClick={() => scrollWithOffset("about")}
+                type="button"
+                onClick={() => scrollToSection("about")}
                 className="text-white/70 hover:text-white transition"
               >
                 About
               </button>
             </li>
-            
-            {!isDesktop && (
-              <li>
-                <button
-                  onClick={() => scrollWithOffset("gallery")}
-                  className="text-white/70 hover:text-white transition"
-                >
-                  Gallery
-                </button>
-              </li>
-            )}
+
+            {/* Desktop About */}
+            <li className="hidden md:block">
+              <button
+                type="button"
+                onClick={() => scrollToSection("upcoming")}
+                className="text-white/70 hover:text-white transition"
+              >
+                About
+              </button>
+            </li>
+
+            <li>
+              <button
+                type="button"
+                onClick={() => scrollToSection("gallery")}
+                className="text-white/70 hover:text-white transition"
+              >
+                Gallery
+              </button>
+            </li>
           </ul>
         </div>
+
         <div className="hidden md:block" />
       </div>
 

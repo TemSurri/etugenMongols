@@ -59,9 +59,9 @@ export default function Gallery() {
           </span>
 
           <div className="flex flex-col gap-3">
-            {eventItems.map((item, i) => (
+            {eventItems.map((item) => (
               <a
-                key={i}
+                key={item.id}
                 href={item.link}
                 className="
                   text-sm text-black/75
@@ -87,9 +87,9 @@ export default function Gallery() {
               Index
             </span>
 
-            {eventItems.map((item, i) => (
+            {eventItems.map((item) => (
               <a
-                key={i}
+                key={item.id}
                 href={item.link}
                 className="
                   text-sm text-black/70
@@ -123,7 +123,7 @@ export default function Gallery() {
 
               return (
                 <motion.a
-                  key={i}
+                  key={item.id}
                   href={item.link}
                   variants={fadeUp}
                   className="shrink-0 group"
