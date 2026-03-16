@@ -86,12 +86,9 @@ export default function Footer() {
             )}
           </ul>
         </div>
-
-        {/* Intentional spacing column */}
         <div className="hidden md:block" />
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-white/10 py-6">
         <p className="text-center text-xs text-white/40 tracking-wide">
           © {new Date().getFullYear()} Etugen Mongols. All rights reserved.

@@ -62,19 +62,18 @@ export default function About() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.25 }}
-        className="relative z-10 max-w-6xl mx-auto px-6 py-28"
+        className="relative z-10 max-w-6xl mx-auto px-6 py-20 sm:py-24 md:py-28"
       >
         <div
           className="
             relative
             bg-white
             px-6 sm:px-10
-            py-14
+            py-12 sm:py-14
             overflow-hidden
             shadow-[0_30px_80px_rgba(0,0,0,0.25)]
           "
         >
-          {/* Decor lines */}
           <div className="absolute inset-y-6 left-0 w-px bg-black/10" />
           <div className="absolute bottom-4 right-4 w-8 h-8 border-r border-b border-black/20" />
 
@@ -91,12 +90,12 @@ export default function About() {
             {lang === "en" ? "Монгол" : "English"}
           </motion.button>
 
-          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-8 lg:gap-10 items-start">
             <motion.img
               variants={fadeUp}
               src={logo}
               alt="Etugen Mongols Logo"
-              className="w-24 sm:w-28 md:w-32 opacity-95"
+              className="w-24 sm:w-28 md:w-32 opacity-95 shrink-0"
             />
 
             <motion.div variants={fadeUp}>
@@ -113,37 +112,53 @@ export default function About() {
               </div>
             </motion.div>
 
-            {/* Images */}
+            {/* Desktop images */}
             <motion.div
               variants={fadeUp}
-              className="relative hidden md:block w-64 h-44 shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+              className="relative hidden lg:block w-full max-w-[280px] self-center"
             >
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${landingImage})` }}
-              />
-              <div className="absolute inset-0 bg-black/10" />
+              <div className="relative aspect-4/3 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+                <img
+                  src={landingImage}
+                  alt="Etugen Mongols community"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/10" />
+              </div>
 
-              <div
-                className="absolute -bottom-6 -left-6 w-36 h-24 bg-cover bg-center border border-white shadow-lg"
-                style={{ backgroundImage: `url(${landingImage})` }}
-              >
+              <div className="absolute -bottom-6 -left-6 w-[58%] aspect-3/2 overflow-hidden border border-white shadow-lg bg-white">
+                <img
+                  src={landingImage}
+                  alt="Etugen Mongols event"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-black/10" />
               </div>
             </motion.div>
           </div>
+
+          {/* Mobile / tablet images */}
           <motion.div
             variants={fadeUp}
-            className="mt-8 grid grid-cols-1 gap-4 md:hidden"
+            className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden"
           >
-            <div
-              className="h-44 bg-cover bg-center shadow-md"
-              style={{ backgroundImage: `url(${landingImage})` }}
-            />
-            <div
-              className="h-44 bg-cover bg-center shadow-md"
-              style={{ backgroundImage: `url(${landingImage})` }}
-            />
+            <div className="relative aspect-4/3 overflow-hidden shadow-md">
+              <img
+                src={landingImage}
+                alt="Etugen Mongols community"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/10" />
+            </div>
+
+            <div className="relative aspect-4/3 overflow-hidden shadow-md">
+              <img
+                src={landingImage}
+                alt="Etugen Mongols event"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/10" />
+            </div>
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-10 md:hidden">
@@ -191,4 +206,3 @@ export default function About() {
     </section>
   );
 }
-

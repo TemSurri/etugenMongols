@@ -7,34 +7,41 @@ export default function Header() {
   const [isTop, setIsTop] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
   const lastScrollY = useRef(0);
 
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 768);
-    console.log(isDesktop)
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  //const [isDesktop, setIsDesktop] = useState(false);  CHECK FOR MOBILE VIEW
+
+  //useEffect(() => {
+  //  const check = () => setIsDesktop(window.innerWidth >= 768);
+  //  check();
+  //  window.addEventListener("resize", check);
+  //  return () => window.removeEventListener("resize", check);
+  //}, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+  let ticking = false;
+
+  const handleScroll = () => {
+    if (ticking) return;
+
+    ticking = true;
+
+    requestAnimationFrame(() => {
       const currentY = window.scrollY;
-      setIsTop(currentY < 100);
+      const nextIsTop = currentY < 100;
+      const nextHidden = currentY > lastScrollY.current && currentY > 120;
 
-      if (currentY > lastScrollY.current && currentY > 120) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
+      setIsTop((prev) => (prev !== nextIsTop ? nextIsTop : prev));
+      setHidden((prev) => (prev !== nextHidden ? nextHidden : prev));
 
       lastScrollY.current = currentY;
-    };
+      ticking = false;
+    });
+  };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
   const scrollWithOffset = (id: string, offset: number = 13) => {
     
@@ -118,7 +125,7 @@ export default function Header() {
 
       {menuOpen && (
         <>
-          {/* MOBILE MENU — unchanged */}
+          {/* MOBILE DROPDOWN MENU */}
           <div className="md:hidden flex flex-col text-center gap-6 text-lg px-6 py-6 bg-black/80 border-t border-white/10 mt-4">
             <button onClick={() => scrollWithOffset("upcoming")} className="hover:text-blue-400 transition">Events</button>
             <button onClick={() => scrollWithOffset("about")} className="hover:text-blue-400 transition">About</button>
@@ -126,7 +133,7 @@ export default function Header() {
             <button onClick={() => scrollWithOffset("contact")} className="hover:text-blue-400 transition">Contact</button>
           </div>
 
-          {/* DESKTOP DROPDOWN — About routes to Events */}
+          {/* DESKTOP DROPDOWN MENU */}
           <div
             className="
               hidden md:block

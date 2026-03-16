@@ -334,7 +334,8 @@ Ticket revenue supports:
 
   ],
 
-}
+},
+
 
 ];
 

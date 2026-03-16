@@ -78,7 +78,7 @@ export default function Upcoming() {
   const hasEvents = eventItems.length > 0;
 
 
-//use effect check for mobile view or nah
+//use effect check for mobile view
   useEffect(() => {
     const check = () => {
       if (typeof window !== "undefined") {

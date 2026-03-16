@@ -5,6 +5,37 @@ import { motion, cubicBezier } from "framer-motion";
 import heroBg from "../assets/landingpage.webp";
 import logo from "../assets/logo.webp";
 
+const textContainer = {
+  hidden: { opacity: 0, y: 32 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, staggerChildren: 0.15 },
+  },
+};
+
+const textItem = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const panelMotion = {
+  hidden: { x: "100%" },
+  show: {
+    x: 0,
+    transition: { duration: 0.9, ease: cubicBezier(0.22, 1, 0.36, 1) },
+  },
+};
+
+const logoMotion = {
+  hidden: { opacity: 0, scale: 0.96 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.7, delay: 0.4 },
+  },
+};
+
 export default function Hero() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,39 +52,6 @@ export default function Hero() {
 
       window.scrollTo({ top: y, behavior: "smooth" });
     }
-  };
-
-  // motion variants
-
-  const textContainer = {
-    hidden: { opacity: 0, y: 32 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, staggerChildren: 0.15 },
-    },
-  };
-
-  const textItem = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
-
-  const panelMotion = {
-    hidden: { x: "100%" },
-    show: {
-      x: 0,
-      transition: { duration: 0.9, ease: cubicBezier(0.22, 1, 0.36, 1) },
-    },
-  };
-
-  const logoMotion = {
-    hidden: { opacity: 0, scale: 0.96 },
-    show: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.7, delay: 0.4 },
-    },
   };
 
   return (
