@@ -1,10 +1,10 @@
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import Gallery from "../components/GalleryBar";
-import CTA from "../components/Contact";
+import Header from "../components/home/Header";
+import Hero from "../components/home/Hero";
+import Gallery from "../components/home/GalleryBar";
+import CTA from "../components/home/Contact";
 
-import Upcoming from "../components/EventBar"
-import Footer from "../components/Footer"
+import Upcoming from "../components/home/EventBar"
+import Footer from "../components/home/Footer"
 
 export default function Home() {
   return (

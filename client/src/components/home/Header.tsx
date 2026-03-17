@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import logo from "../assets/logo.webp";
+import logo from "../../assets/logo.webp";
 
 export default function Header() {
   const [isTop, setIsTop] = useState(true);
@@ -148,8 +148,8 @@ export default function Header() {
           >
             <button onClick={() => scrollWithOffset("upcoming")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Events</button>
             <button onClick={() => scrollWithOffset("upcoming")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">About</button>
-            <button onClick={() => scrollWithOffset("gallery")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Gallery</button>
             <button onClick={() => scrollWithOffset("upcoming",-600)} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Contact</button>
+            <button onClick={() => scrollWithOffset("gallery")} className="block w-full px-6 py-2 hover:bg-black/5 transition text-left">Gallery</button>
           </div>
         </>
       )}

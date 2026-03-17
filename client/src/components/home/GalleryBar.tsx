@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import heroBg from "../assets/landingpage.webp";
-import { events, getCardInfos } from "../static_gallery";
+import heroBg from "../../assets/landingpage.webp";
+import { events, getCardInfos } from "../../static_gallery";
 
 const eventItems = getCardInfos(events);
 

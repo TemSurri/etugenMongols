@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { motion, cubicBezier } from "framer-motion";
-import heroBg from "../assets/landingpage.webp";
-import logo from "../assets/logo.webp";
+import heroBg from "../../assets/landingpage.webp";
+import logo from "../../assets/logo.webp";
 
 const textContainer = {
   hidden: { opacity: 0, y: 32 },
@@ -37,6 +37,7 @@ const logoMotion = {
 };
 
 export default function Hero() {
+  // LOGIN STUFF
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -161,7 +162,7 @@ export default function Hero() {
             className="w-64 xl:w-72 mb-12"
           />
 
-          {/* current login view NOT FUNCTIONAL RN */}
+          {/* LOGIN STUFF */}
           <div className="w-full max-w-sm space-y-6">
             <div>
               <label className="block text-[11px] font-semibold tracking-widest text-neutral-600 uppercase mb-2">
@@ -209,7 +210,7 @@ export default function Hero() {
               />
             </div>
 
-            {/* Login button NOT FUNCTIONL RN */}
+            {/* LOGIN STUFF */}
             <button
               type="button"
               className="

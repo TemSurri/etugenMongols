@@ -7,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { FaFacebookF } from "react-icons/fa";
-import heroBg from "../assets/landingpage.webp";
-import logo from "../assets/logo.webp";
-import { events, getCardInfos, getListings} from "../static_events";
-import type {OrganizedListing} from "../static_events";
+import heroBg from "../../assets/landingpage.webp";
+import logo from "../../assets/logo.webp";
+import { events, getCardInfos, getListings} from "../../static_events";
+import type {OrganizedListing} from "../../static_events";
 import About from "./About";
 
 const CONTACT_EMAIL = "calgarymongolians@gmail.com";

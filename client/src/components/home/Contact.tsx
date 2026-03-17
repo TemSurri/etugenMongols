@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import heroBg from "../assets/landingpage.webp";
+import heroBg from "../../assets/landingpage.webp";
 import { FaFacebook, FaEnvelope } from "react-icons/fa";
 
 export default function CTA() {

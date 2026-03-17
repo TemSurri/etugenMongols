@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import landingImage from "../assets/landingpage.webp";
-import logo from "../assets/logo.webp";
+import landingImage from "../../assets/landingpage.webp";
+import logo from "../../assets/logo.webp";
 
 /* motion and animation variants */
 
