@@ -13,6 +13,7 @@ import GalleryLightbox from "./GalleryLightbox";
 
 // motion
 
+
 const pageFade: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },

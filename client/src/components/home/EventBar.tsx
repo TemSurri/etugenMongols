@@ -1,17 +1,21 @@
 "use client";
 
-
-
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { FaFacebookF } from "react-icons/fa";
 import heroBg from "../../assets/landingpage.webp";
 import logo from "../../assets/logo.webp";
-import { events, getCardInfos, getListings} from "../../static_events";
+import {getCardInfos} from "../../static_events";
 import type {OrganizedListing} from "../../static_events";
 import About from "./About";
+
+// data
+type UpcomingProps = {
+  eventItems: ReturnType<typeof getCardInfos>;
+  Listings: OrganizedListing[];
+};
 
 const CONTACT_EMAIL = "calgarymongolians@gmail.com";
 
@@ -64,21 +68,21 @@ const panelMotion: Variants = {
   },
 };
 
-export default function Upcoming() {
+
+
+export default function Upcoming({
+  eventItems,
+  Listings,
+}: UpcomingProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [lang, setLang] = useState<"en" | "mn">("mn");
   const [eventsLang, setEventsLang] = useState<"en" | "mn">("mn");
 
   const [isDesktop, setIsDesktop] = useState(false);
-
   const navigate = useNavigate();
 
-  const eventItems= useMemo(() => getCardInfos(events), []);
-  const Listings:OrganizedListing[] = useMemo(() => getListings(events), []);
   const hasEvents = eventItems.length > 0;
 
-
-//use effect check for mobile view
   useEffect(() => {
     const check = () => {
       if (typeof window !== "undefined") {
@@ -106,14 +110,6 @@ export default function Upcoming() {
     const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
     window.scrollTo({ top: y, behavior: "smooth" });
   };
-
-  
-  //const scrollToContact = () => {
-  //  const el = document.getElementById("contact");
-  //  if (!el) return;
-  //  const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
-  //  window.scrollTo({ top: y, behavior: "smooth" });
-  //};
 
   return (
     <>

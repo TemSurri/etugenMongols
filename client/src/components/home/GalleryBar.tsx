@@ -3,9 +3,18 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import heroBg from "../../assets/landingpage.webp";
-import { events, getCardInfos } from "../../static_gallery";
 
-const eventItems = getCardInfos(events);
+// data
+type GalleryItemCard = {
+  id: string;
+  title: string;
+  desc: string;
+  link: string;
+};
+
+type GalleryProps = {
+  eventItems: GalleryItemCard[];
+};
 
 // motion and animation variants
 
@@ -25,7 +34,7 @@ const fadeUp: Variants = {
   },
 };
 
-export default function Gallery() {
+export default function Gallery({ eventItems }: GalleryProps) {
   return (
     <section
       id="gallery"
