@@ -9,15 +9,6 @@ export default function Header() {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
 
-  //const [isDesktop, setIsDesktop] = useState(false);  CHECK FOR MOBILE VIEW
-
-  //useEffect(() => {
-  //  const check = () => setIsDesktop(window.innerWidth >= 768);
-  //  check();
-  //  window.addEventListener("resize", check);
-  //  return () => window.removeEventListener("resize", check);
-  //}, []);
-
   useEffect(() => {
   let ticking = false;
 

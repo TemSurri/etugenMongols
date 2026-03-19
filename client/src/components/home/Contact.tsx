@@ -8,7 +8,11 @@ import { FaFacebook, FaEnvelope } from "react-icons/fa";
 export default function CTA() {
   const container = {
     hidden: { opacity: 0, y: 40 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.7, staggerChildren: 0.2 } },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, staggerChildren: 0.2 },
+    },
   };
 
   const fadeChild = {
@@ -16,7 +20,7 @@ export default function CTA() {
     show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
@@ -25,8 +29,7 @@ export default function CTA() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Only show on mobile
-  if (isDesktop) return null;
+  if (isDesktop === null || isDesktop) return null;
 
   return (
     <section
@@ -64,7 +67,6 @@ export default function CTA() {
         </motion.p>
 
         <div className="space-y-6">
-          {/* Email */}
           <motion.a
             variants={fadeChild}
             href="mailto:calgarymongolians@gmail.com"
@@ -84,7 +86,6 @@ export default function CTA() {
             <span className="truncate">calgarymongolians@gmail</span>
           </motion.a>
 
-          {/* Facebook */}
           <motion.a
             variants={fadeChild}
             href="https://www.facebook.com/profile.php?id=61584273744310"

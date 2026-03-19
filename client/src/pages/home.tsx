@@ -2,7 +2,7 @@ import Header from "../components/home/Header";
 import Hero from "../components/home/Hero";
 import Gallery from "../components/home/GalleryBar";
 import CTA from "../components/home/Contact";
-import Upcoming from "../components/home/EventBar";
+import Upcoming from "../components/home/upcoming/Upcoming";
 import Footer from "../components/home/Footer";
 
 import {
