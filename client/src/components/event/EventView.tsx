@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import type { EventItem } from "../../static_events";
 import landingImage from "../../assets/landingpage.webp";
 
@@ -29,7 +30,12 @@ export default function EventView({ event }: EventViewProps) {
       <div className="absolute inset-0 bg-black/78" />
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.10),rgba(0,0,0,0.38))]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-3 py-3 sm:px-5 sm:py-5 lg:px-6 lg:py-4">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="relative z-10 mx-auto max-w-7xl px-3 py-3 sm:px-5 sm:py-5 lg:px-6 lg:py-4"
+      >
         <div className="mb-3">
           <Link
             to="/"
@@ -74,7 +80,7 @@ export default function EventView({ event }: EventViewProps) {
 
           <EventVolunteerRoles whoWeWant={event.whoWeWant} />
         </div>
-      </div>
+      </motion.div>
     </article>
   );
 }
