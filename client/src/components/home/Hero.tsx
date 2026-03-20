@@ -1,22 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { motion, cubicBezier } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, cubicBezier, useAnimation, useInView } from "framer-motion";
 import heroBg from "../../assets/landingpage.webp";
 import logo from "../../assets/logo.webp";
 
 const textContainer = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: {},
   show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, staggerChildren: 0.15 },
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.05,
+    },
   },
 };
 
 const textItem = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
 };
 
 const panelMotion = {
@@ -37,7 +42,6 @@ const logoMotion = {
 };
 
 export default function Hero() {
-  // LOGIN STUFF
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -46,14 +50,25 @@ export default function Hero() {
     const headerHeight = 13;
 
     if (el) {
-      const y =
-        el.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
-
+      const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
+
+  const textRef = useRef(null);
+  const controls = useAnimation();
+
+  const isInView = useInView(textRef, {
+    amount: 0.25,
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("show");
+    } else {
+      controls.start("hidden");
+    }
+  }, [isInView, controls]);
 
   return (
     <section
@@ -61,14 +76,13 @@ export default function Hero() {
       style={{ backgroundImage: `url(${heroBg})` }}
     >
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
-      
-      {/* Title and descriptions + btn (left side) */}
+
       <div className="relative z-10 h-full max-w-7xl mx-auto px-6 md:px-10 md:pr-[35%] flex items-center">
         <motion.div
+          ref={textRef}
           variants={textContainer}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: false, amount: 0.35 }}
+          animate={controls}
           className="
             text-white
             max-w-[min(100%,42rem)]
@@ -78,9 +92,9 @@ export default function Hero() {
             lg:pr-24
           "
         >
-          {/* Mobile title */}
           <motion.div
             variants={textItem}
+            style={{ willChange: "transform, opacity" }}
             className="flex items-center gap-4 md:hidden mb-6"
           >
             <img src={logo} alt="" className="w-14" />
@@ -91,6 +105,7 @@ export default function Hero() {
 
           <motion.h2
             variants={textItem}
+            style={{ willChange: "transform, opacity" }}
             className="hidden md:block text-4xl md:text-6xl xl:text-7xl font-extrabold tracking-[0.15em] uppercase"
           >
             Etugen Mongols
@@ -98,11 +113,13 @@ export default function Hero() {
 
           <motion.div
             variants={textItem}
+            style={{ willChange: "transform, opacity" }}
             className="w-40 h-px bg-white/50 mt-7 mb-7"
           />
 
           <motion.p
             variants={textItem}
+            style={{ willChange: "transform, opacity" }}
             className="text-base md:text-xl xl:text-2xl leading-relaxed text-white/90"
           >
             We host events for the Mongolian-Canadian community in Calgary.
@@ -110,35 +127,37 @@ export default function Hero() {
 
           <motion.p
             variants={textItem}
+            style={{ willChange: "transform, opacity" }}
             className="mt-4 text-sm md:text-base xl:text-lg text-white/70"
           >
-            Бид Калгари хот дахь Монгол-Канадын нийгэмлэгт зориулсан
-            арга хэмжээнүүдийг зохион байгуулдаг.
+            Бид Калгари хот дахь Монгол-Канадын нийгэмлэгт зориулсан арга
+            хэмжээнүүдийг зохион байгуулдаг.
           </motion.p>
 
-
-          <motion.div variants={textItem} className="mt-16">
+          <motion.div
+            variants={textItem}
+            style={{ willChange: "transform, opacity" }}
+            className="mt-16"
+          >
             <button
-              onClick={() => scrollWithOffset("upcoming")}
-              className="
-                inline-flex px-12 py-4
-                text-base font-semibold uppercase tracking-widest
-                text-white bg-black/40
-                border border-white/30
-              "
-            >
-              See Upcoming Events
-            </button>
+  onClick={() => scrollWithOffset("upcoming")}
+  className="
+    inline-flex px-12 py-4
+    text-base font-semibold uppercase tracking-widest
+    text-white bg-black/40
+    border border-white/30
 
+    transition-all duration-300 ease-out
+
+   hover:-translate-y-0.5 hover:shadow-lg
+  "
+>
+  See Upcoming Events
+</button>
           </motion.div>
-
-
-
-
         </motion.div>
       </div>
 
-      {/* white panel (right side)*/}
       <motion.div
         variants={panelMotion}
         initial="hidden"
@@ -152,7 +171,6 @@ export default function Hero() {
         "
       >
         <div className="w-full h-full flex flex-col items-center pt-20 px-12">
-          {/* Logo */}
           <motion.img
             variants={logoMotion}
             initial="hidden"
@@ -162,7 +180,6 @@ export default function Hero() {
             className="w-64 xl:w-72 mb-12"
           />
 
-          {/* LOGIN STUFF */}
           <div className="w-full max-w-sm space-y-6">
             <div>
               <label className="block text-[11px] font-semibold tracking-widest text-neutral-600 uppercase mb-2">
@@ -210,7 +227,6 @@ export default function Hero() {
               />
             </div>
 
-            {/* LOGIN STUFF */}
             <button
               type="button"
               className="
@@ -231,7 +247,6 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* mobile background logo add on */}
       <div className="absolute inset-0 flex items-center justify-center md:hidden pointer-events-none">
         <img
           src={logo}
