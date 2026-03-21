@@ -52,7 +52,6 @@ export type OrganizedListing = {
 export const events: EventItem[] = [
 
 
-
 {
   id: "mongolian-cultural-night-2026",
   title: "Mongolian Cultural Night",
@@ -147,6 +146,7 @@ Ticket revenue supports:
   ],
 
 },
+
 
 ];
 
