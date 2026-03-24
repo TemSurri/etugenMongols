@@ -51,10 +51,10 @@ export type OrganizedListing = {
 //LIST OF EVENTS
 export const events: EventItem[] = [
 
-
 {
   id: "mongolian-cultural-night-2026",
-  title: "Mongolian Cultural Night",
+
+  title: "Naadam",
   date: "September 20, 2026",
   time: "6:30 PM - 9:30 PM",
   location: "University of Calgary Community Hall",
@@ -146,6 +146,7 @@ Ticket revenue supports:
   ],
 
 },
+
 
 
 ];

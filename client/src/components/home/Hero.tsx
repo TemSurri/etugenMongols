@@ -149,7 +149,7 @@ export default function Hero() {
 
                 transition-all duration-300 ease-out
 
-              hover:-translate-y-0.5 hover:shadow-lg
+                hover:-translate-y-0.5 hover:shadow-lg
               "
             >
               See Upcoming Events
@@ -170,19 +170,19 @@ export default function Hero() {
           z-20
         "
       >
-        <div className="w-full h-full flex flex-col items-center pt-20 px-12">
+        <div className="w-full h-full flex flex-col items-center justify-center px-8 lg:px-10 xl:px-12">
           <motion.img
             variants={logoMotion}
             initial="hidden"
             animate="show"
             src={logo}
             alt="Etugen Mongols Logo"
-            className="w-64 xl:w-72 mb-12"
+            className="w-52 lg:w-60 xl:w-72 mb-8 xl:mb-10"
           />
 
-          <div className="w-full max-w-sm space-y-6">
+          <div className="w-full max-w-sm space-y-5">
             <div>
-              <label className="block text-[11px] font-semibold tracking-widest text-neutral-600 uppercase mb-2">
+              <label className="block text-[11px] font-semibold tracking-[0.18em] text-neutral-600 uppercase mb-2">
                 Email
               </label>
               <input
@@ -191,21 +191,24 @@ export default function Hero() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="
-                  w-full px-4 py-3
+                  w-full min-h-[3.1rem] px-4
+                  text-sm lg:text-[15px]
                   bg-white
                   border border-neutral-300
                   text-neutral-900
                   placeholder:text-neutral-400
+                  rounded-none
+                  shadow-sm
                   focus:outline-none
                   focus:border-neutral-900
-                  focus:ring-2 focus:ring-neutral-900/20
+                  focus:ring-2 focus:ring-neutral-900/15
                   transition
                 "
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold tracking-widest text-neutral-600 uppercase mb-2">
+              <label className="block text-[11px] font-semibold tracking-[0.18em] text-neutral-600 uppercase mb-2">
                 Password
               </label>
               <input
@@ -214,14 +217,17 @@ export default function Hero() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="
-                  w-full px-4 py-3
+                  w-full min-h-[3.1rem] px-4
+                  text-sm lg:text-[15px]
                   bg-white
                   border border-neutral-300
                   text-neutral-900
                   placeholder:text-neutral-400
+                  rounded-none
+                  shadow-sm
                   focus:outline-none
                   focus:border-neutral-900
-                  focus:ring-2 focus:ring-neutral-900/20
+                  focus:ring-2 focus:ring-neutral-900/15
                   transition
                 "
               />
@@ -230,14 +236,18 @@ export default function Hero() {
             <button
               type="button"
               className="
-                w-full pt-3 pb-3
-                mt-2
-                text-sm font-semibold tracking-widest uppercase
+                w-full min-h-[3.15rem]
+                mt-2 px-4
+                inline-flex items-center justify-center
+                text-sm font-semibold tracking-[0.16em] uppercase
                 text-white
                 bg-neutral-900
+                rounded-none
+                whitespace-nowrap
+                shadow-sm
                 hover:bg-neutral-800
                 focus:outline-none
-                focus:ring-2 focus:ring-neutral-900/30
+                focus:ring-2 focus:ring-neutral-900/25
                 transition
               "
             >
