@@ -59,7 +59,7 @@ export default function Hero() {
   const controls = useAnimation();
 
   const isInView = useInView(textRef, {
-    amount: 0.25,
+    amount: 0.1,
   });
 
   useEffect(() => {
@@ -72,12 +72,12 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-screen w-full overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url(${heroBg})` }}
-    >
+  className="relative min-h-screen w-full overflow-hidden bg-cover bg-center"
+  style={{ backgroundImage: `url(${heroBg})` }}
+>
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
 
-      <div className="relative z-10 h-full max-w-7xl mx-auto px-6 md:px-10 md:pr-[35%] flex items-center">
+      <div className="relative z-10 min-h-screen max-w-7xl mx-auto px-6 md:px-10 md:pr-[35%] flex items-center">
         <motion.div
           ref={textRef}
           variants={textContainer}

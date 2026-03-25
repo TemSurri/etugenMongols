@@ -109,7 +109,7 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
         id="upcoming"
         initial="hidden"
         whileInView="show"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.1 }}
         className="relative bg-cover bg-center overflow-hidden"
         style={{ backgroundImage: `url(${heroBg})` }}
       >
@@ -130,7 +130,9 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
             relative z-10
             max-w-7xl mx-auto
             px-6 py-28
-            md:pr-[40%]
+            md:pr-[360px]
+            lg:pr-[420px]
+            xl:pr-[480px]
           "
         >
           <UpcomingSectionHeader

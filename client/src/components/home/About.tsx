@@ -61,7 +61,7 @@ export default function About() {
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.25 }}
+        viewport={{ once: true, amount: 0.1 }}
         className="relative z-10 max-w-6xl mx-auto px-6 py-20 sm:py-24 md:py-28"
       >
         <div
