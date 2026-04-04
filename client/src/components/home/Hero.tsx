@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, cubicBezier, useAnimation, useInView } from "framer-motion";
-import heroBg from "../../assets/landingpage.webp";
 import logo from "../../assets/logo.webp";
 
 const textContainer = {
@@ -71,13 +70,17 @@ export default function Hero() {
   }, [isInView, controls]);
 
   return (
-    <section
-  className="relative min-h-screen w-full overflow-hidden bg-cover bg-center"
-  style={{ backgroundImage: `url(${heroBg})` }}
->
+    <section className="relative min-h-screen w-full overflow-hidden bg-neutral-900">
+      <img
+        src="/landingpage.webp"
+        alt=""
+        loading="eager"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
 
-      <div className="relative z-10 min-h-screen max-w-7xl mx-auto px-6 md:px-10 md:pr-[35%] flex items-center">
+      <div className="relative z-10 min-h-screen max-w-7xl mx-auto flex items-center px-6 md:px-10 md:pr-[35%]">
         <motion.div
           ref={textRef}
           variants={textContainer}
@@ -95,10 +98,10 @@ export default function Hero() {
           <motion.div
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
-            className="flex items-center gap-4 md:hidden mb-6"
+            className="mb-6 flex items-center gap-4 md:hidden"
           >
             <img src={logo} alt="" className="w-14" />
-            <h2 className="text-3xl font-extrabold tracking-[0.15em] uppercase">
+            <h2 className="text-3xl font-extrabold uppercase tracking-[0.15em]">
               Etugen Mongols
             </h2>
           </motion.div>
@@ -106,7 +109,7 @@ export default function Hero() {
           <motion.h2
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
-            className="hidden md:block text-4xl md:text-6xl xl:text-7xl font-extrabold tracking-[0.15em] uppercase"
+            className="hidden text-4xl font-extrabold uppercase tracking-[0.15em] md:block md:text-6xl xl:text-7xl"
           >
             Etugen Mongols
           </motion.h2>
@@ -114,13 +117,13 @@ export default function Hero() {
           <motion.div
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
-            className="w-40 h-px bg-white/50 mt-7 mb-7"
+            className="mt-7 mb-7 h-px w-40 bg-white/50"
           />
 
           <motion.p
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
-            className="text-base md:text-xl xl:text-2xl leading-relaxed text-white/90"
+            className="text-base leading-relaxed text-white/90 md:text-xl xl:text-2xl"
           >
             We host events for the Mongolian-Canadian community in Calgary.
           </motion.p>
@@ -128,7 +131,7 @@ export default function Hero() {
           <motion.p
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
-            className="mt-4 text-sm md:text-base xl:text-lg text-white/70"
+            className="mt-4 text-sm text-white/70 md:text-base xl:text-lg"
           >
             Бид Калгари хот дахь Монгол-Канадын нийгэмлэгт зориулсан арга
             хэмжээнүүдийг зохион байгуулдаг.
@@ -146,9 +149,7 @@ export default function Hero() {
                 text-base font-semibold uppercase tracking-widest
                 text-white bg-black/40
                 border border-white/30
-
                 transition-all duration-300 ease-out
-
                 hover:-translate-y-0.5 hover:shadow-lg
               "
             >
@@ -163,26 +164,23 @@ export default function Hero() {
         initial="hidden"
         animate="show"
         className="
-          hidden md:flex
-          absolute inset-y-0 right-0
-          w-[35%]
-          bg-neutral-100
-          z-20
+          absolute inset-y-0 right-0 z-20 hidden
+          w-[35%] bg-neutral-100 md:flex
         "
       >
-        <div className="w-full h-full flex flex-col items-center justify-center px-8 lg:px-10 xl:px-12">
+        <div className="flex h-full w-full flex-col items-center justify-center px-8 lg:px-10 xl:px-12">
           <motion.img
             variants={logoMotion}
             initial="hidden"
             animate="show"
             src={logo}
             alt="Etugen Mongols Logo"
-            className="w-52 lg:w-60 xl:w-72 mb-8 xl:mb-10"
+            className="mb-8 w-52 lg:w-60 xl:mb-10 xl:w-72"
           />
 
           <div className="w-full max-w-sm space-y-5">
             <div>
-              <label className="block text-[11px] font-semibold tracking-[0.18em] text-neutral-600 uppercase mb-2">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-600">
                 Email
               </label>
               <input
@@ -208,7 +206,7 @@ export default function Hero() {
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold tracking-[0.18em] text-neutral-600 uppercase mb-2">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-600">
                 Password
               </label>
               <input
@@ -236,19 +234,16 @@ export default function Hero() {
             <button
               type="button"
               className="
-                w-full min-h-[3.15rem]
-                mt-2 px-4
-                inline-flex items-center justify-center
-                text-sm font-semibold tracking-[0.16em] uppercase
-                text-white
-                bg-neutral-900
-                rounded-none
-                whitespace-nowrap
-                shadow-sm
+                mt-2 inline-flex min-h-[3.15rem] w-full
+                items-center justify-center
+                whitespace-nowrap rounded-none
+                bg-neutral-900 px-4
+                text-sm font-semibold uppercase tracking-[0.16em]
+                text-white shadow-sm
+                transition
                 hover:bg-neutral-800
                 focus:outline-none
                 focus:ring-2 focus:ring-neutral-900/25
-                transition
               "
             >
               Log In
@@ -257,7 +252,7 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      <div className="absolute inset-0 flex items-center justify-center md:hidden pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center md:hidden">
         <img
           src={logo}
           alt=""
