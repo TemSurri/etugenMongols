@@ -31,8 +31,8 @@ export default function UpcomingEventCards({
         md:pt-10 md:pb-24
         md:overflow-x-auto md:overflow-y-visible
         md:snap-x md:snap-proximity
-        md:scroll-padding-left:2.5rem md:scroll-padding-right:2.5rem
-        lg:scroll-padding-left:5rem lg:scroll-padding-right:5rem
+        md:[scroll-padding-left:2.5rem] md:[scroll-padding-right:2.5rem]
+        lg:[scroll-padding-left:5rem] lg:[scroll-padding-right:5rem]
         md:scrollbar-none
       "
     >
