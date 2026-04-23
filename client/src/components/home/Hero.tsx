@@ -36,45 +36,6 @@ const panelMotion: Variants = {
   },
 };
 
-const logoMotion: Variants = {
-  hidden: { opacity: 0, scale: 0.96 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.7, delay: 0.4 },
-  },
-};
-
-const panelContainer: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.5,
-    },
-  },
-};
-
-const panelItem: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.45,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const langButtonVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { duration: 0.4 },
-  },
-};
-
 export default function Hero() {
   const [lang, setLang] = useState<"en" | "mn">("mn");
 
@@ -95,7 +56,6 @@ export default function Hero() {
 
   const textRef = useRef<HTMLDivElement | null>(null);
   const controls = useAnimation();
-  const panelControls = useAnimation();
 
   const isInView = useInView(textRef, {
     amount: 0.1,
@@ -108,10 +68,6 @@ export default function Hero() {
       controls.start("hidden");
     }
   }, [isInView, controls]);
-
-  useEffect(() => {
-    panelControls.start("show");
-  }, [panelControls]);
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-neutral-900">
@@ -126,7 +82,6 @@ export default function Hero() {
 
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
 
-      {/* flags at the split */}
       <div className="pointer-events-none absolute top-6 inset-x-0 z-30 hidden md:block">
         <div className="absolute right-[35%] -translate-x-8">
           <img
@@ -197,7 +152,7 @@ export default function Hero() {
           <motion.p
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
-            className="mt-4 text-sm text-white/70 md:text-base xl:text-lg"
+            className="mt-4 text-base text-white/70 md:text-lg xl:text-xl"
           >
             Соёлын үйл ажиллагаагаар дамжуулан өв соёл, хэл, уламжлалаа
             хадгалж, эмэгтэйчүүдийг хөгжихөд дэмжинэ.
@@ -234,48 +189,41 @@ export default function Hero() {
           w-[35%] bg-neutral-100 md:flex
         "
       >
-        <motion.div
-          variants={panelContainer}
-          initial="hidden"
-          animate={panelControls}
-          className="flex h-full w-full flex-col items-center justify-center px-8 lg:px-10 xl:px-12"
-        >
-          <motion.img
-            variants={logoMotion}
-            src={logo}
-            alt="Etugen Mongols Logo"
-            className="mb-6 mt-12 w-52 lg:mt-14 lg:w-60 xl:mt-16 xl:mb-8 xl:w-72"
-          />
+        <div className="flex h-full w-full items-center justify-center px-8 lg:px-10 xl:px-12">
+          <div className="flex w-full max-w-sm flex-col justify-center py-10">
+            <img
+              src={logo}
+              alt="Etugen Mongols Logo"
+              className="mb-6 w-52 self-center lg:w-60 xl:mb-8 xl:w-72"
+            />
 
-          <div className="w-full max-w-sm">
-            <motion.button
-              variants={langButtonVariants}
+            <button
               onClick={() => setLang((prev) => (prev === "en" ? "mn" : "en"))}
               className="
-                mb-4 block ml-auto
+                mb-4 ml-auto block
                 text-xs uppercase tracking-wide
                 text-black/50 hover:text-black transition
               "
             >
               {lang === "en" ? "Монгол" : "English"}
-            </motion.button>
+            </button>
 
-            <motion.div variants={panelItem} layout>
+            <div>
               <h3 className="text-sm uppercase tracking-widest text-black/50">
                 About Us
               </h3>
 
-              <div className="mt-3 h-0.5 w-14 bg-black" />
+              <div className="mt-2 h-0.5 w-14 bg-black" />
 
-              <p className="mt-4 min-h-[132px] text-sm leading-[1.75] text-black/70">
+              <p className="mt-4 text-sm leading-[1.75] text-black/70">
                 {ABOUT_TEXT}
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div variants={panelItem} className="mt-6" layout>
-              <div className="mb-4 h-px w-full bg-black/10" />
+            <div className="mt-5">
+              <div className="mb-3 h-px w-full bg-black/10" />
 
-              <p className="mb-3 text-[11px] uppercase tracking-[0.25em] text-black/50">
+              <p className="mb-2 text-[11px] uppercase tracking-[0.25em] text-black/50">
                 Contact Us
               </p>
 
@@ -296,15 +244,15 @@ export default function Hero() {
                 </a>
               </div>
 
-              <div className="mt-5 h-px w-full bg-black/10" />
-            </motion.div>
+              <div className="mt-4 h-px w-full bg-black/10" />
+            </div>
 
-            <motion.div variants={panelItem} className="mt-5 text-center" layout>
+            <div className="mt-4 text-center">
               <p className="text-sm uppercase tracking-widest text-black/60">
                 Connect with us
               </p>
 
-              <div className="mt-4 flex justify-center">
+              <div className="mt-3 flex justify-center">
                 <a
                   href="https://www.facebook.com/profile.php?id=61584273744310"
                   target="_blank"
@@ -323,9 +271,9 @@ export default function Hero() {
                   <FaFacebookF className="text-sm" />
                 </a>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
 
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center md:hidden">
