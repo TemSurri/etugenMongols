@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, cubicBezier, useAnimation, useInView } from "framer-motion";
 import type { Variants } from "framer-motion";
 import logo from "../../assets/logo.webp";
+import canadaFlag from "../../assets/canada-flag.webp";
+import mongoliaFlag from "../../assets/mongolia-flag.webp";
 import { FaFacebookF } from "react-icons/fa";
 
 const textContainer: Variants = {
@@ -21,7 +23,7 @@ const textItem: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: 0.35 },
   },
 };
 
@@ -85,17 +87,17 @@ export default function Hero() {
       <div className="pointer-events-none absolute top-6 inset-x-0 z-30 hidden md:block">
         <div className="absolute right-[35%] -translate-x-8">
           <img
-            src="https://flagcdn.com/w160/ca.png"
+            src={canadaFlag}
             alt="Canada flag"
-            className="h-12 object-contain shadow-xl ring-1 ring-white/30"
+            className="h-12 object-contain shadow-xl"
           />
         </div>
 
         <div className="absolute right-[35%] translate-x-32">
           <img
-            src="https://flagcdn.com/w160/mn.png"
+            src={mongoliaFlag}
             alt="Mongolia flag"
-            className="h-12 object-contain shadow-xl ring-1 ring-black/10"
+            className="h-12 object-contain shadow-xl"
           />
         </div>
       </div>
