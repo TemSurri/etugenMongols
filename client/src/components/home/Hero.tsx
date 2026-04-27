@@ -8,6 +8,9 @@ import canadaFlag from "../../assets/canada-flag.webp";
 import mongoliaFlag from "../../assets/mongolia-flag.webp";
 import { FaFacebookF } from "react-icons/fa";
 
+// Animation Variants 
+// all configuration for the animation are set within these objects
+
 const textContainer: Variants = {
   hidden: {},
   show: {
@@ -72,7 +75,9 @@ export default function Hero() {
   }, [isInView, controls]);
 
   return (
+    
     <section className="relative min-h-screen w-full overflow-hidden bg-neutral-900">
+      {/* The main section of the component, which includes the bg image, overlay, and content. */}
       <img
         src="/landingpage.webp"
         alt=""
@@ -84,6 +89,8 @@ export default function Hero() {
 
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
 
+      {/* Flags on the right side for larger screens, hidden on mobile */}
+     
       <div className="pointer-events-none absolute top-6 inset-x-0 z-30 hidden md:block">
         <div className="absolute right-[35%] -translate-x-8">
           <img
@@ -101,8 +108,9 @@ export default function Hero() {
           />
         </div>
       </div>
-
+  
       <div className="relative z-10 min-h-screen max-w-7xl mx-auto flex items-center px-6 md:px-10 md:pr-[35%]">
+        {/* The content wrapper, which contains the text and the sliding panel on larger screens*/}
         <motion.div
           ref={textRef}
           variants={textContainer}
@@ -117,6 +125,7 @@ export default function Hero() {
             lg:pr-24
           "
         >
+          {/* The main heading, subheading, and button.*/}
           <motion.div
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
@@ -182,6 +191,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
+      // The sliding panel that appears on larger screens when the menu is open, contains about and contanct.
       <motion.div
         variants={panelMotion}
         initial="hidden"

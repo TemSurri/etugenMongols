@@ -9,6 +9,13 @@ type MenuItem = {
   offset?: number;
 };
 
+type Lang = "en" | "mn";
+
+type HeaderProps = {
+  lang: Lang;
+  setLang: React.Dispatch<React.SetStateAction<Lang>>;
+};
+
 const MENU_ITEMS: MenuItem[] = [
   { label: "Events", id: "upcoming" },
   { label: "About", id: "upcoming" },
@@ -23,6 +30,7 @@ const MOBILE_MENU_ITEMS: MenuItem[] = [
   { label: "Contact", id: "contact" },
 ];
 
+// keeps track of if the header should be hidden or transparent
 function useHeaderScrollState() {
   const [isTop, setIsTop] = useState(true);
   const [hidden, setHidden] = useState(false);
@@ -60,6 +68,7 @@ type MenuButtonProps = {
   onToggle: () => void;
 };
 
+// hamburger button
 function MenuButton({ menuOpen, onToggle }: MenuButtonProps) {
   return (
     <button
@@ -81,7 +90,12 @@ function MenuButton({ menuOpen, onToggle }: MenuButtonProps) {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       ) : (
         <svg
@@ -91,7 +105,12 @@ function MenuButton({ menuOpen, onToggle }: MenuButtonProps) {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
       )}
     </button>
@@ -103,12 +122,13 @@ type DesktopMenuProps = {
   onItemClick: (id: string, offset?: number) => void;
 };
 
+// desktop dropdown menu
 function DesktopMenu({ items, onItemClick }: DesktopMenuProps) {
   return (
     <div
       id="desktop-header-menu"
       className="
-        hidden md:block
+        hidden lg:block
         absolute right-0 top-full mt-4
         w-48
         bg-white
@@ -134,14 +154,41 @@ function DesktopMenu({ items, onItemClick }: DesktopMenuProps) {
 type MobileMenuProps = {
   items: MenuItem[];
   onItemClick: (id: string, offset?: number) => void;
+  lang: Lang;
+  setLang: React.Dispatch<React.SetStateAction<Lang>>;
 };
 
-function MobileMenu({ items, onItemClick }: MobileMenuProps) {
+// mobile and tablet dropdown menu
+function MobileMenu({ items, onItemClick, lang, setLang }: MobileMenuProps) {
   return (
     <div
       id="mobile-header-menu"
-      className="md:hidden flex flex-col text-center gap-6 text-lg px-6 py-6 bg-black/80 border-t border-white/10 mt-4"
+      className="
+        lg:hidden
+        flex flex-col text-center gap-5
+        text-lg px-6 py-6 mt-4
+        bg-black/80 border-t border-white/10
+      "
     >
+      <button
+        type="button"
+        onClick={() => setLang((prev) => (prev === "en" ? "mn" : "en"))}
+        className="
+          mx-auto
+          rounded-full
+          border border-white/70
+          px-5 py-2
+          text-sm font-semibold uppercase tracking-widest
+          text-white
+          hover:bg-white/10
+          transition
+        "
+      >
+        {lang === "en" ? "Монгол" : "English"}
+      </button>
+
+      <div className="mx-auto h-px w-24 bg-white/20" />
+
       {items.map((item) => (
         <button
           key={`${item.label}-${item.id}-${item.offset ?? 0}`}
@@ -155,14 +202,13 @@ function MobileMenu({ items, onItemClick }: MobileMenuProps) {
   );
 }
 
-export default function Header() {
+export default function Header({ lang, setLang }: HeaderProps) {
   const { isTop, hidden } = useHeaderScrollState();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const scrollWithOffset = (id: string, offset: number = 13) => {
-    const targetId = id;
-    const el = document.getElementById(targetId);
+    const el = document.getElementById(id);
 
     if (el) {
       const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
@@ -172,6 +218,7 @@ export default function Header() {
     setMenuOpen(false);
   };
 
+  // closes menu when escape is pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -183,9 +230,11 @@ export default function Header() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // closes menu when clicking outside of it
   useEffect(() => {
     const handlePointerDown = (e: MouseEvent | TouchEvent) => {
       if (!menuWrapperRef.current) return;
+
       if (!menuWrapperRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
       }
@@ -230,18 +279,37 @@ export default function Header() {
             </h1>
           </button>
 
-          <div className="relative">
-            <MenuButton
-              menuOpen={menuOpen}
-              onToggle={() => setMenuOpen((open) => !open)}
-            />
+          <div className="flex items-center gap-5">
+            <button
+              type="button"
+              onClick={() => setLang((prev) => (prev === "en" ? "mn" : "en"))}
+              className="
+                hidden lg:inline-flex
+                items-center justify-center
+                rounded-full
+                px-4 py-2
+                text-xs font-semibold uppercase tracking-widest
+                bg-black/60 text-white
+                hover:bg-black/80
+                transition
+              "
+            >
+              {lang === "en" ? "Монгол" : "English"}
+            </button>
 
-            {menuOpen && (
-              <DesktopMenu
-                items={MENU_ITEMS}
-                onItemClick={scrollWithOffset}
+            <div className="relative">
+              <MenuButton
+                menuOpen={menuOpen}
+                onToggle={() => setMenuOpen((open) => !open)}
               />
-            )}
+
+              {menuOpen && (
+                <DesktopMenu
+                  items={MENU_ITEMS}
+                  onItemClick={scrollWithOffset}
+                />
+              )}
+            </div>
           </div>
         </div>
 
@@ -249,6 +317,8 @@ export default function Header() {
           <MobileMenu
             items={MOBILE_MENU_ITEMS}
             onItemClick={scrollWithOffset}
+            lang={lang}
+            setLang={setLang}
           />
         )}
       </div>
