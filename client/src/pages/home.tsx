@@ -37,7 +37,7 @@ export default function Home() {
       <Header lang = {lang} setLang = {setLang} />
 
       <main>
-        <Hero />
+        <Hero lang = {lang}/>
         <Upcoming
           eventItems={upcomingItems}
           Listings={volunteerListings}

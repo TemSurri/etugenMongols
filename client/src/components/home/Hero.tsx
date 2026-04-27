@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, cubicBezier, useAnimation, useInView } from "framer-motion";
 import type { Variants } from "framer-motion";
 import logo from "../../assets/logo.webp";
@@ -8,7 +8,7 @@ import canadaFlag from "../../assets/canada-flag.webp";
 import mongoliaFlag from "../../assets/mongolia-flag.webp";
 import { FaFacebookF } from "react-icons/fa";
 
-// Animation Variants 
+// Animation Variants
 // all configuration for the animation are set within these objects
 
 const textContainer: Variants = {
@@ -41,20 +41,32 @@ const panelMotion: Variants = {
   },
 };
 
-export default function Hero() {
-  const [lang, setLang] = useState<"en" | "mn">("mn");
+type Lang = "en" | "mn";
 
+type HeroProps = {
+  lang: Lang;
+};
+
+export default function Hero({ lang }: HeroProps) {
   const ABOUT_TEXT =
     lang === "en"
       ? "Etugen Mongols is a Calgary-based, registered non-profit organization focused on building the Mongolian community. We host programs, events, and gatherings that bring people together and keep our culture alive."
       : "Этүгэн Монголчууд нь Калгари хотод төвтэй, албан ёсоор бүртгэлтэй ашгийн бус байгууллага юм. Бид Монголын нийгэмлэгийг нэгтгэх зорилготой хөтөлбөр, арга хэмжээ, уулзалтуудыг зохион байгуулдаг.";
+
+  const ABOUT_TITLE = lang === "en" ? "About Us" : "Бидний тухай";
+  const CONTACT_TITLE = lang === "en" ? "Contact Us" : "Холбоо барих";
+  const CONNECT_TITLE = lang === "en" ? "Connect with us" : "Бидэнтэй холбогдох";
+  const EMAIL_LABEL = lang === "en" ? "Email" : "Имэйл";
+  const EVENT_BUTTON_TEXT =
+    "See Upcoming Events";
 
   const scrollWithOffset = (id: string) => {
     const el = document.getElementById(id);
     const headerHeight = 13;
 
     if (el) {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      const y =
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
@@ -75,7 +87,6 @@ export default function Hero() {
   }, [isInView, controls]);
 
   return (
-    
     <section className="relative min-h-screen w-full overflow-hidden bg-neutral-900">
       {/* The main section of the component, which includes the bg image, overlay, and content. */}
       <img
@@ -90,7 +101,6 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-black/70 via-black/55 to-black/80" />
 
       {/* Flags on the right side for larger screens, hidden on mobile */}
-     
       <div className="pointer-events-none absolute top-6 inset-x-0 z-30 hidden md:block">
         <div className="absolute right-[35%] -translate-x-8">
           <img
@@ -108,9 +118,9 @@ export default function Hero() {
           />
         </div>
       </div>
-  
+
       <div className="relative z-10 min-h-screen max-w-7xl mx-auto flex items-center px-6 md:px-10 md:pr-[35%]">
-        {/* The content wrapper, which contains the text and the sliding panel on larger screens*/}
+        {/* The content wrapper, which contains the text and the sliding panel on larger screens */}
         <motion.div
           ref={textRef}
           variants={textContainer}
@@ -125,7 +135,7 @@ export default function Hero() {
             lg:pr-24
           "
         >
-          {/* The main heading, subheading, and button.*/}
+          {/* The main heading, subheading, and button. */}
           <motion.div
             variants={textItem}
             style={{ willChange: "transform, opacity" }}
@@ -185,13 +195,13 @@ export default function Hero() {
                 hover:-translate-y-0.5 hover:shadow-lg
               "
             >
-              See Upcoming Events
+              {EVENT_BUTTON_TEXT}
             </button>
           </motion.div>
         </motion.div>
       </div>
 
-      // The sliding panel that appears on larger screens when the menu is open, contains about and contanct.
+      {/* The sliding panel that appears on larger screens, contains about and contact. */}
       <motion.div
         variants={panelMotion}
         initial="hidden"
@@ -209,20 +219,13 @@ export default function Hero() {
               className="mb-6 w-52 self-center lg:w-60 xl:mb-8 xl:w-72"
             />
 
-            <button
-              onClick={() => setLang((prev) => (prev === "en" ? "mn" : "en"))}
-              className="
-                mb-4 ml-auto block
-                text-xs uppercase tracking-wide
-                text-black/50 hover:text-black transition
-              "
-            >
-              {lang === "en" ? "Монгол" : "English"}
-            </button>
-
             <div>
-              <h3 className="text-sm uppercase tracking-widest text-black/50">
-                About Us
+              <h3
+                className={`text-sm uppercase text-black/50 ${
+                  lang === "en" ? "tracking-widest" : "tracking-wide"
+                }`}
+              >
+                {ABOUT_TITLE}
               </h3>
 
               <div className="mt-2 h-0.5 w-14 bg-black" />
@@ -235,8 +238,12 @@ export default function Hero() {
             <div className="mt-5">
               <div className="mb-3 h-px w-full bg-black/10" />
 
-              <p className="mb-2 text-[11px] uppercase tracking-[0.25em] text-black/50">
-                Contact Us
+              <p
+                className={`mb-2 text-[11px] uppercase text-black/50 ${
+                  lang === "en" ? "tracking-[0.25em]" : "tracking-wide"
+                }`}
+              >
+                {CONTACT_TITLE}
               </p>
 
               <div className="flex flex-col gap-2">
@@ -252,7 +259,7 @@ export default function Hero() {
                     transition
                   "
                 >
-                  Email · calgarymongolians@gmail.com
+                  {EMAIL_LABEL} · calgarymongolians@gmail.com
                 </a>
               </div>
 
@@ -260,8 +267,12 @@ export default function Hero() {
             </div>
 
             <div className="mt-4 text-center">
-              <p className="text-sm uppercase tracking-widest text-black/60">
-                Connect with us
+              <p
+                className={`text-sm uppercase text-black/60 ${
+                  lang === "en" ? "tracking-widest" : "tracking-wide"
+                }`}
+              >
+                {CONNECT_TITLE}
               </p>
 
               <div className="mt-3 flex justify-center">
