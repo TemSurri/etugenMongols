@@ -230,7 +230,7 @@ export default function Hero({ lang }: HeroProps) {
 
               <div className="mt-2 h-0.5 w-14 bg-black" />
 
-              <p className="mt-4 text-sm leading-[1.75] text-black/70">
+              <p className="mt-4 min-h-[8.25rem] lg:min-h-[7.75rem] xl:min-h-[7rem] text-sm leading-[1.75] text-black/70">
                 {ABOUT_TEXT}
               </p>
             </div>
