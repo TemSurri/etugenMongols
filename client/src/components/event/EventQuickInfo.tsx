@@ -1,6 +1,4 @@
 import { useMemo } from "react";
-import DarkCard from "./DarkCard";
-import InfoRow from "./InfoRow";
 
 type EventQuickInfoProps = {
   date: string;
@@ -19,52 +17,63 @@ export default function EventQuickInfo({
 }: EventQuickInfoProps) {
   const googleMapsUrl = useMemo(() => {
     if (!location) return null;
+
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       location
     )}`;
   }, [location]);
 
-  const phoneList = useMemo(() => contactPhone?.filter(Boolean) ?? [], [contactPhone]);
-
-  const hasGeneralContact = Boolean(contactEmail || phoneList.length > 0);
+  const phoneList = contactPhone?.filter(Boolean) ?? [];
+  const hasContact = Boolean(contactEmail || phoneList.length > 0);
 
   return (
-    <DarkCard title="Quick Info" className="md:col-span-5 lg:col-span-3">
-      <div className="space-y-2">
-        <InfoRow label="Date" value={date} />
-        <InfoRow label="Time" value={time} />
-        {location && <InfoRow label="Location" value={location} />}
+    <section className="rounded-2xl border border-white/10 bg-white/[0.07] p-4 shadow-[0_14px_36px_rgba(0,0,0,0.18)] backdrop-blur-md">
+      <h2 className="text-[10px] uppercase tracking-[0.2em] text-white/45">
+        Quick Info
+      </h2>
 
-        {googleMapsUrl && (
-          <div className="pt-0.5">
-            <a
-              href={googleMapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[13px] text-white/76 underline underline-offset-4 transition hover:text-white sm:text-sm"
-            >
-              Open in Google Maps →
-            </a>
-          </div>
+      <div className="mt-4 space-y-3">
+        <InfoLine label="Date" value={date} />
+        <InfoLine label="Time" value={time} />
+
+        {location && (
+          <InfoLine
+            label="Location"
+            value={
+              <span>
+                {location}
+                {googleMapsUrl && (
+                  <>
+                    <br />
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-block text-white underline underline-offset-4"
+                    >
+                      Open in Google Maps →
+                    </a>
+                  </>
+                )}
+              </span>
+            }
+          />
         )}
       </div>
 
-      <div className="mt-5 border-t border-white/12 pt-4">
-        <div className="mb-3 flex items-center gap-2">
-          <div className="h-px w-5 bg-white/18" />
-          <div className="text-[10px] uppercase tracking-[0.18em] text-white/52">
-            General Contact
-          </div>
-        </div>
+      <div className="mt-5 border-t border-white/10 pt-4">
+        <h3 className="text-[10px] uppercase tracking-[0.2em] text-white/45">
+          Contact
+        </h3>
 
-        <div className="space-y-2">
+        <div className="mt-3 space-y-3">
           {contactEmail && (
-            <InfoRow
+            <InfoLine
               label="Email"
               value={
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="break-all transition hover:text-white"
+                  className="break-all underline underline-offset-4"
                 >
                   {contactEmail}
                 </a>
@@ -73,20 +82,38 @@ export default function EventQuickInfo({
           )}
 
           {phoneList.map((phone, index) => (
-            <InfoRow
+            <InfoLine
               key={`${phone}-${index}`}
               label={index === 0 ? "Phone" : ""}
               value={phone}
             />
           ))}
 
-          {!hasGeneralContact && (
-            <div className="text-[13px] text-white/60 sm:text-sm">
-              No general contact information yet.
-            </div>
+          {!hasContact && (
+            <p className="text-sm text-white/58">
+              No contact information listed yet.
+            </p>
           )}
         </div>
       </div>
-    </DarkCard>
+    </section>
+  );
+}
+
+function InfoLine({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="grid grid-cols-[78px_1fr] gap-3 border-b border-white/8 pb-3 last:border-b-0 last:pb-0">
+      <div className="text-[10px] uppercase tracking-[0.16em] text-white/38">
+        {label}
+      </div>
+
+      <div className="text-sm leading-relaxed text-white/82">{value}</div>
+    </div>
   );
 }

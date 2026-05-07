@@ -167,6 +167,94 @@ Ticket revenue supports:
     ],
   },
 
+  {
+  id: "mongolian-language-workshop-2026",
+  title: "Mongolian Language Workshop",
+  image: "language-workshop.png",
+
+  details: {
+    date: "October 12, 2026",
+    time: "2:00 PM - 4:00 PM",
+    location: "Calgary Central Library",
+
+    description: `Монгол хэлний сургалт, дадлагын өдөрт хүрэлцэн ирээрэй.
+
+Энэхүү арга хэмжээ нь Монгол хэлээ сайжруулах, шинэ үг хэллэг сурах, ярилцах дадлага хийх хүсэлтэй хүүхэд, залуус, гэр бүлүүдэд зориулагдсан.
+
+Хөтөлбөр:
+• Монгол үсэг, дуудлагын дасгал
+• Өдөр тутмын ярианы дадлага
+• Богино уншлага
+• Гэр бүлийн хамтарсан үйл ажиллагаа
+
+Бүх түвшний оролцогчид оролцох боломжтой.`,
+
+    description_en: `Join us for a Mongolian language workshop.
+
+This event is designed for children, youth, and families who want to improve their Mongolian language skills, learn useful phrases, and practice speaking in a welcoming community setting.
+
+Program highlights include:
+
+• Mongolian alphabet and pronunciation practice
+• Everyday conversation exercises
+• Short reading activities
+• Family-friendly group activities
+
+All skill levels are welcome.`,
+
+    ticketInfo: `Энэхүү арга хэмжээ үнэ төлбөргүй.
+
+Оролцогчдын тоо хязгаартай тул урьдчилан бүртгүүлэхийг зөвлөж байна.`,
+
+    ticketInfo_en: `This event is free to attend.
+
+Space is limited, so advance registration is recommended.`,
+  },
+
+  actions: [
+    {
+      type: "registration",
+      enabled: true,
+      label: "Register",
+      label_mn: "Бүртгүүлэх",
+    },
+    {
+      type: "donation",
+      enabled: true,
+      label: "Donate",
+      label_mn: "Хандив өгөх",
+    },
+  ],
+
+  contact: {
+    email: "calgarymongolians@gmail.com",
+    phone: ["587-435-4494"],
+  },
+
+  whoWeWant: [
+    {
+      title: "Language Helper",
+      title_mn: "Хэлний туслах",
+      description:
+        "Help participants with pronunciation, simple phrases, and group activities.",
+      contact: "587-435-4494",
+    },
+    {
+      title: "Setup Volunteer",
+      title_mn: "Бэлтгэлийн сайн дурын ажилтан",
+      description:
+        "Help prepare tables, signs, worksheets, and materials before the workshop.",
+      contact: "587-435-4494",
+    },
+    {
+      title: "Children's Activity Helper",
+      title_mn: "Хүүхдийн үйл ажиллагааны туслах",
+      description:
+        "Support younger participants during games, reading activities, and group exercises.",
+      contact: "587-435-4494",
+    },
+  ],
+},
   
 
   

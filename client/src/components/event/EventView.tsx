@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { EventItem } from "../../static_events";
@@ -19,67 +19,78 @@ type EventViewProps = {
 export default function EventView({ event }: EventViewProps) {
   const [lang, setLang] = useState<"mn" | "en">("mn");
 
+  const enabledActions = useMemo(
+    () => event.actions.filter((action) => action.enabled),
+    [event.actions]
+  );
+
   return (
-    <article className="relative min-h-screen">
+    <article className="relative min-h-screen overflow-hidden bg-black">
       <div
-        aria-hidden
+        aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${landingImage})` }}
       />
 
-      <div className="absolute inset-0 bg-black/78" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.10),rgba(0,0,0,0.38))]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-black/80" />
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.20),rgba(0,0,0,0.62))]"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-        className="relative z-10 mx-auto max-w-7xl px-3 py-3 sm:px-5 sm:py-5 lg:px-6 lg:py-4"
+        transition={{ duration: 0.42, ease: "easeOut" }}
+        className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col px-4 py-4 sm:px-6 sm:py-6"
       >
-        <div className="mb-3">
+        <div className="mb-4">
           <Link
             to="/"
-            className="inline-block text-[10px] uppercase tracking-[0.22em] text-white/68 transition hover:text-white"
+            className="text-[11px] uppercase tracking-[0.2em] text-white/60 transition hover:text-white"
           >
             ← Back to home
           </Link>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-12 lg:gap-4">
+        <main className="space-y-4 pb-8">
           <EventHeader
             title={event.title}
-            date={event.date}
-            time={event.time}
-            location={event.location}
-            onlinePay={event.onlinePay}
-            donate={event.donate}
+            date={event.details.date}
+            time={event.details.time}
+            location={event.details.location}
+            actions={enabledActions}
+            lang={lang}
+          />
+
+          <EventQuickInfo
+            date={event.details.date}
+            time={event.details.time}
+            location={event.details.location}
+            contactEmail={event.contact?.email}
+            contactPhone={event.contact?.phone}
           />
 
           <EventDescription
             lang={lang}
-            description={event.description}
-            descriptionEn={event.description_en}
+            description={event.details.description}
+            descriptionEn={event.details.description_en}
             onToggleLang={() =>
               setLang((prev) => (prev === "mn" ? "en" : "mn"))
             }
           />
 
-          <EventQuickInfo
-            date={event.date}
-            time={event.time}
-            location={event.location}
-            contactEmail={event.contactEmail}
-            contactPhone={event.contactPhone}
-          />
-
           <EventTicketInfo
             lang={lang}
-            descriptionTicket={event.description_ticket}
-            descriptionTicketEn={event.description_ticket_en}
+            descriptionTicket={event.details.ticketInfo}
+            descriptionTicketEn={event.details.ticketInfo_en}
           />
 
-          <EventVolunteerRoles whoWeWant={event.whoWeWant} />
-        </div>
+          {event.whoWeWant.length > 0 && (
+            <EventVolunteerRoles lang={lang} whoWeWant={event.whoWeWant} />
+          )}
+        </main>
       </motion.div>
     </article>
   );

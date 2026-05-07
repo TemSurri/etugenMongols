@@ -26,11 +26,11 @@ export default function UpcomingPastEventsBar({
   if (pastEvents.length === 0) return null;
 
   return (
-    <motion.section variants={containerVariants} className="mt-24 max-w-5xl">
+    <motion.section variants={containerVariants} className="mt-32 max-w-5xl">
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.28em] text-white/45">
-            {lang === "en" ? "Past Events" : "Өнгөрсөн арга хэмжээнүүд"}
+            {lang === "en" ? "Recent Events" : "Сүүлийн арга хэмжээнүүд"}
           </p>
 
           <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-white">
@@ -40,8 +40,8 @@ export default function UpcomingPastEventsBar({
 
         <p className="hidden max-w-xs text-right text-xs leading-5 text-white/45 lg:block">
           {lang === "en"
-            ? "Select a past event to preview its gallery."
-            : "Өнгөрсөн арга хэмжээг сонгож зургуудыг үзнэ үү."}
+            ? "Select a recent event to preview its gallery."
+            : "Сүүлийн арга хэмжээг сонгож зургуудыг үзнэ үү."}
         </p>
       </div>
 

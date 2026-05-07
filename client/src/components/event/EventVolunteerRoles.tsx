@@ -1,63 +1,43 @@
-import LightCard from "./LightCard";
-
-type VolunteerItem = {
-  title: string;
-  description: string;
-  contact?: string;
-};
+import type { Listing } from "../../static_events";
 
 type EventVolunteerRolesProps = {
-  whoWeWant: VolunteerItem[];
+  lang: "mn" | "en";
+  whoWeWant: Listing[];
 };
 
 export default function EventVolunteerRoles({
+  lang,
   whoWeWant,
 }: EventVolunteerRolesProps) {
-  const hasVolunteerInfo = whoWeWant.length > 0;
-
   return (
-    <LightCard
-      title="Volunteer Roles"
-      className="md:col-span-6 lg:col-span-12"
-    >
-      {hasVolunteerInfo ? (
-        <div className="space-y-3 lg:grid lg:grid-cols-3 lg:gap-4 lg:space-y-0">
-          {whoWeWant.map((item, index) => (
-            <div
-              key={`${item.title}-${index}`}
-              className="rounded-sm border border-black/8 bg-black/0.02 px-3 py-3 sm:px-4 sm:py-4"
-            >
-              <div className="mb-2 flex items-center gap-2">
-                <div className="h-px w-4 bg-black/16" />
-                <div className="text-[10px] uppercase tracking-[0.16em] text-black/46">
-                  Volunteer Role
-                </div>
-              </div>
+    <section className="rounded-2xl bg-white p-4 shadow-[0_14px_36px_rgba(0,0,0,0.16)]">
+      <h2 className="text-[10px] uppercase tracking-[0.2em] text-black/45">
+        Volunteer Roles
+      </h2>
 
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-black/68">
-                {item.title}
-              </div>
+      <div className="mt-4 space-y-3">
+        {whoWeWant.map((item, index) => (
+          <article
+            key={`${item.title}-${index}`}
+            className="rounded-xl border border-black/8 bg-black/[0.025] p-3"
+          >
+            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-black/72">
+              {lang === "mn" ? item.title_mn : item.title}
+            </h3>
 
-              <div className="mt-2 text-[13px] leading-relaxed text-black/72 sm:text-sm">
-                {item.description}
-              </div>
+            <p className="mt-2 text-sm leading-relaxed text-black/66">
+              {item.description}
+            </p>
 
-              {item.contact && (
-                <div className="mt-3 border-t border-black/8 pt-2 text-[12px] text-black/56 sm:text-[13px]">
-                  <span className="uppercase tracking-[0.12em] text-black/42">
-                    Contact
-                  </span>{" "}
-                  {item.contact}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-[13px] text-black/56 sm:text-sm">
-          No volunteer roles yet.
-        </p>
-      )}
-    </LightCard>
+            {item.contact && (
+              <p className="mt-3 border-t border-black/8 pt-2 text-xs text-black/52">
+                <span className="uppercase tracking-[0.14em]">Contact:</span>{" "}
+                {item.contact}
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }

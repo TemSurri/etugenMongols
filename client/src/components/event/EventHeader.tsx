@@ -1,13 +1,12 @@
-import DarkCard from "./DarkCard";
-import SectionLabel from "./SectionLabel";
+import type { EventAction } from "../../static_events";
 
 type EventHeaderProps = {
   title: string;
   date: string;
   time: string;
   location?: string;
-  onlinePay?: boolean;
-  donate?: boolean;
+  actions: EventAction[];
+  lang: "mn" | "en";
 };
 
 export default function EventHeader({
@@ -15,62 +14,50 @@ export default function EventHeader({
   date,
   time,
   location,
-  onlinePay,
-  donate,
+  actions,
+  lang,
 }: EventHeaderProps) {
+  const hasActions = actions.length > 0;
+
   return (
-    <DarkCard className="md:col-span-12">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div className="min-w-0">
-          <SectionLabel>Event</SectionLabel>
-
-          <h1 className="mt-1.5 text-xl font-semibold uppercase leading-tight tracking-[0.06em] text-white sm:text-2xl lg:text-3xl">
-            {title}
-          </h1>
-
-          <div className="mt-2.5 flex flex-wrap gap-1.5">
-            <div className="border border-white/12 bg-white/0.05 px-2.5 py-1 text-[11px] text-white/82">
-              {date}
-            </div>
-            <div className="border border-white/12 bg-white/0.05 px-2.5 py-1 text-[11px] text-white/82">
-              {time}
-            </div>
-            {location && (
-              <div className="border border-white/12 bg-white/0.05 px-2.5 py-1 text-[11px] text-white/82">
-                {location}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {(onlinePay || donate) && (
-          <div className="w-full lg:w-auto lg:max-w-[360px]">
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-2">
-              {onlinePay && (
-                <div className="border border-white/10 bg-white/0.04 px-3 py-2.5">
-                  <div className="text-[10px] uppercase tracking-[0.18em] text-white/40">
-                    Payment
-                  </div>
-                  <div className="mt-1 text-[13px] leading-relaxed text-white/80 sm:text-sm">
-                    Online payment will appear here.
-                  </div>
-                </div>
-              )}
-
-              {donate && (
-                <div className="border border-white/10 bg-white/0.04 px-3 py-2.5">
-                  <div className="text-[10px] uppercase tracking-[0.18em] text-white/40">
-                    Donate
-                  </div>
-                  <div className="mt-1 text-[13px] leading-relaxed text-white/80 sm:text-sm">
-                    Donation support will appear here.
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+    <section className="rounded-2xl border border-white/10 bg-white/[0.07] p-4 shadow-[0_14px_36px_rgba(0,0,0,0.22)] backdrop-blur-md">
+      <div className="text-[10px] uppercase tracking-[0.22em] text-white/45">
+        Event
       </div>
-    </DarkCard>
+
+      <h1 className="mt-2 text-3xl font-semibold uppercase leading-tight tracking-[0.05em] text-white sm:text-4xl">
+        {title}
+      </h1>
+
+      <div className="mt-3 space-y-1.5 text-sm text-white/72">
+        <p>{date}</p>
+        <p>{time}</p>
+        {location && <p>{location}</p>}
+      </div>
+
+      {hasActions && (
+        <div className="mt-5 space-y-2">
+          {actions.map((action) => {
+            const label = lang === "mn" ? action.label_mn : action.label;
+
+            return (
+              <button
+                key={action.type}
+                type="button"
+                className="w-full rounded-xl border border-white/12 bg-white text-sm font-medium uppercase tracking-[0.12em] text-black transition hover:bg-white/90 active:scale-[0.99]"
+              >
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span>{label}</span>
+
+                  {action.type === "payment" && action.price !== undefined && (
+                    <span className="text-black/55">${action.price}</span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </section>
   );
 }

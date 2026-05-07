@@ -138,6 +138,12 @@ export default function Upcoming({
     setSelectedPastEvent(event);
     setSelectedEvent(null);
     setPanelMode("past");
+
+    const el = document.getElementById("upcoming");
+    if (!el) return;
+
+    const y = el.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
   };
 
   const ABOUT_TEXT =

@@ -1,5 +1,3 @@
-import LightCard from "./LightCard";
-
 type EventTicketInfoProps = {
   lang: "mn" | "en";
   descriptionTicket?: string;
@@ -17,15 +15,14 @@ export default function EventTicketInfo({
   const hasTicketInfo = activeTicketInfo.trim().length > 0;
 
   return (
-    <LightCard
-      title="Ticket & Payment Process"
-      className="md:col-span-6 lg:col-span-3 self-start h-fit"
-    >
-      <div className="h-[280px] overflow-y-auto pr-1 text-[13px] leading-relaxed whitespace-pre-line text-black/72 sm:h-[340px] sm:text-sm lg:h-[465px]">
-        {hasTicketInfo
-          ? activeTicketInfo
-          : "No ticket or payment details yet."}
+    <section className="rounded-2xl bg-white p-4 shadow-[0_14px_36px_rgba(0,0,0,0.16)]">
+      <h2 className="text-[10px] uppercase tracking-[0.2em] text-black/45">
+        Ticket Info
+      </h2>
+
+      <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-black/74">
+        {hasTicketInfo ? activeTicketInfo : "No ticket information listed yet."}
       </div>
-    </LightCard>
+    </section>
   );
 }
