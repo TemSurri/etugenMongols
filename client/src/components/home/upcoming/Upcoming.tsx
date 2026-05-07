@@ -1,25 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, cubicBezier } from "framer-motion";
+import { cubicBezier, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+
 import heroBg from "../../../assets/landingpage.webp";
 import logo from "../../../assets/logo.webp";
-import { getCardInfos } from "../../../static_events";
-import type { OrganizedListing } from "../../../static_events";
-import About from "../About";
 
+import type { EventItem, OrganizedListing } from "../../../static_events";
+import type { GalleryItem } from "../../../static_gallery";
+
+import About from "../About";
 import UpcomingDesktopPanel from "./UpcomingDesktopPanel";
 import UpcomingSectionHeader from "./UpcomingSectionHeader";
 import UpcomingEventCards from "./UpcomingEventCards";
-import UpcomingVolunteerBlock from "./UpcomingVolunteerBlock";
 import UpcomingMobileVolunteer from "./UpcomingMobileVolunteer";
+import UpcomingPastEventsBar from "./UpcomingPastEventsBar";
 
-// data
+type Lang = "en" | "mn";
+type PanelMode = "upcoming" | "past";
+
 type UpcomingProps = {
-  eventItems: ReturnType<typeof getCardInfos>;
+  eventItems: EventItem[];
   Listings: OrganizedListing[];
+  pastEvents: GalleryItem[];
+  lang: Lang;
 };
 
 const noEventsVariants: Variants = {
@@ -68,14 +75,26 @@ const panelMotion: Variants = {
   },
 };
 
-export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [lang, setLang] = useState<"en" | "mn">("mn");
-  const [eventsLang, setEventsLang] = useState<"en" | "mn">("mn");
+export default function Upcoming({
+  eventItems,
+  Listings,
+  pastEvents,
+  lang,
+}: UpcomingProps) {
+  const [eventsLang, setEventsLang] = useState<Lang>(lang);
   const [isDesktop, setIsDesktop] = useState(false);
+
+  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
+  const [selectedPastEvent, setSelectedPastEvent] =
+    useState<GalleryItem | null>(null);
+  const [panelMode, setPanelMode] = useState<PanelMode>("upcoming");
 
   const navigate = useNavigate();
   const hasEvents = eventItems.length > 0;
+
+  useEffect(() => {
+    setEventsLang(lang);
+  }, [lang]);
 
   useEffect(() => {
     const check = () => {
@@ -83,13 +102,43 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
         setIsDesktop(window.innerWidth >= 768);
       }
     };
+
     check();
     window.addEventListener("resize", check);
+
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const displayItems =
-    isDesktop && eventItems.length > 1 ? [...eventItems] : eventItems;
+  useEffect(() => {
+    const firstUpcoming = eventItems[0] ?? null;
+    const firstPast = pastEvents[0] ?? null;
+
+    setSelectedEvent(firstUpcoming);
+    setSelectedPastEvent(null);
+
+    if (firstUpcoming) {
+      setPanelMode("upcoming");
+    } else if (firstPast) {
+      setSelectedPastEvent(firstPast);
+      setPanelMode("past");
+    }
+  }, [eventItems, pastEvents]);
+
+  const handleSelectUpcomingEvent: Dispatch<
+    SetStateAction<EventItem | null>
+  > = (value) => {
+    const nextEvent = typeof value === "function" ? value(selectedEvent) : value;
+
+    setSelectedEvent(nextEvent);
+    setSelectedPastEvent(null);
+    setPanelMode("upcoming");
+  };
+
+  const handleSelectPastEvent = (event: GalleryItem) => {
+    setSelectedPastEvent(event);
+    setSelectedEvent(null);
+    setPanelMode("past");
+  };
 
   const ABOUT_TEXT =
     lang === "en"
@@ -99,6 +148,7 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
   const scrollToGallery = () => {
     const el = document.getElementById("gallery");
     if (!el) return;
+
     const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
     window.scrollTo({ top: y, behavior: "smooth" });
   };
@@ -110,7 +160,7 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: false, amount: 0.1 }}
-        className="relative bg-cover bg-center overflow-hidden"
+        className="relative overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}
       >
         <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/65 to-black/90" />
@@ -118,8 +168,11 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
         <UpcomingDesktopPanel
           panelMotion={panelMotion}
           lang={lang}
-          setLang={setLang}
           ABOUT_TEXT={ABOUT_TEXT}
+          selectedEvent={selectedEvent}
+          selectedPastEvent={selectedPastEvent}
+          panelMode={panelMode}
+          hasEvents={hasEvents || pastEvents.length > 0}
           scrollToGallery={scrollToGallery}
           heroBg={heroBg}
           logo={logo}
@@ -143,23 +196,23 @@ export default function Upcoming({ eventItems, Listings }: UpcomingProps) {
 
           <UpcomingEventCards
             hasEvents={hasEvents}
-            displayItems={displayItems}
+            eventItems={eventItems}
+            selectedEvent={panelMode === "upcoming" ? selectedEvent : null}
+            isDesktop={isDesktop}
+            onSelectEvent={handleSelectUpcomingEvent}
             containerVariants={containerVariants}
             cardVariants={cardVariants}
             noEventsVariants={noEventsVariants}
             scrollToGallery={scrollToGallery}
           />
 
-          <UpcomingVolunteerBlock
-            Listings={Listings}
-            eventsLang={eventsLang}
-            setEventsLang={setEventsLang}
-            hoveredIndex={hoveredIndex}
-            setHoveredIndex={setHoveredIndex}
-            navigate={navigate}
+          <UpcomingPastEventsBar
+            pastEvents={pastEvents}
+            selectedPastEvent={selectedPastEvent}
+            onSelectPastEvent={handleSelectPastEvent}
+            lang={lang}
             containerVariants={containerVariants}
-            textVariants={textVariants}
-            logo={logo}
+            cardVariants={cardVariants}
           />
         </div>
       </motion.section>
