@@ -26,14 +26,14 @@ export default function UpcomingPastEventsBar({
   if (pastEvents.length === 0) return null;
 
   return (
-    <motion.section variants={containerVariants} className="mt-32 max-w-5xl">
-      <div className="mb-5 flex items-end justify-between gap-4">
+    <motion.section variants={containerVariants} className="mt-8 max-w-5xl">
+      <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.28em] text-white/45">
+          <p className="text-[10px] uppercase tracking-[0.28em] text-white/45">
             {lang === "en" ? "Recent Events" : "Сүүлийн арга хэмжээнүүд"}
           </p>
 
-          <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-white">
+          <h3 className="mt-1.5 text-lg font-semibold tracking-[-0.02em] text-white">
             {lang === "en" ? "Community Moments" : "Нийгэмлэгийн дурсамжууд"}
           </h3>
         </div>
@@ -57,7 +57,7 @@ export default function UpcomingPastEventsBar({
               onClick={() => onSelectPastEvent(event)}
               className={`
                 group
-                grid grid-cols-[82px_1fr]
+                grid grid-cols-[76px_1fr]
                 overflow-hidden
                 border
                 bg-white/[0.07]
@@ -71,7 +71,7 @@ export default function UpcomingPastEventsBar({
                 }
               `}
             >
-              <div className="h-24 overflow-hidden bg-white/10">
+              <div className="h-20 overflow-hidden bg-white/10">
                 <img
                   src={`/gallery/${event.id}/albumphotos/1.png`}
                   alt={event.title}
@@ -83,7 +83,7 @@ export default function UpcomingPastEventsBar({
                 />
               </div>
 
-              <div className="flex min-w-0 flex-col justify-center px-4 py-3">
+              <div className="flex min-w-0 flex-col justify-center px-3.5 py-2.5">
                 <p className="truncate text-sm font-medium text-white">
                   {event.title}
                 </p>
@@ -92,7 +92,7 @@ export default function UpcomingPastEventsBar({
                   {event.date}
                 </p>
 
-                <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-white/40">
+                <p className="mt-1.5 text-[9px] uppercase tracking-[0.2em] text-white/40">
                   {lang === "en" ? "Preview" : "Урьдчилж харах"}
                 </p>
               </div>

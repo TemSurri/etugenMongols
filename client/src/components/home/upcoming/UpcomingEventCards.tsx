@@ -33,15 +33,15 @@ export default function UpcomingEventCards({
 
   const gridClass =
     eventCount === 1
-      ? "grid-cols-1 max-w-md sm:max-w-lg md:max-w-[460px] mx-auto"
+      ? "grid-cols-1 max-w-md sm:max-w-lg md:max-w-[420px] mx-auto"
       : eventCount === 2
-        ? "grid-cols-1 sm:grid-cols-2 max-w-5xl"
+        ? "grid-cols-1 sm:grid-cols-2 max-w-4xl"
         : eventCount <= 4
-          ? "grid-cols-1 sm:grid-cols-2 max-w-5xl"
-          : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 max-w-6xl";
+          ? "grid-cols-1 sm:grid-cols-2 max-w-4xl"
+          : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 max-w-5xl";
 
   const cardPaddingClass =
-    eventCount <= 2 ? "px-5 py-5 sm:px-6 sm:py-6" : "px-5 py-4";
+    eventCount <= 2 ? "px-4 py-4 sm:px-5 sm:py-5" : "px-4 py-3.5";
 
   return (
     <motion.div
@@ -49,11 +49,11 @@ export default function UpcomingEventCards({
       className={`
         grid
         ${gridClass}
-        gap-6
-        sm:gap-7
-        lg:gap-8
-        md:pt-10
-        md:pb-20
+        gap-4
+        sm:gap-5
+        lg:gap-6
+        md:pt-8
+        md:pb-8
       `}
     >
       {hasEvents ? (
@@ -72,7 +72,7 @@ export default function UpcomingEventCards({
                 e.preventDefault();
                 onSelectEvent(item);
               }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
               className="
                 group
                 block
@@ -94,7 +94,7 @@ export default function UpcomingEventCards({
                   overflow-hidden
                   border
                   bg-black/40
-                  shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+                  shadow-[0_18px_46px_rgba(0,0,0,0.4)]
                   transition-colors
                   duration-200
                   ${
@@ -108,7 +108,7 @@ export default function UpcomingEventCards({
                   className="
                     relative
                     w-full
-                    aspect-[16/10]
+                    aspect-[16/9]
                     overflow-hidden
                     bg-black/20
                   "
@@ -149,6 +149,7 @@ export default function UpcomingEventCards({
                   <p
                     className="
                       mt-2
+                      line-clamp-2
                       text-sm
                       leading-relaxed
                       text-white/65
@@ -160,8 +161,8 @@ export default function UpcomingEventCards({
                   {shouldShowSelectionState && (
                     <p
                       className={`
-                        mt-4
-                        text-xs
+                        mt-3
+                        text-[11px]
                         uppercase
                         tracking-widest
                         transition-colors

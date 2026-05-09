@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.webp";
 
 type MenuItem = {
@@ -30,7 +31,13 @@ const MOBILE_MENU_ITEMS: MenuItem[] = [
   { label: "Contact", id: "contact" },
 ];
 
-// keeps track of if the header should be hidden or transparent
+type PendingScrollTarget = {
+  id: string;
+  offset: number;
+};
+
+const PENDING_SCROLL_KEY = "etugen-pending-scroll";
+
 function useHeaderScrollState() {
   const [isTop, setIsTop] = useState(true);
   const [hidden, setHidden] = useState(false);
@@ -63,12 +70,41 @@ function useHeaderScrollState() {
   return { isTop, hidden };
 }
 
+function scrollToSection(id: string, offset: number = 13) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+
+  const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+  window.scrollTo({ top: y, behavior: "smooth" });
+
+  return true;
+}
+
+function savePendingScroll(id: string, offset: number) {
+  const payload: PendingScrollTarget = { id, offset };
+  sessionStorage.setItem(PENDING_SCROLL_KEY, JSON.stringify(payload));
+}
+
+function readPendingScroll(): PendingScrollTarget | null {
+  const raw = sessionStorage.getItem(PENDING_SCROLL_KEY);
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as PendingScrollTarget;
+  } catch {
+    return null;
+  }
+}
+
+function clearPendingScroll() {
+  sessionStorage.removeItem(PENDING_SCROLL_KEY);
+}
+
 type MenuButtonProps = {
   menuOpen: boolean;
   onToggle: () => void;
 };
 
-// hamburger button
 function MenuButton({ menuOpen, onToggle }: MenuButtonProps) {
   return (
     <button
@@ -122,7 +158,6 @@ type DesktopMenuProps = {
   onItemClick: (id: string, offset?: number) => void;
 };
 
-// desktop dropdown menu
 function DesktopMenu({ items, onItemClick }: DesktopMenuProps) {
   return (
     <div
@@ -158,7 +193,6 @@ type MobileMenuProps = {
   setLang: React.Dispatch<React.SetStateAction<Lang>>;
 };
 
-// mobile and tablet dropdown menu
 function MobileMenu({ items, onItemClick, lang, setLang }: MobileMenuProps) {
   return (
     <div
@@ -207,18 +241,48 @@ export default function Header({ lang, setLang }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuWrapperRef = useRef<HTMLDivElement | null>(null);
 
-  const scrollWithOffset = (id: string, offset: number = 13) => {
-    const el = document.getElementById(id);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: y, behavior: "smooth" });
+  const scrollWithOffset = (id: string, offset: number = 13) => {
+    setMenuOpen(false);
+
+    if (location.pathname === "/") {
+      scrollToSection(id, offset);
+      return;
     }
 
-    setMenuOpen(false);
+    savePendingScroll(id, offset);
+    navigate("/");
   };
 
-  // closes menu when escape is pressed
+  const goHomeTop = () => {
+    setMenuOpen(false);
+    clearPendingScroll();
+
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (location.pathname !== "/") return;
+
+    const pending = readPendingScroll();
+    if (!pending) return;
+
+    clearPendingScroll();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scrollToSection(pending.id, pending.offset);
+      });
+    });
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -230,7 +294,6 @@ export default function Header({ lang, setLang }: HeaderProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // closes menu when clicking outside of it
   useEffect(() => {
     const handlePointerDown = (e: MouseEvent | TouchEvent) => {
       if (!menuWrapperRef.current) return;
@@ -262,10 +325,7 @@ export default function Header({ lang, setLang }: HeaderProps) {
       <div ref={menuWrapperRef}>
         <div className="w-full flex justify-between items-center relative">
           <button
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-              setMenuOpen(false);
-            }}
+            onClick={goHomeTop}
             className="hover:opacity-90 transition flex items-center gap-3"
           >
             <img

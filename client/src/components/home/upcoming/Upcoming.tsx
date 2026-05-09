@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 import { cubicBezier, motion } from "framer-motion";
@@ -56,11 +56,11 @@ const textVariants: Variants = {
 };
 
 const cardVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 18, opacity: 0 },
   show: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 };
 
@@ -81,6 +81,8 @@ export default function Upcoming({
   pastEvents,
   lang,
 }: UpcomingProps) {
+  const navigate = useNavigate();
+
   const [eventsLang, setEventsLang] = useState<Lang>(lang);
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -89,75 +91,92 @@ export default function Upcoming({
     useState<GalleryItem | null>(null);
   const [panelMode, setPanelMode] = useState<PanelMode>("upcoming");
 
-  const navigate = useNavigate();
   const hasEvents = eventItems.length > 0;
+  const hasPanelContent = hasEvents || pastEvents.length > 0;
+
+  const ABOUT_TEXT = useMemo(() => {
+    return lang === "en"
+      ? "Etugen Mongols is a Calgary-based, registered non-profit organization focused on building the Mongolian community. We host programs, events, and gatherings that bring people together and keep our culture alive."
+      : "Этүгэн Монголчууд нь Калгари хотод төвтэй, албан ёсоор бүртгэлтэй ашгийн бус байгууллага юм. Бид Монголын нийгэмлэгийг нэгтгэх зорилготой хөтөлбөр, арга хэмжээ, уулзалтуудыг зохион байгуулдаг.";
+  }, [lang]);
 
   useEffect(() => {
     setEventsLang(lang);
   }, [lang]);
 
   useEffect(() => {
-    const check = () => {
-      if (typeof window !== "undefined") {
-        setIsDesktop(window.innerWidth >= 768);
-      }
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
     };
 
-    check();
-    window.addEventListener("resize", check);
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
 
-    return () => window.removeEventListener("resize", check);
+    return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
   useEffect(() => {
     const firstUpcoming = eventItems[0] ?? null;
     const firstPast = pastEvents[0] ?? null;
 
-    setSelectedEvent(firstUpcoming);
-    setSelectedPastEvent(null);
-
     if (firstUpcoming) {
+      setSelectedEvent(firstUpcoming);
+      setSelectedPastEvent(null);
       setPanelMode("upcoming");
-    } else if (firstPast) {
+      return;
+    }
+
+    if (firstPast) {
+      setSelectedEvent(null);
       setSelectedPastEvent(firstPast);
       setPanelMode("past");
+      return;
     }
-  }, [eventItems, pastEvents]);
 
-  const handleSelectUpcomingEvent: Dispatch<
-    SetStateAction<EventItem | null>
-  > = (value) => {
-    const nextEvent = typeof value === "function" ? value(selectedEvent) : value;
-
-    setSelectedEvent(nextEvent);
+    setSelectedEvent(null);
     setSelectedPastEvent(null);
     setPanelMode("upcoming");
-  };
+  }, [eventItems, pastEvents]);
 
-  const handleSelectPastEvent = (event: GalleryItem) => {
-    setSelectedPastEvent(event);
-    setSelectedEvent(null);
-    setPanelMode("past");
-
+  const scrollToUpcomingTop = useCallback(() => {
     const el = document.getElementById("upcoming");
     if (!el) return;
 
     const y = el.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({ top: y, behavior: "smooth" });
-  };
+  }, []);
 
-  const ABOUT_TEXT =
-    lang === "en"
-      ? "Etugen Mongols is a Calgary-based, registered non-profit organization focused on building the Mongolian community. We host programs, events, and gatherings that bring people together and keep our culture alive."
-      : "Этүгэн Монголчууд нь Калгари хотод төвтэй, албан ёсоор бүртгэлтэй ашгийн бус байгууллага юм. Бид Монголын нийгэмлэгийг нэгтгэх зорилготой хөтөлбөр, арга хэмжээ, уулзалтуудыг зохион байгуулдаг.";
-
-  const scrollToGallery = () => {
+  const scrollToGallery = useCallback(() => {
     const el = document.getElementById("gallery");
     if (!el) return;
 
     const y = el.getBoundingClientRect().top + window.pageYOffset - 60;
     window.scrollTo({ top: y, behavior: "smooth" });
-  };
+  }, []);
+
+  const handleSelectUpcomingEvent: Dispatch<
+    SetStateAction<EventItem | null>
+  > = useCallback((value) => {
+    setSelectedEvent((currentEvent) => {
+      const nextEvent =
+        typeof value === "function" ? value(currentEvent) : value;
+
+      setSelectedPastEvent(null);
+      setPanelMode("upcoming");
+
+      return nextEvent;
+    });
+  }, []);
+
+  const handleSelectPastEvent = useCallback(
+    (event: GalleryItem) => {
+      setSelectedPastEvent(event);
+      setSelectedEvent(null);
+      setPanelMode("past");
+      scrollToUpcomingTop();
+    },
+    [scrollToUpcomingTop]
+  );
 
   return (
     <>
@@ -166,7 +185,7 @@ export default function Upcoming({
         initial="hidden"
         whileInView="show"
         viewport={{ once: false, amount: 0.1 }}
-        className="relative overflow-hidden bg-cover bg-center"
+        className="relative min-h-screen overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}
       >
         <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/65 to-black/90" />
@@ -178,7 +197,7 @@ export default function Upcoming({
           selectedEvent={selectedEvent}
           selectedPastEvent={selectedPastEvent}
           panelMode={panelMode}
-          hasEvents={hasEvents || pastEvents.length > 0}
+          hasEvents={hasPanelContent}
           scrollToGallery={scrollToGallery}
           heroBg={heroBg}
           logo={logo}
@@ -187,11 +206,11 @@ export default function Upcoming({
         <div
           className="
             relative z-10
-            max-w-7xl mx-auto
-            px-6 py-28
-            md:pr-[360px]
-            lg:pr-[420px]
-            xl:pr-[480px]
+            mx-auto min-h-screen max-w-7xl
+            px-6 pt-20 pb-16
+            md:pr-[340px]
+            lg:pr-[400px]
+            xl:pr-[460px]
           "
         >
           <UpcomingSectionHeader

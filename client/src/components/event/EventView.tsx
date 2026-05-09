@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { EventItem } from "../../static_events";
@@ -12,20 +12,21 @@ import EventQuickInfo from "./EventQuickInfo";
 import EventTicketInfo from "./EventTicketInfo";
 import EventVolunteerRoles from "./EventVolunteerRoles";
 
+type Lang = "mn" | "en";
+
 type EventViewProps = {
   event: EventItem;
+  lang: Lang;
 };
 
-export default function EventView({ event }: EventViewProps) {
-  const [lang, setLang] = useState<"mn" | "en">("mn");
-
+export default function EventView({ event, lang }: EventViewProps) {
   const enabledActions = useMemo(
     () => event.actions.filter((action) => action.enabled),
     [event.actions]
   );
 
   return (
-    <article className="relative min-h-screen overflow-hidden bg-black">
+    <article className="relative min-h-screen overflow-hidden bg-black pt-20">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -43,7 +44,7 @@ export default function EventView({ event }: EventViewProps) {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.42, ease: "easeOut" }}
-        className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col px-4 py-4 sm:px-6 sm:py-6"
+        className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] max-w-2xl flex-col px-4 py-4 sm:px-6 sm:py-6"
       >
         <div className="mb-4">
           <Link
@@ -62,6 +63,7 @@ export default function EventView({ event }: EventViewProps) {
             location={event.details.location}
             actions={enabledActions}
             lang={lang}
+            shareUrl={`/events/${event.id}`}
           />
 
           <EventQuickInfo
@@ -76,9 +78,6 @@ export default function EventView({ event }: EventViewProps) {
             lang={lang}
             description={event.details.description}
             descriptionEn={event.details.description_en}
-            onToggleLang={() =>
-              setLang((prev) => (prev === "mn" ? "en" : "mn"))
-            }
           />
 
           <EventTicketInfo

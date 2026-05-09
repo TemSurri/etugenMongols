@@ -40,6 +40,74 @@ export const events: GalleryItem[] = [
     activities: ["wrestling", "festival", "celebration", "community gathering"],
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   },
+  {
+  id: "childrenswp2025",
+  title: "Children's Winter Party 2025",
+  date: "December 14, 2025",
+  location: "Calgary, Alberta",
+  description:
+    "A winter community celebration for children and families, featuring games, food, music, photos, and shared cultural moments.",
+  albumImageCount: 10,
+  activities: [
+    "children's games",
+    "family activities",
+    "winter celebration",
+    "community gathering",
+    "food and music",
+  ],
+  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+},
+{
+  id: "tsagaan-sar-2025",
+  title: "Tsagaan Sar Celebration 2025",
+  date: "February 9, 2025",
+  location: "Calgary, Alberta",
+  description:
+    "A Mongolian Lunar New Year gathering with traditional greetings, food, cultural clothing, music, and family-centered community celebration.",
+  albumImageCount: 10,
+  activities: [
+    "traditional greetings",
+    "community meal",
+    "cultural clothing",
+    "family photos",
+    "music and gathering",
+  ],
+  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+},
+{
+  id: "cultural-night-2024",
+  title: "Mongolian Cultural Night 2024",
+  date: "September 21, 2024",
+  location: "Calgary, Alberta",
+  description:
+    "An evening celebrating Mongolian heritage through music, dance, food, storytelling, cultural displays, and community performances.",
+  albumImageCount: 10,
+  activities: [
+    "traditional music",
+    "dance performances",
+    "cultural displays",
+    "community dinner",
+    "storytelling",
+  ],
+  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+},
+{
+  id: "summer-picnic-2024",
+  title: "Mongolian Community Summer Picnic 2024",
+  date: "August 10, 2024",
+  location: "Calgary, Alberta",
+  description:
+    "A casual outdoor summer gathering for families and community members, with food, games, photos, and social time.",
+  albumImageCount: 10,
+  activities: [
+    "outdoor games",
+    "family picnic",
+    "community photos",
+    "food sharing",
+    "social gathering",
+  ],
+  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+},
 ];
 
 export function getCardInfos(events: GalleryItem[]) {
