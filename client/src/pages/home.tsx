@@ -32,17 +32,6 @@ export default function Home() {
 
       <main>
         <Hero lang={lang} />
-
-        <Upcoming
-          eventItems={upcomingEventsRaw}
-          Listings={volunteerListings}
-          pastEvents={galleryEventsRaw}
-          lang={lang}
-        />
-
-        <Gallery eventItems={galleryItems} />
-
-        <CTA />
       </main>
 
       <Footer />

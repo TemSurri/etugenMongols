@@ -2,11 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="preload" as="image" href="/landingpage.webp" />
-    <link rel="icon" type="image/svg+xml"/>
+
+    <!-- 
+      Preload the hero background early.
+      This helps reduce the black flash before the hero image renders.
+    -->
+    <link
+      rel="preload"
+      as="image"
+      href="/landingpage.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
+    <!-- 
+      Use a real favicon path if you have one.
+      Remove this line if you do not have /favicon.ico in public.
+    -->
+    <link rel="icon" href="/favicon.ico" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>etugen-mongols</title>
+    <meta
+      name="description"
+      content="Etugen Mongols is a Calgary-based Mongolian non-profit organization focused on community, culture, language, and tradition."
+    />
+
+    <title>Etugen Mongols</title>
+
+    <!-- 
+      This gives the browser a better first paint color before React loads.
+      It should match the hero instead of flashing pure black.
+    -->
+    <style>
+      html,
+      body,
+      #root {
+        min-height: 100%;
+        margin: 0;
+        background: #2f3320;
+      }
+    </style>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
