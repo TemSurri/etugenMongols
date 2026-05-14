@@ -9,33 +9,79 @@ import { events, getEventLink } from "../../static_events";
 const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61584273744310";
 const CONTACT_EMAIL = "calgarymongolians@gmail.com";
 
-/*
-  Footer navigation.
-  Kept outside the component so this array is not recreated on every render.
-*/
-const FOOTER_NAV_ITEMS = [
-  { label: "About", to: "/about" },
-  { label: "Events", to: "/events" },
-  { label: "Gallery", to: "/gallery" },
-  { label: "Contact", to: "/contact" },
-] as const;
+type Lang = "en" | "mn";
+
+type FooterProps = {
+  lang: Lang;
+};
+
+const FOOTER_COPY = {
+  en: {
+    community: "Calgary Mongolian Community",
+    slogan: "Preserving heritage through culture, language, and tradition.",
+    description:
+      "Etugen Mongols is a Calgary-based non-profit organization focused on building community, supporting cultural programs, and empowering women to thrive.",
+    navigation: "Navigation",
+    connect: "Connect",
+    contactUs: "Contact Us",
+    featuredEvent: "Featured Event",
+    viewEvent: "View Event",
+    moreEvents: "More Events",
+    noEvents: "New community events will be announced soon.",
+    rights: "All rights reserved.",
+    nav: {
+      about: "About",
+      events: "Events",
+      gallery: "Gallery",
+      contact: "Contact",
+    },
+  },
+  mn: {
+    community: "Калгари дахь Монгол нийгэмлэг",
+    slogan: "Соёл, хэл, уламжлалаараа дамжуулан өв соёлоо хадгална.",
+    description:
+      "Этүгэн Монголчууд нь Калгари хотод төвтэй ашгийн бус байгууллага бөгөөд хамтын нийгэмлэгийг бэхжүүлэх, соёлын хөтөлбөрүүдийг дэмжих, эмэгтэйчүүдийг хөгжихөд дэмжлэг үзүүлэх зорилготой.",
+    navigation: "Цэс",
+    connect: "Холбогдох",
+    contactUs: "Холбогдох",
+    featuredEvent: "Онцлох арга хэмжээ",
+    viewEvent: "Арга хэмжээг үзэх",
+    moreEvents: "Бусад арга хэмжээ",
+    noEvents: "Шинэ арга хэмжээнүүд удахгүй зарлагдана.",
+    rights: "Бүх эрх хуулиар хамгаалагдсан.",
+    nav: {
+      about: "Бидний тухай",
+      events: "Арга хэмжээ",
+      gallery: "Зургийн цомог",
+      contact: "Холбоо барих",
+    },
+  },
+} as const;
 
 /*
   Shared link styles.
   This keeps the JSX cleaner and makes future style edits easier.
 */
 const footerTextLinkClassName =
-  "w-fit text-sm text-[#f3efd9]/68 transition-colors hover:text-[#d6c77a]";
+  "w-fit text-sm text-[#4e593c]/78 transition-colors hover:text-[#9a7b26]";
 
 const footerCtaClassName =
-  "inline-flex border border-[#d6c77a]/25 px-5 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#f3efd9]/88 transition-colors hover:border-[#f3efd9] hover:bg-[#f3efd9] hover:text-[#252817]";
+  "inline-flex border border-[#b39135]/35 px-5 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#27301d]/88 transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]";
 
-function Footer() {
+function Footer({ lang }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const featuredEvent = events[0] ?? null;
+  const copy = FOOTER_COPY[lang];
+
+  const footerNavItems = [
+    { label: copy.nav.about, to: "/about" },
+    { label: copy.nav.events, to: "/events" },
+    { label: copy.nav.gallery, to: "/gallery" },
+    { label: copy.nav.contact, to: "/contact" },
+  ] as const;
 
   return (
-    <footer className="border-t border-[#d6c77a]/12 bg-[#252817] text-[#f3efd9]">
+    <footer className="border-t border-[#d8caa5]/55 bg-[#fffaf0] text-[#27301d]">
       <div
         className="
           mx-auto
@@ -47,10 +93,7 @@ function Footer() {
           lg:py-16
         "
       >
-        {/* 
-          Brand section.
-          This gives the footer a clear identity instead of only showing links.
-        */}
+        {/* Brand section */}
         <section aria-labelledby="footer-brand-heading">
           <Link
             to="/"
@@ -68,59 +111,53 @@ function Footer() {
             <div>
               <p
                 id="footer-brand-heading"
-                className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6c77a]/80"
+                className="text-xs font-semibold uppercase tracking-[0.28em] text-[#9a7b26]/90"
               >
                 Etugen Mongols
               </p>
 
-              <p className="mt-1 text-sm text-[#f3efd9]/52">
-                Calgary Mongolian Community
+              <p className="mt-1 text-sm text-[#4e593c]/58">
+                {copy.community}
               </p>
             </div>
           </Link>
 
-          <h2 className="mt-7 max-w-sm text-2xl font-semibold leading-snug tracking-tight text-[#f3efd9]">
-            Preserving heritage through culture, language, and tradition.
+          <h2 className="mt-7 max-w-sm text-2xl font-semibold leading-snug tracking-tight text-[#27301d]">
+            {copy.slogan}
           </h2>
 
-          <p className="mt-5 max-w-md text-sm leading-7 text-[#f3efd9]/62">
-            Etugen Mongols is a Calgary-based non-profit organization focused
-            on building community, supporting cultural programs, and empowering
-            women to thrive.
+          <p className="mt-5 max-w-md text-sm leading-7 text-[#4e593c]/72">
+            {copy.description}
           </p>
         </section>
 
-        {/* 
-          Navigation and contact section.
-          These are route links now, not scroll buttons.
-        */}
+        {/* Navigation and contact section */}
         <section aria-labelledby="footer-navigation-heading">
           <h3
             id="footer-navigation-heading"
-            className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f3efd9]/45"
+            className="text-xs font-semibold uppercase tracking-[0.22em] text-[#4e593c]/55"
           >
-            Navigation
+            {copy.navigation}
           </h3>
 
           <nav
             className="mt-5 flex flex-col gap-3"
             aria-label="Footer navigation"
           >
-            {FOOTER_NAV_ITEMS.map((item) => (
-              <Link key={item.to} to={item.to} className={footerTextLinkClassName}>
+            {footerNavItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={footerTextLinkClassName}
+              >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          {/* 
-            Connect links.
-            Email opens the user's mail app.
-            Facebook opens in a new tab because it leaves the website.
-          */}
           <div className="mt-8">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f3efd9]/45">
-              Connect
+            <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#4e593c]/55">
+              {copy.connect}
             </h3>
 
             <div className="mt-5 flex flex-col gap-3">
@@ -142,22 +179,19 @@ function Footer() {
             </div>
 
             <Link to="/contact" className={`mt-5 ${footerCtaClassName}`}>
-              Contact Us
+              {copy.contactUs}
               <span className="ml-2">→</span>
             </Link>
           </div>
         </section>
 
-        {/* 
-          Featured event section.
-          Pulls the first event from static_events so the footer stays automatic.
-        */}
+        {/* Featured event section */}
         <section aria-labelledby="footer-featured-event-heading">
           <h3
             id="footer-featured-event-heading"
-            className="text-xs font-semibold uppercase tracking-[0.22em] text-[#f3efd9]/45"
+            className="text-xs font-semibold uppercase tracking-[0.22em] text-[#4e593c]/55"
           >
-            Featured Event
+            {copy.featuredEvent}
           </h3>
 
           {featuredEvent ? (
@@ -166,18 +200,18 @@ function Footer() {
                 to={getEventLink(featuredEvent)}
                 className="
                   group mt-5 block
-                  border border-[#d6c77a]/12
-                  bg-[#171a12]/55
+                  border border-[#d8caa5]/65
+                  bg-white/62
                   p-4
-                  shadow-[0_16px_42px_rgba(0,0,0,0.24)]
+                  shadow-[0_16px_42px_rgba(88,72,38,0.12)]
                   transition-colors
-                  hover:border-[#d6c77a]/35
+                  hover:border-[#b39135]/45
                   focus:outline-none
                   focus-visible:ring-2
-                  focus-visible:ring-[#d6c77a]/70
+                  focus-visible:ring-[#b39135]/70
                 "
               >
-                <div className="relative aspect-[16/9] overflow-hidden bg-black/30">
+                <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]/65">
                   <img
                     src={`/upcoming_event_assets/${featuredEvent.image}`}
                     alt={featuredEvent.title}
@@ -195,11 +229,11 @@ function Footer() {
                 </div>
 
                 <div className="pt-4">
-                  <h4 className="text-base font-semibold leading-snug text-[#f3efd9]">
+                  <h4 className="text-base font-semibold leading-snug text-[#27301d]">
                     {featuredEvent.title}
                   </h4>
 
-                  <div className="mt-2 space-y-1 text-sm leading-6 text-[#f3efd9]/60">
+                  <div className="mt-2 space-y-1 text-sm leading-6 text-[#4e593c]/70">
                     <p>{featuredEvent.details.date}</p>
                     <p>{featuredEvent.details.time}</p>
 
@@ -217,12 +251,12 @@ function Footer() {
                       font-semibold
                       uppercase
                       tracking-[0.2em]
-                      text-[#d6c77a]/85
+                      text-[#9a7b26]/90
                       transition-colors
-                      group-hover:text-[#f3efd9]
+                      group-hover:text-[#27301d]
                     "
                   >
-                    View Event →
+                    {copy.viewEvent} →
                   </p>
                 </div>
               </Link>
@@ -233,33 +267,30 @@ function Footer() {
                   mt-5 inline-flex
                   text-xs font-semibold
                   uppercase tracking-[0.2em]
-                  text-[#d6c77a]/85
+                  text-[#9a7b26]/90
                   transition-colors
-                  hover:text-[#f3efd9]
+                  hover:text-[#27301d]
                 "
               >
-                More Events
+                {copy.moreEvents}
                 <span className="ml-2">→</span>
               </Link>
             </>
           ) : (
-            <p className="mt-5 text-sm leading-7 text-[#f3efd9]/60">
-              New community events will be announced soon.
+            <p className="mt-5 text-sm leading-7 text-[#4e593c]/70">
+              {copy.noEvents}
             </p>
           )}
         </section>
       </div>
 
-      {/* 
-        Bottom legal strip.
-        Kept separate so the main footer content has clear spacing.
-      */}
-      <div className="border-t border-[#d6c77a]/10">
+      {/* Bottom legal strip */}
+      <div className="border-t border-[#d8caa5]/55">
         <div
           className="
             mx-auto flex max-w-7xl flex-col gap-3
             px-6 py-6
-            text-xs text-[#f3efd9]/42
+            text-xs text-[#4e593c]/52
             md:flex-row
             md:items-center
             md:justify-between
@@ -267,11 +298,11 @@ function Footer() {
             lg:px-12
           "
         >
-          <p>© {currentYear} Etugen Mongols. All rights reserved.</p>
-
-          <p className="uppercase tracking-[0.2em]">
-            Calgary Mongolian Community
+          <p>
+            © {currentYear} Etugen Mongols. {copy.rights}
           </p>
+
+          <p className="uppercase tracking-[0.2em]">{copy.community}</p>
         </div>
       </div>
     </footer>

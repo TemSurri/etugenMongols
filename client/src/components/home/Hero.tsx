@@ -81,9 +81,8 @@ function Hero({ lang }: HeroProps) {
         Static overlays.
         These keep the text readable without needing JS.
       */}
-      <div className="pointer-events-none absolute inset-0 bg-black/55" />
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/72 via-black/38 to-black/62" />
-
+      <div className="pointer-events-none absolute inset-0 bg-black/40" />
+<div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/56 via-black/24 to-black/44" />
       {/*
         Main hero layout.
         The top padding keeps the content below the fixed header.
@@ -129,7 +128,7 @@ function Hero({ lang }: HeroProps) {
 
           {/*
             Main mission rectangle.
-            This keeps the rounded rectangle from your last version.
+            Same structure and sizing as before. Only colors were changed.
           */}
           <motion.div
             variants={mainCardMotion}
@@ -140,23 +139,23 @@ function Hero({ lang }: HeroProps) {
               max-w-[38rem]
               transform-gpu
               rounded-md
-              border border-[#d6c77a]/12
-              bg-[#2f3320]/94
+              border border-[#e1d2a6]/55
+              bg-[#fffaf0]/94
               p-9
-              text-white
+              text-[#27301d]
               shadow-[0_24px_70px_rgba(0,0,0,0.42)]
               backdrop-blur-sm
               md:p-10
               lg:p-12
             "
           >
-            <h1 className="max-w-[32rem] text-2xl font-semibold leading-snug tracking-tight text-[#f3efd9] md:text-[1.7rem] lg:text-[2rem]">
+            <h1 className="max-w-[32rem] text-2xl font-semibold leading-snug tracking-tight text-[#27301d] md:text-[1.7rem] lg:text-[2rem]">
               {copy.heroSlogan}
             </h1>
 
-            <div className="my-7 h-px w-full bg-[#d6c77a]/18" />
+            <div className="my-7 h-px w-full bg-[#d8caa5]/90" />
 
-            <p className="max-w-[32rem] text-sm leading-7 text-[#f3efd9]/72 md:text-base md:leading-8">
+            <p className="max-w-[32rem] text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
               {copy.aboutText}
             </p>
 
@@ -169,15 +168,15 @@ function Hero({ lang }: HeroProps) {
               className="
                 mt-9 inline-flex items-center
                 rounded-sm
-                border border-[#d6c77a]/30
+                border border-[#b39135]/45
                 px-5 py-3
                 text-xs font-semibold uppercase tracking-[0.22em]
-                text-[#f3efd9]/90
+                text-[#27301d]
                 transition-colors
                 duration-200
-                hover:border-[#f3efd9]
-                hover:bg-[#f3efd9]
-                hover:text-[#252817]
+                hover:border-[#27301d]
+                hover:bg-[#27301d]
+                hover:text-[#fffaf0]
               "
             >
               {copy.learnMore}

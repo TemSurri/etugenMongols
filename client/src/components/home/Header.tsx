@@ -33,7 +33,7 @@ function Header({ lang, setLang }: HeaderProps) {
   };
 
   return (
-    <header className="fixed left-0 top-0 z-50 w-full border-b border-[#d6c77a]/12 bg-[#252817] text-[#f3efd9] shadow-[0_8px_28px_rgba(0,0,0,0.22)]">
+    <header className="fixed left-0 top-0 z-50 w-full border-b border-[#d8caa5]/55 bg-[#fffaf0] text-[#27301d] shadow-[0_8px_28px_rgba(88,72,38,0.10)]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-10">
         {/* Brand */}
         <Link
@@ -54,14 +54,18 @@ function Header({ lang, setLang }: HeaderProps) {
             <p className="text-lg font-semibold tracking-wide">
               Etugen Mongols
             </p>
-            <p className="mt-1 hidden text-[11px] uppercase tracking-[0.22em] text-[#f3efd9]/55 sm:block">
-              Calgary Mongolian Community
+
+            <p className="mt-1 hidden text-[11px] uppercase tracking-[0.22em] text-[#4e593c]/65 sm:block">
+              Non-Profit Organization
             </p>
           </div>
         </Link>
 
         {/* Desktop navigation */}
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary navigation">
+        <nav
+          className="hidden items-center gap-8 lg:flex"
+          aria-label="Primary navigation"
+        >
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.to}
@@ -70,8 +74,8 @@ function Header({ lang, setLang }: HeaderProps) {
                 [
                   "text-sm font-medium tracking-wide transition-colors",
                   isActive
-                    ? "text-[#d6c77a]"
-                    : "text-[#f3efd9]/72 hover:text-[#f3efd9]",
+                    ? "text-[#9a7b26]"
+                    : "text-[#4e593c]/78 hover:text-[#27301d]",
                 ].join(" ")
               }
             >
@@ -87,14 +91,16 @@ function Header({ lang, setLang }: HeaderProps) {
             onClick={toggleLang}
             className="
               hidden
-              border border-[#d6c77a]/25
+              w-[6.75rem]
+              justify-center
+              border border-[#b39135]/35
               px-4 py-2
               text-xs font-semibold uppercase tracking-[0.18em]
-              text-[#f3efd9]/85
+              text-[#27301d]/85
               transition-colors
-              hover:border-[#d6c77a]/70
-              hover:bg-[#d6c77a]/10
-              hover:text-[#f3efd9]
+              hover:border-[#9a7b26]/70
+              hover:bg-[#efe2bf]/55
+              hover:text-[#27301d]
               sm:inline-flex
             "
           >
@@ -108,11 +114,11 @@ function Header({ lang, setLang }: HeaderProps) {
               inline-flex
               h-10 w-10
               items-center justify-center
-              border border-[#d6c77a]/25
-              text-[#f3efd9]
+              border border-[#b39135]/35
+              text-[#27301d]
               transition-colors
-              hover:border-[#d6c77a]/70
-              hover:bg-[#d6c77a]/10
+              hover:border-[#9a7b26]/70
+              hover:bg-[#efe2bf]/55
               lg:hidden
             "
             aria-label="Toggle navigation menu"
@@ -153,9 +159,12 @@ function Header({ lang, setLang }: HeaderProps) {
       {menuOpen && (
         <div
           id="mobile-navigation"
-          className="border-t border-[#d6c77a]/12 bg-[#252817] px-5 py-5 lg:hidden"
+          className="border-t border-[#d8caa5]/55 bg-[#fffaf0] px-5 py-5 lg:hidden"
         >
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1" aria-label="Mobile navigation">
+          <nav
+            className="mx-auto flex max-w-7xl flex-col gap-1"
+            aria-label="Mobile navigation"
+          >
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.to}
@@ -165,8 +174,8 @@ function Header({ lang, setLang }: HeaderProps) {
                   [
                     "px-1 py-3 text-base font-medium transition-colors",
                     isActive
-                      ? "text-[#d6c77a]"
-                      : "text-[#f3efd9]/75 hover:text-[#f3efd9]",
+                      ? "text-[#9a7b26]"
+                      : "text-[#4e593c]/80 hover:text-[#27301d]",
                   ].join(" ")
                 }
               >
@@ -179,15 +188,16 @@ function Header({ lang, setLang }: HeaderProps) {
               onClick={toggleLang}
               className="
                 mt-4
-                w-fit
-                border border-[#d6c77a]/25
+                w-[6.75rem]
+                justify-center
+                border border-[#b39135]/35
                 px-4 py-2
                 text-xs font-semibold uppercase tracking-[0.18em]
-                text-[#f3efd9]/85
+                text-[#27301d]/85
                 transition-colors
-                hover:border-[#d6c77a]/70
-                hover:bg-[#d6c77a]/10
-                hover:text-[#f3efd9]
+                hover:border-[#9a7b26]/70
+                hover:bg-[#efe2bf]/55
+                hover:text-[#27301d]
                 sm:hidden
               "
             >
