@@ -57,7 +57,7 @@ const HERO_COPY = {
   Shared classes.
   Flags intentionally have sharp edges, so there is no rounded class here.
 */
-const flagClassName = "h-9 object-contain shadow-lg lg:h-10";
+const flagClassName = "h-6 object-contain shadow-lg md:h-9 lg:h-10";
 
 function Hero({ lang }: HeroProps) {
   const copy = HERO_COPY[lang];
@@ -108,7 +108,7 @@ function Hero({ lang }: HeroProps) {
             Flags are inside the hero instead of pinned to the top of the viewport.
             This prevents the fixed header from covering them.
           */}
-          <div className="hidden items-center gap-4 md:flex lg:pr-2 xl:pr-0">
+          <div className="flex items-center gap-3 md:gap-4 lg:pr-2 xl:pr-0">
             <img
               src={canadaFlag}
               alt="Canada flag"

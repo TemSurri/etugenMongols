@@ -39,13 +39,13 @@ function Header({ lang, setLang }: HeaderProps) {
         <Link
           to="/"
           onClick={closeMenu}
-          className="flex items-center gap-3 transition-opacity hover:opacity-85"
+          className="flex items-center gap-0 transition-opacity hover:opacity-85"
           aria-label="Go to homepage"
         >
           <img
             src={logo}
             alt="Etugen Mongols logo"
-            className="h-11 w-11 object-contain"
+            className="h-25 w-25 object-contain"
             loading="eager"
             decoding="async"
           />
@@ -85,23 +85,26 @@ function Header({ lang, setLang }: HeaderProps) {
         </nav>
 
         {/* Right controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={toggleLang}
             className="
-              hidden
-              w-[6.75rem]
+              inline-flex
+              w-[5.6rem]
               justify-center
               border border-[#b39135]/35
-              px-4 py-2
-              text-xs font-semibold uppercase tracking-[0.18em]
+              px-3 py-2
+              text-[10px] font-semibold uppercase tracking-[0.14em]
               text-[#27301d]/85
               transition-colors
               hover:border-[#9a7b26]/70
               hover:bg-[#efe2bf]/55
               hover:text-[#27301d]
-              sm:inline-flex
+              sm:w-[6.75rem]
+              sm:px-4
+              sm:text-xs
+              sm:tracking-[0.18em]
             "
           >
             {lang === "en" ? "Монгол" : "English"}
@@ -182,27 +185,6 @@ function Header({ lang, setLang }: HeaderProps) {
                 {item.label}
               </NavLink>
             ))}
-
-            <button
-              type="button"
-              onClick={toggleLang}
-              className="
-                mt-4
-                w-[6.75rem]
-                justify-center
-                border border-[#b39135]/35
-                px-4 py-2
-                text-xs font-semibold uppercase tracking-[0.18em]
-                text-[#27301d]/85
-                transition-colors
-                hover:border-[#9a7b26]/70
-                hover:bg-[#efe2bf]/55
-                hover:text-[#27301d]
-                sm:hidden
-              "
-            >
-              {lang === "en" ? "Монгол" : "English"}
-            </button>
           </nav>
         </div>
       )}

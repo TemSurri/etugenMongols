@@ -97,7 +97,7 @@ function Footer({ lang }: FooterProps) {
         <section aria-labelledby="footer-brand-heading">
           <Link
             to="/"
-            className="inline-flex items-center gap-4 transition-opacity hover:opacity-85"
+            className="inline-flex items-center gap-1 transition-opacity hover:opacity-85"
             aria-label="Go to homepage"
           >
             <img
@@ -105,7 +105,7 @@ function Footer({ lang }: FooterProps) {
               alt="Etugen Mongols logo"
               loading="lazy"
               decoding="async"
-              className="h-14 w-14 object-contain"
+              className="h-36 w-36 object-contain"
             />
 
             <div>
