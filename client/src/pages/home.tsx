@@ -34,7 +34,7 @@ export default function Home() {
         <Hero lang={lang} />
       </main>
 
-      <Footer lang={lang}/>
+      <Footer/>
     </>
   );
 }
