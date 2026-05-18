@@ -1,6 +1,5 @@
 import Home from "./pages/home";
 import About from "./pages/about";
-import AboutLearnMore from "./pages/aboutLearnMore";
 import AboutEventsPage from "./pages/aboutEvents";
 import EventPage from "./pages/event";
 import EventsPage from "./pages/events";
@@ -18,7 +17,6 @@ function App() {
 
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/about/learnmore" element={<AboutLearnMore />} />
       <Route path="/about/events" element={<AboutEventsPage />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/events/:id" element={<EventPage />} />
