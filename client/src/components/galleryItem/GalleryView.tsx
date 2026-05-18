@@ -115,10 +115,10 @@ export default function GalleryView({
         >
           <div className="px-6 sm:px-10 py-10">
             <Link
-              to="/"
+              to="/gallery"
               className="block mb-6 text-xs uppercase tracking-widest text-black/60 hover:text-black"
             >
-              ← Back to home
+              ← Back to Gallery Page
             </Link>
 
             <GalleryHeader title={title} date={date} location={location} />

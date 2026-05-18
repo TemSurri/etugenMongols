@@ -1,14 +1,22 @@
-import GalleryView from "../components/gallery/GalleryView";
-import {events} from "../static_gallery"
-import { useParams } from "react-router-dom";;
+"use client";
 
-export default function EventPage() {
-  const { id } = useParams();
-  const event = events.find(e => e.id === id); 
+import { useState } from "react";
+import GalleryShowcase from "../components/gallery/GalleryShowcase.tsx";
+import Header from "../components/home/Header.tsx";
+import Footer from "../components/home/Footer.tsx";
 
-  if (!event) {
-    return <p className="text-center mt-10 text-xl">Event not found</p>;
-  }
 
-  return <GalleryView {...event} />;
+type Lang = "en" | "mn";
+
+export default function GalleryPage() {
+  const [lang, setLang] = useState<Lang>("mn");
+
+  return (
+    <>
+      <Header lang={lang} setLang={setLang} />
+      <GalleryShowcase lang={lang} />
+      <Footer />
+    </>
+
+);
 }

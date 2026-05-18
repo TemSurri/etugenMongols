@@ -74,40 +74,8 @@ export const events: GalleryItem[] = [
   ],
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
 },
-{
-  id: "cultural-night-2024",
-  title: "Mongolian Cultural Night 2024",
-  date: "September 21, 2024",
-  location: "Calgary, Alberta",
-  description:
-    "An evening celebrating Mongolian heritage through music, dance, food, storytelling, cultural displays, and community performances.",
-  albumImageCount: 10,
-  activities: [
-    "traditional music",
-    "dance performances",
-    "cultural displays",
-    "community dinner",
-    "storytelling",
-  ],
-  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-},
-{
-  id: "summer-picnic-2024",
-  title: "Mongolian Community Summer Picnic 2024",
-  date: "August 10, 2024",
-  location: "Calgary, Alberta",
-  description:
-    "A casual outdoor summer gathering for families and community members, with food, games, photos, and social time.",
-  albumImageCount: 10,
-  activities: [
-    "outdoor games",
-    "family picnic",
-    "community photos",
-    "food sharing",
-    "social gathering",
-  ],
-  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-},
+
+
 ];
 
 export function getCardInfos(events: GalleryItem[]) {

@@ -10,63 +10,56 @@ type AboutEventsProps = {
   lang: Lang;
 };
 
-const NAADAM_URL =
-  "https://ich.unesco.org/en/RL/naadam-mongolian-traditional-festival-00395";
+const EVENTS_VIDEO_URL = "https://www.youtube.com/embed/9bZkp7q19f0";
 
 const ABOUT_EVENTS_COPY = {
   en: {
     eyebrow: "Cultural Events",
     title: "Events",
     intro:
-      "Our events create spaces where Mongolian culture can be shared, experienced, and passed forward through celebration, food, language, performance, and community gathering.",
-    naadam: "Naadam",
+      "We host gatherings that bring people together through Mongolian food, music, performance, language, and tradition.",
     upcoming: "View Upcoming Events",
     galleries: "View Past Events",
     getInvolved: "See How to Get Involved",
-    whyTitle: "Why We Organize Events",
+    videoTitle: "See What Our Events Look Like",
+    whyTitle: "Why Events Matter",
     whyBody:
-      "Events make culture visible and participatory. They bring families, youth, elders, volunteers, performers, and guests together in one place to experience traditions that are often passed down through memory, practice, and shared celebration.",
-    howTitle: "How We Create Them",
+      "Events help keep culture active. They give families, youth, volunteers, and guests a place to connect and experience Mongolian heritage together.",
+    howTitle: "How We Organize",
     howBody:
-      "Each event is built through community effort. Volunteers help organize, performers share their talents, families support the preparation, and guests help create the energy of the day.",
-    preserveTitle: "Preserving Heritage",
-    preserveBody:
-      "Celebrations like Naadam remind us that culture is not only something we remember. It is something we continue to practice, teach, and share with the next generation.",
-    accessTitle: "Open Cultural Access",
+      "Our events are built through community effort — from planning and setup to performances, food, guest support, and cleanup.",
+    accessTitle: "Open to Everyone",
     accessBody:
-      "We want Mongolian culture to feel accessible to everyone, whether they grew up with it or are learning about it for the first time.",
+      "Our events are open to Mongolians and anyone interested in learning about our culture.",
     volunteerTitle: "How to Get Involved",
     volunteerBody:
-      "Upcoming events may include volunteer roles such as setup, food preparation, guest support, performance coordination, cleanup, and general event assistance.",
+      "Upcoming events may include volunteer roles for setup, food preparation, guest support, performance coordination, cleanup, and general help.",
     volunteerNote:
-      "When you open an upcoming event, available roles will be listed with their respective contact information so you can reach the right organizer directly.",
+      "Open an upcoming event to see available roles and the contact information for each role.",
   },
   mn: {
     eyebrow: "Соёлын арга хэмжээ",
     title: "Арга хэмжээ",
     intro:
-      "Манай арга хэмжээнүүд нь Монгол соёлыг баяр ёслол, хоол, хэл, тоглолт, хамтын оролцоогоор дамжуулан хуваалцах, мэдрэх, дараагийн үедээ өвлүүлэх орон зайг бий болгодог.",
-    naadam: "Наадам",
+      "Бид Монгол хоол, хөгжим, тоглолт, хэл, уламжлалаар дамжуулан хүмүүсийг нэгтгэдэг арга хэмжээнүүд зохион байгуулдаг.",
     upcoming: "Удахгүй болох арга хэмжээ",
     galleries: "Өмнөх арга хэмжээнүүд",
     getInvolved: "Хэрхэн оролцох вэ",
-    whyTitle: "Бид яагаад арга хэмжээ зохион байгуулдаг вэ",
+    videoTitle: "Манай арга хэмжээнүүд хэрхэн болдгийг үзэх",
+    whyTitle: "Арга хэмжээний ач холбогдол",
     whyBody:
-      "Арга хэмжээ нь соёлыг илүү бодит, хамтын оролцоотой болгодог. Гэр бүл, залуус, ахмад үе, сайн дурынхан, уран бүтээлчид, зочид нэг дор цуглаж, уламжлалыг өөрийн биеэр мэдрэх боломжтой болдог.",
+      "Арга хэмжээ нь соёлыг амьд байлгаж, гэр бүл, залуус, сайн дурынхан, зочдод Монгол өв соёлыг хамтдаа мэдрэх орон зай өгдөг.",
     howTitle: "Бид хэрхэн зохион байгуулдаг вэ",
     howBody:
-      "Арга хэмжээ бүр нийгэмлэгийн хамтын оролцоогоор бүтдэг. Сайн дурынхан зохион байгуулалтад тусалж, уран бүтээлчид авьяасаа хуваалцаж, гэр бүлүүд бэлтгэлд оролцож, зочид тухайн өдрийн уур амьсгалыг бүрдүүлдэг.",
-    preserveTitle: "Өв соёлоо хадгалах",
-    preserveBody:
-      "Наадам зэрэг баярууд нь соёл бол зөвхөн санаж явах зүйл биш гэдгийг харуулдаг. Соёл бол үргэлжлүүлэн хийж, зааж, хуваалцаж байж амьдардаг зүйл юм.",
-    accessTitle: "Хүн бүрт нээлттэй соёл",
+      "Манай арга хэмжээнүүд төлөвлөлт, бэлтгэл, тоглолт, хоол, зочин угтах, цэвэрлэгээ зэрэг хамтын оролцоогоор бүтдэг.",
+    accessTitle: "Хүн бүрт нээлттэй",
     accessBody:
-      "Монгол соёлыг багаасаа мэддэг хүмүүст ч, анх удаа сонирхож буй хүмүүст ч ойлгомжтой, нээлттэй байлгахыг бид зорьдог.",
+      "Манай арга хэмжээнүүд Монголчууд болон Монгол соёлыг сонирхож буй хүн бүрт нээлттэй.",
     volunteerTitle: "Хэрхэн оролцох вэ",
     volunteerBody:
       "Удахгүй болох арга хэмжээнүүдэд тайз засалт, хоол бэлтгэл, зочин угтах, тоглолтын зохицуулалт, цэвэрлэгээ болон ерөнхий туслалцааны сайн дурын үүргүүд байж болно.",
     volunteerNote:
-      "Удахгүй болох арга хэмжээг нээх үед боломжтой сайн дурын үүргүүд болон холбогдох хүний мэдээлэл тус бүрээрээ харагдах болно.",
+      "Удахгүй болох арга хэмжээг нээх үед боломжтой үүргүүд болон холбогдох хүний мэдээлэл харагдана.",
   },
 } as const;
 
@@ -80,8 +73,8 @@ function TextBlock({
   body: string;
 }) {
   return (
-    <section className="border-t border-[#b39135]/25 pt-8">
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+    <section className="border-t border-[#b39135]/25 pt-7">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
         {number}
       </p>
 
@@ -89,7 +82,7 @@ function TextBlock({
         {title}
       </h2>
 
-      <p className="mt-4 max-w-3xl text-base leading-8 text-[#4e593c] md:text-lg md:leading-9">
+      <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
         {body}
       </p>
     </section>
@@ -114,26 +107,26 @@ function AboutEvents({ lang }: AboutEventsProps) {
         aria-hidden="true"
         loading="eager"
         decoding="async"
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
+        className="absolute inset-0 h-full w-full object-cover opacity-[0.11]"
       />
 
-      <div className="absolute inset-0 bg-[#fff7e7]/86" />
+      <div className="absolute inset-0 bg-[#fff7e7]/88" />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-12 md:px-10 lg:px-12">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pb-20 pt-10 md:px-10 lg:px-12">
         <header className="max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#9a7b26]">
             {copy.eyebrow}
           </p>
 
-          <h1 className="mt-5 text-5xl font-semibold tracking-tight text-[#27301d] md:text-7xl">
+          <h1 className="mt-4 text-5xl font-semibold tracking-tight text-[#27301d] md:text-7xl">
             {copy.title}
           </h1>
 
-          <p className="mt-8 text-lg leading-9 text-[#4e593c] md:text-xl md:leading-10">
+          <p className="mt-6 max-w-3xl text-base leading-8 text-[#4e593c] md:text-lg md:leading-9">
             {copy.intro}
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
               to="/events"
               className="w-fit text-sm font-semibold text-[#6f571a] underline decoration-[#b39135]/35 underline-offset-4 transition-colors hover:text-[#27301d]"
@@ -158,86 +151,69 @@ function AboutEvents({ lang }: AboutEventsProps) {
           </div>
         </header>
 
-        <div className="my-14 h-px w-full bg-[#b39135]/25" />
+        <div className="my-12 h-px w-full bg-[#b39135]/25" />
 
-        <main className="space-y-12">
-          <TextBlock
-            number="01"
-            title={copy.whyTitle}
-            body={copy.whyBody}
-          />
+        <main className="space-y-10">
+          <section className="border-y border-[#b39135]/25 py-8">
+            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+                  Video
+                </p>
 
-          <TextBlock
-            number="02"
-            title={copy.howTitle}
-            body={copy.howBody}
-          />
+                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#27301d] md:text-3xl">
+                  {copy.videoTitle}
+                </h2>
 
-          <section className="border-y border-[#b39135]/25 py-10">
-            <p className="max-w-3xl text-2xl font-medium leading-10 tracking-tight text-[#27301d] md:text-3xl md:leading-[3rem]">
-              “Events turn culture into something people can see, hear, taste,
-              and take part in.”
-            </p>
+                <p className="mt-4 text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
+                  {lang === "en"
+                    ? "Watch a short highlight to get a better sense of the atmosphere, performances, and community moments."
+                    : "Манай арга хэмжээний уур амьсгал, тоглолт, хамтын мөчүүдийг богино бичлэгээр үзээрэй."}
+                </p>
+              </div>
 
-            <p className="mt-5 text-sm leading-7 text-[#4e593c]">
-              {lang === "en" ? (
-                <>
-                  Celebrations like{" "}
-                  <a
-                    href={NAADAM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-[#9a7b26] underline decoration-[#b39135]/40 underline-offset-4 transition-colors hover:text-[#27301d]"
-                  >
-                    {copy.naadam}
-                  </a>{" "}
-                  help connect tradition with shared community experience.
-                </>
-              ) : (
-                <>
-                  <a
-                    href={NAADAM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-[#9a7b26] underline decoration-[#b39135]/40 underline-offset-4 transition-colors hover:text-[#27301d]"
-                  >
-                    {copy.naadam}
-                  </a>{" "}
-                  зэрэг баярууд нь уламжлалыг хамтын туршлагатай холбодог.
-                </>
-              )}
-            </p>
+              <div className="overflow-hidden rounded-xl border border-[#d8caa5]/70 bg-black shadow-[0_16px_44px_rgba(88,72,38,0.14)]">
+                <div className="aspect-video">
+                  <iframe
+                    className="h-full w-full"
+                    src={EVENTS_VIDEO_URL}
+                    title={copy.videoTitle}
+                    loading="lazy"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            </div>
           </section>
+
+          <TextBlock number="01" title={copy.whyTitle} body={copy.whyBody} />
+
+          <TextBlock number="02" title={copy.howTitle} body={copy.howBody} />
 
           <TextBlock
             number="03"
-            title={copy.preserveTitle}
-            body={copy.preserveBody}
-          />
-
-          <TextBlock
-            number="04"
             title={copy.accessTitle}
             body={copy.accessBody}
           />
 
           <section
             id="event-volunteer"
-            className="scroll-mt-28 border-t border-[#b39135]/25 pt-10"
+            className="scroll-mt-28 border-t border-[#b39135]/25 pt-8"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
-              05
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+              04
             </p>
 
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#27301d] md:text-3xl">
               {copy.volunteerTitle}
             </h2>
 
-            <p className="mt-4 max-w-3xl text-base leading-8 text-[#4e593c] md:text-lg md:leading-9">
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
               {copy.volunteerBody}
             </p>
 
-            <p className="mt-5 max-w-3xl border-l border-[#b39135]/40 pl-5 text-sm leading-7 text-[#4e593c]/90 md:text-base md:leading-8">
+            <p className="mt-5 max-w-3xl border-l border-[#b39135]/40 pl-5 text-sm leading-7 text-[#4e593c]/90">
               {copy.volunteerNote}
             </p>
 

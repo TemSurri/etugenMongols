@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Header from "../components/home/Header";
-import EventView from "../components/event/EventView";
+import EventView from "../components/eventItem/EventView";
 import { events } from "../static_events";
 
 type Lang = "en" | "mn";
