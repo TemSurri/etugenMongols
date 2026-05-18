@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import landingImage from "../../assets/landingpage.webp";
 
 type Lang = "en" | "mn";
 
@@ -88,9 +89,9 @@ const ABOUT_EVENTS_COPY = {
 
 function PhotoPlaceholder() {
   return (
-    <div className="h-20 w-24 shrink-0 overflow-hidden border border-[#d8caa5]/65 bg-[#efe2bf]/70">
-      <div className="relative h-full w-full bg-linear-to-br from-white/55 via-transparent to-[#b39135]/25">
-        <div className="absolute inset-2 border border-[#b39135]/20" />
+    <div className="h-20 w-24 shrink-0 overflow-hidden border border-[#d8caa5]/65 bg-[#efe2bf]">
+      <div className="relative h-full w-full">
+        <div className="absolute inset-2 border border-[#b39135]/25" />
       </div>
     </div>
   );
@@ -100,23 +101,33 @@ function AboutEvents({ lang }: AboutEventsProps) {
   const copy = ABOUT_EVENTS_COPY[lang];
 
   return (
-    <section className="min-h-screen border-y border-[#d8caa5]/55 bg-linear-to-br from-[#ede1c7] via-[#f6eedc] to-[#d8caa5] pt-20 text-[#27301d]">
-      <div className="mx-auto max-w-7xl px-6 pb-10 pt-6 md:px-10 lg:px-12">
+    <section className="relative min-h-screen overflow-hidden border-y border-[#d8caa5]/55 bg-[#2f3320] pt-20 text-[#27301d]">
+      <img
+        src={landingImage}
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-[#efe4cc]/45" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pb-10 pt-6 md:px-10 lg:px-12">
         <Link
           to="/about/learnmore"
-          className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9a7b26]/90 transition-colors hover:text-[#27301d]"
+          className="text-xs font-semibold uppercase tracking-[0.2em] text-[#6f571a] transition-colors hover:text-[#27301d]"
         >
           ← {copy.back}
         </Link>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-stretch">
-          <div className="flex min-h-[28rem] flex-col justify-between overflow-hidden border border-[#d8caa5]/70 bg-[#fffaf0]/72 shadow-[0_18px_46px_rgba(88,72,38,0.10)]">
-            <div className="relative h-44 shrink-0 border-b border-[#d8caa5]/65 bg-[#efe2bf]/70">
-              <div className="absolute inset-0 bg-linear-to-br from-white/50 via-transparent to-[#b39135]/25" />
+          <div className="flex min-h-[28rem] flex-col justify-between overflow-hidden border border-[#d8caa5] bg-[#fffaf0]/92 shadow-sm">
+            <div className="relative h-44 shrink-0 border-b border-[#d8caa5]/65 bg-[#efe2bf]">
               <div className="absolute inset-5 border border-[#b39135]/25" />
 
               <div className="absolute bottom-5 left-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a7b26]/80">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a7b26]">
                   {copy.eyebrow}
                 </p>
 
@@ -136,7 +147,7 @@ function AboutEvents({ lang }: AboutEventsProps) {
                     {item.value}
                   </p>
 
-                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#4e593c]/58">
+                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#4e593c]/70">
                     {item.label}
                   </p>
                 </div>
@@ -144,7 +155,7 @@ function AboutEvents({ lang }: AboutEventsProps) {
             </div>
 
             <div className="flex min-h-[13.5rem] flex-col justify-between p-6">
-              <p className="min-h-[5.75rem] text-sm leading-7 text-[#4e593c]/78">
+              <p className="min-h-[5.75rem] text-sm leading-7 text-[#4e593c]">
                 {copy.snapshotBefore}{" "}
                 <a
                   href={NAADAM_URL}
@@ -160,17 +171,7 @@ function AboutEvents({ lang }: AboutEventsProps) {
               <div className="mt-5 flex min-h-[3rem] flex-col gap-3 sm:flex-row">
                 <Link
                   to="/events"
-                  className="
-                    inline-flex w-fit items-center justify-center
-                    border border-[#b39135]/45
-                    px-5 py-3
-                    text-xs font-semibold uppercase tracking-[0.18em]
-                    text-[#27301d]/88
-                    transition-colors
-                    hover:border-[#27301d]
-                    hover:bg-[#27301d]
-                    hover:text-[#fffaf0]
-                  "
+                  className="inline-flex w-fit items-center justify-center border border-[#b39135]/45 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#27301d] transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]"
                 >
                   {copy.upcoming}
                   <span className="ml-3">→</span>
@@ -178,14 +179,7 @@ function AboutEvents({ lang }: AboutEventsProps) {
 
                 <Link
                   to="/gallery"
-                  className="
-                    inline-flex w-fit items-center justify-center
-                    px-1 py-3
-                    text-xs font-semibold uppercase tracking-[0.18em]
-                    text-[#9a7b26]/95
-                    transition-colors
-                    hover:text-[#27301d]
-                  "
+                  className="inline-flex w-fit items-center justify-center px-1 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f571a] transition-colors hover:text-[#27301d]"
                 >
                   {copy.galleries}
                   <span className="ml-3">→</span>
@@ -194,7 +188,7 @@ function AboutEvents({ lang }: AboutEventsProps) {
             </div>
           </div>
 
-          <div className="min-h-[28rem] border border-[#d8caa5]/70 bg-[#fffaf0]/58 p-5 shadow-[0_14px_34px_rgba(88,72,38,0.08)] md:p-6">
+          <div className="min-h-[28rem] border border-[#d8caa5] bg-[#fffaf0]/88 p-5 shadow-sm md:p-6">
             <h2 className="min-h-[4.5rem] text-2xl font-semibold tracking-tight text-[#27301d] md:text-3xl">
               {copy.supportTitle}
             </h2>
@@ -203,12 +197,12 @@ function AboutEvents({ lang }: AboutEventsProps) {
               {copy.support.map((item, index) => (
                 <article
                   key={item.title}
-                  className="flex min-h-[7.25rem] gap-4 border border-[#d8caa5]/65 bg-white/45 p-3"
+                  className="flex min-h-[7.25rem] gap-4 border border-[#d8caa5]/65 bg-[#fffaf0]/92 p-3"
                 >
                   <PhotoPlaceholder />
 
                   <div className="flex min-w-0 flex-col justify-center">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7b26]/75">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7b26]">
                       0{index + 1}
                     </p>
 
@@ -216,7 +210,7 @@ function AboutEvents({ lang }: AboutEventsProps) {
                       {item.title}
                     </h3>
 
-                    <p className="mt-1 text-sm leading-6 text-[#4e593c]/76">
+                    <p className="mt-1 text-sm leading-6 text-[#4e593c]">
                       {item.body}
                     </p>
 

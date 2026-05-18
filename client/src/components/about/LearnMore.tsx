@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import landingImage from "../../assets/landingpage.webp";
 
 type Lang = "en" | "mn";
 
@@ -57,8 +58,7 @@ const LEARN_MORE_COPY = {
 
 function ImagePlaceholder() {
   return (
-    <div className="relative h-28 overflow-hidden border-b border-[#d8caa5]/65 bg-[#efe2bf]/70 md:h-32">
-      <div className="absolute inset-0 bg-linear-to-br from-white/50 via-transparent to-[#b39135]/20" />
+    <div className="relative h-28 overflow-hidden border-b border-[#d8caa5]/65 bg-[#efe2bf] md:h-32">
       <div className="absolute inset-4 border border-[#b39135]/25" />
 
       <div className="absolute bottom-3 left-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]/70">
@@ -72,33 +72,44 @@ function LearnMore({ lang }: LearnMoreProps) {
   const copy = LEARN_MORE_COPY[lang];
 
   return (
-    <section className="min-h-screen border-y border-[#d8caa5]/55 bg-linear-to-br from-[#ede1c7] via-[#f6eedc] to-[#d8caa5] pt-20 text-[#27301d]">
-      <div className="mx-auto max-w-7xl px-6 pb-8 pt-6 md:px-10 lg:px-12">
+    <section className="relative min-h-screen overflow-hidden border-y border-[#d8caa5]/55 bg-[#2f3320] pt-20 text-[#27301d]">
+      <img
+        src={landingImage}
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-[#efe4cc]/45" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pb-8 pt-6 md:px-10 lg:px-12">
         <Link
           to="/about"
-          className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9a7b26]/90 transition-colors hover:text-[#27301d]"
+          className="text-xs font-semibold uppercase tracking-[0.2em] text-[#6f571a] transition-colors hover:text-[#27301d]"
         >
           ← {copy.back}
         </Link>
 
-        <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
+        <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight text-[#27301d] md:text-5xl">
           {copy.title}
         </h1>
 
         <div className="mt-6 grid gap-5 lg:grid-cols-[3fr_2fr]">
-          <article className="overflow-hidden border border-[#d8caa5]/70 bg-[#fffaf0]/78 shadow-[0_18px_46px_rgba(88,72,38,0.10)]">
+          <article className="overflow-hidden border border-[#d8caa5] bg-[#fffaf0]/92 shadow-sm">
             <ImagePlaceholder />
 
             <div className="p-5 md:p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a7b26]/80">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
                 {copy.events.label}
               </p>
 
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#27301d] md:text-4xl">
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
                 {copy.events.title}
               </h2>
 
-              <p className="mt-3 text-sm leading-7 text-[#4e593c]/78">
+              <p className="mt-3 text-sm leading-7 text-[#4e593c]">
                 {copy.events.bodyStart}{" "}
                 <a
                   href={NAADAM_URL}
@@ -114,17 +125,7 @@ function LearnMore({ lang }: LearnMoreProps) {
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/about/events"
-                  className="
-                    inline-flex w-fit items-center justify-center
-                    border border-[#b39135]/45
-                    px-5 py-3
-                    text-xs font-semibold uppercase tracking-[0.18em]
-                    text-[#27301d]/88
-                    transition-colors
-                    hover:border-[#27301d]
-                    hover:bg-[#27301d]
-                    hover:text-[#fffaf0]
-                  "
+                  className="inline-flex w-fit items-center justify-center border border-[#b39135]/45 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#27301d] transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]"
                 >
                   {copy.events.learnMore}
                   <span className="ml-3">→</span>
@@ -132,14 +133,7 @@ function LearnMore({ lang }: LearnMoreProps) {
 
                 <Link
                   to="/events"
-                  className="
-                    inline-flex w-fit items-center justify-center
-                    px-1 py-3
-                    text-xs font-semibold uppercase tracking-[0.18em]
-                    text-[#9a7b26]/95
-                    transition-colors
-                    hover:text-[#27301d]
-                  "
+                  className="inline-flex w-fit items-center justify-center px-1 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f571a] transition-colors hover:text-[#27301d]"
                 >
                   {copy.events.viewEvents}
                   <span className="ml-3">→</span>
@@ -148,19 +142,19 @@ function LearnMore({ lang }: LearnMoreProps) {
             </div>
           </article>
 
-          <article className="overflow-hidden border border-[#d8caa5]/70 bg-[#fffaf0]/60 shadow-[0_14px_34px_rgba(88,72,38,0.08)]">
+          <article className="overflow-hidden border border-[#d8caa5] bg-[#fffaf0]/88 shadow-sm">
             <ImagePlaceholder />
 
             <div className="p-5 md:p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a7b26]/75">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
                 {copy.programs.label}
               </p>
 
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#27301d]">
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight">
                 {copy.programs.title}
               </h2>
 
-              <p className="mt-3 text-sm leading-7 text-[#4e593c]/76">
+              <p className="mt-3 text-sm leading-7 text-[#4e593c]">
                 {copy.programs.body}
               </p>
             </div>
