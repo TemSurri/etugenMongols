@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 import Header from "../components/home/Header";
 import Events from "../components/events/Events";
 import Footer from "../components/home/Footer";
 
-type Lang = "en" | "mn";
-
 export default function EventsPage() {
-  const [lang, setLang] = useState<Lang>("mn");
+  const { lang, setLang } = useLanguage();
 
   return (
     <>

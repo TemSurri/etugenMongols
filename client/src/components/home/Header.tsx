@@ -8,7 +8,7 @@ type Lang = "en" | "mn";
 
 type HeaderProps = {
   lang: Lang;
-  setLang: React.Dispatch<React.SetStateAction<Lang>>;
+  setLang: (lang: Lang) => void;
 };
 
 type NavItem = {
@@ -29,7 +29,7 @@ function Header({ lang, setLang }: HeaderProps) {
   const closeMenu = () => setMenuOpen(false);
 
   const toggleLang = () => {
-    setLang((prev) => (prev === "en" ? "mn" : "en"));
+    setLang(lang === "en" ? "mn" : "en");
   };
 
   return (

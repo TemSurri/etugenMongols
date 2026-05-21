@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 import GalleryShowcase from "../components/gallery/GalleryShowcase.tsx";
 import Header from "../components/home/Header.tsx";
 import Footer from "../components/home/Footer.tsx";
 
 
-type Lang = "en" | "mn";
-
 export default function GalleryPage() {
-  const [lang, setLang] = useState<Lang>("mn");
+  const { lang, setLang } = useLanguage();
 
   return (
     <>

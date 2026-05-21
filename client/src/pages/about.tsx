@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
+
 
 import Header from "../components/home/Header";
 import AboutUs from "../components/about/aboutUs";
 import Footer from "../components/home/Footer";
 
-type Lang = "en" | "mn";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function About() {
-  const [lang, setLang] = useState<Lang>("mn");
-
+  const { lang, setLang } = useLanguage();
   return (
     <>
       <Header lang={lang} setLang={setLang} />
