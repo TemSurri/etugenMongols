@@ -2,8 +2,7 @@
 
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { motion, cubicBezier } from "framer-motion";
-import type { Variants } from "framer-motion";
+import { motion, cubicBezier, type Variants } from "framer-motion";
 
 import canadaFlag from "../../assets/canada-flag.webp";
 import mongoliaFlag from "../../assets/mongolia-flag.webp";
@@ -14,11 +13,6 @@ type HeroProps = {
   lang: Lang;
 };
 
-/*
-  Main card animation.
-  Only the mission rectangle animates, so the hero stays smooth without extra state,
-  scroll listeners, refs, or in-view checks.
-*/
 const mainCardMotion: Variants = {
   hidden: {
     opacity: 0,
@@ -34,9 +28,6 @@ const mainCardMotion: Variants = {
   },
 };
 
-/*
-  Hero text is outside the component so it is not recreated on every render.
-*/
 const HERO_COPY = {
   en: {
     heroSlogan:
@@ -53,10 +44,6 @@ const HERO_COPY = {
   },
 } as const;
 
-/*
-  Shared classes.
-  Flags intentionally have sharp edges, so there is no rounded class here.
-*/
 const flagClassName = "h-6 object-contain shadow-lg md:h-9 lg:h-10";
 
 function Hero({ lang }: HeroProps) {
@@ -64,10 +51,6 @@ function Hero({ lang }: HeroProps) {
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-[#2f3320]">
-      {/*
-        Main hero background.
-        Keep this eager because it is the first major visual on the page.
-      */}
       <img
         src="/landingpage.webp"
         alt=""
@@ -77,46 +60,21 @@ function Hero({ lang }: HeroProps) {
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/*
-        Static overlays.
-        These keep the text readable without needing JS.
-      */}
       <div className="pointer-events-none absolute inset-0 bg-black/40" />
-<div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/56 via-black/24 to-black/44" />
-      {/*
-        Main hero layout.
-        The top padding keeps the content below the fixed header.
-      */}
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/56 via-black/24 to-black/44" />
+
       <div
         className="
           relative z-10
-          mx-auto
-          flex min-h-screen w-full max-w-7xl
-          items-start
-          justify-end
-          px-6
-          pt-32
-          pb-20
-          md:px-10
-          md:pt-36
-          lg:px-12
-          lg:pt-40
+          mx-auto flex min-h-screen w-full max-w-7xl
+          items-start justify-end
+          px-6 pt-32 pb-20
+          md:px-10 md:pt-36
+          lg:px-12 lg:pt-40
         "
       >
         <div className="flex w-full flex-col items-end gap-5">
-          {/*
-            Flags are inside the hero instead of pinned to the top of the viewport.
-            This prevents the fixed header from covering them.
-          */}
           <div className="flex items-center gap-3 md:gap-4 lg:pr-2 xl:pr-0">
-            <img
-              src={canadaFlag}
-              alt="Canada flag"
-              loading="eager"
-              decoding="async"
-              className={flagClassName}
-            />
-
             <img
               src={mongoliaFlag}
               alt="Mongolia flag"
@@ -124,56 +82,50 @@ function Hero({ lang }: HeroProps) {
               decoding="async"
               className={flagClassName}
             />
+
+            <img
+              src={canadaFlag}
+              alt="Canada flag"
+              loading="eager"
+              decoding="async"
+              className={flagClassName}
+            />
           </div>
 
-          {/*
-            Main mission rectangle.
-            Same structure and sizing as before. Only colors were changed.
-          */}
           <motion.div
             variants={mainCardMotion}
             initial="hidden"
             animate="show"
             className="
-              w-full
-              max-w-[38rem]
-              transform-gpu
-              rounded-md
-              border border-[#e1d2a6]/55
+              w-full max-w-152 transform-gpu
+              rounded-md border border-[#e1d2a6]/55
               bg-[#fffaf0]/94
-              p-9
-              text-[#27301d]
+              p-9 text-[#27301d]
               shadow-[0_24px_70px_rgba(0,0,0,0.42)]
               backdrop-blur-sm
               md:p-10
               lg:p-12
             "
           >
-            <h1 className="max-w-[32rem] text-2xl font-semibold leading-snug tracking-tight text-[#27301d] md:text-[1.7rem] lg:text-[2rem]">
+            <h1 className="max-w-lg text-2xl font-semibold leading-snug tracking-tight text-[#27301d] md:text-[1.7rem] lg:text-[2rem]">
               {copy.heroSlogan}
             </h1>
 
             <div className="my-7 h-px w-full bg-[#d8caa5]/90" />
 
-            <p className="max-w-[32rem] text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
+            <p className="max-w-lg text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
               {copy.aboutText}
             </p>
 
-            {/*
-              Navigation to the About page.
-              No scroll logic here because the refactor is moving toward real pages.
-            */}
             <Link
               to="/about"
               className="
                 mt-9 inline-flex items-center
-                rounded-sm
-                border border-[#b39135]/45
+                rounded-sm border border-[#b39135]/45
                 px-5 py-3
                 text-xs font-semibold uppercase tracking-[0.22em]
                 text-[#27301d]
-                transition-colors
-                duration-200
+                transition-colors duration-200
                 hover:border-[#27301d]
                 hover:bg-[#27301d]
                 hover:text-[#fffaf0]
