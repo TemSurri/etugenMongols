@@ -212,7 +212,7 @@ function Header({ lang, setLang }: HeaderProps) {
               hover:border-[#9a7b26]/70
               hover:bg-[#efe2bf]/55
               hover:text-[#27301d]
-              sm:w-[6.75rem]
+              sm:w-27
               sm:px-4
               sm:text-xs
               sm:tracking-[0.18em]
