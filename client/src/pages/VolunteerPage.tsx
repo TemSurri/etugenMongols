@@ -1,12 +1,11 @@
 "use client";
 
 import Header from "../components/home/Header";
-import AboutEvents from "../components/about/AboutEvents";
 import Footer from "../components/home/Footer";
-
+import VolunteerMain from "../components/involvement/VolunteerMain";
 import { useLanguage } from "../context/LanguageContext";
 
-export default function AboutEventsPage() {
+export default function VolunteerPage() {
   const { lang, setLang } = useLanguage();
 
   return (
@@ -14,7 +13,7 @@ export default function AboutEventsPage() {
       <Header lang={lang} setLang={setLang} />
 
       <main>
-        <AboutEvents lang={lang} />
+        <VolunteerMain lang={lang} />
       </main>
 
       <Footer />

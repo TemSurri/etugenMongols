@@ -1,21 +1,19 @@
 "use client";
 
-
-
 import Header from "../components/home/Header";
-import AboutUs from "../components/about/OurStory";
 import Footer from "../components/home/Footer";
-
+import OurImpactMain from "../components/about/OurImpactMain";
 import { useLanguage } from "../context/LanguageContext";
 
-export default function About() {
+export default function OurImpactPage() {
   const { lang, setLang } = useLanguage();
+
   return (
     <>
       <Header lang={lang} setLang={setLang} />
 
       <main>
-        <AboutUs lang={lang} />
+        <OurImpactMain lang={lang} />
       </main>
 
       <Footer />

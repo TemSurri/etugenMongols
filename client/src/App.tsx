@@ -1,11 +1,15 @@
 import Home from "./pages/home";
 import About from "./pages/about";
-import AboutEventsPage from "./pages/aboutEvents";
 import EventPage from "./pages/eventItem";
 import EventsPage from "./pages/events";
 import GalleryPage from "./pages/galleryItem";
 import Gallery from "./pages/gallery";
 import Contact from "./pages/contact";
+import VolunteerPage from "./pages/VolunteerPage";
+import BecomeMemberPage from "./pages/BecomeMemberPage";
+import DonatePage from "./pages/DonatePage";
+import MeetTeamPage from "./pages/MeetTeamPage";
+import OurImpactPage from "./pages/OurImpactPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
@@ -18,13 +22,20 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/about/events" element={<AboutEventsPage />} />
+        <Route path="/about/our-story" element={<About />} />
+        
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventPage />} />
         <Route path="/gallery/:id" element={<GalleryPage />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
+        
+        <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
+        <Route path="/get-involved/member" element={<BecomeMemberPage />} />
+        <Route path="/get-involved/donate" element={<DonatePage />} />
+
+        <Route path="/about/team" element={<MeetTeamPage />} />
+        <Route path="/about/impact" element={<OurImpactPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

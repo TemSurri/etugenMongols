@@ -1,13 +1,11 @@
 "use client";
 
+import Header from "../components/home/Header";
+import Footer from "../components/home/Footer";
+import BecomeMemberMain from "../components/involvement/BecomeMemberMain";
 import { useLanguage } from "../context/LanguageContext";
 
-import Header from "../components/home/Header";
-import LearnMore from "../components/about/LearnMore";
-import Footer from "../components/home/Footer";
-
-
-export default function AboutLearnMore() {
+export default function BecomeMemberPage() {
   const { lang, setLang } = useLanguage();
 
   return (
@@ -15,7 +13,7 @@ export default function AboutLearnMore() {
       <Header lang={lang} setLang={setLang} />
 
       <main>
-        <LearnMore lang={lang} />
+        <BecomeMemberMain lang={lang} />
       </main>
 
       <Footer />
