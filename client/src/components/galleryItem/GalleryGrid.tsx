@@ -1,7 +1,9 @@
+import type { EventImage } from "../../static_events";
+
 type GalleryGridProps = {
   title: string;
-  images: string[];
-  pagedImages: string[];
+  images: EventImage[];
+  pagedImages: EventImage[];
   page: number;
   pageCount: number;
   imagesPerPage: number;
@@ -23,7 +25,7 @@ export default function GalleryGrid({
 }: GalleryGridProps) {
   return (
     <div className="space-y-16">
-      <div className="grid grid-cols-1 lg:grid-cols-2 auto-rows-[260px] gap-1.5">
+      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:auto-rows-[260px]">
         {pagedImages.map((img, i) => {
           const realIndex = page * imagesPerPage + i;
           const pattern = i % 6;
@@ -32,27 +34,27 @@ export default function GalleryGrid({
             pattern === 0
               ? "lg:col-span-2 lg:row-span-2"
               : pattern === 2
-              ? "lg:row-span-2"
-              : pattern === 4
-              ? "lg:col-span-2"
-              : "";
+                ? "lg:row-span-2"
+                : pattern === 4
+                  ? "lg:col-span-2"
+                  : "";
 
           return (
             <button
-              key={img}
+              key={`${img.lowRes}-${realIndex}`}
               type="button"
               onClick={() => onOpenImage(realIndex)}
               aria-label={`Open image ${realIndex + 1} of ${images.length}`}
-              className={`relative overflow-hidden bg-white rounded-sm shadow-md ${variety}`}
+              className={`relative overflow-hidden rounded-xl bg-white shadow-md ${variety}`}
             >
-              <div className="absolute inset-0 p-1.5 bg-white">
+              <div className="absolute inset-0 p-1.5">
                 <img
-                  src={img}
-                  alt={`${title} gallery image ${realIndex + 1}`}
+                  src={img.lowRes || img.highRes}
+                  alt={img.alt.en || `${title} gallery image ${realIndex + 1}`}
                   loading="lazy"
                   decoding="async"
                   draggable={false}
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                 />
               </div>
             </button>
@@ -60,7 +62,7 @@ export default function GalleryGrid({
         })}
       </div>
 
-      <div className="flex justify-between text-[11px] uppercase tracking-widest text-black/60">
+      <div className="flex justify-between text-[11px] font-semibold uppercase tracking-widest text-[#9a7b26]">
         {page > 0 && (
           <button type="button" onClick={onPrevPage}>
             ← Previous Page

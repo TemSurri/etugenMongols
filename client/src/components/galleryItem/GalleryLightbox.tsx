@@ -1,5 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import type { EventImage } from "../../static_events";
+
+type Lang = "en" | "mn";
 
 const overlayFade: Variants = {
   hidden: { opacity: 0 },
@@ -10,7 +13,8 @@ const overlayFade: Variants = {
 type GalleryLightboxProps = {
   isOpen: boolean;
   activeIndex: number | null;
-  images: string[];
+  images: EventImage[];
+  lang: Lang;
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
@@ -20,38 +24,39 @@ export default function GalleryLightbox({
   isOpen,
   activeIndex,
   images,
+  lang,
   onClose,
   onPrev,
   onNext,
 }: GalleryLightboxProps) {
   return (
     <AnimatePresence>
-      {isOpen && activeIndex !== null && (
+      {isOpen && activeIndex !== null && images[activeIndex] && (
         <motion.div
           variants={overlayFade}
           initial="hidden"
           animate="show"
           exit="exit"
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
           onClick={onClose}
         >
           <div
-            className="flex items-center gap-10"
+            className="flex items-center gap-6"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={onPrev}
               aria-label="Previous image"
-              className="text-white text-5xl"
+              className="text-5xl text-white"
             >
               ‹
             </button>
 
             <img
-              src={images[activeIndex]}
-              alt={`Gallery image ${activeIndex + 1}`}
-              className="max-w-[88vw] max-h-[82vh] object-contain"
+              src={images[activeIndex].highRes}
+              alt={images[activeIndex].alt[lang]}
+              className="max-h-[82vh] max-w-[88vw] object-contain"
               draggable={false}
             />
 
@@ -59,7 +64,7 @@ export default function GalleryLightbox({
               type="button"
               onClick={onNext}
               aria-label="Next image"
-              className="text-white text-5xl"
+              className="text-5xl text-white"
             >
               ›
             </button>

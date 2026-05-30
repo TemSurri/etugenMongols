@@ -3,11 +3,7 @@
 import { memo, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import {
-  events,
-  getEventCardDescription,
-  getEventLink,
-} from "../../static_events";
+import { events } from "../../static_events";
 
 type Lang = "en" | "mn";
 
@@ -42,24 +38,26 @@ function getYearFromDate(date: string) {
   return date.match(/\b(20\d{2}|19\d{2})\b/)?.[0] ?? date;
 }
 
-function getGalleryHref(eventId: string) {
-  return `/gallery/${eventId}`;
-}
-
 function Events({ lang }: EventsProps) {
   const copy = EVENTS_COPY[lang];
 
   const timelineItems = useMemo(
     () =>
-      events.map((event, index) => ({
-        event,
-        isUpcoming: index === 0,
-        href: getEventLink(event),
-        galleryHref: getGalleryHref(event.id),
-        description: getEventCardDescription(event),
-        year: getYearFromDate(event.details.date),
-      })),
-    []
+      events.map((event) => {
+        const isUpcoming = event.status === "upcoming";
+
+        return {
+          event,
+          isUpcoming,
+          title: event.title[lang],
+          description: event.description[lang],
+          imageSrc: event.coverImage.lowRes || event.coverImage.highRes,
+          imageAlt: event.coverImage.alt[lang],
+          year: getYearFromDate(event.date),
+          href: isUpcoming ? `/events/${event.id}` : `/gallery/${event.id}`,
+        };
+      }),
+    [lang]
   );
 
   return (
@@ -87,7 +85,16 @@ function Events({ lang }: EventsProps) {
           <div className="space-y-16">
             {timelineItems.map(
               (
-                { event, isUpcoming, href, galleryHref, description, year },
+                {
+                  event,
+                  isUpcoming,
+                  title,
+                  description,
+                  imageSrc,
+                  imageAlt,
+                  year,
+                  href,
+                },
                 index
               ) => {
                 const isLeftSide = index % 2 === 0;
@@ -120,15 +127,15 @@ function Events({ lang }: EventsProps) {
                         </p>
 
                         <p className="mt-1 text-2xl font-semibold tracking-tight text-[#27301d]">
-                          {isUpcoming ? event.details.date : year}
+                          {isUpcoming ? event.date : year}
                         </p>
                       </div>
 
                       <div className="group overflow-hidden rounded-xl border border-[#d8caa5]/75 bg-[#fffaf0]/92 shadow-[0_18px_50px_rgba(88,72,38,0.12)] transition duration-300 hover:-translate-y-0.5 hover:border-[#b39135]/70 hover:shadow-[0_24px_70px_rgba(88,72,38,0.18)]">
                         <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]">
                           <img
-                            src={`/upcoming_event_assets/${event.image}`}
-                            alt={event.title}
+                            src={imageSrc}
+                            alt={imageAlt}
                             loading={index === 0 ? "eager" : "lazy"}
                             decoding="async"
                             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
@@ -149,7 +156,7 @@ function Events({ lang }: EventsProps) {
                           </div>
 
                           <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-[#27301d]">
-                            {event.title}
+                            {title}
                           </h2>
 
                           <p className="mt-3 line-clamp-4 text-sm leading-7 text-[#4e593c]/85">
@@ -157,21 +164,12 @@ function Events({ lang }: EventsProps) {
                           </p>
 
                           <div className="mt-6 border-t border-[#d8caa5]/65 pt-4">
-                            {isUpcoming ? (
-                              <Link
-                                to={href}
-                                className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors hover:text-[#27301d]"
-                              >
-                                {copy.viewEvent} →
-                              </Link>
-                            ) : (
-                              <Link
-                                to={galleryHref}
-                                className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors hover:text-[#27301d]"
-                              >
-                                {copy.viewGallery} →
-                              </Link>
-                            )}
+                            <Link
+                              to={href}
+                              className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors hover:text-[#27301d]"
+                            >
+                              {isUpcoming ? copy.viewEvent : copy.viewGallery} →
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -186,4 +184,5 @@ function Events({ lang }: EventsProps) {
     </section>
   );
 }
+
 export default memo(Events);

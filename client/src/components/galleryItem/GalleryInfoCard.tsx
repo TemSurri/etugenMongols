@@ -1,56 +1,47 @@
 type GalleryInfoCardProps = {
   title: string;
+  sectionTitle?: string;
   description?: string;
-  activities?: string[];
+  eventDescription?: string;
 };
 
 export default function GalleryInfoCard({
   title,
+  sectionTitle,
   description,
-  activities = [],
+  eventDescription,
 }: GalleryInfoCardProps) {
   return (
-    <div
-      className="
-        backdrop-blur-lg bg-white/65
-        border border-white/40
-        rounded-md
-        shadow-lg
-        ring-1 ring-white/30
-        p-6 space-y-8
-      "
-    >
-      <div className="relative aspect-video bg-black rounded-sm overflow-hidden shadow-md">
-        <iframe
-          className="absolute inset-0 w-full h-full"
-          loading="lazy"
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title={`${title} event video`}
-          allowFullScreen
-        />
+    <div className="space-y-8 rounded-2xl border border-[#d8caa5]/70 bg-white/70 p-6 shadow-lg backdrop-blur">
+      <div>
+        <div className="text-[11px] uppercase tracking-widest text-[#9a7b26]">
+          {sectionTitle || "Gallery Section"}
+        </div>
+
+        <h2 className="mt-2 text-xl font-semibold text-[#27301d]">
+          {title}
+        </h2>
       </div>
 
       {description && (
         <div className="space-y-2">
-          <div className="text-[11px] uppercase tracking-widest text-black/55">
-            Event Summary
+          <div className="text-[11px] uppercase tracking-widest text-[#9a7b26]">
+            Section Summary
           </div>
-          <div className="text-sm text-black/75 leading-relaxed">
-            {description}
-          </div>
+
+          <p className="text-sm leading-7 text-[#4e593c]/85">{description}</p>
         </div>
       )}
 
-      {activities.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-[11px] uppercase tracking-widest text-black/55">
-            Activities & Amenities
+      {eventDescription && (
+        <div className="space-y-2 border-t border-[#d8caa5]/70 pt-5">
+          <div className="text-[11px] uppercase tracking-widest text-[#9a7b26]">
+            Event Summary
           </div>
-          <div className="max-h-36 overflow-y-auto pr-2 text-sm text-black/70 space-y-2">
-            {activities.map((activity, index) => (
-              <p key={`${activity}-${index}`}>{activity}</p>
-            ))}
-          </div>
+
+          <p className="text-sm leading-7 text-[#4e593c]/85">
+            {eventDescription}
+          </p>
         </div>
       )}
     </div>

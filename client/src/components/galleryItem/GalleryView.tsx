@@ -4,15 +4,21 @@ import { Link } from "react-router-dom";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import type { GalleryItem as GalleryItemType } from "../../static_gallery";
+import type { Event, EventImage, GallerySection } from "../../static_events";
 
 import GalleryHeader from "./GalleryHeader";
 import GalleryInfoCard from "./GalleryInfoCard";
 import GalleryGrid from "./GalleryGrid";
 import GalleryLightbox from "./GalleryLightbox";
 
-// motion
+type Lang = "en" | "mn";
 
+type GalleryViewProps = {
+  event: Event;
+  lang: Lang;
+};
+
+type SectionKey = "general" | "performances" | "behindTheScenes";
 
 const pageFade: Variants = {
   hidden: { opacity: 0 },
@@ -30,27 +36,70 @@ const fadeUp: Variants = {
 
 const IMAGES_PER_PAGE = 6;
 
-export default function GalleryView({
-  id,
-  title,
-  date,
-  location,
-  albumImageCount,
-  description,
-  activities = [],
-}: GalleryItemType) {
-  const albumBasePath = `/gallery/${id}/albumphotos`;
+const COPY = {
+  en: {
+    back: "Back to Gallery Page",
+    general: "General",
+    performances: "Performances",
+    behindTheScenes: "Behind the Scenes",
+    appreciation: "Appreciation Video",
+  },
+  mn: {
+    back: "Цомог руу буцах",
+    general: "Ерөнхий",
+    performances: "Тоглолтууд",
+    behindTheScenes: "Ар тал",
+    appreciation: "Талархлын бичлэг",
+  },
+} as const;
 
-  const images = useMemo(
-    () =>
-      Array.from(
-        { length: albumImageCount },
-        (_, i) => `${albumBasePath}/${i + 1}.png`
-      ),
-    [albumImageCount, albumBasePath]
+function getAvailableSections(gallery: NonNullable<Event["gallery"]>) {
+  return Object.entries(gallery.sections).filter(
+    ([, section]) => section && section.images.length > 0
+  ) as [SectionKey, GallerySection][];
+}
+
+export default function GalleryView({ event, lang }: GalleryViewProps) {
+  const copy = COPY[lang];
+
+  if (!event.gallery) {
+    return (
+      <main className="min-h-screen bg-[#f4ecd9] pt-28 text-[#27301d]">
+        <div className="mx-auto max-w-4xl px-5 py-12">
+          <Link
+            to="/gallery"
+            className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7b26]"
+          >
+            ← {copy.back}
+          </Link>
+
+          <h1 className="mt-6 text-3xl font-semibold">
+            Gallery not available.
+          </h1>
+        </div>
+      </main>
+    );
+  }
+
+  const availableSections = useMemo(
+    () => getAvailableSections(event.gallery!),
+    [event.gallery]
   );
 
-  const backgroundImage = images[0];
+  const [activeSectionKey, setActiveSectionKey] = useState<SectionKey>(
+    availableSections[0]?.[0] ?? "general"
+  );
+
+  const activeSection =
+    event.gallery.sections[activeSectionKey] ?? availableSections[0]?.[1];
+
+  const images = useMemo<EventImage[]>(
+    () => activeSection?.images ?? [],
+    [activeSection]
+  );
+
+  const backgroundImage =
+    event.coverImage.lowRes || event.coverImage.highRes || images[0]?.lowRes;
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [page, setPage] = useState(0);
@@ -81,6 +130,11 @@ export default function GalleryView({
   }, []);
 
   useEffect(() => {
+    setPage(0);
+    setActiveIndex(null);
+  }, [activeSectionKey]);
+
+  useEffect(() => {
     if (activeIndex === null) return;
 
     const onKey = (e: KeyboardEvent) => {
@@ -98,60 +152,96 @@ export default function GalleryView({
       variants={pageFade}
       initial="hidden"
       animate="show"
-      className="relative min-h-screen"
+      className="relative min-h-screen overflow-hidden bg-[#f4ecd9] pt-20 text-[#27301d]"
     >
       {backgroundImage && (
         <img
           src={backgroundImage}
           aria-hidden
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+          className="absolute inset-0 h-full w-full object-cover opacity-25 blur-sm"
         />
       )}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div className="absolute inset-0 bg-[#f4ecd9]/88" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <motion.div
           variants={fadeUp}
-          className="bg-white/70 border border-white/30 shadow-xl"
+          className="rounded-3xl border border-[#d8caa5]/70 bg-[#fffaf0]/85 shadow-xl backdrop-blur"
         >
-          <div className="px-6 sm:px-10 py-10">
+          <div className="px-6 py-10 sm:px-10">
             <Link
               to="/gallery"
-              className="block mb-6 text-xs uppercase tracking-widest text-black/60 hover:text-black"
+              className="mb-6 block text-xs font-semibold uppercase tracking-widest text-[#9a7b26] hover:text-[#27301d]"
             >
-              ← Back to Gallery Page
+              ← {copy.back}
             </Link>
 
-            <GalleryHeader title={title} date={date} location={location} />
+            <GalleryHeader
+              title={event.title[lang]}
+              date={event.date}
+              location={event.location}
+            />
 
-            <div className="md:hidden mb-12">
-              <GalleryInfoCard
-                title={title}
-                description={description}
-                activities={activities}
-              />
+            {event.gallery.thankYouVideo && (
+              <div className="mb-10">
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+                  {copy.appreciation}
+                </p>
+
+                <div className="aspect-video overflow-hidden rounded-2xl bg-black shadow-lg">
+                  <iframe
+                    className="h-full w-full"
+                    loading="lazy"
+                    src={event.gallery.thankYouVideo.url}
+                    title={event.gallery.thankYouVideo.title[lang]}
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mb-8 flex flex-wrap gap-2">
+              {availableSections.map(([key, section]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setActiveSectionKey(key)}
+                  className={`rounded-full border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
+                    activeSectionKey === key
+                      ? "border-[#27301d] bg-[#27301d] text-[#fffaf0]"
+                      : "border-[#d8caa5] bg-white/70 text-[#9a7b26] hover:border-[#9a7b26]"
+                  }`}
+                >
+                  {section.title[lang]}
+                </button>
+              ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] gap-14">
-              <aside className="hidden md:block relative">
-                <div className="md:sticky md:top-10">
+            <div className="grid grid-cols-1 gap-14 md:grid-cols-[360px_1fr]">
+              <aside className="relative">
+                <div className="md:sticky md:top-28">
                   <GalleryInfoCard
-                    title={title}
-                    description={description}
-                    activities={activities}
+                    title={event.title[lang]}
+                    description={activeSection?.description[lang]}
+                    sectionTitle={activeSection?.title[lang]}
+                    eventDescription={event.description[lang]}
                   />
                 </div>
               </aside>
 
               <GalleryGrid
-                title={title}
+                title={event.title[lang]}
                 images={images}
                 pagedImages={pagedImages}
                 page={page}
                 pageCount={pageCount}
                 imagesPerPage={IMAGES_PER_PAGE}
                 onOpenImage={setActiveIndex}
-                onPrevPage={() => setPage(page - 1)}
-                onNextPage={() => setPage(page + 1)}
+                onPrevPage={() => setPage((p) => Math.max(0, p - 1))}
+                onNextPage={() =>
+                  setPage((p) => Math.min(pageCount - 1, p + 1))
+                }
               />
             </div>
           </div>
@@ -162,6 +252,7 @@ export default function GalleryView({
         isOpen={activeIndex !== null}
         activeIndex={activeIndex}
         images={images}
+        lang={lang}
         onClose={closeLightbox}
         onPrev={prev}
         onNext={next}

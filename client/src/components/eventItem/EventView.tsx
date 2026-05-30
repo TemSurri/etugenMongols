@@ -2,12 +2,12 @@
 
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import type { EventAction, EventItem, Listing } from "../../static_events";
+import type { Event, EventAction } from "../../static_events";
 
 type Lang = "mn" | "en";
 
 type EventViewProps = {
-  event: EventItem;
+  event: Event;
   lang: Lang;
 };
 
@@ -17,35 +17,33 @@ const COPY = {
     about: "About",
     details: "Details",
     ticket: "Ticket Information",
-    volunteerRoles: "Volunteer Roles",
     maps: "Open in Google Maps",
+    unavailable: "This event is not currently available for registration.",
   },
   mn: {
     back: "Арга хэмжээ рүү буцах",
     about: "Тухай",
     details: "Мэдээлэл",
     ticket: "Тасалбарын мэдээлэл",
-    volunteerRoles: "Сайн дурын үүрэг",
     maps: "Google Maps дээр нээх",
+    unavailable: "Энэ арга хэмжээнд одоогоор бүртгүүлэх боломжгүй байна.",
   },
 } as const;
 
 function EventView({ event, lang }: EventViewProps) {
   const copy = COPY[lang];
 
-  const description =
-    lang === "mn" ? event.details.description : event.details.description_en;
+  const title = event.title[lang];
+  const description = event.description[lang];
+  const imageSrc = event.coverImage.highRes || event.coverImage.lowRes;
+  const imageAlt = event.coverImage.alt[lang];
 
-  const ticketInfo =
-    lang === "mn"
-      ? event.details.ticketInfo || ""
-      : event.details.ticketInfo_en || "";
+  const upcoming = event.upcoming;
+  const enabledActions = upcoming?.actions.filter((action) => action.enabled) ?? [];
 
-  const enabledActions = event.actions.filter((action) => action.enabled);
-
-  const googleMapsUrl = event.details.location
+  const googleMapsUrl = event.location
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        event.details.location
+        event.location
       )}`
     : null;
 
@@ -62,8 +60,8 @@ function EventView({ event, lang }: EventViewProps) {
         <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.95fr] lg:items-start">
           <div>
             <img
-              src={`/upcoming_event_assets/${event.image}`}
-              alt={event.title}
+              src={imageSrc}
+              alt={imageAlt}
               loading="eager"
               decoding="async"
               className="w-full rounded-xl border border-[#d8caa5]/70 bg-white object-contain"
@@ -72,24 +70,24 @@ function EventView({ event, lang }: EventViewProps) {
 
           <div className="pt-1">
             <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              {event.title}
+              {title}
             </h1>
 
             <div className="mt-4 space-y-3 border-l-2 border-[#d8caa5] pl-4">
-              <Info label="Date" value={event.details.date} />
-              <Info label="Time" value={event.details.time} />
+              <Info label="Date" value={event.date} />
 
-              {event.details.location && (
+              {upcoming?.time && <Info label="Time" value={upcoming.time} />}
+
+              {event.location && (
                 <Info
                   label="Location"
                   value={
                     <>
-                      {event.details.location}
+                      {event.location}
 
                       {googleMapsUrl && (
                         <>
                           <br />
-
                           <a
                             href={googleMapsUrl}
                             target="_blank"
@@ -106,7 +104,7 @@ function EventView({ event, lang }: EventViewProps) {
               )}
             </div>
 
-            {enabledActions.length > 0 && (
+            {enabledActions.length > 0 ? (
               <div className="mt-5 flex flex-wrap gap-2">
                 {enabledActions.map((action) => (
                   <ActionButton
@@ -116,6 +114,10 @@ function EventView({ event, lang }: EventViewProps) {
                   />
                 ))}
               </div>
+            ) : (
+              <p className="mt-5 text-sm leading-6 text-[#4e593c]/80">
+                {copy.unavailable}
+              </p>
             )}
           </div>
         </section>
@@ -131,61 +133,31 @@ function EventView({ event, lang }: EventViewProps) {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_0.9fr]">
-            {ticketInfo && (
-              <div>
-                <SectionTitle>{copy.ticket}</SectionTitle>
+          {(upcoming?.contact?.email ||
+            upcoming?.contact?.phone?.length ||
+            googleMapsUrl) && (
+            <div className="mt-10">
+              <SectionTitle>{copy.details}</SectionTitle>
 
-                <p className="mt-3 whitespace-pre-line text-sm leading-7 text-black/72">
-                  {ticketInfo}
-                </p>
-              </div>
-            )}
+              <div className="mt-3 space-y-2 text-sm leading-7 text-black/72">
+                {upcoming?.contact?.email && <p>{upcoming.contact.email}</p>}
 
-            {(event.contact?.email ||
-              event.contact?.phone?.length ||
-              googleMapsUrl) && (
-              <div>
-                <SectionTitle>{copy.details}</SectionTitle>
-
-                <div className="mt-3 space-y-2 text-sm leading-7 text-black/72">
-                  {event.contact?.email && (
-                    <p>{event.contact.email}</p>
-                  )}
-
-                  {event.contact?.phone?.map((phone, index) => (
-                    <p key={`${phone}-${index}`}>{phone}</p>
-                  ))}
-
-                  {googleMapsUrl && (
-                    <a
-                      href={googleMapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
-                    >
-                      {copy.maps} →
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {event.whoWeWant.length > 0 && (
-            <section className="mt-12 border-t border-black/10 pt-6">
-              <SectionTitle>{copy.volunteerRoles}</SectionTitle>
-
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
-                {event.whoWeWant.map((item, index) => (
-                  <VolunteerRole
-                    key={`${item.title}-${index}`}
-                    item={item}
-                    lang={lang}
-                  />
+                {upcoming?.contact?.phone?.map((phone, index) => (
+                  <p key={`${phone}-${index}`}>{phone}</p>
                 ))}
+
+                {googleMapsUrl && (
+                  <a
+                    href={googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
+                  >
+                    {copy.maps} →
+                  </a>
+                )}
               </div>
-            </section>
+            </div>
           )}
         </div>
       </section>
@@ -193,11 +165,7 @@ function EventView({ event, lang }: EventViewProps) {
   );
 }
 
-function SectionTitle({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
       {children}
@@ -218,9 +186,7 @@ function Info({
         {label}
       </p>
 
-      <div className="mt-0.5 text-sm leading-6 text-[#4e593c]">
-        {value}
-      </div>
+      <div className="mt-0.5 text-sm leading-6 text-[#4e593c]">{value}</div>
     </div>
   );
 }
@@ -232,7 +198,7 @@ function ActionButton({
   action: EventAction;
   lang: Lang;
 }) {
-  const label = lang === "mn" ? action.label_mn : action.label;
+  const label = action.label[lang];
 
   return (
     <button
@@ -241,37 +207,10 @@ function ActionButton({
     >
       {label}
 
-      {action.type === "payment" &&
-        action.price !== undefined && (
-          <span className="ml-1.5">${action.price}</span>
-        )}
-    </button>
-  );
-}
-
-function VolunteerRole({
-  item,
-  lang,
-}: {
-  item: Listing;
-  lang: Lang;
-}) {
-  return (
-    <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
-      <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-[#27301d]">
-        {lang === "mn" ? item.title_mn : item.title}
-      </h3>
-
-      <p className="mt-2 text-sm leading-6 text-black/72">
-        {item.description}
-      </p>
-
-      {item.contact && (
-        <p className="mt-2 text-xs text-black/55">
-          {item.contact}
-        </p>
+      {action.type === "payment" && action.price !== undefined && (
+        <span className="ml-1.5">${action.price}</span>
       )}
-    </div>
+    </button>
   );
 }
 
