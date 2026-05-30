@@ -4,12 +4,6 @@ import type { EventImage } from "../../static_events";
 
 type Lang = "en" | "mn";
 
-const overlayFade: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
 type GalleryLightboxProps = {
   isOpen: boolean;
   activeIndex: number | null;
@@ -18,6 +12,12 @@ type GalleryLightboxProps = {
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
+};
+
+const overlayFade: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 export default function GalleryLightbox({
@@ -29,42 +29,47 @@ export default function GalleryLightbox({
   onPrev,
   onNext,
 }: GalleryLightboxProps) {
+  const activeImage =
+    activeIndex !== null ? images[activeIndex] : undefined;
+
   return (
     <AnimatePresence>
-      {isOpen && activeIndex !== null && images[activeIndex] && (
+      {isOpen && activeImage && (
         <motion.div
           variants={overlayFade}
           initial="hidden"
           animate="show"
           exit="exit"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 px-4"
           onClick={onClose}
         >
           <div
-            className="flex items-center gap-6"
+            className="grid w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={onPrev}
               aria-label="Previous image"
-              className="text-5xl text-white"
+              className="rounded-full bg-white/10 px-3 py-2 text-4xl leading-none text-white transition hover:bg-white/20"
             >
               ‹
             </button>
 
-            <img
-              src={images[activeIndex].highRes}
-              alt={images[activeIndex].alt[lang]}
-              className="max-h-[82vh] max-w-[88vw] object-contain"
-              draggable={false}
-            />
+            <div className="flex min-h-[70vh] items-center justify-center">
+              <img
+                src={activeImage.highRes || activeImage.lowRes}
+                alt={activeImage.alt[lang]}
+                className="max-h-[86vh] max-w-full object-contain"
+                draggable={false}
+              />
+            </div>
 
             <button
               type="button"
               onClick={onNext}
               aria-label="Next image"
-              className="text-5xl text-white"
+              className="rounded-full bg-white/10 px-3 py-2 text-4xl leading-none text-white transition hover:bg-white/20"
             >
               ›
             </button>

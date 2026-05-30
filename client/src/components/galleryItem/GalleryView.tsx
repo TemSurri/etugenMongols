@@ -4,7 +4,12 @@ import { Link } from "react-router-dom";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import type { Event, EventImage, GallerySection } from "../../static_events";
+import type {
+  Event,
+  EventImage,
+  GallerySection,
+  PerformanceItem,
+} from "../../static_events";
 
 import GalleryHeader from "./GalleryHeader";
 import GalleryInfoCard from "./GalleryInfoCard";
@@ -12,51 +17,46 @@ import GalleryGrid from "./GalleryGrid";
 import GalleryLightbox from "./GalleryLightbox";
 
 type Lang = "en" | "mn";
+type SectionKey = "general" | "performances" | "behindTheScenes";
 
 type GalleryViewProps = {
   event: Event;
   lang: Lang;
 };
 
-type SectionKey = "general" | "performances" | "behindTheScenes";
-
-const pageFade: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: "easeOut" },
-  },
-};
-
-const IMAGES_PER_PAGE = 6;
+const IMAGES_PER_PAGE = 9;
 
 const COPY = {
   en: {
-    back: "Back to Gallery Page",
+    back: "Back to Gallery",
+    overview: "Event Overview",
     general: "General",
     performances: "Performances",
     behindTheScenes: "Behind the Scenes",
-    appreciation: "Appreciation Video",
+    noMedia: "No media has been added for this section yet.",
   },
   mn: {
     back: "Цомог руу буцах",
+    overview: "Арга хэмжээний тойм",
     general: "Ерөнхий",
     performances: "Тоглолтууд",
     behindTheScenes: "Ар тал",
-    appreciation: "Талархлын бичлэг",
+    noMedia: "Энэ хэсэгт одоогоор зураг, бичлэг нэмэгдээгүй байна.",
   },
 } as const;
 
-function getAvailableSections(gallery: NonNullable<Event["gallery"]>) {
-  return Object.entries(gallery.sections).filter(
-    ([, section]) => section && section.images.length > 0
-  ) as [SectionKey, GallerySection][];
+const pageFade: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.22, ease: "easeOut" } },
+};
+
+function getSectionImages(
+  key: SectionKey,
+  gallery: NonNullable<Event["gallery"]>,
+  activePerformance?: PerformanceItem
+): EventImage[] {
+  if (key === "performances") return activePerformance?.images ?? [];
+  return gallery.sections[key].images;
 }
 
 export default function GalleryView({ event, lang }: GalleryViewProps) {
@@ -81,25 +81,34 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
     );
   }
 
-  const availableSections = useMemo(
-    () => getAvailableSections(event.gallery!),
-    [event.gallery]
+  const gallery = event.gallery;
+
+  const [activeSectionKey, setActiveSectionKey] =
+    useState<SectionKey>("general");
+
+  const firstPerformance = gallery.sections.performances.items[0];
+
+  const [activePerformanceId, setActivePerformanceId] = useState<string | null>(
+    firstPerformance?.id ?? null
   );
 
-  const [activeSectionKey, setActiveSectionKey] = useState<SectionKey>(
-    availableSections[0]?.[0] ?? "general"
+  const activePerformance = useMemo(
+    () =>
+      gallery.sections.performances.items.find(
+        (item) => item.id === activePerformanceId
+      ) ?? firstPerformance,
+    [activePerformanceId, firstPerformance, gallery.sections.performances.items]
   );
 
-  const activeSection =
-    event.gallery.sections[activeSectionKey] ?? availableSections[0]?.[1];
+  const activeStaticSection =
+    activeSectionKey === "performances"
+      ? null
+      : (gallery.sections[activeSectionKey] as GallerySection);
 
-  const images = useMemo<EventImage[]>(
-    () => activeSection?.images ?? [],
-    [activeSection]
+  const images = useMemo(
+    () => getSectionImages(activeSectionKey, gallery, activePerformance),
+    [activeSectionKey, gallery, activePerformance]
   );
-
-  const backgroundImage =
-    event.coverImage.lowRes || event.coverImage.highRes || images[0]?.lowRes;
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [page, setPage] = useState(0);
@@ -116,120 +125,153 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
   );
 
   const next = useCallback(() => {
+    if (images.length === 0) return;
     setActiveIndex((i) => (i === null ? 0 : (i + 1) % images.length));
   }, [images.length]);
 
   const prev = useCallback(() => {
+    if (images.length === 0) return;
     setActiveIndex((i) =>
       i === null ? 0 : (i - 1 + images.length) % images.length
     );
   }, [images.length]);
 
-  const closeLightbox = useCallback(() => {
-    setActiveIndex(null);
-  }, []);
+  const closeLightbox = useCallback(() => setActiveIndex(null), []);
 
   useEffect(() => {
     setPage(0);
     setActiveIndex(null);
-  }, [activeSectionKey]);
+  }, [activeSectionKey, activePerformanceId]);
 
   useEffect(() => {
     if (activeIndex === null) return;
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "Escape") closeLightbox();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") next();
+      if (event.key === "ArrowLeft") prev();
+      if (event.key === "Escape") closeLightbox();
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [activeIndex, next, prev, closeLightbox]);
 
+  const bgImage = event.coverImage.lowRes || event.coverImage.highRes;
+
   return (
     <motion.article
       variants={pageFade}
       initial="hidden"
       animate="show"
-      className="relative min-h-screen overflow-hidden bg-[#f4ecd9] pt-20 text-[#27301d]"
+      className="relative min-h-screen bg-[#f4ecd9] pt-20 text-[#27301d]"
     >
-      {backgroundImage && (
-        <img
-          src={backgroundImage}
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover opacity-25 blur-sm"
-        />
-      )}
+      <img
+        src={bgImage}
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        className="absolute inset-x-0 top-0 h-[38rem] w-full object-cover opacity-70"
+      />
 
-      <div className="absolute inset-0 bg-[#f4ecd9]/88" />
+      <div className="absolute inset-x-0 top-0 h-[38rem] bg-gradient-to-b from-[#f4ecd9]/10 via-[#f4ecd9]/55 to-[#f4ecd9]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <motion.div
-          variants={fadeUp}
-          className="rounded-3xl border border-[#d8caa5]/70 bg-[#fffaf0]/85 shadow-xl backdrop-blur"
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12">
+        <Link
+          to="/gallery"
+          className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#27301d] transition-colors hover:text-[#9a7b26]"
         >
-          <div className="px-6 py-10 sm:px-10">
-            <Link
-              to="/gallery"
-              className="mb-6 block text-xs font-semibold uppercase tracking-widest text-[#9a7b26] hover:text-[#27301d]"
-            >
-              ← {copy.back}
-            </Link>
+          ← {copy.back}
+        </Link>
 
-            <GalleryHeader
-              title={event.title[lang]}
-              date={event.date}
-              location={event.location}
+        <section className="mt-8 border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-6 shadow-[0_18px_50px_rgba(88,72,38,0.10)] sm:p-8">
+          <GalleryHeader
+            title={event.title[lang]}
+            date={event.date}
+            location={event.location}
+          />
+
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+            {copy.overview}
+          </p>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[#4e593c]/85 md:text-[15px] md:leading-8">
+            {event.description[lang]}
+          </p>
+        </section>
+
+        <div className="mt-8 flex flex-wrap gap-2">
+          {(["general", "performances", "behindTheScenes"] as SectionKey[]).map(
+            (key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveSectionKey(key)}
+                className={`border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
+                  activeSectionKey === key
+                    ? "border-[#27301d] bg-[#27301d] text-[#fffaf0]"
+                    : "border-[#d8caa5] bg-[#fffaf0]/95 text-[#9a7b26] hover:border-[#9a7b26]"
+                }`}
+              >
+                {copy[key]}
+              </button>
+            )
+          )}
+        </div>
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-[19rem_minmax(0,1fr)] lg:items-start">
+          <aside className="lg:sticky lg:top-32 lg:self-start">
+            <GalleryInfoCard
+              lang={lang}
+              sectionKey={activeSectionKey}
+              sectionTitle={
+                activeSectionKey === "performances"
+                  ? gallery.sections.performances.title[lang]
+                  : activeStaticSection?.title[lang]
+              }
+              description={
+                activeSectionKey === "performances"
+                  ? gallery.sections.performances.description[lang]
+                  : activeStaticSection?.description[lang]
+              }
+              montageVideo={
+                activeSectionKey === "general" ? gallery.montageVideo : undefined
+              }
+              performances={gallery.sections.performances.items}
+              activePerformance={activePerformance}
+              onSelectPerformance={setActivePerformanceId}
+              performanceVideos={
+                activeSectionKey === "performances"
+                  ? activePerformance?.videos
+                  : undefined
+              }
+              thankYouVideo={
+                activeSectionKey === "behindTheScenes"
+                  ? gallery.thankYouVideo
+                  : undefined
+              }
             />
+          </aside>
 
-            {event.gallery.thankYouVideo && (
-              <div className="mb-10">
-                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
-                  {copy.appreciation}
+          <section className="min-w-0 space-y-8">
+            {activeSectionKey === "performances" && activePerformance && (
+              <div className="border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-5 shadow-[0_14px_38px_rgba(88,72,38,0.08)]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+                  {copy.performances}
                 </p>
 
-                <div className="aspect-video overflow-hidden rounded-2xl bg-black shadow-lg">
-                  <iframe
-                    className="h-full w-full"
-                    loading="lazy"
-                    src={event.gallery.thankYouVideo.url}
-                    title={event.gallery.thankYouVideo.title[lang]}
-                    allowFullScreen
-                  />
-                </div>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+                  {activePerformance.title[lang]}
+                </h2>
+
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-[#4e593c]/85">
+                  {activePerformance.description[lang]}
+                </p>
               </div>
             )}
 
-            <div className="mb-8 flex flex-wrap gap-2">
-              {availableSections.map(([key, section]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setActiveSectionKey(key)}
-                  className={`rounded-full border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
-                    activeSectionKey === key
-                      ? "border-[#27301d] bg-[#27301d] text-[#fffaf0]"
-                      : "border-[#d8caa5] bg-white/70 text-[#9a7b26] hover:border-[#9a7b26]"
-                  }`}
-                >
-                  {section.title[lang]}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 gap-14 md:grid-cols-[360px_1fr]">
-              <aside className="relative">
-                <div className="md:sticky md:top-28">
-                  <GalleryInfoCard
-                    title={event.title[lang]}
-                    description={activeSection?.description[lang]}
-                    sectionTitle={activeSection?.title[lang]}
-                    eventDescription={event.description[lang]}
-                  />
-                </div>
-              </aside>
-
+            {images.length > 0 ? (
               <GalleryGrid
                 title={event.title[lang]}
                 images={images}
@@ -237,15 +279,20 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
                 page={page}
                 pageCount={pageCount}
                 imagesPerPage={IMAGES_PER_PAGE}
+                lang={lang}
                 onOpenImage={setActiveIndex}
                 onPrevPage={() => setPage((p) => Math.max(0, p - 1))}
                 onNextPage={() =>
                   setPage((p) => Math.min(pageCount - 1, p + 1))
                 }
               />
-            </div>
-          </div>
-        </motion.div>
+            ) : (
+              <p className="border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-6 text-sm text-[#4e593c]/85">
+                {copy.noMedia}
+              </p>
+            )}
+          </section>
+        </div>
       </div>
 
       <GalleryLightbox

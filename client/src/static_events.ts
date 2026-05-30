@@ -16,6 +16,14 @@ export type EventVideo = {
   url: string;
 };
 
+export type PerformanceItem = {
+  id: string;
+  title: LangText;
+  description: LangText;
+  images: EventImage[];
+  videos?: EventVideo[];
+};
+
 export type GallerySection = {
   title: LangText;
   description: LangText;
@@ -64,12 +72,17 @@ export type Event = {
   };
 
   gallery?: {
+    montageVideo?: EventVideo;
     thankYouVideo?: EventVideo;
 
     sections: {
-      performances: GallerySection;
       general: GallerySection;
       behindTheScenes: GallerySection;
+      performances: {
+        title: LangText;
+        description: LangText;
+        items: PerformanceItem[];
+      };
     };
   };
 };
@@ -139,106 +152,257 @@ export const events: Event[] = [
     },
   },
 
-  {
-    id: "naadam2022",
-    status: "past",
+ {
+  id: "naadam2022",
+  status: "past",
 
-    title: {
-      en: "Naadam Celebration 2022",
-      mn: "Наадам 2022",
+  title: {
+    en: "Naadam Celebration 2022",
+    mn: "Наадам 2022",
+  },
+
+  description: {
+    en: "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
+    mn: "Бөх, сур харваа, дуу хөгжим, хоол, соёлын үзүүлбэрүүд багтсан уламжлалт Монгол наадмын баяр.",
+  },
+
+  date: "July 11, 2022",
+  location: "Calgary, Alberta",
+
+  coverImage: {
+    highRes: "/gallery/naadam2022/cover.webp",
+    lowRes: "/gallery/naadam2022/cover-low.webp",
+    alt: {
+      en: "Naadam Celebration 2022 cover image",
+      mn: "Наадам 2022 арга хэмжээний нүүр зураг",
     },
+  },
 
-    description: {
-      en: "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
-      mn: "Бөх, сур харваа, дуу хөгжим, хоол, соёлын үзүүлбэрүүд багтсан уламжлалт Монгол наадмын баяр.",
-    },
-
-    date: "July 11, 2022",
-    location: "Calgary, Alberta",
-
-    coverImage: {
-      highRes: "/gallery/naadam2022/cover.webp",
-      lowRes: "/gallery/naadam2022/cover-low.webp",
-      alt: {
-        en: "Naadam Celebration 2022 cover image",
-        mn: "Наадам 2022 арга хэмжээний нүүр зураг",
+  gallery: {
+    montageVideo: {
+      title: {
+        en: "Naadam 2022 Montage",
+        mn: "Наадам 2022 эвлүүлэг",
       },
+      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     },
 
-    gallery: {
-      thankYouVideo: {
+    thankYouVideo: {
+      title: {
+        en: "Thank You Video",
+        mn: "Талархлын бичлэг",
+      },
+      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    },
+
+    sections: {
+      general: {
         title: {
-          en: "Thank You Video",
-          mn: "Талархлын бичлэг",
+          en: "General Moments",
+          mn: "Ерөнхий мөчүүд",
         },
-        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        description: {
+          en: "Community photos, food, families, and shared moments from the event.",
+          mn: "Хамт олны зураг, хоол, гэр бүлүүд, арга хэмжээний дурсамжит мөчүүд.",
+        },
+        images: [
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/2.png",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/3.png",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+        ],
       },
 
-      sections: {
-        performances: {
-          title: {
-            en: "Performances",
-            mn: "Тоглолтууд",
-          },
-          description: {
-            en: "Stage performances, music, and cultural showcases from the Naadam celebration.",
-            mn: "Наадмын баярын тайзны тоглолт, дуу хөгжим, соёлын үзүүлбэрүүд.",
-          },
-          images: [
-            {
-              highRes: "/gallery/naadam2022/performances/1.webp",
-              lowRes: "/gallery/naadam2022/performances/1-low.webp",
-              alt: {
-                en: "Naadam 2022 performance photo",
-                mn: "Наадам 2022 тоглолтын зураг",
-              },
-            },
-          ],
-          videos: [],
+      behindTheScenes: {
+        title: {
+          en: "Behind the Scenes",
+          mn: "Ар талын мөчүүд",
         },
+        description: {
+          en: "Preparation, setup, volunteers, and moments behind the event.",
+          mn: "Бэлтгэл ажил, зохион байгуулалт, сайн дурынхан болон арга хэмжээний ар талын мөчүүд.",
+        },
+        images: [
+          {
+            highRes: "/gallery/naadam2022/behind-the-scenes/1.webp",
+            lowRes: "/gallery/naadam2022/behind-the-scenes/1-low.webp",
+            alt: {
+              en: "Naadam 2022 behind the scenes photo",
+              mn: "Наадам 2022 ар талын зураг",
+            },
+          },
+        ],
+      },
 
-        general: {
-          title: {
-            en: "General Moments",
-            mn: "Ерөнхий мөчүүд",
-          },
-          description: {
-            en: "Community photos, food, families, and shared moments from the event.",
-            mn: "Хамт олны зураг, хоол, гэр бүлүүд, арга хэмжээний дурсамжит мөчүүд.",
-          },
-          images: [
-            {
-              highRes: "/gallery/naadam2022/general/1.webp",
-              lowRes: "/gallery/naadam2022/general/1-low.webp",
-              alt: {
-                en: "Naadam 2022 community photo",
-                mn: "Наадам 2022 хамт олны зураг",
-              },
-            },
-          ],
+      performances: {
+        title: {
+          en: "Performances",
+          mn: "Тоглолтууд",
         },
-
-        behindTheScenes: {
-          title: {
-            en: "Behind the Scenes",
-            mn: "Ар талын мөчүүд",
-          },
-          description: {
-            en: "Preparation, setup, volunteers, and moments behind the event.",
-            mn: "Бэлтгэл ажил, зохион байгуулалт, сайн дурынхан болон арга хэмжээний ар талын мөчүүд.",
-          },
-          images: [
-            {
-              highRes: "/gallery/naadam2022/behind-the-scenes/1.webp",
-              lowRes: "/gallery/naadam2022/behind-the-scenes/1-low.webp",
-              alt: {
-                en: "Naadam 2022 behind the scenes photo",
-                mn: "Наадам 2022 ар талын зураг",
-              },
-            },
-          ],
+        description: {
+          en: "Individual performances from the Naadam celebration.",
+          mn: "Наадмын баярын тус бүрийн тоглолтууд.",
         },
+        items: [
+          {
+            id: "morin-khuur",
+            title: {
+              en: "Morin Khuur Performance",
+              mn: "Морин хуурын тоглолт",
+            },
+            description: {
+              en: "A traditional horsehead fiddle performance during the celebration.",
+              mn: "Баярын үеэр болсон уламжлалт морин хуурын тоглолт.",
+            },
+            images: [
+              {
+                highRes: "/gallery/naadam2022/performances/morin-khuur/1.webp",
+                lowRes: "/gallery/naadam2022/performances/morin-khuur/1-low.webp",
+                alt: {
+                  en: "Morin khuur performance at Naadam 2022",
+                  mn: "Наадам 2022 морин хуурын тоглолт",
+                },
+              },
+            ],
+            videos: [
+              {
+                title: {
+                  en: "Morin Khuur Video",
+                  mn: "Морин хуурын бичлэг",
+                },
+                url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+              },
+            ],
+          },
+          {
+            id: "dance-performance",
+            title: {
+              en: "Dance Performance",
+              mn: "Бүжгийн тоглолт",
+            },
+            description: {
+              en: "A cultural dance performance from the event program.",
+              mn: "Арга хэмжээний хөтөлбөрт багтсан соёлын бүжгийн тоглолт.",
+            },
+            images: [],
+            videos: [],
+          },
+        ],
       },
     },
   },
+}
+
+
+
+
+
 ];

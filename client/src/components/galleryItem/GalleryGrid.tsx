@@ -1,5 +1,7 @@
 import type { EventImage } from "../../static_events";
 
+type Lang = "en" | "mn";
+
 type GalleryGridProps = {
   title: string;
   images: EventImage[];
@@ -7,10 +9,26 @@ type GalleryGridProps = {
   page: number;
   pageCount: number;
   imagesPerPage: number;
+  lang: Lang;
   onOpenImage: (index: number) => void;
   onPrevPage: () => void;
   onNextPage: () => void;
 };
+
+const GRID_PATTERNS = [
+  "sm:col-span-2 sm:row-span-2",
+  "sm:col-span-1 sm:row-span-1",
+  "sm:col-span-1 sm:row-span-2",
+  "sm:col-span-1 sm:row-span-1",
+  "sm:col-span-2 sm:row-span-1",
+  "sm:col-span-1 sm:row-span-1",
+  "sm:col-span-1 sm:row-span-2",
+  "sm:col-span-2 sm:row-span-2",
+  "sm:col-span-1 sm:row-span-1",
+  "sm:col-span-1 sm:row-span-1",
+  "sm:col-span-2 sm:row-span-1",
+  "sm:col-span-1 sm:row-span-2",
+] as const;
 
 export default function GalleryGrid({
   title,
@@ -19,25 +37,17 @@ export default function GalleryGrid({
   page,
   pageCount,
   imagesPerPage,
+  lang,
   onOpenImage,
   onPrevPage,
   onNextPage,
 }: GalleryGridProps) {
   return (
-    <div className="space-y-16">
-      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:auto-rows-[260px]">
+    <div className="space-y-8">
+      <div className="grid auto-rows-[150px] grid-flow-dense grid-cols-1 gap-3 sm:grid-cols-2 sm:auto-rows-[170px] xl:grid-cols-3 xl:auto-rows-[190px]">
         {pagedImages.map((img, i) => {
           const realIndex = page * imagesPerPage + i;
-          const pattern = i % 6;
-
-          const variety =
-            pattern === 0
-              ? "lg:col-span-2 lg:row-span-2"
-              : pattern === 2
-                ? "lg:row-span-2"
-                : pattern === 4
-                  ? "lg:col-span-2"
-                  : "";
+          const pattern = GRID_PATTERNS[(i + page * 3) % GRID_PATTERNS.length];
 
           return (
             <button
@@ -45,18 +55,16 @@ export default function GalleryGrid({
               type="button"
               onClick={() => onOpenImage(realIndex)}
               aria-label={`Open image ${realIndex + 1} of ${images.length}`}
-              className={`relative overflow-hidden rounded-xl bg-white shadow-md ${variety}`}
+              className={`group relative overflow-hidden border border-[#d8caa5]/70 bg-[#fffaf0] p-1 shadow-[0_12px_30px_rgba(88,72,38,0.12)] transition-transform duration-200 hover:-translate-y-0.5 ${pattern}`}
             >
-              <div className="absolute inset-0 p-1.5">
-                <img
-                  src={img.lowRes || img.highRes}
-                  alt={img.alt.en || `${title} gallery image ${realIndex + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                  draggable={false}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+              <img
+                src={img.lowRes || img.highRes}
+                alt={img.alt[lang] || `${title} gallery image ${realIndex + 1}`}
+                loading={realIndex < 6 ? "eager" : "lazy"}
+                decoding="async"
+                draggable={false}
+                className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.025]"
+              />
             </button>
           );
         })}
