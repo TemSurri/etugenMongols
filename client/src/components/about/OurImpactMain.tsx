@@ -184,7 +184,7 @@ function QuoteRow({
     >
       {quotes.map((quote, index) => (
         <figure
-          key={quote.text}
+          key={`${quote.text}-${index}`}
           className={[
             "min-w-0 px-1",
             index > 0
@@ -278,21 +278,16 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
   const copy = COPY[lang];
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]">
-      <div className="fixed inset-0 z-0">
-        <img
-          src="/landingpage.webp"
-          alt=""
-          aria-hidden="true"
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          className="h-full w-full object-cover object-center"
-        />
-
-        <div className="absolute inset-0 bg-black/44" />
-        <div className="absolute inset-0 bg-linear-to-r from-black/58 via-black/24 to-black/46" />
-      </div>
+    <section
+      className="
+        relative isolate min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]
+        before:fixed before:inset-0 before:-z-10
+        before:bg-[url('/landingpage.webp')]
+        before:bg-cover before:bg-center before:bg-no-repeat
+        after:fixed after:inset-0 after:-z-10 after:bg-black/44
+      "
+    >
+      <div className="fixed inset-0 -z-10 bg-linear-to-r from-black/58 via-black/24 to-black/46" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-6 sm:pt-28 md:px-10 lg:px-12 lg:pt-32">
         <motion.header
