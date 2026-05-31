@@ -10,6 +10,19 @@ type OurImpactMainProps = {
   lang: Lang;
 };
 
+type ImpactItem = {
+  tag: string;
+  title: string;
+  body: string;
+  image: string;
+  href: string;
+};
+
+type Quote = {
+  text: string;
+  by: string;
+};
+
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const sectionMotion: Variants = {
@@ -145,29 +158,50 @@ const COPY = {
   },
 } as const;
 
-function QuoteChip({
-  text,
-  by,
-  className = "",
+function QuoteRow({
+  quotes,
+  compact = false,
+  align = "center",
 }: {
-  text: string;
-  by: string;
-  className?: string;
+  quotes: readonly Quote[];
+  compact?: boolean;
+  align?: "left" | "center";
 }) {
   return (
-    <div
+    <motion.div
+      variants={sectionMotion}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.25 }}
       className={[
-        "pointer-events-none absolute z-30 hidden max-w-52 rounded-md",
-        "border border-[#e1d2a6]/40 bg-[#fffaf0]/92 px-4 py-3",
-        "shadow-[0_16px_42px_rgba(0,0,0,0.24)] backdrop-blur-sm lg:block",
-        className,
+        "my-8 grid gap-4 rounded-md border border-[#e1d2a6]/45",
+        "bg-[#fffaf0]/94 px-5 py-6",
+        "shadow-[0_18px_52px_rgba(0,0,0,0.22)] backdrop-blur-sm",
+        quotes.length > 1 ? "md:grid-cols-2 md:px-7" : "",
+        compact && align === "center" ? "mx-auto max-w-2xl" : "",
+        compact && align === "left" ? "ml-0 mr-auto max-w-2xl lg:ml-12" : "",
       ].join(" ")}
     >
-      <p className="text-sm font-medium leading-6 text-[#27301d]">“{text}”</p>
-      <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-[#9a7b26]">
-        — {by}
-      </p>
-    </div>
+      {quotes.map((quote, index) => (
+        <figure
+          key={quote.text}
+          className={[
+            "min-w-0 px-1",
+            index > 0
+              ? "border-t border-[#d8caa5] pt-5 md:border-l md:border-t-0 md:pl-7 md:pt-0"
+              : "",
+          ].join(" ")}
+        >
+          <blockquote className="text-lg font-medium italic leading-8 text-[#27301d]">
+            “{quote.text}”
+          </blockquote>
+
+          <figcaption className="mt-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
+            — {quote.by}
+          </figcaption>
+        </figure>
+      ))}
+    </motion.div>
   );
 }
 
@@ -179,13 +213,7 @@ function ImpactTile({
   eager = false,
   viewMore,
 }: {
-  item: {
-    tag: string;
-    title: string;
-    body: string;
-    image: string;
-    href: string;
-  };
+  item: ImpactItem;
   className?: string;
   large?: boolean;
   compact?: boolean;
@@ -199,6 +227,7 @@ function ImpactTile({
         "group relative block min-h-[16rem] overflow-hidden rounded-md",
         "border border-[#e1d2a6]/40 bg-[#27301d]",
         "shadow-[0_22px_60px_rgba(0,0,0,0.28)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b04c]",
         className,
       ].join(" ")}
     >
@@ -320,26 +349,16 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
             viewMore={copy.viewMore}
             className="lg:col-span-2 lg:row-span-1"
           />
-
-          <QuoteChip
-            text={copy.quotes[0].text}
-            by={copy.quotes[0].by}
-            className="-bottom-6 left-[35%]"
-          />
-
-          <QuoteChip
-            text={copy.quotes[1].text}
-            by={copy.quotes[1].by}
-            className="right-6 top-[42%]"
-          />
         </motion.div>
+
+        <QuoteRow quotes={[copy.quotes[0]]} compact align="left" />
 
         <motion.div
           variants={sectionMotion}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.22 }}
-          className="relative mt-10 grid gap-4 lg:grid-cols-6 lg:auto-rows-[13rem]"
+          className="relative grid gap-4 lg:grid-cols-6 lg:auto-rows-[13rem]"
         >
           <ImpactTile
             item={copy.items[3]}
@@ -352,33 +371,11 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
             viewMore={copy.viewMore}
             className="lg:col-span-3 lg:row-span-2"
           />
-
-          <QuoteChip
-            text={copy.quotes[2].text}
-            by={copy.quotes[2].by}
-            className="-top-5 left-8"
-          />
-
-          <QuoteChip
-            text={copy.quotes[3].text}
-            by={copy.quotes[3].by}
-            className="-bottom-6 right-10"
-          />
         </motion.div>
 
-        <div className="mt-8 grid gap-3 lg:hidden">
-          {copy.quotes.map((quote) => (
-            <div
-              key={quote.text}
-              className="rounded-md border border-[#e1d2a6]/25 bg-[#fffaf0]/12 px-4 py-4 text-[#fffaf0] backdrop-blur-sm"
-            >
-              <p className="text-sm leading-7 text-white/92">“{quote.text}”</p>
-              <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-[#d6b04c]">
-                — {quote.by}
-              </p>
-            </div>
-          ))}
-        </div>
+        <QuoteRow quotes={[copy.quotes[1], copy.quotes[2]]} />
+
+        <QuoteRow quotes={[copy.quotes[3]]} compact />
 
         <motion.section
           variants={sectionMotion}
@@ -399,14 +396,26 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link
               to="/events"
-              className="inline-flex rounded-sm border border-[#27301d] bg-[#27301d] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#fffaf0] transition-colors hover:bg-transparent hover:text-[#27301d]"
+              className="
+                inline-flex rounded-sm border border-[#27301d] bg-[#27301d]
+                px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em]
+                text-[#fffaf0] transition-colors
+                hover:bg-transparent hover:text-[#27301d]
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b04c]
+              "
             >
               {copy.events}
             </Link>
 
             <Link
               to="/gallery"
-              className="inline-flex rounded-sm border border-[#b39135]/55 px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#27301d] transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]"
+              className="
+                inline-flex rounded-sm border border-[#b39135]/55
+                px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em]
+                text-[#27301d] transition-colors
+                hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b04c]
+              "
             >
               {copy.gallery}
             </Link>
