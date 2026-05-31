@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import { motion, cubicBezier, type Variants } from "framer-motion";
 
 type Lang = "en" | "mn";
 
@@ -11,116 +12,139 @@ type AboutUsProps = {
 
 const ABOUT_COPY = {
   en: {
-    title: "About Us",
-    aboutBody:
-      "Since 2022, Etugen Mongols has organized cultural events through personal contribution, volunteer effort, and community support. Our goal is to make Mongolian culture easier to celebrate, experience, and preserve — not only for Mongolians, but for anyone interested in learning about our traditions, language, food, music, and heritage.",
-    strategyTitle: "What We Do",
-    eventsTitle: "Events",
-    eventsBody:
-      "We organize cultural gatherings, celebrations, performances, and community events that bring people together and make Mongolian heritage easier to experience.",
-    programsTitle: "Programs",
-    programsBody:
-      "We support cultural learning through future programs focused on language, tradition, youth involvement, and community connection.",
-    learnMore: "Learn More",
-    upcoming: "View Upcoming Events",
-    pastEvents: "View Past Events",
+    title: "Our Story",
+    brand: "Etugen Mongols",
+    story:
+      "Since 2022, Etugen Mongols has brought families, youth, volunteers, and community members together through cultural celebrations, performances, gatherings, and shared traditions.",
+    storyTwo:
+      "What began as a volunteer-led effort in Calgary has grown into a community space where Mongolian identity can be practiced, seen, and passed forward.",
+    photoCaption: "Founding members of Etugen Mongols",
+    team: "Meet the Bigger Team",
   },
   mn: {
-    title: "Бидний тухай",
-    aboutBody:
-      "2022 оноос хойш Этүгэн Монголчууд нь хувь хүмүүсийн сэтгэл, сайн дурын хөдөлмөр, нийгэмлэгийн дэмжлэгээр соёлын арга хэмжээнүүдийг зохион байгуулсаар ирсэн. Бидний зорилго бол Монгол соёлыг тэмдэглэх, мэдрэх, хадгалах боломжийг илүү хүртээмжтэй болгох бөгөөд энэ нь зөвхөн Монголчуудад бус, Монгол уламжлал, хэл, хоол, хөгжим, өв соёлыг сонирхож буй хүн бүрт нээлттэй.",
-    strategyTitle: "Бид юу хийдэг вэ",
-    eventsTitle: "Арга хэмжээ",
-    eventsBody:
-      "Бид хүмүүсийг нэгтгэж, Монгол өв соёлыг илүү ойроос мэдрүүлэх соёлын уулзалт, баяр ёслол, тоглолт, олон нийтийн арга хэмжээг зохион байгуулдаг.",
-    programsTitle: "Хөтөлбөрүүд",
-    programsBody:
-      "Бид хэл, уламжлал, залуусын оролцоо, нийгэмлэгийн холбоог дэмжих ирээдүйн соёлын хөтөлбөрүүдийг хөгжүүлэхийг зорьдог.",
-    learnMore: "Дэлгэрэнгүй",
-    upcoming: "Удахгүй болох арга хэмжээ",
-    pastEvents: "Өмнөх арга хэмжээнүүд",
+    title: "Бидний түүх",
+    brand: "Этүгэн Монголчууд",
+    story:
+      "2022 оноос хойш Этүгэн Монголчууд нь соёлын баяр, тоглолт, гэр бүлийн уулзалт, олон нийтийн арга хэмжээгээр дамжуулан гэр бүлүүд, хүүхэд залуус, сайн дурынхан болон хамт олныг нэгтгэсээр ирсэн.",
+    storyTwo:
+      "Бидний үйл ажиллагаа зохион байгуулагчид, эцэг эхчүүд, уран бүтээлчид, ахмадууд, зурагчид, дэмжигчид болон сайн дурынхны сэтгэлээр бүтээгддэг.",
+    photoCaption: "Этүгэн Монголчуудын үүсгэн байгуулагч гишүүд",
+    team: "Багтай танилцах",
   },
 } as const;
+
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const textCardMotion: Variants = {
+  hidden: { opacity: 0, x: -44 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: easeOut },
+  },
+};
+
+const imageMotion: Variants = {
+  hidden: { opacity: 0, x: 44, scale: 0.985 },
+  show: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: { duration: 0.75, delay: 0.08, ease: easeOut },
+  },
+};
 
 function AboutUs({ lang }: AboutUsProps) {
   const copy = ABOUT_COPY[lang];
 
   return (
-    <section className="min-h-screen border-y border-[#d8caa5]/55 bg-linear-to-br from-[#ede1c7] via-[#f6eedc] to-[#d8caa5] pt-20 text-[#27301d]">
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl items-center gap-14 px-6 py-20 md:grid-cols-[3fr_2fr] md:px-10 lg:px-12">
-        <div className="max-w-3xl">
-          <h2 className="text-4xl font-semibold leading-tight tracking-tight text-[#27301d] md:text-5xl">
-            {copy.title}
-          </h2>
+    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]">
+      <div className="absolute inset-0">
+        <img
+          src="/about/bg.webp"
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-center"
+        />
 
-          <p className="mt-8 max-w-2xl text-sm leading-7 text-[#4e593c]/78 md:text-base md:leading-8">
-            {copy.aboutBody}
+        <div className="pointer-events-none absolute inset-0 bg-black/40" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/56 via-black/24 to-black/44" />
+      </div>
+
+      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-8 px-5 pb-8 pt-28 sm:px-6 md:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:px-12 lg:pb-10">
+        <motion.div
+          variants={textCardMotion}
+          initial="hidden"
+          animate="show"
+          className="
+            w-full max-w-xl transform-gpu
+            rounded-md border border-[#e1d2a6]/55
+            bg-[#fffaf0]/94
+            p-8 text-[#27301d]
+            shadow-[0_24px_70px_rgba(0,0,0,0.34)]
+            backdrop-blur-sm
+            md:p-9
+            lg:p-10
+          "
+        >
+          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#9a7b26]">
+            {copy.brand}
           </p>
 
-          <div className="mt-12">
-            <h3 className="text-2xl font-semibold leading-tight tracking-tight text-[#27301d] md:text-3xl">
-              {copy.strategyTitle}
-            </h3>
+          <h1 className="mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-tight text-[#27301d] sm:text-4xl lg:text-[2.7rem]">
+            {copy.title}
+          </h1>
 
-            <div className="mt-6 grid gap-8 sm:grid-cols-2">
-              <div>
-                <h4 className="text-base font-semibold tracking-tight text-[#27301d]">
-                  {copy.eventsTitle}
-                </h4>
+          <div className="my-6 h-px w-full bg-[#d8caa5]/90" />
 
-                <p className="mt-3 text-sm leading-7 text-[#4e593c]/78 md:text-base md:leading-8">
-                  {copy.eventsBody}
-                </p>
-
-                <div className="mt-5 flex flex-col gap-3">
-                  <Link
-                    to="/about/events"
-                    className="
-                      inline-flex w-fit items-center
-                      border border-[#b39135]/40
-                      px-5 py-3
-                      text-xs font-semibold uppercase tracking-[0.2em]
-                      text-[#27301d]/88
-                      transition-colors
-                      hover:border-[#27301d]
-                      hover:bg-[#27301d]
-                      hover:text-[#fffaf0]
-                    "
-                  >
-                    {copy.learnMore}
-                    <span className="ml-3 text-base leading-none">→</span>
-                  </Link>
-
-                  <Link
-                    to="/events"
-                    className="w-fit text-sm font-medium text-[#6f571a] underline decoration-[#b39135]/35 underline-offset-4 transition-colors hover:text-[#27301d]"
-                  >
-                    {copy.upcoming} →
-                  </Link>
-
-                  <Link
-                    to="/gallery"
-                    className="w-fit text-sm font-medium text-[#6f571a] underline decoration-[#b39135]/35 underline-offset-4 transition-colors hover:text-[#27301d]"
-                  >
-                    {copy.pastEvents} →
-                  </Link>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-base font-semibold tracking-tight text-[#27301d]">
-                  {copy.programsTitle}
-                </h4>
-
-                <p className="mt-3 text-sm leading-7 text-[#4e593c]/78 md:text-base md:leading-8">
-                  {copy.programsBody}
-                </p>
-              </div>
-            </div>
+          <div className="max-w-lg space-y-4 text-sm leading-7 text-[#4e593c] md:text-[15px] md:leading-8">
+            <p>{copy.story}</p>
+            <p>{copy.storyTwo}</p>
           </div>
-        </div>
 
-        <div className="hidden min-h-[70vh] border border-[#d8caa5]/65 bg-[#fffaf0]/65 shadow-[0_18px_48px_rgba(88,72,38,0.12)] md:block" />
+          <Link
+            to="/about/team"
+            className="
+              mt-8 inline-flex items-center
+              rounded-sm border border-[#b39135]/45
+              px-5 py-3
+              text-xs font-semibold uppercase tracking-[0.2em]
+              text-[#27301d]
+              transition-colors duration-200
+              hover:border-[#27301d]
+              hover:bg-[#27301d]
+              hover:text-[#fffaf0]
+            "
+          >
+            {copy.team}
+            <span className="ml-3 text-base leading-none">→</span>
+          </Link>
+        </motion.div>
+
+        <motion.figure
+          variants={imageMotion}
+          initial="hidden"
+          animate="show"
+          className="transform-gpu rounded-md bg-[#e8dcc2] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.24)] md:p-4"
+        >
+          <div className="overflow-hidden border border-[#d8caa5]/80 bg-[#fffaf0] p-2 md:p-3">
+            <img
+              src="/about/founding-group.webp"
+              alt={copy.photoCaption}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              className="h-[18rem] w-full object-cover object-[center_38%] sm:h-[24rem] lg:h-[29rem] xl:h-[31rem]"
+            />
+          </div>
+
+          <figcaption className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
+            {copy.photoCaption}
+          </figcaption>
+        </motion.figure>
       </div>
     </section>
   );

@@ -1,105 +1,420 @@
 "use client";
 
+import { memo } from "react";
+import { Link } from "react-router-dom";
+import { motion, cubicBezier, type Variants } from "framer-motion";
+
 type Lang = "en" | "mn";
 
 type OurImpactMainProps = {
   lang: Lang;
 };
 
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const sectionMotion: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: easeOut },
+  },
+};
+
 const COPY = {
   en: {
     eyebrow: "Our Impact",
-    title: "Strengthening Culture Through Community",
+    title: "Community Building in Action",
     intro:
-      "Etugen Mongols supports cultural connection, language preservation, youth involvement, and community belonging through events, programs, and shared traditions.",
-    stats: [
+      "Our impact is seen through shared cultural moments, family participation, volunteer work, and community-led celebrations.",
+
+    items: [
       {
-        value: "200+",
-        label: "Families reached through cultural events and gatherings.",
+        tag: "Cultural Connection",
+        title: "Bringing Calgary and Mongolian Culture Together",
+        body:
+          "A shared celebration connecting the Calgary Stampede Breakfast spirit with Mongolian Naadam.",
+        image: "/about/impact/stampede-naadam.webp",
+        href: "/events",
       },
       {
-        value: "10+",
-        label: "Community programs, celebrations, and cultural activities.",
+        tag: "Community Performance",
+        title: "55-Person Community Performance",
+        body:
+          "Children, parents, performers, and volunteers came together through song, rehearsal, and performance.",
+        image: "/about/impact/community-song.webp",
+        href: "/events",
       },
       {
-        value: "2",
-        label: "Languages supported across the website and event information.",
+        tag: "Shared Traditions",
+        title: "Culture Practiced Together",
+        body:
+          "Events create spaces where language, food, music, and tradition can be experienced across generations.",
+        image: "/about/impact/stampede-naadam-small-1.webp",
+        href: "/gallery",
+      },
+      {
+        tag: "Volunteer Support",
+        title: "People Showing Up",
+        body:
+          "Our work continues because families, volunteers, sponsors, and supporters keep building together.",
+        image: "/about/impact/community-song-small-1.webp",
+        href: "/about/team",
+      },
+      {
+        tag: "Next Generation",
+        title: "Creating Spaces for Children and Youth",
+        body:
+          "Programs and gatherings help young people experience Mongolian culture as something active, visible, and shared.",
+        image: "/about/impact/youth-culture.webp",
+        href: "/gallery",
       },
     ],
-    bodyTitle: "Why It Matters",
-    body:
-      "Our work helps create spaces where Mongolian families, youth, and community members can stay connected to their heritage while building relationships across generations.",
+
+    quotes: [
+      { text: "Culture represented in real life.", by: "Community member" },
+      { text: "Families feel more connected.", by: "Parent" },
+      { text: "People keep showing up.", by: "Volunteer" },
+      { text: "A place to feel proud.", by: "Community supporter" },
+    ],
+
+    events: "View Events",
+    gallery: "View Gallery",
+    viewMore: "View More",
   },
+
   mn: {
     eyebrow: "Бидний нөлөө",
-    title: "Хамт олноор дамжуулан соёлоо бэхжүүлэх",
+    title: "Хамт олноор бүтсэн нөлөө",
     intro:
-      "Этүгэн Монголчууд нь арга хэмжээ, хөтөлбөр, уламжлалаар дамжуулан соёл, хэл, залуучуудын оролцоо, хамтын холбоог дэмждэг.",
-    stats: [
+      "Бидний нөлөө нь соёлын мөчүүд, гэр бүлийн оролцоо, сайн дурын ажил болон хамтын баяраар харагддаг.",
+
+    items: [
       {
-        value: "200+",
-        label: "Соёлын арга хэмжээ, уулзалтаар хүрсэн гэр бүлүүд.",
+        tag: "Соёлын холбоо",
+        title: "Калгари болон Монгол соёлыг холбосон",
+        body:
+          "Calgary Stampede Breakfast-ийн уур амьсгалыг Монгол Наадамтай холбосон хамтын баяр.",
+        image: "/about/impact/stampede-naadam.webp",
+        href: "/events",
       },
       {
-        value: "10+",
-        label: "Олон нийтийн хөтөлбөр, баяр, соёлын үйл ажиллагаа.",
+        tag: "Хамтын тоглолт",
+        title: "55 хүнтэй хамтын тоглолт",
+        body:
+          "Хүүхдүүд, эцэг эхчүүд, уран бүтээлчид болон сайн дурынхан хамтдаа бэлтгэл хийж, тоглосон.",
+        image: "/about/impact/community-song.webp",
+        href: "/events",
       },
       {
-        value: "2",
-        label: "Вэбсайт болон арга хэмжээний мэдээлэлд ашиглагдах хэл.",
+        tag: "Уламжлал",
+        title: "Соёлоо хамтдаа амьд байлгах",
+        body:
+          "Хэл, хоол, дуу хөгжим, уламжлалаа үе үеэрээ мэдрэх орон зайг бий болгодог.",
+        image: "/about/impact/stampede-naadam-small-1.webp",
+        href: "/gallery",
+      },
+      {
+        tag: "Дэмжлэг",
+        title: "Хүмүүс хамтдаа оролцдог",
+        body:
+          "Гэр бүлүүд, сайн дурынхан, ивээн тэтгэгчид болон дэмжигчид хамтдаа бүтээдэг.",
+        image: "/about/impact/community-song-small-1.webp",
+        href: "/about/team",
+      },
+      {
+        tag: "Дараагийн үе",
+        title: "Хүүхэд залууст зориулсан орон зай",
+        body:
+          "Хөтөлбөр, уулзалтууд нь хүүхэд залууст Монгол соёлыг бодитоор, хамтдаа мэдрэх боломж өгдөг.",
+        image: "/about/impact/youth-culture.webp",
+        href: "/gallery",
       },
     ],
-    bodyTitle: "Яагаад чухал вэ",
-    body:
-      "Бидний ажил нь Монгол гэр бүл, хүүхэд залуус, хамт олны гишүүдийг өв соёлтой нь холбож, үе үеийн харилцааг бэхжүүлэх орон зайг бий болгодог.",
+
+    quotes: [
+      { text: "Соёлоо бодитоор харах боломж.", by: "Хамт олны гишүүн" },
+      { text: "Гэр бүлүүд илүү холбогддог.", by: "Эцэг эх" },
+      { text: "Хүмүүс үргэлж дэмждэг.", by: "Сайн дурынхан" },
+      { text: "Бахархах орон зай.", by: "Дэмжигч" },
+    ],
+
+    events: "Арга хэмжээнүүд",
+    gallery: "Зургийн цомог",
+    viewMore: "Дэлгэрэнгүй",
   },
 } as const;
 
-export default function OurImpactMain({ lang }: OurImpactMainProps) {
+function QuoteChip({
+  text,
+  by,
+  className = "",
+}: {
+  text: string;
+  by: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={[
+        "pointer-events-none absolute z-30 hidden max-w-52 rounded-md",
+        "border border-[#e1d2a6]/40 bg-[#fffaf0]/92 px-4 py-3",
+        "shadow-[0_16px_42px_rgba(0,0,0,0.24)] backdrop-blur-sm lg:block",
+        className,
+      ].join(" ")}
+    >
+      <p className="text-sm font-medium leading-6 text-[#27301d]">“{text}”</p>
+      <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-[#9a7b26]">
+        — {by}
+      </p>
+    </div>
+  );
+}
+
+function ImpactTile({
+  item,
+  className = "",
+  large = false,
+  compact = false,
+  eager = false,
+  viewMore,
+}: {
+  item: {
+    tag: string;
+    title: string;
+    body: string;
+    image: string;
+    href: string;
+  };
+  className?: string;
+  large?: boolean;
+  compact?: boolean;
+  eager?: boolean;
+  viewMore: string;
+}) {
+  return (
+    <Link
+      to={item.href}
+      className={[
+        "group relative block min-h-[16rem] overflow-hidden rounded-md",
+        "border border-[#e1d2a6]/40 bg-[#27301d]",
+        "shadow-[0_22px_60px_rgba(0,0,0,0.28)]",
+        className,
+      ].join(" ")}
+    >
+      <img
+        src={item.image}
+        alt={item.title}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={eager ? "high" : "auto"}
+        className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]"
+      />
+
+      <div className="absolute inset-0 bg-linear-to-t from-black/84 via-black/32 to-black/10" />
+
+      <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
+        <p className="mb-3 inline-flex rounded-sm bg-[#fffaf0]/92 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#9a7b26]">
+          {item.tag}
+        </p>
+
+        <h2
+          className={[
+            "max-w-2xl font-semibold leading-tight tracking-tight text-[#fffaf0]",
+            large
+              ? "text-3xl sm:text-4xl lg:text-[2.65rem]"
+              : compact
+                ? "text-lg sm:text-xl"
+                : "text-xl sm:text-2xl",
+          ].join(" ")}
+        >
+          {item.title}
+        </h2>
+
+        {!compact && (
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-white/86">
+            {item.body}
+          </p>
+        )}
+
+        <span className="mt-5 inline-flex text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d6b04c]">
+          {viewMore} →
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function OurImpactMain({ lang }: OurImpactMainProps) {
   const copy = COPY[lang];
 
   return (
-    <section className="min-h-screen bg-[#f4ecd9] pt-28 text-[#27301d]">
-      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-6 md:px-10 lg:px-12">
-        <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-[#9a7b26]">
-          {copy.eyebrow}
-        </p>
+    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]">
+      <div className="fixed inset-0 z-0">
+        <img
+          src="/landingpage.webp"
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-center"
+        />
 
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
-          {copy.title}
-        </h1>
+        <div className="absolute inset-0 bg-black/44" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/58 via-black/24 to-black/46" />
+      </div>
 
-        <p className="mt-5 max-w-3xl text-base leading-8 text-[#4e593c]/85">
-          {copy.intro}
-        </p>
+      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-6 sm:pt-28 md:px-10 lg:px-12 lg:pt-32">
+        <motion.header
+          variants={sectionMotion}
+          initial="hidden"
+          animate="show"
+          className="
+            mb-6 rounded-md border border-[#e1d2a6]/55
+            bg-[#fffaf0]/94 px-6 py-6
+            shadow-[0_24px_70px_rgba(0,0,0,0.34)]
+            backdrop-blur-sm md:px-7
+          "
+        >
+          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#9a7b26]">
+                {copy.eyebrow}
+              </p>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {copy.stats.map((stat) => (
-            <article
-              key={stat.value}
-              className="rounded-2xl border border-[#d8caa5]/75 bg-[#fffaf0]/90 p-6 shadow-[0_14px_38px_rgba(88,72,38,0.10)]"
+              <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-[2.45rem]">
+                {copy.title}
+              </h1>
+            </div>
+
+            <p className="max-w-xl border-t border-[#d8caa5]/90 pt-4 text-sm leading-7 text-[#4e593c] md:border-l md:border-t-0 md:pl-6 md:pt-0 md:text-[15px]">
+              {copy.intro}
+            </p>
+          </div>
+        </motion.header>
+
+        <motion.div
+          variants={sectionMotion}
+          initial="hidden"
+          animate="show"
+          className="relative grid gap-4 lg:grid-cols-6 lg:auto-rows-[13rem]"
+        >
+          <ImpactTile
+            item={copy.items[0]}
+            large
+            eager
+            viewMore={copy.viewMore}
+            className="lg:col-span-4 lg:row-span-3"
+          />
+
+          <ImpactTile
+            item={copy.items[1]}
+            viewMore={copy.viewMore}
+            className="lg:col-span-2 lg:row-span-2"
+          />
+
+          <ImpactTile
+            item={copy.items[2]}
+            compact
+            viewMore={copy.viewMore}
+            className="lg:col-span-2 lg:row-span-1"
+          />
+
+          <QuoteChip
+            text={copy.quotes[0].text}
+            by={copy.quotes[0].by}
+            className="-bottom-6 left-[35%]"
+          />
+
+          <QuoteChip
+            text={copy.quotes[1].text}
+            by={copy.quotes[1].by}
+            className="right-6 top-[42%]"
+          />
+        </motion.div>
+
+        <motion.div
+          variants={sectionMotion}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.22 }}
+          className="relative mt-10 grid gap-4 lg:grid-cols-6 lg:auto-rows-[13rem]"
+        >
+          <ImpactTile
+            item={copy.items[3]}
+            viewMore={copy.viewMore}
+            className="lg:col-span-3 lg:row-span-2"
+          />
+
+          <ImpactTile
+            item={copy.items[4]}
+            viewMore={copy.viewMore}
+            className="lg:col-span-3 lg:row-span-2"
+          />
+
+          <QuoteChip
+            text={copy.quotes[2].text}
+            by={copy.quotes[2].by}
+            className="-top-5 left-8"
+          />
+
+          <QuoteChip
+            text={copy.quotes[3].text}
+            by={copy.quotes[3].by}
+            className="-bottom-6 right-10"
+          />
+        </motion.div>
+
+        <div className="mt-8 grid gap-3 lg:hidden">
+          {copy.quotes.map((quote) => (
+            <div
+              key={quote.text}
+              className="rounded-md border border-[#e1d2a6]/25 bg-[#fffaf0]/12 px-4 py-4 text-[#fffaf0] backdrop-blur-sm"
             >
-              <p className="text-4xl font-semibold tracking-tight text-[#27301d]">
-                {stat.value}
+              <p className="text-sm leading-7 text-white/92">“{quote.text}”</p>
+              <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-[#d6b04c]">
+                — {quote.by}
               </p>
-
-              <p className="mt-3 text-sm leading-6 text-[#4e593c]/80">
-                {stat.label}
-              </p>
-            </article>
+            </div>
           ))}
         </div>
 
-        <div className="mt-10 rounded-3xl border border-[#d8caa5]/75 bg-[#fffaf0]/90 p-6 shadow-[0_14px_38px_rgba(88,72,38,0.10)] sm:p-8">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            {copy.bodyTitle}
+        <motion.section
+          variants={sectionMotion}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.22 }}
+          className="
+            mx-auto mt-10 max-w-4xl rounded-md border border-[#e1d2a6]/55
+            bg-[#fffaf0]/94 px-6 py-8 text-center
+            shadow-[0_24px_70px_rgba(0,0,0,0.28)]
+            backdrop-blur-sm md:px-10
+          "
+        >
+          <h2 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+            {copy.title}
           </h2>
 
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4e593c]/85">
-            {copy.body}
-          </p>
-        </div>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Link
+              to="/events"
+              className="inline-flex rounded-sm border border-[#27301d] bg-[#27301d] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#fffaf0] transition-colors hover:bg-transparent hover:text-[#27301d]"
+            >
+              {copy.events}
+            </Link>
+
+            <Link
+              to="/gallery"
+              className="inline-flex rounded-sm border border-[#b39135]/55 px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#27301d] transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]"
+            >
+              {copy.gallery}
+            </Link>
+          </div>
+        </motion.section>
       </div>
     </section>
   );
 }
+
+export default memo(OurImpactMain);
