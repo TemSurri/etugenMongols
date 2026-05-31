@@ -118,7 +118,7 @@ function Hero({ lang }: HeroProps) {
             </p>
 
             <Link
-              to="/about"
+              to="/about/our-story"
               className="
                 mt-9 inline-flex items-center
                 rounded-sm border border-[#b39135]/45

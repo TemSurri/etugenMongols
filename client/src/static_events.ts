@@ -1,291 +1,657 @@
-export type Listing = {
-  title: string;
-  title_mn: string;
-  description: string;
-  contact: string;
+export type LangText = {
+  en: string;
+  mn: string;
+};
+
+export type EventStatus = "upcoming" | "past";
+
+export type EventImage = {
+  highRes: string;
+  lowRes: string;
+  alt: LangText;
+};
+
+export type EventVideo = {
+  title: LangText;
+  url: string;
+};
+
+export type PerformanceItem = {
+  id: string;
+  title: LangText;
+  description: LangText;
+  images: EventImage[];
+  videos?: EventVideo[];
+};
+
+export type GallerySection = {
+  title: LangText;
+  description: LangText;
+  images: EventImage[];
+  videos?: EventVideo[];
 };
 
 export type EventAction =
   | {
       type: "payment";
       enabled: boolean;
-      label: string;
-      label_mn: string;
+      label: LangText;
       price?: number;
     }
   | {
       type: "donation";
       enabled: boolean;
-      label: string;
-      label_mn: string;
+      label: LangText;
     }
   | {
       type: "registration";
       enabled: boolean;
-      label: string;
-      label_mn: string;
+      label: LangText;
     };
-
-export type EventDetails = {
-  date: string;
-  time: string;
-  location?: string;
-  description: string;
-  description_en: string;
-  ticketInfo?: string;
-  ticketInfo_en?: string;
-};
 
 export type EventContact = {
   email?: string;
   phone?: string[];
 };
 
-export type EventItem = {
+export type Event = {
   id: string;
-  title: string;
-  image: string;
+  status: EventStatus;
 
-  details: EventDetails;
-  actions: EventAction[];
-  contact?: EventContact;
+  title: LangText;
+  description: LangText;
+  date: string;
+  location?: string;
 
-  whoWeWant: Listing[];
+  coverImage: EventImage;
+
+  upcoming?: {
+    time: string;
+    actions: EventAction[];
+    contact?: EventContact;
+  };
+
+  gallery?: {
+    montageVideo?: EventVideo;
+    thankYouVideo?: EventVideo;
+
+    sections: {
+      general: GallerySection;
+      behindTheScenes: GallerySection;
+      performances: {
+        title: LangText;
+        description: LangText;
+        items: PerformanceItem[];
+      };
+    };
+  };
 };
 
-export type OrganizedListing = {
-  listing: Listing;
-  id: string;
-};
-
-export const events: EventItem[] = [
+export const events: Event[] = [
   {
-    id: "mongolian-cultural-night-2026",
-    title: "Naadam",
-    image: "winterparty.png",
+    id: "naadam2026",
+    status: "upcoming",
 
-    details: {
-      date: "September 20, 2026",
+    title: {
+      en: "Naadam 2026",
+      mn: "Наадам 2026",
+    },
+
+    description: {
+      en: "An upcoming Mongolian cultural celebration featuring performances, food, community gathering, and traditional activities.",
+      mn: "Уламжлалт тоглолт, хоол, олон нийтийн уулзалт, соёлын үйл ажиллагаа бүхий удахгүй болох Монгол соёлын баяр.",
+    },
+
+    date: "September 20, 2026",
+    location: "Calgary, Alberta",
+
+    coverImage: {
+      highRes: "/upcoming_event_assets/winterparty.png",
+      lowRes: "/upcoming_event_assets/winterparty.png",
+      alt: {
+        en: "Naadam 2026 event cover",
+        mn: "Наадам 2026 арга хэмжээний зураг",
+      },
+    },
+
+    upcoming: {
       time: "6:30 PM - 9:30 PM",
-      location: "University of Calgary Community Hall",
 
-      description: `Монгол соёлын үдэшлэгт хүрэлцэн ирээрэй.
+      actions: [
+        {
+          type: "payment",
+          enabled: true,
+          label: {
+            en: "Buy Ticket",
+            mn: "Тасалбар авах",
+          },
+          price: 20,
+        },
+        {
+          type: "registration",
+          enabled: true,
+          label: {
+            en: "Register",
+            mn: "Бүртгүүлэх",
+          },
+        },
+        {
+          type: "donation",
+          enabled: true,
+          label: {
+            en: "Donate",
+            mn: "Хандив өгөх",
+          },
+        },
+      ],
 
-Энэ үдэш Монголын урлаг, дуу хөгжим, бүжиг болон уламжлалт соёлыг танилцуулна.
-
-Хөтөлбөр:
-• Морин хуурын тоглолт
-• Уртын дуу
-• Монгол бүжгийн үзүүлбэр
-• Соёлын танилцуулга
-
-Арга хэмжээ нь Монгол соёлыг олон нийтэд таниулах зорилготой.`,
-
-      description_en: `Experience an evening dedicated to Mongolian culture and artistic expression.
-
-This event will feature live performances and presentations showcasing traditional Mongolian music, dance, and storytelling.
-
-Program highlights include:
-
-• Morin khuur instrumental performances
-• Traditional long song (Urtiin Duu)
-• Mongolian folk dance
-• Cultural presentations about Mongolian history and traditions
-
-This event is ideal for anyone interested in learning more about Mongolia's cultural heritage.`,
-
-      ticketInfo: `Тасалбар: $20
-
-Суудал хязгаартай тул урьдчилан бүртгүүлэх шаардлагатай.
-
-Тасалбарын орлого нь:
-• Соёлын хөтөлбөрүүд
-• Уран бүтээлчдийн зардал
-• Ирээдүйн арга хэмжээнүүдэд
-
-зарцуулагдана.`,
-
-      ticketInfo_en: `Ticket price: $20
-
-Seats are limited. Advance registration is recommended.
-
-Ticket revenue supports:
-
-• Cultural programming
-• Artist travel and performance costs
-• Future community events.`,
+      contact: {
+        email: "calgarymongolians@gmail.com",
+        phone: ["587-435-4494"],
+      },
     },
-
-    actions: [
-      {
-        type: "payment",
-        enabled: true,
-        label: "Buy Ticket",
-        label_mn: "Тасалбар авах",
-        price: 20,
-      },
-      {
-        type: "donation",
-        enabled: false,
-        label: "Donate",
-        label_mn: "Хандив өгөх",
-      },
-      {
-        type: "registration",
-        enabled: true,
-        label: "Register",
-        label_mn: "Бүртгүүлэх",
-      },
-    ],
-
-    contact: {
-      email: "calgarymongolians@gmail.com",
-      phone: ["587-435-4494"],
-    },
-
-    whoWeWant: [
-      {
-        title: "Backstage Assistant",
-        title_mn: "Тайзны арын туслах",
-        description:
-          "Help performers prepare and move between backstage and stage areas.",
-        contact: "587-435-4494",
-      },
-      {
-        title: "Stage Manager",
-        title_mn: "Тайзны зохицуулагч",
-        description: "Coordinate performance order and help manage stage timing.",
-        contact: "587-435-4494",
-      },
-      {
-        title: "Photography Volunteer",
-        title_mn: "Зураг авалтын сайн дурын ажилтан",
-        description:
-          "Capture photos and short video clips for community archives and social media.",
-        contact: "587-435-4494",
-      },
-    ],
   },
 
-  
+ {
+  id: "naadam2022",
+  status: "past",
 
-  {
-  id: "mongolian-language-workshop-2026",
-  title: "Mongolian Language Workshop",
-  image: "language-workshop.png",
-
-  details: {
-    date: "October 12, 2026",
-    time: "2:00 PM - 4:00 PM",
-    location: "Calgary Central Library",
-
-    description: `Монгол хэлний сургалт, дадлагын өдөрт хүрэлцэн ирээрэй.
-
-Энэхүү арга хэмжээ нь Монгол хэлээ сайжруулах, шинэ үг хэллэг сурах, ярилцах дадлага хийх хүсэлтэй хүүхэд, залуус, гэр бүлүүдэд зориулагдсан.
-
-Хөтөлбөр:
-• Монгол үсэг, дуудлагын дасгал
-• Өдөр тутмын ярианы дадлага
-• Богино уншлага
-• Гэр бүлийн хамтарсан үйл ажиллагаа
-
-Бүх түвшний оролцогчид оролцох боломжтой.`,
-
-    description_en: `Join us for a Mongolian language workshop.
-
-This event is designed for children, youth, and families who want to improve their Mongolian language skills, learn useful phrases, and practice speaking in a welcoming community setting.
-
-Program highlights include:
-
-• Mongolian alphabet and pronunciation practice
-• Everyday conversation exercises
-• Short reading activities
-• Family-friendly group activities
-
-All skill levels are welcome.`,
-
-    ticketInfo: `Энэхүү арга хэмжээ үнэ төлбөргүй.
-
-Оролцогчдын тоо хязгаартай тул урьдчилан бүртгүүлэхийг зөвлөж байна.`,
-
-    ticketInfo_en: `This event is free to attend.
-
-Space is limited, so advance registration is recommended.`,
+  title: {
+    en: "Naadam Celebration 2022",
+    mn: "Наадам 2022",
   },
 
-  actions: [
-    {
-      type: "registration",
-      enabled: true,
-      label: "Register",
-      label_mn: "Бүртгүүлэх",
-    },
-    {
-      type: "donation",
-      enabled: true,
-      label: "Donate",
-      label_mn: "Хандив өгөх",
-    },
-  ],
-
-  contact: {
-    email: "calgarymongolians@gmail.com",
-    phone: ["587-435-4494"],
+  description: {
+    en: "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
+    mn: "Бөх, сур харваа, дуу хөгжим, хоол, соёлын үзүүлбэрүүд багтсан уламжлалт Монгол наадмын баяр.",
   },
 
-  whoWeWant: [
-    {
-      title: "Language Helper",
-      title_mn: "Хэлний туслах",
-      description:
-        "Help participants with pronunciation, simple phrases, and group activities.",
-      contact: "587-435-4494",
+  date: "July 11, 2022",
+  location: "Calgary, Alberta",
+
+  coverImage: {
+    highRes: "/gallery/naadam2022/cover.webp",
+    lowRes: "/gallery/naadam2022/cover-low.webp",
+    alt: {
+      en: "Naadam Celebration 2022 cover image",
+      mn: "Наадам 2022 арга хэмжээний нүүр зураг",
     },
-    {
-      title: "Setup Volunteer",
-      title_mn: "Бэлтгэлийн сайн дурын ажилтан",
-      description:
-        "Help prepare tables, signs, worksheets, and materials before the workshop.",
-      contact: "587-435-4494",
+  },
+
+  gallery: {
+    montageVideo: {
+      title: {
+        en: "Naadam 2022 Montage",
+        mn: "Наадам 2022 эвлүүлэг",
+      },
+      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     },
-    {
-      title: "Children's Activity Helper",
-      title_mn: "Хүүхдийн үйл ажиллагааны туслах",
-      description:
-        "Support younger participants during games, reading activities, and group exercises.",
-      contact: "587-435-4494",
+
+    thankYouVideo: {
+      title: {
+        en: "Thank You Video",
+        mn: "Талархлын бичлэг",
+      },
+      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     },
-  ],
+
+    sections: {
+      general: {
+        title: {
+          en: "General Moments",
+          mn: "Ерөнхий мөчүүд",
+        },
+        description: {
+          en: "Community photos, food, families, and shared moments from the event.",
+          mn: "Хамт олны зураг, хоол, гэр бүлүүд, арга хэмжээний дурсамжит мөчүүд.",
+        },
+        images: [
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/2.png",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/3.png",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+        ],
+      },
+
+      behindTheScenes: {
+        title: {
+          en: "Behind the Scenes",
+          mn: "Ар талын мөчүүд",
+        },
+        description: {
+          en: "Preparation, setup, volunteers, and moments behind the event.",
+          mn: "Бэлтгэл ажил, зохион байгуулалт, сайн дурынхан болон арга хэмжээний ар талын мөчүүд.",
+        },
+        images: [
+          {
+            highRes: "/gallery/naadam2022/behind-the-scenes/1.webp",
+            lowRes: "/gallery/naadam2022/behind-the-scenes/1-low.webp",
+            alt: {
+              en: "Naadam 2022 behind the scenes photo",
+              mn: "Наадам 2022 ар талын зураг",
+            },
+          },
+        ],
+      },
+
+      performances: {
+        title: {
+          en: "Performances",
+          mn: "Тоглолтууд",
+        },
+        description: {
+          en: "Individual performances from the Naadam celebration.",
+          mn: "Наадмын баярын тус бүрийн тоглолтууд.",
+        },
+        items: [
+          {
+            id: "morin-khuur",
+            title: {
+              en: "Morin Khuur Performance",
+              mn: "Морин хуурын тоглолт",
+            },
+            description: {
+              en: "A traditional horsehead fiddle performance during the celebration.",
+              mn: "Баярын үеэр болсон уламжлалт морин хуурын тоглолт.",
+            },
+            images: [
+              {
+                highRes: "/gallery/naadam2022/performances/morin-khuur/1.webp",
+                lowRes: "/gallery/naadam2022/performances/morin-khuur/1-low.webp",
+                alt: {
+                  en: "Morin khuur performance at Naadam 2022",
+                  mn: "Наадам 2022 морин хуурын тоглолт",
+                },
+              },
+            ],
+            videos: [
+              {
+                title: {
+                  en: "Morin Khuur Video",
+                  mn: "Морин хуурын бичлэг",
+                },
+                url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+              },
+            ],
+          },
+          {
+            id: "dance-performance",
+            title: {
+              en: "Dance Performance",
+              mn: "Бүжгийн тоглолт",
+            },
+            description: {
+              en: "A cultural dance performance from the event program.",
+              mn: "Арга хэмжээний хөтөлбөрт багтсан соёлын бүжгийн тоглолт.",
+            },
+            images: [],
+            videos: [],
+          },
+        ],
+      },
+      
+    },
+  },
 },
-  
+ {
+  id: "naadam2022",
+  status: "past",
 
-  
+  title: {
+    en: "Naadam Celebration 2022",
+    mn: "Наадам 2022",
+  },
+
+  description: {
+    en: "A traditional Mongolian Naadam festival featuring wrestling, archery, music, food, and cultural showcases.",
+    mn: "Бөх, сур харваа, дуу хөгжим, хоол, соёлын үзүүлбэрүүд багтсан уламжлалт Монгол наадмын баяр.",
+  },
+
+  date: "July 11, 2022",
+  location: "Calgary, Alberta",
+
+  coverImage: {
+    highRes: "/gallery/naadam2022/cover.webp",
+    lowRes: "/gallery/naadam2022/cover-low.webp",
+    alt: {
+      en: "Naadam Celebration 2022 cover image",
+      mn: "Наадам 2022 арга хэмжээний нүүр зураг",
+    },
+  },
+
+  gallery: {
+    montageVideo: {
+      title: {
+        en: "Naadam 2022 Montage",
+        mn: "Наадам 2022 эвлүүлэг",
+      },
+      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    },
+
+    thankYouVideo: {
+      title: {
+        en: "Thank You Video",
+        mn: "Талархлын бичлэг",
+      },
+      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    },
+
+    sections: {
+      general: {
+        title: {
+          en: "General Moments",
+          mn: "Ерөнхий мөчүүд",
+        },
+        description: {
+          en: "Community photos, food, families, and shared moments from the event.",
+          mn: "Хамт олны зураг, хоол, гэр бүлүүд, арга хэмжээний дурсамжит мөчүүд.",
+        },
+        images: [
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/2.png",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/3.png",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+          {
+            highRes: "/gallery/naadam2022/general/1.webp",
+            lowRes: "/gallery/naadam2022/general/1-low.webp",
+            alt: {
+              en: "Naadam 2022 community photo",
+              mn: "Наадам 2022 хамт олны зураг",
+            },
+          },
+        ],
+      },
+
+      behindTheScenes: {
+        title: {
+          en: "Behind the Scenes",
+          mn: "Ар талын мөчүүд",
+        },
+        description: {
+          en: "Preparation, setup, volunteers, and moments behind the event.",
+          mn: "Бэлтгэл ажил, зохион байгуулалт, сайн дурынхан болон арга хэмжээний ар талын мөчүүд.",
+        },
+        images: [
+          {
+            highRes: "/gallery/naadam2022/behind-the-scenes/1.webp",
+            lowRes: "/gallery/naadam2022/behind-the-scenes/1-low.webp",
+            alt: {
+              en: "Naadam 2022 behind the scenes photo",
+              mn: "Наадам 2022 ар талын зураг",
+            },
+          },
+        ],
+      },
+
+      performances: {
+        title: {
+          en: "Performances",
+          mn: "Тоглолтууд",
+        },
+        description: {
+          en: "Individual performances from the Naadam celebration.",
+          mn: "Наадмын баярын тус бүрийн тоглолтууд.",
+        },
+        items: [
+          {
+            id: "morin-khuur",
+            title: {
+              en: "Morin Khuur Performance",
+              mn: "Морин хуурын тоглолт",
+            },
+            description: {
+              en: "A traditional horsehead fiddle performance during the celebration.",
+              mn: "Баярын үеэр болсон уламжлалт морин хуурын тоглолт.",
+            },
+            images: [
+              {
+                highRes: "/gallery/naadam2022/performances/morin-khuur/1.webp",
+                lowRes: "/gallery/naadam2022/performances/morin-khuur/1-low.webp",
+                alt: {
+                  en: "Morin khuur performance at Naadam 2022",
+                  mn: "Наадам 2022 морин хуурын тоглолт",
+                },
+              },
+            ],
+            videos: [
+              {
+                title: {
+                  en: "Morin Khuur Video",
+                  mn: "Морин хуурын бичлэг",
+                },
+                url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+              },
+            ],
+          },
+          {
+            id: "dance-performance",
+            title: {
+              en: "Dance Performance",
+              mn: "Бүжгийн тоглолт",
+            },
+            description: {
+              en: "A cultural dance performance from the event program.",
+              mn: "Арга хэмжээний хөтөлбөрт багтсан соёлын бүжгийн тоглолт.",
+            },
+            images: [],
+            videos: [],
+          },
+        ],
+      },
+      
+    },
+  },
+}
+
+
+
+
 ];
-
-export function getListings(events: EventItem[]) {
-  const listings: OrganizedListing[] = [];
-
-  for (const event of events) {
-    for (const listing of event.whoWeWant) {
-      listings.push({
-        id: event.id,
-        listing,
-      });
-    }
-  }
-
-  return listings;
-}
-
-export function getEventLink(event: EventItem) {
-  return `/events/${event.id}`;
-}
-
-export function getEventCardDescription(event: EventItem) {
-  return event.details.date;
-}
-
-export function getFirstParagraph(text?: string) {
-  if (!text) return "";
-  return text.split("\n").find((line) => line.trim().length > 0) || "";
-}

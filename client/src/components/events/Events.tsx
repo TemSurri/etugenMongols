@@ -2,13 +2,9 @@
 
 import { memo, useMemo } from "react";
 import { Link } from "react-router-dom";
-import landingImage from "../../assets/landingpage.webp";
+import { motion, cubicBezier, type Variants } from "framer-motion";
 
-import {
-  events,
-  getEventCardDescription,
-  getEventLink,
-} from "../../static_events";
+import { events } from "../../static_events";
 
 type Lang = "en" | "mn";
 
@@ -16,210 +12,244 @@ type EventsProps = {
   lang: Lang;
 };
 
-const LATEST_EVENT_VIDEO_URL = "https://www.youtube.com/embed/9bZkp7q19f0";
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const headerMotion: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: easeOut },
+  },
+};
+
+const cardMotion: Variants = {
+  hiddenLeft: { opacity: 0, x: -34, y: 10 },
+  hiddenRight: { opacity: 0, x: 34, y: 10 },
+  show: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    transition: { duration: 0.58, ease: easeOut },
+  },
+};
+
+const dotMotion: Variants = {
+  hidden: { scale: 0.72, opacity: 0 },
+  show: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.42, ease: easeOut },
+  },
+};
 
 const EVENTS_COPY = {
   en: {
-    learnMore: "Learn More About Events",
-    eyebrow: "Upcoming Events",
-    title: "Events",
+    eyebrow: "Our Events",
+    title: "Event Timeline",
     intro:
-      "Explore upcoming cultural events, celebrations, and community gatherings hosted by Etugen Mongols.",
-    emptyTitle: "No events are planned right now",
-    emptyBody:
-      "While there are no upcoming events posted, you can still watch highlights from our latest event.",
-    latestHighlights: "Highlights From Our Latest Event",
-    moreEventsTitle: "Look at More of Our Events",
-    moreEventsBody:
-      "Explore photos and memories from past gatherings, celebrations, and community events.",
-    viewGallery: "View Gallery",
+      "See the timeline of all our events, view upcoming events, and explore past events from our community gatherings and cultural celebrations.",
+    upcoming: "Upcoming",
+    pastEvent: "Past Event",
     viewEvent: "View Event",
+    viewGallery: "View Gallery",
   },
   mn: {
-    learnMore: "Арга хэмжээний талаар дэлгэрэнгүй",
-    eyebrow: "Удахгүй болох арга хэмжээ",
-    title: "Арга хэмжээ",
+    eyebrow: "Манай арга хэмжээнүүд",
+    title: "Арга хэмжээний цаг хугацаа",
     intro:
-      "Этүгэн Монголчуудын зохион байгуулж буй удахгүй болох соёлын арга хэмжээ, баяр, нийгэмлэгийн уулзалтуудтай танилцаарай.",
-    emptyTitle: "Одоогоор төлөвлөсөн арга хэмжээ алга",
-    emptyBody:
-      "Одоогоор удахгүй болох арга хэмжээ нийтлэгдээгүй байгаа ч та манай сүүлийн арга хэмжээний онцлох бичлэгийг үзэж болно.",
-    latestHighlights: "Сүүлийн арга хэмжээний онцлох бичлэг",
-    moreEventsTitle: "Өмнөх арга хэмжээнүүдийг үзэх",
-    moreEventsBody:
-      "Өмнөх уулзалт, баяр, нийгэмлэгийн арга хэмжээнүүдийн зураг, дурсамжтай танилцаарай.",
-    viewGallery: "Зургийн цомог үзэх",
+      "Манай бүх арга хэмжээний цаг хугацааны дарааллыг үзэж, удахгүй болох арга хэмжээнүүдийг харан, өмнөх олон нийтийн уулзалт болон соёлын баяруудыг сонирхоорой.",
+    upcoming: "Удахгүй болох",
+    pastEvent: "Өмнөх арга хэмжээ",
     viewEvent: "Арга хэмжээг үзэх",
+    viewGallery: "Зургийн цомог үзэх",
   },
 } as const;
+
+function getYearFromDate(date: string) {
+  return date.match(/\b(20\d{2}|19\d{2})\b/)?.[0] ?? date;
+}
 
 function Events({ lang }: EventsProps) {
   const copy = EVENTS_COPY[lang];
 
-  const eventCards = useMemo(
+  const timelineItems = useMemo(
     () =>
-      events.map((event) => ({
-        event,
-        href: getEventLink(event),
-        description: getEventCardDescription(event),
-      })),
-    []
+      events.map((event) => {
+        const isUpcoming = event.status === "upcoming";
+
+        return {
+          event,
+          isUpcoming,
+          title: event.title[lang],
+          description: event.description[lang],
+          imageSrc: event.coverImage.lowRes || event.coverImage.highRes,
+          imageAlt: event.coverImage.alt[lang],
+          year: getYearFromDate(event.date),
+          href: isUpcoming ? `/events/${event.id}` : `/gallery/${event.id}`,
+        };
+      }),
+    [lang]
   );
 
-  const hasEvents = eventCards.length > 0;
-
   return (
-    <section className="min-h-screen bg-[#f4ecd9] pt-20 text-[#27301d]">
-      {hasEvents && (
-        <div className="relative overflow-hidden border-y border-[#d8caa5]/60 bg-[radial-gradient(circle_at_top_left,rgba(179,145,53,0.16),transparent_32%),linear-gradient(135deg,#efe2c5_0%,#fff8ea_50%,#dcc891_100%)]">
-          <div className="mx-auto max-w-7xl px-5 py-6 sm:px-6 md:px-10 lg:px-12 lg:py-7">
-            <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div className="max-w-3xl">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7b26]">
-                  {copy.eyebrow}
-                </p>
+    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] pt-20 text-[#27301d]">
+      <div className="fixed inset-0 z-0">
+        <img
+          src="/landingpage.webp"
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-center"
+        />
 
-                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#27301d] sm:text-4xl md:text-5xl">
-                  {copy.title}
-                </h1>
+        <div className="absolute inset-0 bg-black/44" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/58 via-black/24 to-black/46" />
+      </div>
 
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#4e593c]/85 md:text-[15px] md:leading-7">
-                  {copy.intro}
-                </p>
-              </div>
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-14 sm:px-6 md:px-10 lg:px-12">
+        <motion.div
+          variants={headerMotion}
+          initial="hidden"
+          animate="show"
+          className="
+            grid gap-8 rounded-md border border-[#e1d2a6]/55
+            bg-[#fffaf0]/94 px-6 py-7
+            shadow-[0_24px_70px_rgba(0,0,0,0.34)]
+            backdrop-blur-sm
+            md:grid-cols-[0.9fr_1fr] md:items-start md:px-7
+          "
+        >
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.36em] text-[#9a7b26]">
+              {copy.eyebrow}
+            </p>
 
-              <Link
-                to="/about/events"
-                className="inline-flex w-fit items-center justify-center border border-[#b39135]/45 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#27301d] transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0] lg:justify-self-end"
-              >
-                {copy.learnMore}
-                <span className="ml-3">→</span>
-              </Link>
-            </div>
+            <h1 className="mt-4 max-w-xl text-4xl font-semibold leading-none tracking-tight text-[#27301d] sm:text-5xl md:text-6xl">
+              {copy.title}
+            </h1>
           </div>
-        </div>
-      )}
 
-      {hasEvents ? (
-        <div className="mx-auto max-w-7xl px-5 py-8 sm:px-6 md:px-10 lg:px-12">
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {eventCards.map(({ event, href, description }) => (
-              <Link
-                key={event.id}
-                to={href}
-                className="group flex overflow-hidden rounded-xl border border-[#d8caa5]/70 bg-[#fffaf0]/85 shadow-[0_12px_32px_rgba(88,72,38,0.10)] transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-[#b39135]/60 hover:shadow-[0_18px_46px_rgba(88,72,38,0.14)]"
-              >
-                <article className="flex w-full flex-col">
-                  <div className="relative aspect-[16/9] overflow-hidden border-b border-[#d8caa5]/60 bg-[#efe2bf]">
-                    <img
-                      src={`/upcoming_event_assets/${event.image}`}
-                      alt={event.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                    />
+          <p className="max-w-xl text-base font-medium leading-8 text-[#4e593c]/85 md:justify-self-end">
+            {copy.intro}
+          </p>
+        </motion.div>
 
-                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent" />
-                  </div>
+        <div className="relative mt-16">
+          <div className="absolute left-5 top-0 h-full border-l-2 border-dashed border-[#d6b04c] md:left-1/2 md:-translate-x-1/2" />
 
-                  <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7b26]">
-                      {event.details.date}
-                    </p>
+          <div className="space-y-16">
+            {timelineItems.map(
+              (
+                {
+                  event,
+                  isUpcoming,
+                  title,
+                  description,
+                  imageSrc,
+                  imageAlt,
+                  year,
+                  href,
+                },
+                index
+              ) => {
+                const isLeftSide = index % 2 === 0;
 
-                    <h2 className="mt-2 line-clamp-2 text-xl font-semibold leading-tight tracking-tight text-[#27301d] sm:text-2xl">
-                      {event.title}
-                    </h2>
-
-                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#4e593c]/80">
-                      {description}
-                    </p>
-
-                    <div className="mt-auto pt-5">
-                      <div className="flex items-center justify-between gap-4 border-t border-[#d8caa5]/60 pt-3">
-                        <p className="truncate text-xs font-medium text-[#4e593c]/70">
-                          {event.details.time}
-                        </p>
-
-                        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.17em] text-[#9a7b26] transition-colors group-hover:text-[#27301d]">
-                          {copy.viewEvent} →
+                return (
+                  <article
+                    key={event.id}
+                    className="relative grid gap-8 md:grid-cols-2 md:gap-16"
+                  >
+                    <motion.div
+                      variants={dotMotion}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.5 }}
+                      className="absolute left-5 top-7 z-10 -translate-x-1/2 md:left-1/2"
+                    >
+                      <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-[#d6b04c] bg-[#27301d] shadow-[0_0_0_6px_rgba(47,51,32,0.95)]">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#fffaf0]">
+                          {isUpcoming ? "Soon" : year}
                         </span>
                       </div>
-                    </div>
-                  </div>
-                </article>
-              </Link>
-            ))}
+                    </motion.div>
+
+                    <motion.div
+                      variants={cardMotion}
+                      initial={isLeftSide ? "hiddenLeft" : "hiddenRight"}
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.22 }}
+                      className={`ml-12 md:ml-0 ${
+                        isLeftSide ? "md:col-start-1" : "md:col-start-2"
+                      }`}
+                    >
+                      <div
+                        className={`mb-4 ${
+                          isLeftSide ? "md:text-right" : "md:text-left"
+                        }`}
+                      >
+                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
+                          {isUpcoming ? copy.upcoming : copy.pastEvent}
+                        </p>
+
+                        <p className="mt-1 text-2xl font-semibold tracking-tight text-[#fffaf0]">
+                          {isUpcoming ? event.date : year}
+                        </p>
+                      </div>
+
+                      <div className="group overflow-hidden rounded-xl border border-[#e1d2a6]/45 bg-[#fffaf0]/94 shadow-[0_22px_60px_rgba(0,0,0,0.26)] transition duration-300 hover:-translate-y-0.5 hover:border-[#d6b04c]/80 hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
+                        <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]">
+                          <img
+                            src={imageSrc}
+                            alt={imageAlt}
+                            loading={index === 0 ? "eager" : "lazy"}
+                            decoding="async"
+                            fetchPriority={index === 0 ? "high" : "auto"}
+                            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+                          />
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                        </div>
+
+                        <div className="p-6">
+                          <div className="flex flex-wrap gap-2">
+                            <span className="rounded-full bg-[#f4ecd9] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a7b26]">
+                              {isUpcoming ? copy.upcoming : year}
+                            </span>
+
+                            <span className="rounded-full bg-[#f4ecd9] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a7b26]">
+                              Cultural
+                            </span>
+                          </div>
+
+                          <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-[#27301d]">
+                            {title}
+                          </h2>
+
+                          <p className="mt-3 line-clamp-4 text-sm leading-7 text-[#4e593c]/85">
+                            {description}
+                          </p>
+
+                          <div className="mt-6 border-t border-[#d8caa5]/65 pt-4">
+                            <Link
+                              to={href}
+                              className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors hover:text-[#27301d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b39135]"
+                            >
+                              {isUpcoming ? copy.viewEvent : copy.viewGallery} →
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </article>
+                );
+              }
+            )}
           </div>
         </div>
-      ) : (
-        <div className="relative min-h-[calc(100vh-5rem)] overflow-hidden">
-          <img
-            src={landingImage}
-            alt=""
-            aria-hidden="true"
-            loading="eager"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-black/72" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(179,145,53,0.2),transparent_40%)]" />
-
-          <div className="relative z-10 mx-auto max-w-6xl px-5 py-8 sm:px-6 md:px-10 lg:px-12">
-            <div className="mx-auto max-w-xl text-center text-[#fffaf0]">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#d8caa5]">
-                {copy.eyebrow}
-              </p>
-
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-                {copy.emptyTitle}
-              </h1>
-
-              <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-white/75 md:text-[15px] md:leading-7">
-                {copy.emptyBody}
-              </p>
-            </div>
-
-            <div className="mx-auto mt-5 max-w-2xl overflow-hidden rounded-xl border border-white/15 bg-black/35 shadow-[0_18px_52px_rgba(0,0,0,0.35)]">
-              <div className="border-b border-white/10 px-4 py-2.5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d8caa5]">
-                  {copy.latestHighlights}
-                </p>
-              </div>
-
-              <div className="aspect-video bg-black">
-                <iframe
-                  className="h-full w-full"
-                  src={LATEST_EVENT_VIDEO_URL}
-                  title={copy.latestHighlights}
-                  loading="lazy"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-
-            <div className="mx-auto mt-5 max-w-2xl border-t border-white/15 pt-5 text-center text-[#fffaf0]">
-              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                {copy.moreEventsTitle}
-              </h2>
-
-              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-white/70">
-                {copy.moreEventsBody}
-              </p>
-
-              <Link
-                to="/gallery"
-                className="mt-4 inline-flex items-center justify-center border border-[#d8caa5]/45 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#fffaf0] transition-colors hover:border-[#fffaf0] hover:bg-[#fffaf0] hover:text-[#27301d]"
-              >
-                {copy.viewGallery}
-                <span className="ml-3">→</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </section>
   );
 }

@@ -4,53 +4,111 @@ import { Link } from "react-router-dom";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import type { GalleryItem as GalleryItemType } from "../../static_gallery";
+import type {
+  Event,
+  EventImage,
+  GallerySection,
+  PerformanceItem,
+} from "../../static_events";
 
 import GalleryHeader from "./GalleryHeader";
 import GalleryInfoCard from "./GalleryInfoCard";
 import GalleryGrid from "./GalleryGrid";
 import GalleryLightbox from "./GalleryLightbox";
 
-// motion
+type Lang = "en" | "mn";
+type SectionKey = "general" | "performances" | "behindTheScenes";
 
+type GalleryViewProps = {
+  event: Event;
+  lang: Lang;
+};
+
+const IMAGES_PER_PAGE = 9;
+
+const COPY = {
+  en: {
+    back: "Back to Gallery",
+    overview: "Event Overview",
+    general: "General",
+    performances: "Performances",
+    behindTheScenes: "Behind the Scenes",
+    noMedia: "No media has been added for this section yet.",
+  },
+  mn: {
+    back: "Цомог руу буцах",
+    overview: "Арга хэмжээний тойм",
+    general: "Ерөнхий",
+    performances: "Тоглолтууд",
+    behindTheScenes: "Ар тал",
+    noMedia: "Энэ хэсэгт одоогоор зураг, бичлэг нэмэгдээгүй байна.",
+  },
+} as const;
 
 const pageFade: Variants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
+  show: { opacity: 1, transition: { duration: 0.22, ease: "easeOut" } },
 };
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: "easeOut" },
-  },
-};
+function getSectionImages(
+  key: SectionKey,
+  gallery: NonNullable<Event["gallery"]>,
+  activePerformance?: PerformanceItem
+): EventImage[] {
+  if (key === "performances") return activePerformance?.images ?? [];
+  return gallery.sections[key].images;
+}
 
-const IMAGES_PER_PAGE = 6;
+export default function GalleryView({ event, lang }: GalleryViewProps) {
+  const copy = COPY[lang];
 
-export default function GalleryView({
-  id,
-  title,
-  date,
-  location,
-  albumImageCount,
-  description,
-  activities = [],
-}: GalleryItemType) {
-  const albumBasePath = `/gallery/${id}/albumphotos`;
+  if (!event.gallery) {
+    return (
+      <main className="min-h-screen bg-[#f4ecd9] pt-28 text-[#27301d]">
+        <div className="mx-auto max-w-4xl px-5 py-12">
+          <Link
+            to="/gallery"
+            className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7b26]"
+          >
+            ← {copy.back}
+          </Link>
 
-  const images = useMemo(
-    () =>
-      Array.from(
-        { length: albumImageCount },
-        (_, i) => `${albumBasePath}/${i + 1}.png`
-      ),
-    [albumImageCount, albumBasePath]
+          <h1 className="mt-6 text-3xl font-semibold">
+            Gallery not available.
+          </h1>
+        </div>
+      </main>
+    );
+  }
+
+  const gallery = event.gallery;
+
+  const [activeSectionKey, setActiveSectionKey] =
+    useState<SectionKey>("general");
+
+  const firstPerformance = gallery.sections.performances.items[0];
+
+  const [activePerformanceId, setActivePerformanceId] = useState<string | null>(
+    firstPerformance?.id ?? null
   );
 
-  const backgroundImage = images[0];
+  const activePerformance = useMemo(
+    () =>
+      gallery.sections.performances.items.find(
+        (item) => item.id === activePerformanceId
+      ) ?? firstPerformance,
+    [activePerformanceId, firstPerformance, gallery.sections.performances.items]
+  );
+
+  const activeStaticSection =
+    activeSectionKey === "performances"
+      ? null
+      : (gallery.sections[activeSectionKey] as GallerySection);
+
+  const images = useMemo(
+    () => getSectionImages(activeSectionKey, gallery, activePerformance),
+    [activeSectionKey, gallery, activePerformance]
+  );
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [page, setPage] = useState(0);
@@ -67,101 +125,181 @@ export default function GalleryView({
   );
 
   const next = useCallback(() => {
+    if (images.length === 0) return;
     setActiveIndex((i) => (i === null ? 0 : (i + 1) % images.length));
   }, [images.length]);
 
   const prev = useCallback(() => {
+    if (images.length === 0) return;
     setActiveIndex((i) =>
       i === null ? 0 : (i - 1 + images.length) % images.length
     );
   }, [images.length]);
 
-  const closeLightbox = useCallback(() => {
+  const closeLightbox = useCallback(() => setActiveIndex(null), []);
+
+  useEffect(() => {
+    setPage(0);
     setActiveIndex(null);
-  }, []);
+  }, [activeSectionKey, activePerformanceId]);
 
   useEffect(() => {
     if (activeIndex === null) return;
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "Escape") closeLightbox();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") next();
+      if (event.key === "ArrowLeft") prev();
+      if (event.key === "Escape") closeLightbox();
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [activeIndex, next, prev, closeLightbox]);
 
+  const bgImage = event.coverImage.lowRes || event.coverImage.highRes;
+
   return (
     <motion.article
       variants={pageFade}
       initial="hidden"
       animate="show"
-      className="relative min-h-screen"
+      className="relative min-h-screen bg-[#f4ecd9] pt-20 text-[#27301d]"
     >
-      {backgroundImage && (
-        <img
-          src={backgroundImage}
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-        />
-      )}
+      <img
+        src={bgImage}
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        className="absolute inset-x-0 top-0 h-[38rem] w-full object-cover opacity-70"
+      />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <motion.div
-          variants={fadeUp}
-          className="bg-white/70 border border-white/30 shadow-xl"
+      <div className="absolute inset-x-0 top-0 h-[38rem] bg-gradient-to-b from-[#f4ecd9]/10 via-[#f4ecd9]/55 to-[#f4ecd9]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12">
+        <Link
+          to="/gallery"
+          className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#27301d] transition-colors hover:text-[#9a7b26]"
         >
-          <div className="px-6 sm:px-10 py-10">
-            <Link
-              to="/gallery"
-              className="block mb-6 text-xs uppercase tracking-widest text-black/60 hover:text-black"
-            >
-              ← Back to Gallery Page
-            </Link>
+          ← {copy.back}
+        </Link>
 
-            <GalleryHeader title={title} date={date} location={location} />
+        <section className="mt-8 border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-6 shadow-[0_18px_50px_rgba(88,72,38,0.10)] sm:p-8">
+          <GalleryHeader
+            title={event.title[lang]}
+            date={event.date}
+            location={event.location}
+          />
 
-            <div className="md:hidden mb-12">
-              <GalleryInfoCard
-                title={title}
-                description={description}
-                activities={activities}
-              />
-            </div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+            {copy.overview}
+          </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] gap-14">
-              <aside className="hidden md:block relative">
-                <div className="md:sticky md:top-10">
-                  <GalleryInfoCard
-                    title={title}
-                    description={description}
-                    activities={activities}
-                  />
-                </div>
-              </aside>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[#4e593c]/85 md:text-[15px] md:leading-8">
+            {event.description[lang]}
+          </p>
+        </section>
 
+        <div className="mt-8 flex flex-wrap gap-2">
+          {(["general", "performances", "behindTheScenes"] as SectionKey[]).map(
+            (key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveSectionKey(key)}
+                className={`border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
+                  activeSectionKey === key
+                    ? "border-[#27301d] bg-[#27301d] text-[#fffaf0]"
+                    : "border-[#d8caa5] bg-[#fffaf0]/95 text-[#9a7b26] hover:border-[#9a7b26]"
+                }`}
+              >
+                {copy[key]}
+              </button>
+            )
+          )}
+        </div>
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-[19rem_minmax(0,1fr)] lg:items-start">
+          <aside className="lg:sticky lg:top-32 lg:self-start">
+            <GalleryInfoCard
+              lang={lang}
+              sectionKey={activeSectionKey}
+              sectionTitle={
+                activeSectionKey === "performances"
+                  ? gallery.sections.performances.title[lang]
+                  : activeStaticSection?.title[lang]
+              }
+              description={
+                activeSectionKey === "performances"
+                  ? gallery.sections.performances.description[lang]
+                  : activeStaticSection?.description[lang]
+              }
+              montageVideo={
+                activeSectionKey === "general" ? gallery.montageVideo : undefined
+              }
+              performances={gallery.sections.performances.items}
+              activePerformance={activePerformance}
+              onSelectPerformance={setActivePerformanceId}
+              performanceVideos={
+                activeSectionKey === "performances"
+                  ? activePerformance?.videos
+                  : undefined
+              }
+              thankYouVideo={
+                activeSectionKey === "behindTheScenes"
+                  ? gallery.thankYouVideo
+                  : undefined
+              }
+            />
+          </aside>
+
+          <section className="min-w-0 space-y-8">
+            {activeSectionKey === "performances" && activePerformance && (
+              <div className="border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-5 shadow-[0_14px_38px_rgba(88,72,38,0.08)]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+                  {copy.performances}
+                </p>
+
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+                  {activePerformance.title[lang]}
+                </h2>
+
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-[#4e593c]/85">
+                  {activePerformance.description[lang]}
+                </p>
+              </div>
+            )}
+
+            {images.length > 0 ? (
               <GalleryGrid
-                title={title}
+                title={event.title[lang]}
                 images={images}
                 pagedImages={pagedImages}
                 page={page}
                 pageCount={pageCount}
                 imagesPerPage={IMAGES_PER_PAGE}
+                lang={lang}
                 onOpenImage={setActiveIndex}
-                onPrevPage={() => setPage(page - 1)}
-                onNextPage={() => setPage(page + 1)}
+                onPrevPage={() => setPage((p) => Math.max(0, p - 1))}
+                onNextPage={() =>
+                  setPage((p) => Math.min(pageCount - 1, p + 1))
+                }
               />
-            </div>
-          </div>
-        </motion.div>
+            ) : (
+              <p className="border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-6 text-sm text-[#4e593c]/85">
+                {copy.noMedia}
+              </p>
+            )}
+          </section>
+        </div>
       </div>
 
       <GalleryLightbox
         isOpen={activeIndex !== null}
         activeIndex={activeIndex}
         images={images}
+        lang={lang}
         onClose={closeLightbox}
         onPrev={prev}
         onNext={next}

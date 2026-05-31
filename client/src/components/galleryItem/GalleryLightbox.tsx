@@ -1,5 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import type { EventImage } from "../../static_events";
+
+type Lang = "en" | "mn";
+
+type GalleryLightboxProps = {
+  isOpen: boolean;
+  activeIndex: number | null;
+  images: EventImage[];
+  lang: Lang;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+};
 
 const overlayFade: Variants = {
   hidden: { opacity: 0 },
@@ -7,59 +20,56 @@ const overlayFade: Variants = {
   exit: { opacity: 0 },
 };
 
-type GalleryLightboxProps = {
-  isOpen: boolean;
-  activeIndex: number | null;
-  images: string[];
-  onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-};
-
 export default function GalleryLightbox({
   isOpen,
   activeIndex,
   images,
+  lang,
   onClose,
   onPrev,
   onNext,
 }: GalleryLightboxProps) {
+  const activeImage =
+    activeIndex !== null ? images[activeIndex] : undefined;
+
   return (
     <AnimatePresence>
-      {isOpen && activeIndex !== null && (
+      {isOpen && activeImage && (
         <motion.div
           variants={overlayFade}
           initial="hidden"
           animate="show"
           exit="exit"
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 px-4"
           onClick={onClose}
         >
           <div
-            className="flex items-center gap-10"
+            className="grid w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={onPrev}
               aria-label="Previous image"
-              className="text-white text-5xl"
+              className="rounded-full bg-white/10 px-3 py-2 text-4xl leading-none text-white transition hover:bg-white/20"
             >
               ‹
             </button>
 
-            <img
-              src={images[activeIndex]}
-              alt={`Gallery image ${activeIndex + 1}`}
-              className="max-w-[88vw] max-h-[82vh] object-contain"
-              draggable={false}
-            />
+            <div className="flex min-h-[70vh] items-center justify-center">
+              <img
+                src={activeImage.highRes || activeImage.lowRes}
+                alt={activeImage.alt[lang]}
+                className="max-h-[86vh] max-w-full object-contain"
+                draggable={false}
+              />
+            </div>
 
             <button
               type="button"
               onClick={onNext}
               aria-label="Next image"
-              className="text-white text-5xl"
+              className="rounded-full bg-white/10 px-3 py-2 text-4xl leading-none text-white transition hover:bg-white/20"
             >
               ›
             </button>

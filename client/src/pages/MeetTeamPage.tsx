@@ -1,21 +1,19 @@
 "use client";
 
-
-
 import Header from "../components/home/Header";
-import AboutUs from "../components/about/OurStory";
 import Footer from "../components/home/Footer";
-
+import MeetTeamMain from "../components/about/MeetTeamMain";
 import { useLanguage } from "../context/LanguageContext";
 
-export default function About() {
+export default function MeetTeamPage() {
   const { lang, setLang } = useLanguage();
+
   return (
     <>
       <Header lang={lang} setLang={setLang} />
 
       <main>
-        <AboutUs lang={lang} />
+        <MeetTeamMain lang={lang} />
       </main>
 
       <Footer />

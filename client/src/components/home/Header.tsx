@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.webp";
 
 type Lang = "en" | "mn";
@@ -11,22 +11,72 @@ type HeaderProps = {
   setLang: (lang: Lang) => void;
 };
 
-type NavItem = {
+type NavChild = {
   label: string;
   to: string;
 };
 
+type NavItem = {
+  label: string;
+  to: string;
+  children?: NavChild[];
+};
+
 const NAV_ITEMS: NavItem[] = [
-  { label: "About", to: "/about" },
-  { label: "Events", to: "/events" },
-  { label: "Gallery", to: "/gallery" },
-  { label: "Contact", to: "/contact" },
+  {
+    label: "About Us",
+    to: "/about",
+    children: [
+      { label: "Our Story", to: "/about/our-story" },
+      { label: "Meet the Bigger Team", to: "/about/team" },
+      { label: "Our Impact", to: "/about/impact" },
+    ],
+  },
+  {
+    label: "What We Do",
+    to: "/what-we-do",
+    children: [{ label: "Events", to: "/events" }],
+  },
+  {
+    label: "Get Involved",
+    to: "/get-involved",
+    children: [
+      { label: "Volunteer", to: "/get-involved/volunteer" },
+      { label: "Become Member", to: "/get-involved/member" },
+      { label: "Donate", to: "/get-involved/donate" },
+    ],
+  },
+  {
+    label: "Gallery",
+    to: "/gallery",
+  },
+  {
+    label: "Contact",
+    to: "/contact",
+  },
 ];
 
-function Header({ lang, setLang }: HeaderProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
+const isRouteActive = (pathname: string, to: string) => {
+  return pathname === to || pathname.startsWith(`${to}/`);
+};
 
-  const closeMenu = () => setMenuOpen(false);
+const isParentActive = (pathname: string, item: NavItem) => {
+  return (
+    isRouteActive(pathname, item.to) ||
+    item.children?.some((child) => isRouteActive(pathname, child.to))
+  );
+};
+
+function Header({ lang, setLang }: HeaderProps) {
+  const { pathname } = useLocation();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setOpenMobileGroup(null);
+  };
 
   const toggleLang = () => {
     setLang(lang === "en" ? "mn" : "en");
@@ -63,25 +113,86 @@ function Header({ lang, setLang }: HeaderProps) {
 
         {/* Desktop navigation */}
         <nav
-          className="hidden items-center gap-8 lg:flex"
+          className="hidden items-center gap-7 lg:flex"
           aria-label="Primary navigation"
         >
-          {NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                [
-                  "text-sm font-medium tracking-wide transition-colors",
-                  isActive
-                    ? "text-[#9a7b26]"
-                    : "text-[#4e593c]/78 hover:text-[#27301d]",
-                ].join(" ")
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const hasDropdown = Boolean(item.children?.length);
+            const parentActive = isParentActive(pathname, item);
+
+            if (!hasDropdown) {
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    [
+                      "text-sm font-medium tracking-wide transition-colors",
+                      isActive
+                        ? "text-[#9a7b26]"
+                        : "text-[#4e593c]/78 hover:text-[#27301d]",
+                    ].join(" ")
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              );
+            }
+
+            return (
+              <div key={item.label} className="group relative">
+                {/* Non-clickable parent. It only opens the dropdown. */}
+                <button
+                  type="button"
+                  className={[
+                    "inline-flex cursor-default items-center gap-1.5 text-sm font-medium tracking-wide transition-colors",
+                    parentActive
+                      ? "text-[#9a7b26]"
+                      : "text-[#4e593c]/78 group-hover:text-[#27301d]",
+                  ].join(" ")}
+                  aria-haspopup="true"
+                >
+                  {item.label}
+
+                  <svg
+                    className="h-3.5 w-3.5 transition-transform group-hover:rotate-180"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+
+                {/* Desktop dropdown */}
+                <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 border border-[#d8caa5]/65 bg-[#fffaf0] p-2 opacity-0 shadow-[0_18px_45px_rgba(88,72,38,0.16)] transition-all duration-150 group-hover:visible group-hover:mt-3 group-hover:opacity-100">
+                  {/* Hover bridge so the dropdown does not close while moving down. */}
+                  <div className="absolute -top-3 left-0 h-3 w-full" />
+
+                  {item.children?.map((child) => (
+                    <NavLink
+                      key={child.to}
+                      to={child.to}
+                      className={({ isActive }) =>
+                        [
+                          "block px-3 py-2.5 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-[#efe2bf]/70 text-[#9a7b26]"
+                            : "text-[#4e593c]/82 hover:bg-[#efe2bf]/45 hover:text-[#27301d]",
+                        ].join(" ")
+                      }
+                    >
+                      {child.label}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </nav>
 
         {/* Right controls */}
@@ -101,7 +212,7 @@ function Header({ lang, setLang }: HeaderProps) {
               hover:border-[#9a7b26]/70
               hover:bg-[#efe2bf]/55
               hover:text-[#27301d]
-              sm:w-[6.75rem]
+              sm:w-27
               sm:px-4
               sm:text-xs
               sm:tracking-[0.18em]
@@ -168,23 +279,87 @@ function Header({ lang, setLang }: HeaderProps) {
             className="mx-auto flex max-w-7xl flex-col gap-1"
             aria-label="Mobile navigation"
           >
-            {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  [
-                    "px-1 py-3 text-base font-medium transition-colors",
-                    isActive
-                      ? "text-[#9a7b26]"
-                      : "text-[#4e593c]/80 hover:text-[#27301d]",
-                  ].join(" ")
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const hasDropdown = Boolean(item.children?.length);
+              const isOpen = openMobileGroup === item.label;
+              const parentActive = isParentActive(pathname, item);
+
+              if (!hasDropdown) {
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={closeMenu}
+                    className={({ isActive }) =>
+                      [
+                        "px-1 py-3 text-base font-medium transition-colors",
+                        isActive
+                          ? "text-[#9a7b26]"
+                          : "text-[#4e593c]/80 hover:text-[#27301d]",
+                      ].join(" ")
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                );
+              }
+
+              return (
+                <div key={item.label} className="border-b border-[#d8caa5]/35">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenMobileGroup(isOpen ? null : item.label)
+                    }
+                    className={[
+                      "flex w-full items-center justify-between px-1 py-3 text-left text-base font-medium transition-colors hover:text-[#27301d]",
+                      parentActive ? "text-[#9a7b26]" : "text-[#4e593c]/85",
+                    ].join(" ")}
+                    aria-expanded={isOpen}
+                  >
+                    <span>{item.label}</span>
+
+                    <svg
+                      className={[
+                        "h-4 w-4 transition-transform",
+                        isOpen ? "rotate-180" : "",
+                      ].join(" ")}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+
+                  {isOpen && (
+                    <div className="pb-3 pl-4">
+                      {item.children?.map((child) => (
+                        <NavLink
+                          key={child.to}
+                          to={child.to}
+                          onClick={closeMenu}
+                          className={({ isActive }) =>
+                            [
+                              "block px-2 py-2 text-sm font-medium transition-colors",
+                              isActive
+                                ? "text-[#9a7b26]"
+                                : "text-[#4e593c]/75 hover:text-[#27301d]",
+                            ].join(" ")
+                          }
+                        >
+                          {child.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
         </div>
       )}
