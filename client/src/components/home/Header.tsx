@@ -38,10 +38,6 @@ const NAV_ITEMS: NavItem[] = [
     children: [{ label: "Events", to: "/events" }],
   },
   {
-    label: "Gallery",
-    to: "/gallery",
-  },
-  {
     label: "Get Involved",
     to: "/get-involved",
     children: [
@@ -49,6 +45,10 @@ const NAV_ITEMS: NavItem[] = [
       { label: "Become Member", to: "/get-involved/member" },
       { label: "Donate", to: "/get-involved/donate" },
     ],
+  },
+  {
+    label: "Gallery",
+    to: "/gallery",
   },
   {
     label: "Contact",

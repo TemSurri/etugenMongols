@@ -2,6 +2,7 @@
 
 import { memo, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { motion, cubicBezier, type Variants } from "framer-motion";
 
 import { events } from "../../static_events";
 
@@ -11,12 +12,43 @@ type EventsProps = {
   lang: Lang;
 };
 
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const headerMotion: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: easeOut },
+  },
+};
+
+const cardMotion: Variants = {
+  hiddenLeft: { opacity: 0, x: -34, y: 10 },
+  hiddenRight: { opacity: 0, x: 34, y: 10 },
+  show: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    transition: { duration: 0.58, ease: easeOut },
+  },
+};
+
+const dotMotion: Variants = {
+  hidden: { scale: 0.72, opacity: 0 },
+  show: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.42, ease: easeOut },
+  },
+};
+
 const EVENTS_COPY = {
   en: {
     eyebrow: "Our Events",
-    title: "What We Do",
+    title: "Event Timeline",
     intro:
-      "From cultural celebrations to community gatherings, every event we organize helps preserve tradition, connect generations, and strengthen our community.",
+      "See the timeline of all our events, view upcoming events, and explore past events from our community gatherings and cultural celebrations.",
     upcoming: "Upcoming",
     pastEvent: "Past Event",
     viewEvent: "View Event",
@@ -24,9 +56,9 @@ const EVENTS_COPY = {
   },
   mn: {
     eyebrow: "Манай арга хэмжээнүүд",
-    title: "Бид юу хийдэг вэ",
+    title: "Арга хэмжээний цаг хугацаа",
     intro:
-      "Соёлын баяр, уулзалт, олон нийтийн арга хэмжээгээр дамжуулан бид уламжлалаа хадгалж, үе үеийг холбож, хамт олноо бэхжүүлдэг.",
+      "Манай бүх арга хэмжээний цаг хугацааны дарааллыг үзэж, удахгүй болох арга хэмжээнүүдийг харан, өмнөх олон нийтийн уулзалт болон соёлын баяруудыг сонирхоорой.",
     upcoming: "Удахгүй болох",
     pastEvent: "Өмнөх арга хэмжээ",
     viewEvent: "Арга хэмжээг үзэх",
@@ -61,9 +93,35 @@ function Events({ lang }: EventsProps) {
   );
 
   return (
-    <section className="min-h-screen bg-[#f4ecd9] pt-20 text-[#27301d]">
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-6 md:px-10 lg:px-12">
-        <div className="grid gap-8 md:grid-cols-[0.9fr_1fr] md:items-start">
+    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] pt-20 text-[#27301d]">
+      <div className="fixed inset-0 z-0">
+        <img
+          src="/landingpage.webp"
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-center"
+        />
+
+        <div className="absolute inset-0 bg-black/44" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/58 via-black/24 to-black/46" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-14 sm:px-6 md:px-10 lg:px-12">
+        <motion.div
+          variants={headerMotion}
+          initial="hidden"
+          animate="show"
+          className="
+            grid gap-8 rounded-md border border-[#e1d2a6]/55
+            bg-[#fffaf0]/94 px-6 py-7
+            shadow-[0_24px_70px_rgba(0,0,0,0.34)]
+            backdrop-blur-sm
+            md:grid-cols-[0.9fr_1fr] md:items-start md:px-7
+          "
+        >
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.36em] text-[#9a7b26]">
               {copy.eyebrow}
@@ -77,10 +135,10 @@ function Events({ lang }: EventsProps) {
           <p className="max-w-xl text-base font-medium leading-8 text-[#4e593c]/85 md:justify-self-end">
             {copy.intro}
           </p>
-        </div>
+        </motion.div>
 
         <div className="relative mt-16">
-          <div className="absolute left-5 top-0 h-full border-l-2 border-dashed border-[#b39135] md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-5 top-0 h-full border-l-2 border-dashed border-[#d6b04c] md:left-1/2 md:-translate-x-1/2" />
 
           <div className="space-y-16">
             {timelineItems.map(
@@ -104,15 +162,25 @@ function Events({ lang }: EventsProps) {
                     key={event.id}
                     className="relative grid gap-8 md:grid-cols-2 md:gap-16"
                   >
-                    <div className="absolute left-5 top-7 z-10 -translate-x-1/2 md:left-1/2">
-                      <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-[#b39135] bg-[#27301d] shadow-[0_0_0_6px_rgba(244,236,217,1)]">
+                    <motion.div
+                      variants={dotMotion}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.5 }}
+                      className="absolute left-5 top-7 z-10 -translate-x-1/2 md:left-1/2"
+                    >
+                      <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-[#d6b04c] bg-[#27301d] shadow-[0_0_0_6px_rgba(47,51,32,0.95)]">
                         <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#fffaf0]">
                           {isUpcoming ? "Soon" : year}
                         </span>
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div
+                    <motion.div
+                      variants={cardMotion}
+                      initial={isLeftSide ? "hiddenLeft" : "hiddenRight"}
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.22 }}
                       className={`ml-12 md:ml-0 ${
                         isLeftSide ? "md:col-start-1" : "md:col-start-2"
                       }`}
@@ -122,22 +190,23 @@ function Events({ lang }: EventsProps) {
                           isLeftSide ? "md:text-right" : "md:text-left"
                         }`}
                       >
-                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#9a7b26]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
                           {isUpcoming ? copy.upcoming : copy.pastEvent}
                         </p>
 
-                        <p className="mt-1 text-2xl font-semibold tracking-tight text-[#27301d]">
+                        <p className="mt-1 text-2xl font-semibold tracking-tight text-[#fffaf0]">
                           {isUpcoming ? event.date : year}
                         </p>
                       </div>
 
-                      <div className="group overflow-hidden rounded-xl border border-[#d8caa5]/75 bg-[#fffaf0]/92 shadow-[0_18px_50px_rgba(88,72,38,0.12)] transition duration-300 hover:-translate-y-0.5 hover:border-[#b39135]/70 hover:shadow-[0_24px_70px_rgba(88,72,38,0.18)]">
+                      <div className="group overflow-hidden rounded-xl border border-[#e1d2a6]/45 bg-[#fffaf0]/94 shadow-[0_22px_60px_rgba(0,0,0,0.26)] transition duration-300 hover:-translate-y-0.5 hover:border-[#d6b04c]/80 hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
                         <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]">
                           <img
                             src={imageSrc}
                             alt={imageAlt}
                             loading={index === 0 ? "eager" : "lazy"}
                             decoding="async"
+                            fetchPriority={index === 0 ? "high" : "auto"}
                             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
                           />
 
@@ -166,14 +235,14 @@ function Events({ lang }: EventsProps) {
                           <div className="mt-6 border-t border-[#d8caa5]/65 pt-4">
                             <Link
                               to={href}
-                              className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors hover:text-[#27301d]"
+                              className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors hover:text-[#27301d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b39135]"
                             >
                               {isUpcoming ? copy.viewEvent : copy.viewGallery} →
                             </Link>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </article>
                 );
               }
