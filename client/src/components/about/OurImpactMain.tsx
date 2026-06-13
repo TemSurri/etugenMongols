@@ -26,10 +26,19 @@ const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const COPY = {
   en: {
-    eyebrow: "Our Impact",
-    title: "Community Building in Action",
+    eyebrow: "What We Are Proud Of",
+    title: "Things We Have Built Together",
     intro:
-      "Our impact is seen through shared cultural moments, family participation, volunteer work, and community-led celebrations.",
+      "Over the years, Etugen Mongols has created spaces where culture, family, language, volunteering, and community pride can be seen in real life.",
+
+    quoteIntro: "Community voices",
+    legendTitle: "See highlights",
+
+    quotes: [
+      { text: "Culture represented in real life.", by: "Community member" },
+      { text: "Families feel more connected.", by: "Parent" },
+      { text: "People keep showing up.", by: "Volunteer" },
+    ],
 
     items: [
       {
@@ -69,28 +78,28 @@ const COPY = {
       },
     ],
 
-    quotes: [
-      { text: "Culture represented in real life.", by: "Community member" },
-      { text: "Families feel more connected.", by: "Parent" },
-      { text: "People keep showing up.", by: "Volunteer" },
-      { text: "A place to feel proud.", by: "Community supporter" },
-    ],
-
-    voicesTitle: "Small moments that show the bigger picture.",
-    moreTitle: "See the Events Behind the Impact",
-    moreBody:
-      "Every gathering tells part of the story. Explore upcoming events, past celebrations, and gallery moments to see how the community continues to build this impact together.",
-
+    finalTitle: "See the Events Behind the Work",
+    finalBody:
+      "Explore the events, gallery moments, and community gatherings that shaped what we are proud to have built together.",
     events: "View Events",
     gallery: "View Gallery",
     viewMore: "View More",
   },
 
   mn: {
-    eyebrow: "Бидний нөлөө",
-    title: "Хамт олноор бүтсэн нөлөө",
+    eyebrow: "Бидний бахархал",
+    title: "Хамтдаа бүтээсэн зүйлс",
     intro:
-      "Бидний нөлөө нь соёлын мөчүүд, гэр бүлийн оролцоо, сайн дурын ажил болон хамтын баяраар харагддаг.",
+      "Олон жилийн турш Этүгэн Монголчууд соёл, гэр бүл, хэл, сайн дурын оролцоо, хамтын бахархлыг бодитоор мэдрэх орон зайг бүтээсээр ирсэн.",
+
+    quoteIntro: "Хамт олны дуу хоолой",
+    legendTitle: "Онцлох хэсгүүд",
+
+    quotes: [
+      { text: "Соёлоо бодитоор харах боломж.", by: "Хамт олны гишүүн" },
+      { text: "Гэр бүлүүд илүү холбогддог.", by: "Эцэг эх" },
+      { text: "Хүмүүс үргэлж дэмждэг.", by: "Сайн дурынхан" },
+    ],
 
     items: [
       {
@@ -130,18 +139,9 @@ const COPY = {
       },
     ],
 
-    quotes: [
-      { text: "Соёлоо бодитоор харах боломж.", by: "Хамт олны гишүүн" },
-      { text: "Гэр бүлүүд илүү холбогддог.", by: "Эцэг эх" },
-      { text: "Хүмүүс үргэлж дэмждэг.", by: "Сайн дурынхан" },
-      { text: "Бахархах орон зай.", by: "Дэмжигч" },
-    ],
-
-    voicesTitle: "Жижиг мөчүүд том нөлөөг харуулдаг.",
-    moreTitle: "Нөлөөг бүтээсэн арга хэмжээнүүд",
-    moreBody:
-      "Арга хэмжээ бүр энэ түүхийн нэг хэсэг юм. Ирэх арга хэмжээ, өнгөрсөн баярууд болон галерейн дурсамжуудаас хамт олон энэ нөлөөг хэрхэн бүтээснийг хараарай.",
-
+    finalTitle: "Бүтээсэн ажлын ард буй арга хэмжээнүүд",
+    finalBody:
+      "Бидний хамтдаа бүтээсэн бахархалт ажлуудын ард буй арга хэмжээ, дурсамж, хамтын мөчүүдийг үзээрэй.",
     events: "Арга хэмжээнүүд",
     gallery: "Зургийн цомог",
     viewMore: "Дэлгэрэнгүй",
@@ -149,11 +149,11 @@ const COPY = {
 } as const;
 
 const sectionMotion: Variants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.42, ease: easeOut },
+    transition: { duration: 0.38, ease: easeOut },
   },
 };
 
@@ -161,42 +161,29 @@ const imageMotion: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { duration: 0.5, ease: easeOut },
+    transition: { duration: 0.45, ease: easeOut },
   },
 };
 
 function OurImpactMain({ lang }: OurImpactMainProps) {
   const copy = COPY[lang];
-  const [stampede, performance, culture, people, youth] = copy.items;
 
   return (
     <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
-      <Hero copy={copy} />
+      <main>
+        <HeaderSection copy={copy} items={copy.items} />
 
-      <main id="impact" className="scroll-mt-20">
-        <FeatureSection
-          item={stampede}
-          eyebrow={copy.eyebrow}
-          viewMore={copy.viewMore}
-        />
-
-        <GreenStatement
-          item={performance}
-          eyebrow={copy.eyebrow}
-          viewMore={copy.viewMore}
-        />
-
-        <BackgroundGlimpse>
-          <TwoColumnImpact
-            imageItem={performance}
-            cards={[culture, people]}
+        {copy.items.map((item, index) => (
+          <ImpactRow
+            key={item.title}
+            id={`impact-${index}`}
+            item={item}
             viewMore={copy.viewMore}
+            reverse={index % 2 === 1}
+            tone={index === 1 || index === 3 ? "green" : "cream"}
+            useBackground={index === 2}
           />
-        </BackgroundGlimpse>
-
-        <VoicesSection copy={copy} />
-
-        <YouthSection item={youth} viewMore={copy.viewMore} />
+        ))}
 
         <BackgroundCta copy={copy} />
 
@@ -206,9 +193,15 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
   );
 }
 
-function Hero({ copy }: { copy: (typeof COPY)[Lang] }) {
+function HeaderSection({
+  copy,
+  items,
+}: {
+  copy: (typeof COPY)[Lang];
+  items: readonly ImpactItem[];
+}) {
   return (
-    <section className="relative min-h-[88vh] overflow-hidden bg-[#2f3320]">
+    <section className="relative overflow-hidden px-6 pb-16 pt-28 md:px-10 lg:pt-32">
       <img
         src="/landingpage.webp"
         alt=""
@@ -218,231 +211,174 @@ function Hero({ copy }: { copy: (typeof COPY)[Lang] }) {
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-black/42" />
-      <div className="absolute inset-0 bg-linear-to-r from-black/76 via-black/46 to-black/12" />
-      <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/60" />
+      <div className="absolute inset-0 bg-black/34" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/32 via-[#27301d]/20 to-[#fffaf0]/92" />
 
-      <div className="relative z-10 mx-auto flex min-h-[88vh] max-w-7xl items-center px-6 pb-16 pt-28 md:px-10 lg:px-12">
-        <motion.div
-          variants={sectionMotion}
-          initial="hidden"
-          animate="show"
-          className="max-w-3xl"
-        >
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+      <motion.header
+        variants={sectionMotion}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.62fr_1.38fr] lg:items-start"
+      >
+        <div className="bg-[#fffaf0]/92 px-6 py-8 shadow-[0_18px_50px_rgba(0,0,0,0.18)] md:px-8 lg:px-10 lg:py-10">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
             {copy.eyebrow}
           </p>
 
-          <h1 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-[#fffaf0] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight text-[#27301d] sm:text-5xl lg:text-6xl">
             {copy.title}
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[#f3ead2] md:text-lg md:leading-9">
+          <p className="mt-6 max-w-xl text-[15px] leading-8 text-[#4e593c]">
             {copy.intro}
           </p>
-
-          <a
-            href="#impact"
-            className="mt-9 inline-flex items-center bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline shadow-[0_18px_50px_rgba(0,0,0,0.25)] transition-colors duration-200 hover:bg-[#e1d2a6]"
-          >
-            {copy.viewMore}
-            <span className="ml-3">↓</span>
-          </a>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function FeatureSection({
-  item,
-  eyebrow,
-  viewMore,
-}: {
-  item: ImpactItem;
-  eyebrow: string;
-  viewMore: string;
-}) {
-  return (
-    <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
-      <motion.article
-        variants={sectionMotion}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.18 }}
-        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center"
-      >
-        <div className="max-w-xl">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            {eyebrow}
-          </p>
-
-          <h2 className="mt-4 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-            {item.title}
-          </h2>
-
-          <div className="mt-5 h-px w-24 bg-[#b39135]" />
-
-          <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
-            {item.body}
-          </p>
-
-          <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <SimpleImage src={item.image} alt={item.title} large />
-      </motion.article>
-    </section>
-  );
-}
-
-function GreenStatement({
-  item,
-  eyebrow,
-  viewMore,
-}: {
-  item: ImpactItem;
-  eyebrow: string;
-  viewMore: string;
-}) {
-  return (
-    <section className="bg-[#27301d] px-6 py-20 text-[#fffaf0] md:px-10">
-      <motion.div
-        variants={sectionMotion}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-end"
-      >
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#d6b85d]">
-            {eyebrow}
-          </p>
-
-          <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
-            {item.title}
-          </h2>
-        </div>
-
-        <div className="max-w-2xl lg:justify-self-end">
-          <p className="text-[15px] leading-8 text-[#f3ead2]">{item.body}</p>
-
-          <Link
-            to={item.href}
-            className="mt-7 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
-          >
-            {viewMore}
-            <span className="ml-3">→</span>
-          </Link>
-        </div>
-      </motion.div>
-    </section>
-  );
-}
-
-function BackgroundGlimpse({ children }: { children: React.ReactNode }) {
-  return (
-    <section className="relative overflow-hidden px-6 py-20 md:px-10">
-      <img
-        src="/landingpage.webp"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute inset-0 bg-black/52" />
-      <div className="relative z-10">{children}</div>
-    </section>
-  );
-}
-
-function TwoColumnImpact({
-  imageItem,
-  cards,
-  viewMore,
-}: {
-  imageItem: ImpactItem;
-  cards: ImpactItem[];
-  viewMore: string;
-}) {
-  return (
-    <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-stretch">
-      <SimpleImage src={imageItem.image} alt={imageItem.title} tall />
-
-      <div className="grid gap-5">
-        {cards.map((item) => (
-          <ImpactMiniCard key={item.title} item={item} viewMore={viewMore} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function VoicesSection({ copy }: { copy: (typeof COPY)[Lang] }) {
-  return (
-    <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
-      <motion.div
-        variants={sectionMotion}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-6xl"
-      >
-        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+        <div className="grid gap-8 text-[#fffaf0] lg:grid-cols-[1fr_0.82fr] lg:pt-4">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-              Shared Voices
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#e1d2a6]">
+              {copy.quoteIntro}
             </p>
 
-            <h2 className="mt-4 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-              {copy.voicesTitle}
-            </h2>
+            <div className="mt-5 space-y-5">
+              {copy.quotes.map((quote) => (
+                <figure key={quote.text}>
+                  <blockquote className="text-xl font-semibold italic leading-8 md:text-2xl md:leading-9">
+                    “{quote.text}”
+                  </blockquote>
+
+                  <figcaption className="mt-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#e1d2a6]/85">
+                    — {quote.by}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
 
-          <QuoteCard quote={copy.quotes[0]} featured />
-        </div>
+          <nav aria-label="Impact sections" className="lg:pt-1">
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#e1d2a6]">
+              {copy.legendTitle}
+            </p>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {copy.quotes.slice(1).map((quote) => (
-            <QuoteCard key={quote.text} quote={quote} />
-          ))}
+            <div className="mt-5 flex flex-col gap-3">
+              {items.map((item, index) => (
+                <a
+                  key={item.title}
+                  href={`#impact-${index}`}
+                  className="group flex items-start gap-3 text-left text-sm leading-6 text-[#fffaf0]/86 no-underline transition-colors duration-200 hover:text-[#fffaf0]"
+                >
+                  <span className="mt-[0.35rem] h-1.5 w-1.5 shrink-0 bg-[#e1d2a6] transition-transform duration-200 group-hover:scale-125" />
+                  <span>{item.title}</span>
+                </a>
+              ))}
+            </div>
+          </nav>
         </div>
-      </motion.div>
+      </motion.header>
     </section>
   );
 }
 
-function YouthSection({
+function ImpactRow({
+  id,
   item,
   viewMore,
+  reverse = false,
+  tone = "cream",
+  useBackground = false,
 }: {
+  id: string;
   item: ImpactItem;
   viewMore: string;
+  reverse?: boolean;
+  tone?: "cream" | "green";
+  useBackground?: boolean;
 }) {
+  const isGreen = tone === "green";
+
+  const sectionClass = useBackground
+    ? "relative overflow-hidden"
+    : isGreen
+      ? "bg-[#27301d]"
+      : "bg-[#fffaf0]";
+
   return (
-    <section className="bg-[#efefec] px-6 py-20 md:px-10">
+    <section id={id} className={`${sectionClass} scroll-mt-24`}>
+      {useBackground && (
+        <>
+          <img
+            src="/landingpage.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-[#fffaf0]/86" />
+          <div className="absolute inset-0 bg-linear-to-r from-[#fffaf0]/92 via-[#fffaf0]/82 to-[#27301d]/20" />
+        </>
+      )}
+
       <motion.article
         variants={sectionMotion}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
+        className="relative z-10 mx-auto grid max-w-6xl items-center lg:min-h-[34rem] lg:grid-cols-2"
       >
-        <SimpleImage src={item.image} alt={item.title} large />
+        <div
+          className={`flex h-full items-center px-6 py-14 md:px-10 lg:px-12 lg:py-16 ${
+            reverse ? "lg:order-2" : "lg:order-1"
+          }`}
+        >
+          <div className="max-w-xl">
+            <h2
+              className={`text-3xl font-semibold leading-tight md:text-5xl ${
+                isGreen ? "text-[#fffaf0]" : "text-[#27301d]"
+              }`}
+            >
+              {item.title}
+            </h2>
 
-        <div className="max-w-xl lg:justify-self-end">
-          <h2 className="text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-            {item.title}
-          </h2>
+            <p
+              className={`mt-6 text-[15px] leading-8 ${
+                isGreen ? "text-[#f3ead2]" : "text-[#4e593c]"
+              }`}
+            >
+              {item.body}
+            </p>
 
-          <div className="mt-5 h-px w-24 bg-[#b39135]" />
-
-          <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
-            {item.body}
-          </p>
-
-          <TextLink to={item.href}>{viewMore}</TextLink>
+            <Link
+              to={item.href}
+              className={`mt-8 inline-flex px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] no-underline transition-colors duration-200 ${
+                isGreen
+                  ? "bg-[#fffaf0] text-[#27301d] hover:bg-[#e1d2a6]"
+                  : "bg-[#27301d] text-[#fffaf0] hover:bg-[#b39135]"
+              }`}
+            >
+              {viewMore}
+              <span className="ml-3">→</span>
+            </Link>
+          </div>
         </div>
+
+        <motion.div
+          variants={imageMotion}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className={`relative h-[22rem] overflow-hidden bg-[#27301d] sm:h-[28rem] lg:h-full ${
+            reverse ? "lg:order-1" : "lg:order-2"
+          }`}
+        >
+          <img
+            src={item.image}
+            alt={item.title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/10" />
+        </motion.div>
       </motion.article>
     </section>
   );
@@ -459,7 +395,8 @@ function BackgroundCta({ copy }: { copy: (typeof COPY)[Lang] }) {
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-black/48" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/42 via-black/34 to-black/52" />
 
       <motion.div
         variants={sectionMotion}
@@ -473,11 +410,11 @@ function BackgroundCta({ copy }: { copy: (typeof COPY)[Lang] }) {
         </p>
 
         <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#fffaf0] md:text-5xl">
-          {copy.moreTitle}
+          {copy.finalTitle}
         </h2>
 
         <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#f3ead2]">
-          {copy.moreBody}
+          {copy.finalBody}
         </p>
       </motion.div>
     </section>
@@ -486,27 +423,15 @@ function BackgroundCta({ copy }: { copy: (typeof COPY)[Lang] }) {
 
 function FinalCta({ copy }: { copy: (typeof COPY)[Lang] }) {
   return (
-    <section className="bg-[#fffaf0] px-6 py-20 text-center md:px-10">
+    <section className="bg-[#fffaf0] px-6 py-16 text-center md:px-10">
       <motion.div
         variants={sectionMotion}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.25 }}
+        viewport={{ once: true, amount: 0.24 }}
         className="mx-auto max-w-4xl"
       >
-        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-          {copy.eyebrow}
-        </p>
-
-        <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-          {copy.moreTitle}
-        </h2>
-
-        <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#4e593c]">
-          {copy.moreBody}
-        </p>
-
-        <div className="mt-9 flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           <Link
             to="/events"
             className="inline-flex bg-[#27301d] px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
@@ -523,126 +448,6 @@ function FinalCta({ copy }: { copy: (typeof COPY)[Lang] }) {
         </div>
       </motion.div>
     </section>
-  );
-}
-
-function SimpleImage({
-  src,
-  alt,
-  large = false,
-  tall = false,
-}: {
-  src: string;
-  alt: string;
-  large?: boolean;
-  tall?: boolean;
-}) {
-  return (
-    <motion.div
-      variants={imageMotion}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
-      className={[
-        "relative overflow-hidden bg-[#27301d]",
-        large ? "h-[24rem] lg:h-[34rem]" : "",
-        tall ? "h-[24rem] sm:h-[30rem] lg:h-full" : "",
-        !large && !tall ? "h-[22rem] sm:h-[28rem]" : "",
-      ].join(" ")}
-    >
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute inset-0 bg-[#27301d]/10" />
-    </motion.div>
-  );
-}
-
-function ImpactMiniCard({
-  item,
-  viewMore,
-}: {
-  item: ImpactItem;
-  viewMore: string;
-}) {
-  return (
-    <motion.article
-      variants={sectionMotion}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
-      className="bg-[#fffaf0] p-6 shadow-[0_16px_44px_rgba(0,0,0,0.18)]"
-    >
-      <h3 className="text-2xl font-semibold leading-tight text-[#27301d]">
-        {item.title}
-      </h3>
-
-      <p className="mt-4 text-sm leading-7 text-[#4e593c]">{item.body}</p>
-
-      <Link
-        to={item.href}
-        className="mt-6 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] no-underline transition-colors duration-200 hover:text-[#27301d]"
-      >
-        {viewMore}
-        <span className="ml-3">→</span>
-      </Link>
-    </motion.article>
-  );
-}
-
-function QuoteCard({
-  quote,
-  featured = false,
-}: {
-  quote: Quote;
-  featured?: boolean;
-}) {
-  return (
-    <motion.figure
-      variants={sectionMotion}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
-      className={[
-        "relative overflow-hidden border bg-white shadow-[0_16px_44px_rgba(39,48,29,0.09)]",
-        featured ? "border-[#b39135]/55 p-8 md:p-10" : "border-[#d8caa5] p-6",
-      ].join(" ")}
-    >
-      <div className="absolute -right-2 -top-7 font-serif text-[9rem] leading-none text-[#b39135]/10">
-        “
-      </div>
-
-      <blockquote
-        className={[
-          "relative z-10 font-semibold italic text-[#27301d]",
-          featured
-            ? "text-2xl leading-10 md:text-3xl md:leading-[3rem]"
-            : "text-lg leading-8",
-        ].join(" ")}
-      >
-        {quote.text}
-      </blockquote>
-
-      <figcaption className="relative z-10 mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
-        — {quote.by}
-      </figcaption>
-    </motion.figure>
-  );
-}
-
-function TextLink({ to, children }: { to: string; children: string }) {
-  return (
-    <Link
-      to={to}
-      className="mt-8 inline-flex bg-[#27301d] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
-    >
-      {children}
-      <span className="ml-3">→</span>
-    </Link>
   );
 }
 

@@ -50,26 +50,62 @@ const COPY = {
 } as const;
 
 const BOARD_MEMBERS: TeamMember[] = [
-  { name: "Member One", role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" }, image: "/about/founding-1.webp" },
-  { name: "Member Two", role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" }, image: "/about/founding-2.webp" },
-  { name: "Member Three", role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" }, image: "/about/founding-3.webp" },
-  { name: "Member Four", role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" }, image: "/about/founding-4.webp" },
-  { name: "Member Five", role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" }, image: "/about/founding-5.webp" },
+  {
+    name: "Member One",
+    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
+    image: "/about/founding-1.webp",
+  },
+  {
+    name: "Member Two",
+    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
+    image: "/about/founding-2.webp",
+  },
+  {
+    name: "Member Three",
+    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
+    image: "/about/founding-3.webp",
+  },
+  {
+    name: "Member Four",
+    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
+    image: "/about/founding-4.webp",
+  },
+  {
+    name: "Member Five",
+    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
+    image: "/about/founding-5.webp",
+  },
 ];
 
 const COMMUNITY_MEMBERS: TeamMember[] = [
-  { name: "Contributor One", role: { en: "Volunteer", mn: "Сайн дурын ажилтан" }, image: "/about/community-1.webp" },
-  { name: "Contributor Two", role: { en: "Performer / Artist", mn: "Уран бүтээлч" }, image: "/about/community-2.webp" },
-  { name: "Contributor Three", role: { en: "Community Supporter", mn: "Хамт олны дэмжигч" }, image: "/about/community-3.webp" },
-  { name: "Contributor Four", role: { en: "Photographer", mn: "Зурагчин" }, image: "/about/community-4.webp" },
+  {
+    name: "Contributor One",
+    role: { en: "Volunteer", mn: "Сайн дурын ажилтан" },
+    image: "/about/community-1.webp",
+  },
+  {
+    name: "Contributor Two",
+    role: { en: "Performer / Artist", mn: "Уран бүтээлч" },
+    image: "/about/community-2.webp",
+  },
+  {
+    name: "Contributor Three",
+    role: { en: "Community Supporter", mn: "Хамт олны дэмжигч" },
+    image: "/about/community-3.webp",
+  },
+  {
+    name: "Contributor Four",
+    role: { en: "Photographer", mn: "Зурагчин" },
+    image: "/about/community-4.webp",
+  },
 ];
 
 const sectionMotion: Variants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.42, ease: easeOut },
+    transition: { duration: 0.38, ease: easeOut },
   },
 };
 
@@ -98,7 +134,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
             animate="show"
             className="relative z-10 mx-auto max-w-7xl"
           >
-            <div className="grid gap-8 py-10 lg:grid-cols-[0.58fr_1.42fr] lg:items-center lg:py-14">
+            <div className="grid gap-8 bg-[#fffaf0]/82 px-6 py-8 shadow-[0_18px_50px_rgba(39,48,29,0.10)] md:px-8 lg:grid-cols-[0.58fr_1.42fr] lg:items-center lg:px-10 lg:py-10">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
                   {copy.eyebrow}
@@ -114,27 +150,42 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
               </p>
             </div>
 
-            <section className="pt-6">
+            <section className="pt-14">
               <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
                 {copy.boardTitle}
               </h2>
 
               <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5">
                 {BOARD_MEMBERS.map((member) => (
-                  <BoardHoverCard key={member.name} member={member} lang={lang} />
+                  <BoardHoverCard
+                    key={member.name}
+                    member={member}
+                    lang={lang}
+                  />
                 ))}
               </div>
             </section>
           </motion.div>
         </section>
 
-        <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
+        <section className="relative overflow-hidden px-6 py-20 md:px-10">
+          <img
+            src="/landingpage.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-[#fffaf0]/90" />
+          <div className="absolute inset-0 bg-linear-to-b from-[#fffaf0]/94 via-[#fffaf0]/88 to-[#fffaf0]/94" />
+
           <motion.div
             variants={sectionMotion}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.18 }}
-            className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
+            className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
           >
             <div className="max-w-xl">
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
@@ -152,7 +203,11 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
             <div className="grid gap-5 sm:grid-cols-2">
               {COMMUNITY_MEMBERS.map((member) => (
-                <ContributorCard key={member.name} member={member} lang={lang} />
+                <ContributorCard
+                  key={member.name}
+                  member={member}
+                  lang={lang}
+                />
               ))}
             </div>
           </motion.div>
@@ -167,7 +222,8 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-[#27301d]/88" />
+          <div className="absolute inset-0 bg-black/42" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/58 via-black/36 to-black/18" />
 
           <motion.article
             variants={sectionMotion}
@@ -177,7 +233,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
             className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]"
           >
             <div className="max-w-xl text-[#fffaf0]">
-              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#d6b85d]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
                 {copy.eyebrow}
               </p>
 
@@ -206,7 +262,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
                 decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-[#27301d]/10" />
+              <div className="absolute inset-0 bg-black/10" />
             </div>
           </motion.article>
         </section>
@@ -229,9 +285,9 @@ function BoardHoverCard({ member, lang }: { member: TeamMember; lang: Lang }) {
         className="absolute inset-0 h-full w-full object-cover object-top"
       />
 
-      <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/88 via-[#27301d]/18 to-transparent opacity-100 transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/88 via-[#27301d]/18 to-transparent opacity-100 transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100" />
 
-      <div className="absolute inset-x-0 bottom-0 p-4 text-[#fffaf0] transition-transform duration-300 lg:translate-y-5 lg:group-hover:translate-y-0">
+      <div className="absolute inset-x-0 bottom-0 p-4 text-[#fffaf0] transition-transform duration-200 lg:translate-y-5 lg:group-hover:translate-y-0">
         <h3 className="text-lg font-semibold leading-tight">{member.name}</h3>
 
         <p className="mt-1 text-xs font-medium text-[#e1d2a6]">
@@ -246,8 +302,8 @@ function ContributorCard({ member, lang }: { member: TeamMember; lang: Lang }) {
   return (
     <motion.article
       variants={sectionMotion}
-      whileHover={{ y: -3 }}
-      className="grid grid-cols-[7rem_1fr] items-center gap-5 bg-[#efefec] p-3 sm:grid-cols-1"
+      whileHover={{ y: -2 }}
+      className="grid grid-cols-[7rem_1fr] items-center gap-5 bg-[#fffaf0] p-3 shadow-[0_14px_34px_rgba(39,48,29,0.10)] sm:grid-cols-1"
     >
       <div className="aspect-square overflow-hidden bg-[#e8dcc2]">
         <img

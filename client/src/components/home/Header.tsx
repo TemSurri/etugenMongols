@@ -24,7 +24,7 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: "About Us",
+    label: "Who We Are",
     to: "/about",
     children: [
       { label: "Home / Our Story", to: "/" },
@@ -35,7 +35,10 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "What We Do",
     to: "/what-we-do",
-    children: [{ label: "Events", to: "/events" }],
+    children: [
+      { label: "Events", to: "/events" },
+      { label: "Programs (Coming Soon)", to: "/programs" }
+    ],
   },
   {
     label: "Get Involved",
