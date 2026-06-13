@@ -17,10 +17,6 @@ type ImpactItem = {
   href: string;
 };
 
-type Quote = {
-  text: string;
-  by: string;
-};
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
