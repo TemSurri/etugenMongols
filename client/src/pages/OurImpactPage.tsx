@@ -3,14 +3,13 @@
 import Header from "../components/home/Header";
 import Footer from "../components/home/Footer";
 import OurImpactMain from "../components/about/OurImpactMain";
-import AboutLayout from "../components/about/AboutLayout";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function OurImpactPage() {
   const { lang, setLang } = useLanguage();
 
   return (
-    <AboutLayout>
+    <>
       <Header lang={lang} setLang={setLang} />
 
       <main className="relative z-10">
@@ -18,6 +17,6 @@ export default function OurImpactPage() {
       </main>
 
       <Footer />
-    </AboutLayout>
+    </>
   );
 }

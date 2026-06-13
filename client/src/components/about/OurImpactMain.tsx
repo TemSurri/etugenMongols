@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { motion, cubicBezier, type Variants } from "framer-motion";
+import { cubicBezier, motion, type Variants } from "framer-motion";
 
 type Lang = "en" | "mn";
 
@@ -23,35 +23,6 @@ type Quote = {
 };
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
-
-const sectionMotion: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: easeOut },
-  },
-};
-
-const gridMotion: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.08,
-    },
-  },
-};
-
-const cardMotion: Variants = {
-  hidden: { opacity: 0, y: 24, scale: 0.985 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.55, ease: easeOut },
-  },
-};
 
 const COPY = {
   en: {
@@ -177,70 +148,449 @@ const COPY = {
   },
 } as const;
 
-function ImpactTile({
+const sectionMotion: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.42, ease: easeOut },
+  },
+};
+
+const imageMotion: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.5, ease: easeOut },
+  },
+};
+
+function OurImpactMain({ lang }: OurImpactMainProps) {
+  const copy = COPY[lang];
+  const [stampede, performance, culture, people, youth] = copy.items;
+
+  return (
+    <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
+      <Hero copy={copy} />
+
+      <main id="impact" className="scroll-mt-20">
+        <FeatureSection
+          item={stampede}
+          eyebrow={copy.eyebrow}
+          viewMore={copy.viewMore}
+        />
+
+        <GreenStatement
+          item={performance}
+          eyebrow={copy.eyebrow}
+          viewMore={copy.viewMore}
+        />
+
+        <BackgroundGlimpse>
+          <TwoColumnImpact
+            imageItem={performance}
+            cards={[culture, people]}
+            viewMore={copy.viewMore}
+          />
+        </BackgroundGlimpse>
+
+        <VoicesSection copy={copy} />
+
+        <YouthSection item={youth} viewMore={copy.viewMore} />
+
+        <BackgroundCta copy={copy} />
+
+        <FinalCta copy={copy} />
+      </main>
+    </section>
+  );
+}
+
+function Hero({ copy }: { copy: (typeof COPY)[Lang] }) {
+  return (
+    <section className="relative min-h-[88vh] overflow-hidden bg-[#2f3320]">
+      <img
+        src="/landingpage.webp"
+        alt=""
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-black/42" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/76 via-black/46 to-black/12" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/60" />
+
+      <div className="relative z-10 mx-auto flex min-h-[88vh] max-w-7xl items-center px-6 pb-16 pt-28 md:px-10 lg:px-12">
+        <motion.div
+          variants={sectionMotion}
+          initial="hidden"
+          animate="show"
+          className="max-w-3xl"
+        >
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+            {copy.eyebrow}
+          </p>
+
+          <h1 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-[#fffaf0] sm:text-5xl lg:text-6xl">
+            {copy.title}
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-base leading-8 text-[#f3ead2] md:text-lg md:leading-9">
+            {copy.intro}
+          </p>
+
+          <a
+            href="#impact"
+            className="mt-9 inline-flex items-center bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline shadow-[0_18px_50px_rgba(0,0,0,0.25)] transition-colors duration-200 hover:bg-[#e1d2a6]"
+          >
+            {copy.viewMore}
+            <span className="ml-3">↓</span>
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function FeatureSection({
   item,
-  className = "",
-  large = false,
-  compact = false,
-  eager = false,
+  eyebrow,
   viewMore,
 }: {
   item: ImpactItem;
-  className?: string;
-  large?: boolean;
-  compact?: boolean;
-  eager?: boolean;
+  eyebrow: string;
   viewMore: string;
 }) {
   return (
-    <motion.div variants={cardMotion} className={className}>
-      <Link
-        to={item.href}
-        className="
-          group relative block h-full min-h-[18rem] overflow-hidden rounded-lg
-          border border-[#e1d2a6]/45 bg-[#27301d]
-          shadow-[0_24px_70px_rgba(0,0,0,0.3)]
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b04c]
-        "
+    <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
+      <motion.article
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.18 }}
+        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center"
       >
-        <img
-          src={item.image}
-          alt={item.title}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
-          fetchPriority={eager ? "high" : "auto"}
-          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.045]"
-        />
+        <div className="max-w-xl">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+            {eyebrow}
+          </p>
 
-        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/42 to-black/8" />
-        <div className="absolute inset-0 bg-linear-to-r from-black/36 via-transparent to-transparent" />
-
-        <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
-          <h2
-            className={[
-              "max-w-2xl font-semibold leading-tight tracking-tight text-[#fffaf0]",
-              large
-                ? "text-3xl sm:text-4xl lg:text-[2.85rem]"
-                : compact
-                  ? "text-lg sm:text-xl"
-                  : "text-xl sm:text-2xl",
-            ].join(" ")}
-          >
+          <h2 className="mt-4 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
             {item.title}
           </h2>
 
-          {!compact && (
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/86">
-              {item.body}
-            </p>
-          )}
+          <div className="mt-5 h-px w-24 bg-[#b39135]" />
 
-          <span className="mt-5 inline-flex text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d6b04c]">
-            {viewMore} →
-          </span>
+          <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
+            {item.body}
+          </p>
+
+          <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
-      </Link>
+
+        <SimpleImage src={item.image} alt={item.title} large />
+      </motion.article>
+    </section>
+  );
+}
+
+function GreenStatement({
+  item,
+  eyebrow,
+  viewMore,
+}: {
+  item: ImpactItem;
+  eyebrow: string;
+  viewMore: string;
+}) {
+  return (
+    <section className="bg-[#27301d] px-6 py-20 text-[#fffaf0] md:px-10">
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-end"
+      >
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#d6b85d]">
+            {eyebrow}
+          </p>
+
+          <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
+            {item.title}
+          </h2>
+        </div>
+
+        <div className="max-w-2xl lg:justify-self-end">
+          <p className="text-[15px] leading-8 text-[#f3ead2]">{item.body}</p>
+
+          <Link
+            to={item.href}
+            className="mt-7 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
+          >
+            {viewMore}
+            <span className="ml-3">→</span>
+          </Link>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function BackgroundGlimpse({ children }: { children: React.ReactNode }) {
+  return (
+    <section className="relative overflow-hidden px-6 py-20 md:px-10">
+      <img
+        src="/landingpage.webp"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black/52" />
+      <div className="relative z-10">{children}</div>
+    </section>
+  );
+}
+
+function TwoColumnImpact({
+  imageItem,
+  cards,
+  viewMore,
+}: {
+  imageItem: ImpactItem;
+  cards: ImpactItem[];
+  viewMore: string;
+}) {
+  return (
+    <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-stretch">
+      <SimpleImage src={imageItem.image} alt={imageItem.title} tall />
+
+      <div className="grid gap-5">
+        {cards.map((item) => (
+          <ImpactMiniCard key={item.title} item={item} viewMore={viewMore} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VoicesSection({ copy }: { copy: (typeof COPY)[Lang] }) {
+  return (
+    <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="mx-auto max-w-6xl"
+      >
+        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+              Shared Voices
+            </p>
+
+            <h2 className="mt-4 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
+              {copy.voicesTitle}
+            </h2>
+          </div>
+
+          <QuoteCard quote={copy.quotes[0]} featured />
+        </div>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {copy.quotes.slice(1).map((quote) => (
+            <QuoteCard key={quote.text} quote={quote} />
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function YouthSection({
+  item,
+  viewMore,
+}: {
+  item: ImpactItem;
+  viewMore: string;
+}) {
+  return (
+    <section className="bg-[#efefec] px-6 py-20 md:px-10">
+      <motion.article
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
+      >
+        <SimpleImage src={item.image} alt={item.title} large />
+
+        <div className="max-w-xl lg:justify-self-end">
+          <h2 className="text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
+            {item.title}
+          </h2>
+
+          <div className="mt-5 h-px w-24 bg-[#b39135]" />
+
+          <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
+            {item.body}
+          </p>
+
+          <TextLink to={item.href}>{viewMore}</TextLink>
+        </div>
+      </motion.article>
+    </section>
+  );
+}
+
+function BackgroundCta({ copy }: { copy: (typeof COPY)[Lang] }) {
+  return (
+    <section className="relative overflow-hidden px-6 py-24 text-center md:px-10">
+      <img
+        src="/landingpage.webp"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-black/55" />
+
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+        className="relative z-10 mx-auto max-w-3xl"
+      >
+        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+          {copy.eyebrow}
+        </p>
+
+        <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#fffaf0] md:text-5xl">
+          {copy.moreTitle}
+        </h2>
+
+        <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#f3ead2]">
+          {copy.moreBody}
+        </p>
+      </motion.div>
+    </section>
+  );
+}
+
+function FinalCta({ copy }: { copy: (typeof COPY)[Lang] }) {
+  return (
+    <section className="bg-[#fffaf0] px-6 py-20 text-center md:px-10">
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+        className="mx-auto max-w-4xl"
+      >
+        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+          {copy.eyebrow}
+        </p>
+
+        <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
+          {copy.moreTitle}
+        </h2>
+
+        <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#4e593c]">
+          {copy.moreBody}
+        </p>
+
+        <div className="mt-9 flex flex-wrap justify-center gap-4">
+          <Link
+            to="/events"
+            className="inline-flex bg-[#27301d] px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
+          >
+            {copy.events}
+          </Link>
+
+          <Link
+            to="/gallery"
+            className="inline-flex border border-[#b39135]/45 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#27301d] hover:text-[#fffaf0]"
+          >
+            {copy.gallery}
+          </Link>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function SimpleImage({
+  src,
+  alt,
+  large = false,
+  tall = false,
+}: {
+  src: string;
+  alt: string;
+  large?: boolean;
+  tall?: boolean;
+}) {
+  return (
+    <motion.div
+      variants={imageMotion}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
+      className={[
+        "relative overflow-hidden bg-[#27301d]",
+        large ? "h-[24rem] lg:h-[34rem]" : "",
+        tall ? "h-[24rem] sm:h-[30rem] lg:h-full" : "",
+        !large && !tall ? "h-[22rem] sm:h-[28rem]" : "",
+      ].join(" ")}
+    >
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-[#27301d]/10" />
     </motion.div>
+  );
+}
+
+function ImpactMiniCard({
+  item,
+  viewMore,
+}: {
+  item: ImpactItem;
+  viewMore: string;
+}) {
+  return (
+    <motion.article
+      variants={sectionMotion}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
+      className="bg-[#fffaf0] p-6 shadow-[0_16px_44px_rgba(0,0,0,0.18)]"
+    >
+      <h3 className="text-2xl font-semibold leading-tight text-[#27301d]">
+        {item.title}
+      </h3>
+
+      <p className="mt-4 text-sm leading-7 text-[#4e593c]">{item.body}</p>
+
+      <Link
+        to={item.href}
+        className="mt-6 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] no-underline transition-colors duration-200 hover:text-[#27301d]"
+      >
+        {viewMore}
+        <span className="ml-3">→</span>
+      </Link>
+    </motion.article>
   );
 }
 
@@ -253,9 +603,12 @@ function QuoteCard({
 }) {
   return (
     <motion.figure
-      variants={cardMotion}
+      variants={sectionMotion}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
       className={[
-        "relative overflow-hidden rounded-lg border bg-white shadow-[0_16px_44px_rgba(39,48,29,0.09)]",
+        "relative overflow-hidden border bg-white shadow-[0_16px_44px_rgba(39,48,29,0.09)]",
         featured ? "border-[#b39135]/55 p-8 md:p-10" : "border-[#d8caa5] p-6",
       ].join(" ")}
     >
@@ -281,182 +634,15 @@ function QuoteCard({
   );
 }
 
-function OurImpactMain({ lang }: OurImpactMainProps) {
-  const copy = COPY[lang];
-  const topItems = copy.items.slice(0, 3);
-  const lowerItems = copy.items.slice(3);
-
+function TextLink({ to, children }: { to: string; children: string }) {
   return (
-    <section className="relative overflow-hidden text-[#27301d]">
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-20 pt-36 sm:px-6 sm:pt-40 md:px-10 lg:px-12 lg:pb-24 lg:pt-44">
-        <motion.header
-          variants={sectionMotion}
-          initial="hidden"
-          animate="show"
-          className="
-            mb-8 rounded-lg border border-[#e1d2a6]/55
-            bg-[#fffaf0]/94 px-6 py-7
-            shadow-[0_24px_70px_rgba(0,0,0,0.34)]
-            backdrop-blur-sm md:px-8 md:py-8
-          "
-        >
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#9a7b26]">
-                {copy.eyebrow}
-              </p>
-
-              <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-[2.65rem]">
-                {copy.title}
-              </h1>
-            </div>
-
-            <p className="max-w-xl border-t border-[#d8caa5]/90 pt-5 text-sm leading-7 text-[#4e593c] md:border-l md:border-t-0 md:pl-7 md:pt-0 md:text-[15px]">
-              {copy.intro}
-            </p>
-          </div>
-        </motion.header>
-
-        <motion.div
-          variants={gridMotion}
-          initial="hidden"
-          animate="show"
-          className="grid gap-5 lg:grid-cols-6 lg:auto-rows-[13.5rem]"
-        >
-          <ImpactTile
-            item={topItems[0]}
-            large
-            eager
-            viewMore={copy.viewMore}
-            className="lg:col-span-4 lg:row-span-3"
-          />
-
-          <ImpactTile
-            item={topItems[1]}
-            viewMore={copy.viewMore}
-            className="lg:col-span-2 lg:row-span-2"
-          />
-
-          <ImpactTile
-            item={topItems[2]}
-            compact
-            viewMore={copy.viewMore}
-            className="lg:col-span-2 lg:row-span-1"
-          />
-        </motion.div>
-      </div>
-
-      <section className="relative bg-[#fffaf0] px-5 py-20 text-[#27301d] sm:px-6 md:px-10 lg:py-24">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-linear-to-b from-black/12 to-transparent" />
-
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            variants={sectionMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.22 }}
-            className="mb-12 max-w-3xl"
-          >
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#9a7b26]">
-              Shared Voices
-            </p>
-
-            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              {copy.voicesTitle}
-            </h2>
-          </motion.div>
-
-          <motion.div
-            variants={gridMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.18 }}
-            className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]"
-          >
-            <QuoteCard quote={copy.quotes[0]} featured />
-
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-              <QuoteCard quote={copy.quotes[1]} />
-              <QuoteCard quote={copy.quotes[2]} />
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={gridMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="mt-16 grid gap-5 lg:grid-cols-2"
-          >
-            {lowerItems.map((item) => (
-              <ImpactTile
-                key={item.title}
-                item={item}
-                viewMore={copy.viewMore}
-              />
-            ))}
-          </motion.div>
-
-          <motion.div
-            variants={gridMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="mt-16 grid gap-5 lg:grid-cols-[0.8fr_1.2fr]"
-          >
-            <QuoteCard quote={copy.quotes[3]} />
-
-            <motion.section
-              variants={cardMotion}
-              className="
-                rounded-lg border border-[#d8caa5]
-                bg-white px-6 py-9
-                shadow-[0_18px_48px_rgba(39,48,29,0.1)]
-                md:px-10
-              "
-            >
-              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#9a7b26]">
-                {copy.eyebrow}
-              </p>
-
-              <h2 className="mt-3 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-                {copy.moreTitle}
-              </h2>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-[#4e593c]">
-                {copy.moreBody}
-              </p>
-
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  to="/events"
-                  className="
-                    inline-flex rounded-sm border border-[#27301d] bg-[#27301d]
-                    px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em]
-                    text-[#fffaf0] transition-colors
-                    hover:bg-transparent hover:text-[#27301d]
-                  "
-                >
-                  {copy.events}
-                </Link>
-
-                <Link
-                  to="/gallery"
-                  className="
-                    inline-flex rounded-sm border border-[#b39135]/55
-                    px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em]
-                    text-[#27301d] transition-colors
-                    hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]
-                  "
-                >
-                  {copy.gallery}
-                </Link>
-              </div>
-            </motion.section>
-          </motion.div>
-        </div>
-      </section>
-    </section>
+    <Link
+      to={to}
+      className="mt-8 inline-flex bg-[#27301d] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
+    >
+      {children}
+      <span className="ml-3">→</span>
+    </Link>
   );
 }
 
