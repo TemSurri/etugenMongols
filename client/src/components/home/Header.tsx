@@ -27,7 +27,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "About Us",
     to: "/about",
     children: [
-      { label: "Our Story", to: "/about/our-story" },
+      { label: "Home / Our Story", to: "/" },
       { label: "Meet the Bigger Team", to: "/about/team" },
       { label: "Our Impact", to: "/about/impact" },
     ],

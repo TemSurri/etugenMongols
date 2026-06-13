@@ -1,5 +1,4 @@
 import Home from "./pages/home";
-import About from "./pages/about";
 import EventPage from "./pages/eventItem";
 import EventsPage from "./pages/events";
 import GalleryPage from "./pages/galleryItem";
@@ -22,7 +21,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about/our-story" element={<About />} />
+        
         
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventPage />} />
