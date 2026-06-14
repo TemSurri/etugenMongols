@@ -13,12 +13,12 @@ const CONTACT_EMAIL = "contact@etugenmongols.org";
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
-const heroTextMotion: Variants = {
-  hidden: { opacity: 0, x: -44 },
+const sectionMotion: Variants = {
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: easeOut },
+    y: 0,
+    transition: { duration: 0.42, ease: easeOut },
   },
 };
 
@@ -45,7 +45,7 @@ function BecomeMember({ lang }: BecomeMemberProps) {
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#fffaf0]">
       <img
-        src="/about/founding-group.webp"
+        src="/landingpage.webp"
         alt=""
         aria-hidden="true"
         loading="eager"
@@ -54,34 +54,35 @@ function BecomeMember({ lang }: BecomeMemberProps) {
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
 
-      <div className="pointer-events-none absolute inset-0 bg-black/42" />
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/64 via-black/30 to-black/46" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#2f3320] to-transparent" />
+      <div className="absolute inset-0 bg-black/46" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/76 via-black/42 to-black/16" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/62" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-16 pt-32 sm:px-6 md:px-10 lg:px-12">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6 pb-20 pt-28 md:px-10 lg:px-12 lg:pt-32">
         <motion.div
-          variants={heroTextMotion}
+          variants={sectionMotion}
           initial="hidden"
           animate="show"
-          className="max-w-3xl transform-gpu"
+          className="max-w-3xl"
         >
-          <p className="text-xs font-bold uppercase tracking-[0.32em] text-[#d6b04c]">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
             {copy.eyebrow}
           </p>
 
-          <h1 className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <h1 className="mt-5 max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-[#fffaf0] sm:text-5xl lg:text-6xl">
             {copy.title}
           </h1>
 
-          <p className="mt-7 max-w-2xl text-base leading-8 text-white/84 md:text-lg">
+          <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#f3ead2] md:text-base md:leading-8">
             {copy.body}
           </p>
 
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="mt-8 inline-flex rounded-full bg-[#fffaf0] px-6 py-3 text-sm font-semibold text-[#27301d] transition-colors hover:bg-[#d6b04c]"
+            className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
           >
-            {copy.cta} →
+            {copy.cta}
+            <span className="ml-3">→</span>
           </a>
         </motion.div>
       </div>

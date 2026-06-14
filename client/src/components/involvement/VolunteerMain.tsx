@@ -57,21 +57,12 @@ const EXAMPLE_LISTINGS: VolunteerListing[] = [
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
-const heroTextMotion: Variants = {
-  hidden: { opacity: 0, x: -44 },
-  show: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: easeOut },
-  },
-};
-
-const contentMotion: Variants = {
-  hidden: { opacity: 0, y: 26 },
+const sectionMotion: Variants = {
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: easeOut },
+    transition: { duration: 0.42, ease: easeOut },
   },
 };
 
@@ -81,8 +72,10 @@ const COPY = {
     title: "Volunteer With Us",
     body:
       "Support Etugen Mongols by helping with events, cultural programs, setup, coordination, media, and community outreach.",
-    secondary: "View Events",
+    secondary: "View Openings",
     listingsTitle: "Current Volunteer Openings",
+    listingsIntro:
+      "These are current or upcoming ways to support community events through volunteering.",
     noListings: "No help is needed right now. Please check back later.",
     viewEvent: "View Event",
   },
@@ -91,20 +84,22 @@ const COPY = {
     title: "Сайн дурын ажилтан болох",
     body:
       "Арга хэмжээ, соёлын хөтөлбөр, зохион байгуулалт, зураг бичлэг, олон нийттэй харилцах ажилд бидэнтэй хамтран оролцоорой.",
-    secondary: "Арга хэмжээнүүд",
+    secondary: "Боломжуудыг үзэх",
     listingsTitle: "Одоогийн сайн дурын боломжууд",
+    listingsIntro:
+      "Одоогийн болон удахгүй болох арга хэмжээнд сайн дураар туслах боломжууд.",
     noListings: "Одоогоор тусламж шаардлагатай арга хэмжээ байхгүй байна.",
     viewEvent: "Арга хэмжээг үзэх",
   },
 } as const;
 
-export default function Volunteer({ lang }: VolunteerProps) {
+function Volunteer({ lang }: VolunteerProps) {
   const copy = COPY[lang];
   const listings = EXAMPLE_LISTINGS;
 
   return (
-    <section className="bg-[#f4ecd9] text-[#27301d]">
-      <div className="relative min-h-[76vh] overflow-hidden bg-[#2f3320] pt-[7rem]">
+    <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
+      <section className="relative min-h-screen overflow-hidden bg-[#2f3320]">
         <img
           src="/about/founding-group.webp"
           alt=""
@@ -115,94 +110,115 @@ export default function Volunteer({ lang }: VolunteerProps) {
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
 
-        <div className="pointer-events-none absolute inset-0 bg-black/42" />
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/64 via-black/30 to-black/46" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f4ecd9] to-transparent" />
+        <div className="absolute inset-0 bg-black/46" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/78 via-black/44 to-black/16" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/66" />
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(76vh-7rem)] max-w-7xl items-center px-5 pb-20 sm:px-6 md:px-10 lg:px-12">
+        <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6 pb-20 pt-28 md:px-10 lg:px-12 lg:pt-32">
           <motion.div
-            variants={heroTextMotion}
+            variants={sectionMotion}
             initial="hidden"
             animate="show"
-            className="max-w-3xl transform-gpu"
+            className="max-w-3xl text-[#fffaf0]"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.32em] text-[#d6b04c]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
               {copy.eyebrow}
             </p>
 
-            <h1 className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+            <h1 className="mt-5 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               {copy.title}
             </h1>
 
-            <p className="mt-7 max-w-2xl text-base leading-8 text-white/84 md:text-lg">
+            <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#f3ead2] md:text-base md:leading-8">
               {copy.body}
             </p>
 
-            <Link
-              to="/events"
-              className="mt-8 inline-flex rounded-full border border-[#fffaf0]/45 px-6 py-3 text-sm font-semibold text-[#fffaf0] transition-colors hover:bg-[#fffaf0] hover:text-[#27301d]"
+            <a
+              href="#volunteer-listings"
+              className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
             >
               {copy.secondary}
-            </Link>
+              <span className="ml-3">↓</span>
+            </a>
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      <motion.div
-        variants={contentMotion}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-6xl px-5 pb-16 pt-12 sm:px-6 md:px-10"
+      <section
+        id="volunteer-listings"
+        className="relative scroll-mt-0 overflow-hidden bg-[#fffaf0] px-6 py-20 md:px-10"
       >
-        <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#9a7b26]">
-          {copy.eyebrow}
-        </p>
+        <motion.div
+          variants={sectionMotion}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="relative z-10 mx-auto max-w-6xl"
+        >
+          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+                {copy.eyebrow}
+              </p>
 
-        <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-          {copy.listingsTitle}
-        </h2>
+              <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
+                {copy.listingsTitle}
+              </h2>
+            </div>
 
-        {listings.length > 0 ? (
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {listings.map((listing) => (
-              <article
-                key={listing.id}
-                className="rounded-md border border-[#d8caa5]/70 bg-[#fffaf0] p-5 shadow-[0_14px_38px_rgba(39,48,29,0.08)]"
-              >
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
-                  {listing.date}
-                </p>
-
-                <h3 className="mt-3 text-xl font-semibold leading-tight">
-                  {listing.role[lang]}
-                </h3>
-
-                <p className="mt-2 text-sm font-semibold text-[#4e593c]/80">
-                  {listing.eventTitle[lang]}
-                </p>
-
-                <p className="mt-3 text-sm leading-7 text-[#4e593c]">
-                  {listing.description[lang]}
-                </p>
-
-                <Link
-                  to={listing.href}
-                  className="mt-5 inline-flex rounded-sm border border-[#b39135]/55 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#27301d] transition-colors hover:border-[#27301d] hover:bg-[#27301d] hover:text-[#fffaf0]"
-                >
-                  {copy.viewEvent} →
-                </Link>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="mt-8 rounded-md border border-[#d8caa5]/70 bg-[#fffaf0] p-6 shadow-[0_14px_38px_rgba(39,48,29,0.08)]">
-            <p className="text-base leading-8 text-[#4e593c]">
-              {copy.noListings}
+            <p className="max-w-2xl text-[15px] leading-8 text-[#4e593c] lg:justify-self-end">
+              {listings.length > 0 ? copy.listingsIntro : copy.noListings}
             </p>
           </div>
-        )}
-      </motion.div>
+
+          {listings.length > 0 ? (
+            <div className="mt-12 grid gap-5">
+              {listings.map((listing) => (
+                <article
+                  key={listing.id}
+                  className="grid gap-6 bg-[#fffaf0] p-6 shadow-[0_16px_44px_rgba(39,48,29,0.10)] md:grid-cols-[0.28fr_1fr_auto] md:items-center md:p-7"
+                >
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
+                      {listing.date}
+                    </p>
+
+                    <p className="mt-3 text-sm font-semibold leading-6 text-[#4e593c]">
+                      {listing.eventTitle[lang]}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-2xl font-semibold leading-tight text-[#27301d]">
+                      {listing.role[lang]}
+                    </h3>
+
+                    <p className="mt-3 max-w-2xl text-sm leading-7 text-[#4e593c]">
+                      {listing.description[lang]}
+                    </p>
+                  </div>
+
+                  <Link
+                    to={listing.href}
+                    className="inline-flex justify-center bg-[#27301d] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
+                  >
+                    {copy.viewEvent}
+                    <span className="ml-3">→</span>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 bg-[#fffaf0] p-6 shadow-[0_16px_44px_rgba(39,48,29,0.10)]">
+              <p className="text-base leading-8 text-[#4e593c]">
+                {copy.noListings}
+              </p>
+            </div>
+          )}
+        </motion.div>
+      </section>
     </section>
   );
 }
+
+export default Volunteer;

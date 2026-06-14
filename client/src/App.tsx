@@ -1,4 +1,5 @@
 import Home from "./pages/home";
+import ProgramsPage from "./pages/programs";
 import EventPage from "./pages/eventItem";
 import EventsPage from "./pages/events";
 import GalleryPage from "./pages/galleryItem";
@@ -22,7 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         
-        
+        <Route path="/programs" element={<ProgramsPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventPage />} />
         <Route path="/gallery/:id" element={<GalleryPage />} />

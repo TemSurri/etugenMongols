@@ -21,30 +21,38 @@ const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 const COPY = {
   en: {
     eyebrow: "Our Community",
-    title: "Meet the Bigger Team",
-    body:
-      "Etugen Mongols is led by board members who organize, guide, and support our events and programs. Around them is a bigger team of volunteers, performers, families, elders, photographers, sponsors, and supporters who help bring each gathering to life.",
     boardTitle: "Board Members",
+    boardBody:
+      "Our board members organize, guide, and support the work behind Etugen Mongols. They help coordinate events, build programs, connect families, and keep our community efforts moving forward throughout the year.",
     appreciationTitle: "With Deep Appreciation",
     appreciationIntro:
-      "Every event is made possible by many hands. We are grateful to the people who continue to share their time, care, skills, and encouragement with the community.",
+      "A closer look at the people who have dedicated large amounts of their time, energy, care, and significant effort to making what we do special for the community.",
+    contributorBody:
+      "Part of the wider team that helps bring events, performances, media, coordination, and community support to life.",
+    communityTitle: "Our Community",
+    communityBody:
+      "Dedicated to everyone who shows up, supports, volunteers, performs, organizes, and helps keep our community connected.",
     impactTitle: "See the Impact",
     impactBody:
-      "See the impact we were able to achieve together through years of culture, community, volunteering, and shared care.",
+      "See what we have been able to build together through culture, volunteering, family participation, and shared community care.",
     impactButton: "View Our Impact",
   },
   mn: {
     eyebrow: "Манай хамт олон",
-    title: "Манай том багтай танилцах",
-    body:
-      "Этүгэн Монголчуудын арга хэмжээ, хөтөлбөрүүдийг удирдах зөвлөлийн гишүүд зохион байгуулж, чиглүүлж, дэмждэг. Харин тэдний эргэн тойронд сайн дурынхан, уран бүтээлчид, гэр бүлүүд, ахмадууд, зурагчид, ивээн тэтгэгчид болон дэмжигчдээс бүрдсэн өргөн хамт олон байдаг.",
     boardTitle: "Удирдах зөвлөлийн гишүүд",
+    boardBody:
+      "Удирдах зөвлөлийн гишүүд Этүгэн Монголчуудын үйл ажиллагааг зохион байгуулж, чиглүүлж, дэмждэг. Тэд арга хэмжээ зохицуулах, хөтөлбөр хөгжүүлэх, гэр бүлүүдийг холбох болон хамтын ажлыг жилийн турш урагшлуулахад оролцдог.",
     appreciationTitle: "Талархалтайгаар",
     appreciationIntro:
-      "Арга хэмжээ бүр олон хүний хамтын оролцоогоор бүтдэг. Цаг зав, сэтгэл, ур чадвар, дэмжлэгээ зориулдаг хамт олондоо бид талархаж байна.",
+      "Манай үйл ажиллагааг онцгой болгохын төлөө их цаг, сэтгэл, хүч хөдөлмөр, бодит хувь нэмрээ зориулсан хүмүүст талархал илэрхийлье.",
+    contributorBody:
+      "Арга хэмжээ, тоглолт, медиа, зохион байгуулалт болон хамтын дэмжлэгийг бүтээхэд оролцдог өргөн багийн нэг хэсэг.",
+    communityTitle: "Манай хамт олон",
+    communityBody:
+      "Оролцож, дэмжиж, сайн дураар тусалж, уран бүтээлээ хуваалцаж, хамт олноо холбож байдаг бүх хүмүүст зориулав.",
     impactTitle: "Бидний нөлөө",
     impactBody:
-      "Соёл, хамтын ажиллагаа, сайн дурын оролцоо, халуун сэтгэлээр хамтдаа бүтээсэн нөлөөг хараарай.",
+      "Соёл, сайн дурын оролцоо, гэр бүлийн хамтын ажиллагаа болон халуун сэтгэлээр хамтдаа бүтээсэн нөлөөг хараарай.",
     impactButton: "Нөлөөг үзэх",
   },
 } as const;
@@ -100,12 +108,26 @@ const COMMUNITY_MEMBERS: TeamMember[] = [
   },
 ];
 
+const COMMUNITY_IMAGES = [
+  "/about/community-wide-1.webp",
+  "/about/community-wide-2.webp",
+  "/about/community-wide-3.webp",
+];
+
 const sectionMotion: Variants = {
   hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
     transition: { duration: 0.38, ease: easeOut },
+  },
+};
+
+const imageMotion: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.45, ease: easeOut },
   },
 };
 
@@ -125,8 +147,8 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-[#fffaf0]/93" />
-          <div className="absolute inset-0 bg-linear-to-b from-[#fffaf0]/98 via-[#fffaf0]/94 to-[#eef0e6]/96" />
+          <div className="absolute inset-0 bg-[#fffaf0]/92" />
+          <div className="absolute inset-0 bg-linear-to-b from-[#fffaf0]/97 via-[#fffaf0]/93 to-[#eef0e6]/96" />
 
           <motion.div
             variants={sectionMotion}
@@ -134,60 +156,37 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
             animate="show"
             className="relative z-10 mx-auto max-w-7xl"
           >
-            <div className="grid gap-8 bg-[#fffaf0]/82 px-6 py-8 shadow-[0_18px_50px_rgba(39,48,29,0.10)] md:px-8 lg:grid-cols-[0.58fr_1.42fr] lg:items-center lg:px-10 lg:py-10">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-                  {copy.eyebrow}
-                </p>
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+                {copy.eyebrow}
+              </p>
 
-                <h1 className="mt-4 max-w-xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                  {copy.title}
-                </h1>
-              </div>
+              <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                {copy.boardTitle}
+              </h1>
 
-              <p className="max-w-3xl text-[15px] leading-8 text-[#4e593c] lg:justify-self-end lg:text-base">
-                {copy.body}
+              <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-8 text-[#4e593c]">
+                {copy.boardBody}
               </p>
             </div>
 
-            <section className="pt-14">
-              <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
-                {copy.boardTitle}
-              </h2>
-
-              <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5">
-                {BOARD_MEMBERS.map((member) => (
-                  <BoardHoverCard
-                    key={member.name}
-                    member={member}
-                    lang={lang}
-                  />
-                ))}
-              </div>
-            </section>
+            <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5">
+              {BOARD_MEMBERS.map((member) => (
+                <BoardCard key={member.name} member={member} lang={lang} />
+              ))}
+            </div>
           </motion.div>
         </section>
 
-        <section className="relative overflow-hidden px-6 py-20 md:px-10">
-          <img
-            src="/landingpage.webp"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-[#fffaf0]/90" />
-          <div className="absolute inset-0 bg-linear-to-b from-[#fffaf0]/94 via-[#fffaf0]/88 to-[#fffaf0]/94" />
-
+        <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
           <motion.div
             variants={sectionMotion}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.18 }}
-            className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
+            className="mx-auto max-w-6xl"
           >
-            <div className="max-w-xl">
+            <div className="mx-auto max-w-3xl text-center">
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
                 {copy.eyebrow}
               </p>
@@ -200,82 +199,33 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
                 {copy.appreciationIntro}
               </p>
             </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              {COMMUNITY_MEMBERS.map((member) => (
-                <ContributorCard
-                  key={member.name}
-                  member={member}
-                  lang={lang}
-                />
-              ))}
-            </div>
           </motion.div>
         </section>
 
-        <section className="relative overflow-hidden px-6 py-20 md:px-10">
-          <img
-            src="/landingpage.webp"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
+        {COMMUNITY_MEMBERS.map((member, index) => (
+          <ContributorStoryRow
+            key={member.name}
+            member={member}
+            lang={lang}
+            body={copy.contributorBody}
+            reverse={index % 2 === 1}
+            muted={index % 2 === 1}
           />
+        ))}
 
-          <div className="absolute inset-0 bg-black/42" />
-          <div className="absolute inset-0 bg-linear-to-r from-black/58 via-black/36 to-black/18" />
+        <CommunityDedication copy={copy} />
 
-          <motion.article
-            variants={sectionMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]"
-          >
-            <div className="max-w-xl text-[#fffaf0]">
-              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-                {copy.eyebrow}
-              </p>
-
-              <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
-                {copy.impactTitle}
-              </h2>
-
-              <p className="mt-6 text-[15px] leading-8 text-[#f3ead2]">
-                {copy.impactBody}
-              </p>
-
-              <Link
-                to="/about/impact"
-                className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
-              >
-                {copy.impactButton}
-                <span className="ml-3">→</span>
-              </Link>
-            </div>
-
-            <div className="relative h-[24rem] overflow-hidden bg-[#27301d] sm:h-[30rem] lg:h-[34rem]">
-              <img
-                src="/about/story-children.webp"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/10" />
-            </div>
-          </motion.article>
-        </section>
+        <ImpactCta copy={copy} />
       </main>
     </section>
   );
 }
 
-function BoardHoverCard({ member, lang }: { member: TeamMember; lang: Lang }) {
+function BoardCard({ member, lang }: { member: TeamMember; lang: Lang }) {
   return (
     <motion.article
       variants={sectionMotion}
-      className="group relative aspect-[4/5] overflow-hidden bg-[#e8ebe3]"
+      className="group relative aspect-[4/5] overflow-hidden bg-[#e8ebe3] shadow-[0_14px_34px_rgba(39,48,29,0.10)]"
     >
       <img
         src={member.image}
@@ -285,7 +235,7 @@ function BoardHoverCard({ member, lang }: { member: TeamMember; lang: Lang }) {
         className="absolute inset-0 h-full w-full object-cover object-top"
       />
 
-      <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/88 via-[#27301d]/18 to-transparent opacity-100 transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/86 via-[#27301d]/16 to-transparent opacity-100 transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100" />
 
       <div className="absolute inset-x-0 bottom-0 p-4 text-[#fffaf0] transition-transform duration-200 lg:translate-y-5 lg:group-hover:translate-y-0">
         <h3 className="text-lg font-semibold leading-tight">{member.name}</h3>
@@ -298,33 +248,162 @@ function BoardHoverCard({ member, lang }: { member: TeamMember; lang: Lang }) {
   );
 }
 
-function ContributorCard({ member, lang }: { member: TeamMember; lang: Lang }) {
+function ContributorStoryRow({
+  member,
+  lang,
+  body,
+  reverse = false,
+  muted = false,
+}: {
+  member: TeamMember;
+  lang: Lang;
+  body: string;
+  reverse?: boolean;
+  muted?: boolean;
+}) {
   return (
-    <motion.article
-      variants={sectionMotion}
-      whileHover={{ y: -2 }}
-      className="grid grid-cols-[7rem_1fr] items-center gap-5 bg-[#fffaf0] p-3 shadow-[0_14px_34px_rgba(39,48,29,0.10)] sm:grid-cols-1"
-    >
-      <div className="aspect-square overflow-hidden bg-[#e8dcc2]">
-        <img
-          src={member.image}
-          alt={member.name}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover object-top"
-        />
-      </div>
+    <section className={muted ? "bg-[#efefec]" : "bg-[#fffaf0]"}>
+      <motion.article
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="mx-auto grid max-w-6xl items-center lg:min-h-[28rem] lg:grid-cols-2"
+      >
+        <div
+          className={`flex h-full items-center px-6 py-14 md:px-10 lg:px-12 lg:py-16 ${
+            reverse ? "lg:order-2" : "lg:order-1"
+          }`}
+        >
+          <div className="max-w-xl">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+              {member.role[lang]}
+            </p>
 
-      <div className="sm:px-2 sm:pb-2">
-        <h3 className="text-xl font-semibold leading-tight text-[#27301d]">
-          {member.name}
-        </h3>
+            <h3 className="mt-4 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
+              {member.name}
+            </h3>
 
-        <p className="mt-2 text-sm leading-6 text-[#4e593c]">
-          {member.role[lang]}
+            <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
+              {body}
+            </p>
+          </div>
+        </div>
+
+        <motion.div
+          variants={imageMotion}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className={`relative h-[22rem] overflow-hidden bg-[#27301d] sm:h-[28rem] lg:h-full ${
+            reverse ? "lg:order-1" : "lg:order-2"
+          }`}
+        >
+          <img
+            src={member.image}
+            alt={member.name}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-black/10" />
+        </motion.div>
+      </motion.article>
+    </section>
+  );
+}
+
+function CommunityDedication({ copy }: { copy: (typeof COPY)[Lang] }) {
+  return (
+    <section className="bg-[#fffaf0] px-6 py-20 text-center md:px-10">
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.24 }}
+        className="mx-auto max-w-6xl"
+      >
+        <div className="mx-auto max-w-3xl">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+            {copy.eyebrow}
+          </p>
+
+          <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
+            {copy.communityTitle}
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#4e593c]">
+            {copy.communityBody}
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {COMMUNITY_IMAGES.map((src, index) => (
+            <div
+              key={src}
+              className={[
+                "relative h-[18rem] overflow-hidden bg-[#e8dcc2]",
+                index === 1 ? "md:mt-10" : "",
+              ].join(" ")}
+            >
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/10" />
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function ImpactCta({ copy }: { copy: (typeof COPY)[Lang] }) {
+  return (
+    <section className="relative overflow-hidden px-6 py-24 text-center md:px-10">
+      <img
+        src="/landingpage.webp"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-black/46" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/36 via-black/28 to-black/54" />
+
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.24 }}
+        className="relative z-10 mx-auto max-w-3xl text-[#fffaf0]"
+      >
+        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+          {copy.eyebrow}
         </p>
-      </div>
-    </motion.article>
+
+        <h2 className="mt-5 text-3xl font-semibold leading-tight md:text-5xl">
+          {copy.impactTitle}
+        </h2>
+
+        <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#f3ead2]">
+          {copy.impactBody}
+        </p>
+
+        <Link
+          to="/about/impact"
+          className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
+        >
+          {copy.impactButton}
+          <span className="ml-3">→</span>
+        </Link>
+      </motion.div>
+    </section>
   );
 }
 

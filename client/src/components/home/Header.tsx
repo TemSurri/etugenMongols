@@ -109,7 +109,7 @@ function Header({ lang, setLang }: HeaderProps) {
             </p>
 
             <p className="mt-1 hidden text-[11px] uppercase tracking-[0.22em] text-[#4e593c]/65 sm:block">
-              Non-Profit Organization
+              Not For Profit 
             </p>
           </div>
         </Link>

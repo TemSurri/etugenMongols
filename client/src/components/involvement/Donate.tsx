@@ -11,39 +11,35 @@ type DonateProps = {
 
 const DONATION_EMAIL = "donations@etugenmongols.org";
 
-const mainCardMotion: Variants = {
-  hidden: {
-    opacity: 0,
-    x: 52,
-  },
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const sectionMotion: Variants = {
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.7,
-      ease: cubicBezier(0.22, 1, 0.36, 1),
-    },
+    y: 0,
+    transition: { duration: 0.42, ease: easeOut },
   },
 };
 
 const COPY = {
   en: {
-    title: "Support Etugen Mongols",
+    eyebrow: "Support Our Work",
+    title: "Help Us Build More for the Community",
     body:
-      "Your donation helps support cultural events, youth activities, performances, gatherings, and community programs that keep Mongolian heritage active in Calgary.",
+      "Your donation helps us create better cultural events, youth activities, performances, gatherings, and community programs more often for Mongolian families and supporters in Calgary.",
     note:
-      "We do not currently have a direct online donation portal. For now, donations can be sent by bank e-transfer to the email below.",
+      "We do not currently have a direct online donation portal. Donations can be sent by bank e-transfer to the email below.",
     label: "E-transfer donation email",
-    cta: "Send Donation",
   },
   mn: {
-    title: "Этүгэн Монголчуудыг дэмжих",
+    eyebrow: "Биднийг дэмжих",
+    title: "Хамт олондоо илүү ихийг бүтээхэд туслаарай",
     body:
-      "Таны хандив нь соёлын арга хэмжээ, хүүхэд залуусын үйл ажиллагаа, тоглолт, уулзалт болон Монгол өв соёлыг Калгари хотод амьд байлгах ажилд дэмжлэг болно.",
+      "Таны хандив нь соёлын арга хэмжээ, хүүхэд залуусын үйл ажиллагаа, тоглолт, уулзалт болон олон нийтийн хөтөлбөрүүдийг илүү чанартай, илүү олон удаа зохион байгуулахад дэмжлэг болно.",
     note:
       "Одоогоор шууд онлайн хандивын систем байхгүй байна. Хандивыг доорх имэйл рүү банкны e-transfer хэлбэрээр илгээх боломжтой.",
     label: "E-transfer хандивын имэйл",
-    cta: "Хандив илгээх",
   },
 } as const;
 
@@ -51,7 +47,7 @@ function Donate({ lang }: DonateProps) {
   const copy = COPY[lang];
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-[#2f3320]">
+    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]">
       <img
         src="/about/founding-group.webp"
         alt=""
@@ -62,77 +58,51 @@ function Donate({ lang }: DonateProps) {
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
 
-      <div className="pointer-events-none absolute inset-0 bg-black/42" />
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/62 via-black/28 to-black/46" />
+      <div className="absolute inset-0 bg-black/48" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/78 via-black/44 to-black/14" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/66" />
 
-      <div
-        className="
-          relative z-10
-          mx-auto flex min-h-screen w-full max-w-7xl
-          items-start justify-end
-          px-6 pt-32 pb-20
-          md:px-10 md:pt-36
-          lg:px-12 lg:pt-40
-        "
-      >
+      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-12 px-6 pb-20 pt-28 md:px-10 lg:grid-cols-[0.92fr_1.08fr] lg:px-12 lg:pt-32">
         <motion.div
-          variants={mainCardMotion}
+          variants={sectionMotion}
           initial="hidden"
           animate="show"
-          className="
-            w-full max-w-152 transform-gpu
-            rounded-md border border-[#e1d2a6]/55
-            bg-[#fffaf0]/94
-            p-9 text-[#27301d]
-            shadow-[0_24px_70px_rgba(0,0,0,0.42)]
-            backdrop-blur-sm
-            md:p-10
-            lg:p-12
-          "
+          className="max-w-2xl text-[#fffaf0]"
         >
-          <h1 className="max-w-lg text-2xl font-semibold leading-snug tracking-tight text-[#27301d] md:text-[1.7rem] lg:text-[2rem]">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+            {copy.eyebrow}
+          </p>
+
+          <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             {copy.title}
           </h1>
 
-          <div className="my-7 h-px w-full bg-[#d8caa5]/90" />
-
-          <p className="max-w-lg text-sm leading-7 text-[#4e593c] md:text-base md:leading-8">
+          <p className="mt-6 max-w-xl text-[15px] leading-8 text-[#f3ead2] md:text-base md:leading-8">
             {copy.body}
           </p>
+        </motion.div>
 
-          <div className="mt-7 rounded-sm border border-[#d8caa5]/80 bg-[#f4ecd9]/70 p-4">
-            <p className="text-sm leading-7 text-[#4e593c]">{copy.note}</p>
-
-            <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
-              {copy.label}
-            </p>
-
-            <a
-              href={`mailto:${DONATION_EMAIL}`}
-              className="mt-2 block break-all text-sm font-semibold text-[#27301d] underline decoration-[#b39135]/50 underline-offset-4 md:text-base"
-            >
-              {DONATION_EMAIL}
-            </a>
-          </div>
+        <motion.aside
+          variants={sectionMotion}
+          initial="hidden"
+          animate="show"
+          className="w-full bg-[#fffaf0]/96 p-6 text-[#27301d] shadow-[0_22px_65px_rgba(0,0,0,0.32)] md:p-8 lg:justify-self-end lg:p-10"
+        >
+          <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#9a7b26]">
+            {copy.label}
+          </p>
 
           <a
             href={`mailto:${DONATION_EMAIL}`}
-            className="
-              mt-8 inline-flex items-center
-              rounded-sm border border-[#b39135]/45
-              px-5 py-3
-              text-xs font-semibold uppercase tracking-[0.22em]
-              text-[#27301d]
-              transition-colors duration-200
-              hover:border-[#27301d]
-              hover:bg-[#27301d]
-              hover:text-[#fffaf0]
-            "
+            className="mt-4 block break-all text-2xl font-semibold leading-tight tracking-tight text-[#27301d] no-underline transition-colors duration-200 hover:text-[#9a7b26] sm:text-3xl"
           >
-            {copy.cta}
-            <span className="ml-3 text-base leading-none">→</span>
+            {DONATION_EMAIL}
           </a>
-        </motion.div>
+
+          <p className="mt-6 text-sm leading-7 text-[#4e593c] md:text-[15px]">
+            {copy.note}
+          </p>
+        </motion.aside>
       </div>
     </section>
   );

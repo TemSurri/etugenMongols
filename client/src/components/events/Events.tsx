@@ -14,53 +14,39 @@ type EventsProps = {
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
-const headerMotion: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: easeOut },
-  },
-};
-
 const itemMotion: Variants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.58, ease: easeOut },
-  },
-};
-
-const dotMotion: Variants = {
-  hidden: { scale: 0.72, opacity: 0 },
-  show: {
-    scale: 1,
-    opacity: 1,
-    transition: { duration: 0.42, ease: easeOut },
+    transition: { duration: 0.4, ease: easeOut },
   },
 };
 
 const EVENTS_COPY = {
   en: {
-    eyebrow: "Our Events",
-    title: "Event Timeline",
-    intro:
-      "Explore upcoming gatherings and past cultural events that have brought our community together through celebration, volunteering, and shared tradition.",
+    timelineTitle: "Event Timeline",
+    timelineNote: "See upcoming and past events",
     upcoming: "Upcoming",
     pastEvent: "Past Event",
     viewEvent: "View Event",
     viewGallery: "View Gallery",
+    eventDetails: "Event Details",
+    time: "Time",
+    location: "Location",
+    actions: "Actions",
   },
   mn: {
-    eyebrow: "Манай арга хэмжээнүүд",
-    title: "Арга хэмжээний цаг хугацаа",
-    intro:
-      "Ирэх арга хэмжээ болон өнгөрсөн соёлын баяр, олон нийтийн уулзалтуудаар дамжуулан хамт олон хэрхэн нэгдэж ирснийг үзээрэй.",
+    timelineTitle: "Арга хэмжээний цаг хугацаа",
+    timelineNote: "Удахгүй болох болон өнгөрсөн арга хэмжээнүүдийг үзэх",
     upcoming: "Удахгүй болох",
     pastEvent: "Өмнөх арга хэмжээ",
     viewEvent: "Арга хэмжээг үзэх",
     viewGallery: "Зургийн цомог үзэх",
+    eventDetails: "Арга хэмжээний мэдээлэл",
+    time: "Цаг",
+    location: "Байршил",
+    actions: "Үйлдлүүд",
   },
 } as const;
 
@@ -85,13 +71,15 @@ function Events({ lang }: EventsProps) {
           imageAlt: event.coverImage.alt[lang],
           year: getYearFromDate(event.date),
           href: isUpcoming ? `/events/${event.id}` : `/gallery/${event.id}`,
+          enabledActions:
+            event.upcoming?.actions.filter((action) => action.enabled) ?? [],
         };
       }),
     [lang]
   );
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] pt-24 text-[#27301d]">
+    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]">
       <div className="fixed inset-0 z-0">
         <img
           src="/landingpage.webp"
@@ -104,159 +92,212 @@ function Events({ lang }: EventsProps) {
         />
 
         <div className="absolute inset-0 bg-black/48" />
-        <div className="absolute inset-0 bg-linear-to-b from-black/42 via-black/28 to-black/64" />
-        <div className="absolute inset-0 bg-linear-to-r from-black/54 via-transparent to-black/42" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/36 via-black/28 to-black/68" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/54 via-transparent to-black/36" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-20 pt-12 sm:px-6 md:px-10 lg:px-12">
-        <motion.header
-          variants={headerMotion}
-          initial="hidden"
-          animate="show"
-          className="
-            rounded-lg border border-[#e1d2a6]/55
-            bg-[#fffaf0]/95 px-6 py-7
-            shadow-[0_24px_70px_rgba(0,0,0,0.34)]
-            backdrop-blur-sm
-            md:px-8 md:py-8
-          "
-        >
-          <div className="grid gap-6 md:grid-cols-[0.9fr_1fr] md:items-end">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-[#9a7b26]">
-                {copy.eyebrow}
-              </p>
-
-              <h1 className="mt-4 max-w-xl text-4xl font-semibold leading-tight tracking-tight text-[#27301d] sm:text-5xl lg:text-[3.35rem]">
-                {copy.title}
-              </h1>
-            </div>
-
-            <p className="max-w-xl border-t border-[#d8caa5] pt-5 text-sm leading-7 text-[#4e593c] md:justify-self-end md:border-l md:border-t-0 md:pl-7 md:pt-0 md:text-[15px]">
-              {copy.intro}
+      <div className="relative z-10 px-6 pb-24 pt-28 md:px-12 lg:pt-32">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            variants={itemMotion}
+            initial="hidden"
+            animate="show"
+            className="mb-8 inline-flex flex-wrap items-center gap-3 bg-[#fffaf0]/10 px-4 py-2 text-[#fffaf0] backdrop-blur-sm"
+          >
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#e1d2a6]">
+              {copy.timelineTitle}
             </p>
-          </div>
-        </motion.header>
 
-        <div className="relative mt-16 md:mt-20">
-          <div className="absolute left-5 top-0 h-full border-l-2 border-dashed border-[#d6b04c]/80 md:left-1/2 md:-translate-x-1/2" />
+            <span className="h-1 w-1 bg-[#d6b04c]" />
 
-          <div className="space-y-14 md:space-y-20">
-            {timelineItems.map(
-              (
-                {
-                  event,
-                  isUpcoming,
-                  title,
-                  description,
-                  imageSrc,
-                  imageAlt,
-                  year,
-                  href,
-                },
-                index
-              ) => {
-                const isLeftSide = index % 2 === 0;
+            <p className="text-xs font-medium text-[#f3ead2]/90">
+              {copy.timelineNote}
+            </p>
+          </motion.div>
 
-                return (
-                  <motion.article
-                    key={event.id}
-                    variants={itemMotion}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, amount: 0.18 }}
-                    className="relative grid gap-8 md:grid-cols-2 md:gap-16"
-                  >
-                    <motion.div
-                      variants={dotMotion}
+          <div className="relative">
+            <div className="absolute left-4 top-0 h-full w-px bg-[#e1d2a6]/55 md:left-1/2" />
+
+            <div className="space-y-16 md:space-y-20 lg:space-y-24">
+              {timelineItems.map(
+                (
+                  {
+                    event,
+                    isUpcoming,
+                    title,
+                    description,
+                    imageSrc,
+                    imageAlt,
+                    year,
+                    href,
+                    enabledActions,
+                  },
+                  index
+                ) => {
+                  const isLeftSide = index % 2 === 0;
+
+                  return (
+                    <motion.article
+                      key={`${event.id}-${index}`}
+                      variants={itemMotion}
                       initial="hidden"
                       whileInView="show"
-                      viewport={{ once: true, amount: 0.5 }}
-                      className="absolute left-5 top-8 z-10 -translate-x-1/2 md:left-1/2"
+                      viewport={{ once: true, amount: 0.16 }}
+                      className="relative grid gap-8 pl-10 md:grid-cols-2 md:gap-16 md:pl-0"
                     >
-                      <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-[#d6b04c] bg-[#27301d] shadow-[0_0_0_7px_rgba(47,51,32,0.92)]">
-                        <span className="text-[9px] font-bold uppercase tracking-[0.08em] text-[#fffaf0]">
-                          {isUpcoming ? "Soon" : year}
-                        </span>
+                      <div className="absolute left-4 top-8 z-10 -translate-x-1/2 md:left-1/2">
+                        <div className="h-3 w-3 bg-[#d6b04c] shadow-[0_0_0_6px_rgba(47,51,32,0.9)]" />
                       </div>
-                    </motion.div>
 
-                    <div
-                      className={[
-                        "ml-12 md:ml-0",
-                        isLeftSide ? "md:col-start-1" : "md:col-start-2",
-                      ].join(" ")}
-                    >
                       <div
-                        className={[
-                          "mb-4",
-                          isLeftSide ? "md:text-right" : "md:text-left",
-                        ].join(" ")}
+                        className={
+                          isLeftSide ? "md:col-start-1" : "md:col-start-2"
+                        }
                       >
-                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
-                          {isUpcoming ? copy.upcoming : copy.pastEvent}
-                        </p>
-
-                        <p className="mt-1 text-2xl font-semibold tracking-tight text-[#fffaf0]">
-                          {isUpcoming ? event.date : year}
-                        </p>
-                      </div>
-
-                      <Link
-                        to={href}
-                        className="
-                          group block overflow-hidden rounded-lg border border-[#e1d2a6]/45
-                          bg-[#fffaf0]/96
-                          shadow-[0_22px_60px_rgba(0,0,0,0.28)]
-                          transition duration-300
-                          hover:-translate-y-0.5
-                          hover:border-[#d6b04c]/80
-                          hover:shadow-[0_28px_80px_rgba(0,0,0,0.36)]
-                          focus-visible:outline-none
-                          focus-visible:ring-2
-                          focus-visible:ring-[#d6b04c]
-                        "
-                      >
-                        <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]">
-                          <img
-                            src={imageSrc}
-                            alt={imageAlt}
-                            loading={index === 0 ? "eager" : "lazy"}
-                            decoding="async"
-                            fetchPriority={index === 0 ? "high" : "auto"}
-                            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
-                          />
-
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/34 via-transparent to-transparent" />
-                        </div>
-
-                        <div className="p-6 md:p-7">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="rounded-sm bg-[#f4ecd9] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a7b26]">
-                              {isUpcoming ? copy.upcoming : year}
-                            </span>
-                          </div>
-
-                          <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-[#27301d]">
-                            {title}
-                          </h2>
-
-                          <p className="mt-3 line-clamp-4 text-sm leading-7 text-[#4e593c]/88">
-                            {description}
+                        <div
+                          className={
+                            isLeftSide
+                              ? "mb-4 md:text-right"
+                              : "mb-4 md:text-left"
+                          }
+                        >
+                          <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
+                            {isUpcoming ? copy.upcoming : copy.pastEvent}
                           </p>
 
-                          <div className="mt-6 border-t border-[#d8caa5]/75 pt-4">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors group-hover:text-[#27301d]">
+                          <p className="mt-1 text-2xl font-semibold tracking-tight text-[#fffaf0]">
+                            {isUpcoming ? event.date : year}
+                          </p>
+                        </div>
+
+                        <Link
+                          to={href}
+                          className="group block overflow-hidden bg-[#fffaf0]/96 shadow-[0_18px_50px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b04c]"
+                        >
+                          <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]">
+                            <img
+                              src={imageSrc}
+                              alt={imageAlt}
+                              loading={index === 0 ? "eager" : "lazy"}
+                              decoding="async"
+                              fetchPriority={index === 0 ? "high" : "auto"}
+                              className="h-full w-full object-cover"
+                            />
+
+                            <div className="absolute inset-0 bg-linear-to-t from-black/28 via-transparent to-transparent" />
+                          </div>
+
+                          <div className="p-6 md:p-7">
+                            <span className="inline-flex bg-[#f4ecd9] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a7b26]">
+                              {isUpcoming ? copy.upcoming : year}
+                            </span>
+
+                            <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-[#27301d]">
+                              {title}
+                            </h2>
+
+                            <p className="mt-3 line-clamp-4 text-sm leading-7 text-[#4e593c]/88">
+                              {description}
+                            </p>
+
+                            <span className="mt-6 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors group-hover:text-[#27301d]">
                               {isUpcoming ? copy.viewEvent : copy.viewGallery} →
                             </span>
                           </div>
+                        </Link>
+                      </div>
+
+                      <div
+                        className={[
+                          "hidden md:flex md:items-center",
+                          isLeftSide
+                            ? "md:col-start-2"
+                            : "md:col-start-1 md:row-start-1",
+                        ].join(" ")}
+                      >
+                        <div
+                          className={[
+                            "max-w-md text-[#fffaf0]",
+                            isLeftSide ? "text-left" : "ml-auto text-right",
+                          ].join(" ")}
+                        >
+                          <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
+                            {isUpcoming ? copy.upcoming : copy.pastEvent}
+                          </p>
+
+                          <h3 className="mt-3 text-3xl font-semibold leading-tight">
+                            {title}
+                          </h3>
+
+                          <p className="mt-4 text-[15px] leading-8 text-[#f3ead2]">
+                            {description}
+                          </p>
+
+                          {isUpcoming && (
+                            <div className="mt-6 border-l-2 border-[#d6b04c] bg-[#fffaf0]/10 px-5 py-4 backdrop-blur-sm">
+                              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#d6b04c]">
+                                {copy.eventDetails}
+                              </p>
+
+                              <div className="mt-4 grid gap-3 text-sm text-[#f3ead2]">
+                                {event.upcoming?.time && (
+                                  <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#d6b04c]/85">
+                                      {copy.time}
+                                    </p>
+                                    <p className="mt-1 font-medium">
+                                      {event.upcoming.time}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {event.location && (
+                                  <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#d6b04c]/85">
+                                      {copy.location}
+                                    </p>
+                                    <p className="mt-1 font-medium">
+                                      {event.location}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {enabledActions.length > 0 && (
+                                  <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#d6b04c]/85">
+                                      {copy.actions}
+                                    </p>
+
+                                    <div
+                                      className={[
+                                        "mt-2 flex flex-wrap gap-2",
+                                        isLeftSide
+                                          ? "justify-start"
+                                          : "justify-end",
+                                      ].join(" ")}
+                                    >
+                                      {enabledActions.map((action) => (
+                                        <Link
+                                          key={action.type}
+                                          to={`/events/${event.id}`}
+                                          className="bg-[#d6b04c] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#27301d] transition-colors hover:bg-[#fffaf0]"
+                                        >
+                                          {action.label[lang]}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      </Link>
-                    </div>
-                  </motion.article>
-                );
-              }
-            )}
+                      </div>
+                    </motion.article>
+                  );
+                }
+              )}
+            </div>
           </div>
         </div>
       </div>
