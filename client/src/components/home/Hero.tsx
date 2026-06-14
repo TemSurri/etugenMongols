@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, cubicBezier, type Variants } from "framer-motion";
 
@@ -57,14 +57,8 @@ const IMAGE_PATHS: Record<StoryImageKey, string> = {
 };
 
 const FLAG_IMAGES = [
-  {
-    src: mongoliaFlag,
-    alt: "Mongolia flag",
-  },
-  {
-    src: canadaFlag,
-    alt: "Canada flag",
-  },
+  { src: mongoliaFlag, alt: "Mongolia flag" },
+  { src: canadaFlag, alt: "Canada flag" },
 ] as const;
 
 const STORY_ROW_CONFIG = [
@@ -199,6 +193,8 @@ function Hero({ lang }: HeroProps) {
         <img
           src={IMAGE_PATHS.landing}
           alt=""
+          width={1920}
+          height={1080}
           loading="eager"
           fetchPriority="high"
           decoding="async"
@@ -222,6 +218,8 @@ function Hero({ lang }: HeroProps) {
                   key={flag.alt}
                   src={flag.src}
                   alt={flag.alt}
+                  width={48}
+                  height={32}
                   loading="eager"
                   decoding="async"
                   className={flagClassName}
@@ -259,31 +257,10 @@ function Hero({ lang }: HeroProps) {
             className="hidden justify-self-end lg:block"
             aria-label="Featured event video"
           >
-            <div className="w-[28rem] border border-[#e1d2a6]/45 bg-[#fffaf0]/94 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm">
-              <div className="h-[15.75rem] overflow-hidden bg-[#27301d]">
-                <iframe
-                  src={`https://www.youtube.com/embed/${FEATURED_VIDEO_ID}`}
-                  title="Etugen Mongols featured event video"
-                  loading="lazy"
-                  className="h-full w-full"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-
-              <div className="flex min-h-[3.75rem] items-center justify-between gap-4 px-2 pb-2 pt-4">
-                <p className="max-w-[12rem] text-[11px] font-bold uppercase tracking-[0.24em] text-[#9a7b26]">
-                  {copy.eventHosted}
-                </p>
-
-                <Link
-                  to="/events"
-                  className="shrink-0 bg-[#27301d] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
-                >
-                  {copy.viewEvents}
-                </Link>
-              </div>
-            </div>
+            <FeaturedVideoCard
+              eventHosted={copy.eventHosted}
+              viewEvents={copy.viewEvents}
+            />
           </motion.aside>
         </div>
       </section>
@@ -328,6 +305,8 @@ function Hero({ lang }: HeroProps) {
               <img
                 src={IMAGE_PATHS[finalStoryRow.imageKey]}
                 alt=""
+                width={1200}
+                height={800}
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
@@ -382,6 +361,76 @@ function Hero({ lang }: HeroProps) {
   );
 }
 
+const FeaturedVideoCard = memo(function FeaturedVideoCard({
+  eventHosted,
+  viewEvents,
+}: {
+  eventHosted: string;
+  viewEvents: string;
+}) {
+  const [showVideo, setShowVideo] = useState(false);
+  const hasVideo = FEATURED_VIDEO_ID !== "YOUR_FEATURED_EVENT_VIDEO_ID";
+
+  const thumbnailSrc = hasVideo
+    ? `https://img.youtube.com/vi/${FEATURED_VIDEO_ID}/hqdefault.jpg`
+    : IMAGE_PATHS.landing;
+
+  return (
+    <div className="w-[28rem] border border-[#e1d2a6]/45 bg-[#fffaf0]/94 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm">
+      <div className="relative h-[15.75rem] overflow-hidden bg-[#27301d]">
+        {showVideo && hasVideo ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${FEATURED_VIDEO_ID}?autoplay=1&rel=0`}
+            title="Etugen Mongols featured event video"
+            loading="lazy"
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => hasVideo && setShowVideo(true)}
+            aria-label="Play featured event video"
+            className="group relative h-full w-full cursor-pointer overflow-hidden"
+          >
+            <img
+              src={thumbnailSrc}
+              alt=""
+              width={480}
+              height={270}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover opacity-90 transition-opacity duration-200 group-hover:opacity-100"
+            />
+
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#fffaf0] text-[#27301d] shadow-lg">
+                <span className="ml-1 text-lg" aria-hidden="true">
+                  ▶
+                </span>
+              </span>
+            </span>
+          </button>
+        )}
+      </div>
+
+      <div className="flex min-h-[3.75rem] items-center justify-between gap-4 px-2 pb-2 pt-4">
+        <p className="max-w-[12rem] text-[11px] font-bold uppercase tracking-[0.24em] text-[#9a7b26]">
+          {eventHosted}
+        </p>
+
+        <Link
+          to="/events"
+          className="shrink-0 bg-[#27301d] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
+        >
+          {viewEvents}
+        </Link>
+      </div>
+    </div>
+  );
+});
+
 const StoryRow = memo(function StoryRow({
   body,
   image,
@@ -428,6 +477,8 @@ const StoryRow = memo(function StoryRow({
           <img
             src={image}
             alt=""
+            width={1200}
+            height={800}
             loading="lazy"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
