@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import type { Event, EventAction } from "../../static_events";
 
@@ -11,41 +11,68 @@ type EventViewProps = {
   lang: Lang;
 };
 
+type EventViewCopy = {
+  back: string;
+  about: string;
+  details: string;
+  date: string;
+  time: string;
+  location: string;
+  ticket: string;
+  maps: string;
+  unavailable: string;
+};
+
 const COPY = {
   en: {
     back: "Back to Events",
     about: "About",
     details: "Details",
+    date: "Date",
+    time: "Time",
+    location: "Location",
     ticket: "Ticket Information",
     maps: "Open in Google Maps",
     unavailable: "This event is not currently available for registration.",
   },
   mn: {
-    back: "Арга хэмжээ рүү буцах",
+    back: "Арга хэмжээнүүд рүү буцах",
     about: "Тухай",
     details: "Мэдээлэл",
+    date: "Огноо",
+    time: "Цаг",
+    location: "Байршил",
     ticket: "Тасалбарын мэдээлэл",
     maps: "Google Maps дээр нээх",
     unavailable: "Энэ арга хэмжээнд одоогоор бүртгүүлэх боломжгүй байна.",
   },
-} as const;
+} as const satisfies Record<Lang, EventViewCopy>;
+
+function getEventImage(event: Event) {
+  return event.coverImage.highRes || event.coverImage.lowRes;
+}
+
+function getGoogleMapsUrl(location?: string) {
+  if (!location) return null;
+
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    location
+  )}`;
+}
 
 function EventView({ event, lang }: EventViewProps) {
   const copy = COPY[lang];
 
   const title = event.title[lang];
   const description = event.description[lang];
-  const imageSrc = event.coverImage.highRes || event.coverImage.lowRes;
+  const imageSrc = getEventImage(event);
   const imageAlt = event.coverImage.alt[lang];
 
   const upcoming = event.upcoming;
-  const enabledActions = upcoming?.actions.filter((action) => action.enabled) ?? [];
+  const enabledActions =
+    upcoming?.actions.filter((action) => action.enabled) ?? [];
 
-  const googleMapsUrl = event.location
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        event.location
-      )}`
-    : null;
+  const googleMapsUrl = getGoogleMapsUrl(event.location);
 
   return (
     <main className="min-h-screen bg-[#f6efdf] pt-20 text-[#27301d]">
@@ -62,9 +89,12 @@ function EventView({ event, lang }: EventViewProps) {
             <img
               src={imageSrc}
               alt={imageAlt}
+              width={1280}
+              height={720}
               loading="eager"
+              fetchPriority="high"
               decoding="async"
-              className="w-full rounded-xl border border-[#d8caa5]/70 bg-white object-contain"
+              className="w-full border border-[#d8caa5]/70 bg-white object-contain"
             />
           </div>
 
@@ -74,13 +104,15 @@ function EventView({ event, lang }: EventViewProps) {
             </h1>
 
             <div className="mt-4 space-y-3 border-l-2 border-[#d8caa5] pl-4">
-              <Info label="Date" value={event.date} />
+              <Info label={copy.date} value={event.date} />
 
-              {upcoming?.time && <Info label="Time" value={upcoming.time} />}
+              {upcoming?.time && (
+                <Info label={copy.time} value={upcoming.time} />
+              )}
 
               {event.location && (
                 <Info
-                  label="Location"
+                  label={copy.location}
                   value={
                     <>
                       {event.location}
@@ -107,11 +139,7 @@ function EventView({ event, lang }: EventViewProps) {
             {enabledActions.length > 0 ? (
               <div className="mt-5 flex flex-wrap gap-2">
                 {enabledActions.map((action) => (
-                  <ActionButton
-                    key={action.type}
-                    action={action}
-                    lang={lang}
-                  />
+                  <ActionButton key={action.type} action={action} lang={lang} />
                 ))}
               </div>
             ) : (
@@ -140,10 +168,23 @@ function EventView({ event, lang }: EventViewProps) {
               <SectionTitle>{copy.details}</SectionTitle>
 
               <div className="mt-3 space-y-2 text-sm leading-7 text-black/72">
-                {upcoming?.contact?.email && <p>{upcoming.contact.email}</p>}
+                {upcoming?.contact?.email && (
+                  <a
+                    href={`mailto:${upcoming.contact.email}`}
+                    className="block text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
+                  >
+                    {upcoming.contact.email}
+                  </a>
+                )}
 
-                {upcoming?.contact?.phone?.map((phone, index) => (
-                  <p key={`${phone}-${index}`}>{phone}</p>
+                {upcoming?.contact?.phone?.map((phone) => (
+                  <a
+                    key={phone}
+                    href={`tel:${phone.replace(/\s+/g, "")}`}
+                    className="block text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
+                  >
+                    {phone}
+                  </a>
                 ))}
 
                 {googleMapsUrl && (
@@ -165,7 +206,7 @@ function EventView({ event, lang }: EventViewProps) {
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <h2 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
       {children}
@@ -173,13 +214,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Info({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function Info({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9a7b26]">
@@ -191,19 +226,13 @@ function Info({
   );
 }
 
-function ActionButton({
-  action,
-  lang,
-}: {
-  action: EventAction;
-  lang: Lang;
-}) {
+function ActionButton({ action, lang }: { action: EventAction; lang: Lang }) {
   const label = action.label[lang];
 
   return (
     <button
       type="button"
-      className="rounded-full border border-[#d8caa5] bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8d7020] transition-colors hover:border-[#8d7020]"
+      className="border border-[#d8caa5] bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8d7020] transition-colors hover:border-[#8d7020]"
     >
       {label}
 
