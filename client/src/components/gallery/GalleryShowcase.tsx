@@ -1,8 +1,7 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
+import { memo, useDeferredValue, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, type Variants } from "framer-motion";
 
 import { events } from "../../static_events";
 
@@ -11,8 +10,6 @@ type Lang = "en" | "mn";
 type GalleryShowcaseProps = {
   lang?: Lang;
 };
-
-type GalleryImageKey = "hero";
 
 type GalleryCardItem = {
   id: string;
@@ -37,9 +34,9 @@ type GalleryCopy = {
   emptyBody: string;
 };
 
-const IMAGE_PATHS: Record<GalleryImageKey, string> = {
+const IMAGE_PATHS = {
   hero: "/landingpage.webp",
-};
+} as const;
 
 const ALBUM_STYLES = [
   "aspect-[4/3]",
@@ -77,19 +74,9 @@ const COPY = {
     viewAlbum: "Цомог үзэх",
     noResults: "Тохирох цомог олдсонгүй.",
     emptyTitle: "Одоогоор цомог алга",
-    emptyBody:
-      "Өнгөрсөн арга хэмжээний цомгууд нэмэгдмэгц энд харагдана.",
+    emptyBody: "Өнгөрсөн арга хэмжээний цомгууд нэмэгдмэгц энд харагдана.",
   },
 } as const satisfies Record<Lang, GalleryCopy>;
-
-const entranceVariants: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
-  },
-};
 
 function getYearFromDate(date: string) {
   return date.match(/\b(20\d{2}|19\d{2})\b/)?.[0] ?? "";
@@ -99,13 +86,11 @@ function getLayoutClass(count: number) {
   if (count <= 1) return "mx-auto max-w-3xl";
   if (count === 2) return "grid gap-10 md:grid-cols-2";
   if (count <= 5) return "grid gap-8 sm:grid-cols-2 xl:grid-cols-3";
-
   return "columns-1 gap-7 sm:columns-2 xl:columns-3";
 }
 
 function getAlbumFrame(index: number, isLargeSet: boolean) {
   if (isLargeSet) return ALBUM_STYLES[index % ALBUM_STYLES.length];
-
   return index % 2 === 0 ? "aspect-[4/3]" : "aspect-[5/4]";
 }
 
@@ -113,15 +98,12 @@ function getEventImage(event: (typeof events)[number]) {
   return event.coverImage.lowRes || event.coverImage.highRes;
 }
 
-function normalizeSearchValue(value: string) {
-  return value.trim().toLowerCase();
-}
-
 function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
   const safeLang: Lang = lang === "en" || lang === "mn" ? lang : "mn";
   const copy = COPY[safeLang];
 
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
 
   const galleryItems = useMemo<GalleryCardItem[]>(
     () =>
@@ -145,17 +127,16 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
   );
 
   const filteredItems = useMemo(() => {
-    const normalizedQuery = normalizeSearchValue(query);
+    const normalizedQuery = deferredQuery.trim().toLowerCase();
 
     if (!normalizedQuery) return galleryItems;
 
-    return galleryItems.filter((item) => {
-      const searchableText =
-        `${item.title} ${item.desc} ${item.date} ${item.year} ${item.id}`.toLowerCase();
-
-      return searchableText.includes(normalizedQuery);
-    });
-  }, [galleryItems, query]);
+    return galleryItems.filter((item) =>
+      `${item.title} ${item.desc} ${item.date} ${item.year} ${item.id}`
+        .toLowerCase()
+        .includes(normalizedQuery)
+    );
+  }, [galleryItems, deferredQuery]);
 
   const hasItems = galleryItems.length > 0;
   const hasResults = filteredItems.length > 0;
@@ -166,13 +147,7 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
     <section className="relative min-h-screen overflow-hidden bg-black pt-20 text-white">
       <PageBackground />
 
-      <motion.div
-        variants={entranceVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.12 }}
-        className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12"
-      >
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12">
         <GalleryHeader copy={copy} />
 
         {!hasItems ? (
@@ -194,7 +169,10 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
                   {filteredItems.map((item, index) => (
                     <div
                       key={item.id}
-                      className={isLargeSet ? "mb-12 break-inside-avoid" : ""}
+                      className={[
+                        isLargeSet ? "mb-12 break-inside-avoid" : "",
+                        "[content-visibility:auto] [contain-intrinsic-size:420px]",
+                      ].join(" ")}
                     >
                       <GalleryCard
                         item={item}
@@ -211,7 +189,7 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
             </div>
           </div>
         )}
-      </motion.div>
+      </div>
     </section>
   );
 }
@@ -267,6 +245,7 @@ const GalleryCard = memo(function GalleryCard({
   isLargeSet: boolean;
 }) {
   const frame = getAlbumFrame(index, isLargeSet);
+  const eager = index === 0;
 
   return (
     <Link
@@ -283,9 +262,9 @@ const GalleryCard = memo(function GalleryCard({
             alt={item.imageAlt}
             width={960}
             height={720}
-            loading={index < 3 ? "eager" : "lazy"}
+            loading={eager ? "eager" : "lazy"}
             decoding="async"
-            fetchPriority={index < 3 ? "high" : "auto"}
+            fetchPriority={eager ? "high" : "auto"}
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
 
