@@ -2,7 +2,6 @@
 
 import { memo, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import logo from "../../assets/logo.webp";
 
 type Lang = "en" | "mn";
 
@@ -37,7 +36,7 @@ const NAV_ITEMS: NavItem[] = [
     to: "/what-we-do",
     children: [
       { label: "Events", to: "/events" },
-      { label: "Programs (Coming Soon)", to: "/programs" }
+      { label: "Programs (Coming Soon)", to: "/programs" },
     ],
   },
   {
@@ -88,7 +87,6 @@ function Header({ lang, setLang }: HeaderProps) {
   return (
     <header className="fixed left-0 top-0 z-50 w-full border-b border-[#d8caa5]/55 bg-[#fffaf0] text-[#27301d] shadow-[0_8px_28px_rgba(88,72,38,0.10)]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-10">
-        {/* Brand */}
         <Link
           to="/"
           onClick={closeMenu}
@@ -96,9 +94,9 @@ function Header({ lang, setLang }: HeaderProps) {
           aria-label="Go to homepage"
         >
           <img
-            src={logo}
+            src="/logo.webp"
             alt="Etugen Mongols logo"
-            className="h-25 w-25 object-contain"
+            className="h-20 w-20 object-contain"
             loading="eager"
             decoding="async"
           />
@@ -109,12 +107,11 @@ function Header({ lang, setLang }: HeaderProps) {
             </p>
 
             <p className="mt-1 hidden text-[11px] uppercase tracking-[0.22em] text-[#4e593c]/65 sm:block">
-              Not For Profit 
+              Not For Profit
             </p>
           </div>
         </Link>
 
-        {/* Desktop navigation */}
         <nav
           className="hidden items-center gap-7 lg:flex"
           aria-label="Primary navigation"
@@ -144,7 +141,6 @@ function Header({ lang, setLang }: HeaderProps) {
 
             return (
               <div key={item.label} className="group relative">
-                {/* Non-clickable parent. It only opens the dropdown. */}
                 <button
                   type="button"
                   className={[
@@ -171,9 +167,7 @@ function Header({ lang, setLang }: HeaderProps) {
                   </svg>
                 </button>
 
-                {/* Desktop dropdown */}
                 <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 border border-[#d8caa5]/65 bg-[#fffaf0] p-2 opacity-0 shadow-[0_18px_45px_rgba(88,72,38,0.16)] transition-all duration-150 group-hover:visible group-hover:mt-3 group-hover:opacity-100">
-                  {/* Hover bridge so the dropdown does not close while moving down. */}
                   <div className="absolute -top-3 left-0 h-3 w-full" />
 
                   {item.children?.map((child) => (
@@ -198,28 +192,11 @@ function Header({ lang, setLang }: HeaderProps) {
           })}
         </nav>
 
-        {/* Right controls */}
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={toggleLang}
-            className="
-              inline-flex
-              w-[5.6rem]
-              justify-center
-              border border-[#b39135]/35
-              px-3 py-2
-              text-[10px] font-semibold uppercase tracking-[0.14em]
-              text-[#27301d]/85
-              transition-colors
-              hover:border-[#9a7b26]/70
-              hover:bg-[#efe2bf]/55
-              hover:text-[#27301d]
-              sm:w-27
-              sm:px-4
-              sm:text-xs
-              sm:tracking-[0.18em]
-            "
+            className="inline-flex w-[5.6rem] justify-center border border-[#b39135]/35 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#27301d]/85 transition-colors hover:border-[#9a7b26]/70 hover:bg-[#efe2bf]/55 hover:text-[#27301d] sm:w-27 sm:px-4 sm:text-xs sm:tracking-[0.18em]"
           >
             {lang === "en" ? "Монгол" : "English"}
           </button>
@@ -227,17 +204,7 @@ function Header({ lang, setLang }: HeaderProps) {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="
-              inline-flex
-              h-10 w-10
-              items-center justify-center
-              border border-[#b39135]/35
-              text-[#27301d]
-              transition-colors
-              hover:border-[#9a7b26]/70
-              hover:bg-[#efe2bf]/55
-              lg:hidden
-            "
+            className="inline-flex h-10 w-10 items-center justify-center border border-[#b39135]/35 text-[#27301d] transition-colors hover:border-[#9a7b26]/70 hover:bg-[#efe2bf]/55 lg:hidden"
             aria-label="Toggle navigation menu"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
@@ -272,7 +239,6 @@ function Header({ lang, setLang }: HeaderProps) {
         </div>
       </div>
 
-      {/* Mobile navigation */}
       {menuOpen && (
         <div
           id="mobile-navigation"

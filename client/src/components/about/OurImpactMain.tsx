@@ -10,162 +10,65 @@ type OurImpactMainProps = {
   lang: Lang;
 };
 
+type ImpactImageKey =
+  | "landing"
+  | "archery"
+  | "wrestling"
+  | "stories"
+  | "dance"
+  | "stampedeNaadam"
+  | "communitySong"
+  | "youthCulture";
+
 type ImpactItem = {
+  id: string;
   title: string;
   body: string;
-  image: string;
+  imageKey: ImpactImageKey;
   href: string;
 };
 
 type CultureActivity = {
+  id: string;
   title: string;
   body: string;
-  image: string;
+  imageKey: ImpactImageKey;
+};
+
+type Copy = {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  viewMore: string;
+  events: string;
+  gallery: string;
+  featuredLabel: string;
+  performanceLabel: string;
+  youthLabel: string;
+  quoteA: string;
+  quoteB: string;
+  quoteC: string;
+  cultureEyebrow: string;
+  cultureTitle: string;
+  cultureIntro: string;
+  cultureActivities: readonly CultureActivity[];
+  items: readonly [ImpactItem, ImpactItem, ImpactItem];
+};
+
+const IMAGE_PATHS: Record<ImpactImageKey, string> = {
+  landing: "/landingpage.webp",
+
+  archery: "/about/impact/archery.webp",
+  wrestling: "/about/impact/wrestling.webp",
+  stories: "/about/impact/stories.webp",
+  dance: "/about/impact/dance.webp",
+
+  stampedeNaadam: "/about/impact/stampede-naadam.webp",
+  communitySong: "/about/impact/community-song.webp",
+  youthCulture: "/about/impact/youth-culture.webp",
 };
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
-
-const COPY = {
-  en: {
-    eyebrow: "What We Are Proud Of",
-    title: "Our Impact",
-    intro:
-      "A direct look at some of the notable moments, special parts, and meaningful events we are proud to have created with the community.",
-    viewMore: "View More",
-    events: "View Events",
-    gallery: "View Gallery",
-
-    quoteA: "Culture represented in real life.",
-    quoteB: "Families feel more connected.",
-    quoteC: "People keep showing up.",
-
-    cultureEyebrow: "Celebrate Culture",
-    cultureTitle: "Culture Practiced Together",
-    cultureIntro:
-      "Our events create space for Mongolian culture to be experienced directly through activity, movement, stories, food, music, and shared participation.",
-
-    cultureActivities: [
-      {
-        title: "Archery and Traditional Games",
-        body:
-          "Activities like archery and traditional games help make culture visible, active, and memorable for families and youth.",
-        image: "/about/impact/archery.webp",
-      },
-      {
-        title: "Wrestling and Physical Activity",
-        body:
-          "Wrestling and physical activities bring energy into events while connecting people to familiar cultural traditions.",
-        image: "/about/impact/wrestling.webp",
-      },
-      {
-        title: "Stories and Shared Memory",
-        body:
-          "Stories, language, and shared memory help connect generations and keep cultural knowledge alive.",
-        image: "/about/impact/stories.webp",
-      },
-      {
-        title: "Dance, Music, and Performance",
-        body:
-          "Dance, music, food, and performance turn gatherings into cultural spaces people can feel and remember.",
-        image: "/about/impact/dance.webp",
-      },
-    ],
-
-    items: [
-      {
-        title: "Stampede and Naadam Together",
-        body:
-          "A shared celebration connecting Calgary’s Stampede Breakfast spirit with Mongolian Naadam.",
-        image: "/about/impact/stampede-naadam.webp",
-        href: "/events",
-      },
-      {
-        title: "55-Person Community Performance",
-        body:
-          "Children, parents, performers, and volunteers came together through rehearsal, song, and performance.",
-        image: "/about/impact/community-song.webp",
-        href: "/events",
-      },
-      {
-        title: "Spaces for Children and Youth",
-        body:
-          "Programs and gatherings help young people experience Mongolian culture as something active and shared.",
-        image: "/about/impact/youth-culture.webp",
-        href: "/gallery",
-      },
-    ],
-  },
-
-  mn: {
-    eyebrow: "Бидний бахархал",
-    title: "Бидний нөлөө",
-    intro:
-      "Бидний хамт олонтойгоо хамт бүтээсэн онцгой мөчүүд, бахархалт хэсгүүд болон утга учиртай арга хэмжээнүүдийн шууд тойм.",
-    viewMore: "Дэлгэрэнгүй",
-    events: "Арга хэмжээнүүд",
-    gallery: "Зургийн цомог",
-
-    quoteA: "Соёлоо бодитоор харах боломж.",
-    quoteB: "Гэр бүлүүд илүү холбогддог.",
-    quoteC: "Хүмүүс үргэлж дэмждэг.",
-
-    cultureEyebrow: "Соёлоо тэмдэглэх",
-    cultureTitle: "Соёлоо хамтдаа амьд байлгах",
-    cultureIntro:
-      "Манай арга хэмжээнүүд Монгол соёлыг хөдөлгөөн, түүх, хоол, хөгжим, тоглолт болон хамтын оролцоогоор бодитоор мэдрэх орон зайг бий болгодог.",
-
-    cultureActivities: [
-      {
-        title: "Сур харваа болон уламжлалт тоглоом",
-        body:
-          "Сур харваа болон уламжлалт тоглоомууд соёлыг хүүхэд залуус, гэр бүлүүдэд илүү бодит, идэвхтэй, дурсамжтай болгодог.",
-        image: "/about/impact/archery.webp",
-      },
-      {
-        title: "Бөх болон хөдөлгөөнт үйл ажиллагаа",
-        body:
-          "Бөх болон хөдөлгөөнт үйл ажиллагаа нь арга хэмжээнд эрч хүч нэмж, уламжлалтай холбодог.",
-        image: "/about/impact/wrestling.webp",
-      },
-      {
-        title: "Түүх, хэл, дурсамж",
-        body:
-          "Түүх, хэл, хамтын дурсамж нь үе үеийг холбож, соёлын мэдлэгийг амьд байлгадаг.",
-        image: "/about/impact/stories.webp",
-      },
-      {
-        title: "Бүжиг, хөгжим болон тоглолт",
-        body:
-          "Бүжиг, хөгжим, хоол болон тоглолт нь уулзалтыг хүмүүсийн мэдэрч, санаж үлдэх соёлын орон зай болгодог.",
-        image: "/about/impact/dance.webp",
-      },
-    ],
-
-    items: [
-      {
-        title: "Stampede болон Наадам хамтдаа",
-        body:
-          "Calgary Stampede Breakfast-ийн уур амьсгалыг Монгол Наадамтай холбосон хамтын баяр.",
-        image: "/about/impact/stampede-naadam.webp",
-        href: "/events",
-      },
-      {
-        title: "55 хүнтэй хамтын тоглолт",
-        body:
-          "Хүүхдүүд, эцэг эхчүүд, уран бүтээлчид болон сайн дурынхан хамтдаа бэлтгэл хийж, тоглосон.",
-        image: "/about/impact/community-song.webp",
-        href: "/events",
-      },
-      {
-        title: "Хүүхэд залууст зориулсан орон зай",
-        body:
-          "Хүүхэд залууст Монгол соёлыг бодитоор, хамтдаа мэдрэх боломж өгдөг.",
-        image: "/about/impact/youth-culture.webp",
-        href: "/gallery",
-      },
-    ],
-  },
-} as const;
 
 const sectionMotion: Variants = {
   hidden: { opacity: 0, y: 12 },
@@ -184,6 +87,170 @@ const imageMotion: Variants = {
   },
 };
 
+const COPY = {
+  en: {
+    eyebrow: "What We Are Proud Of",
+    title: "Our Impact",
+    intro:
+      "A direct look at some of the notable moments, special parts, and meaningful events we are proud to have created with the community.",
+    viewMore: "View More",
+    events: "View Events",
+    gallery: "View Gallery",
+
+    featuredLabel: "Featured",
+    performanceLabel: "Performance",
+    youthLabel: "Youth",
+
+    quoteA: "Culture represented in real life.",
+    quoteB: "Families feel more connected.",
+    quoteC: "People keep showing up.",
+
+    cultureEyebrow: "Celebrate Culture",
+    cultureTitle: "Culture Practiced Together",
+    cultureIntro:
+      "Our events create space for Mongolian culture to be experienced directly through activity, movement, stories, food, music, and shared participation.",
+
+    cultureActivities: [
+      {
+        id: "archery-games",
+        title: "Archery and Traditional Games",
+        body:
+          "Activities like archery and traditional games help make culture visible, active, and memorable for families and youth.",
+        imageKey: "archery",
+      },
+      {
+        id: "wrestling-activity",
+        title: "Wrestling and Physical Activity",
+        body:
+          "Wrestling and physical activities bring energy into events while connecting people to familiar cultural traditions.",
+        imageKey: "wrestling",
+      },
+      {
+        id: "stories-memory",
+        title: "Stories and Shared Memory",
+        body:
+          "Stories, language, and shared memory help connect generations and keep cultural knowledge alive.",
+        imageKey: "stories",
+      },
+      {
+        id: "dance-music-performance",
+        title: "Dance, Music, and Performance",
+        body:
+          "Dance, music, food, and performance turn gatherings into cultural spaces people can feel and remember.",
+        imageKey: "dance",
+      },
+    ],
+
+    items: [
+      {
+        id: "stampede-naadam",
+        title: "Stampede and Naadam Together",
+        body:
+          "A shared celebration connecting Calgary’s Stampede Breakfast spirit with Mongolian Naadam.",
+        imageKey: "stampedeNaadam",
+        href: "/events",
+      },
+      {
+        id: "community-performance",
+        title: "55-Person Community Performance",
+        body:
+          "Children, parents, performers, and volunteers came together through rehearsal, song, and performance.",
+        imageKey: "communitySong",
+        href: "/events",
+      },
+      {
+        id: "youth-spaces",
+        title: "Spaces for Children and Youth",
+        body:
+          "Programs and gatherings help young people experience Mongolian culture as something active and shared.",
+        imageKey: "youthCulture",
+        href: "/gallery",
+      },
+    ],
+  },
+
+  mn: {
+    eyebrow: "Бидний бахархал",
+    title: "Бидний нөлөө",
+    intro:
+      "Хамт олонтойгоо хамт бүтээсэн онцгой мөчүүд, утга учиртай хэсгүүд болон бахархалт арга хэмжээнүүдийн шууд тойм.",
+    viewMore: "Дэлгэрэнгүй",
+    events: "Арга хэмжээнүүд",
+    gallery: "Зургийн цомог",
+
+    featuredLabel: "Онцлох",
+    performanceLabel: "Тоглолт",
+    youthLabel: "Хүүхэд залуус",
+
+    quoteA: "Соёл бодит амьдрал дээр харагддаг.",
+    quoteB: "Гэр бүлүүд илүү холбоотой болдог.",
+    quoteC: "Хүмүүс үргэлж оролцож, дэмждэг.",
+
+    cultureEyebrow: "Соёлоо тэмдэглэх",
+    cultureTitle: "Соёлоо хамтдаа хэрэгжүүлэх",
+    cultureIntro:
+      "Манай арга хэмжээнүүд Монгол соёлыг хөдөлгөөн, түүх, хоол, хөгжим, тоглолт болон хамтын оролцоогоор шууд мэдрэх орон зайг бий болгодог.",
+
+    cultureActivities: [
+      {
+        id: "archery-games",
+        title: "Сур харваа болон уламжлалт тоглоом",
+        body:
+          "Сур харваа болон уламжлалт тоглоомууд соёлыг гэр бүл, хүүхэд залууст илүү бодит, идэвхтэй, дурсамжтай болгодог.",
+        imageKey: "archery",
+      },
+      {
+        id: "wrestling-activity",
+        title: "Бөх болон хөдөлгөөнт үйл ажиллагаа",
+        body:
+          "Бөх болон хөдөлгөөнт үйл ажиллагаа нь арга хэмжээнд эрч хүч нэмж, хүмүүсийг танил соёлын уламжлалтай холбодог.",
+        imageKey: "wrestling",
+      },
+      {
+        id: "stories-memory",
+        title: "Түүх, хэл, хамтын дурсамж",
+        body:
+          "Түүх, хэл, хамтын дурсамж нь үе үеийг холбож, соёлын мэдлэгийг амьд байлгахад тусалдаг.",
+        imageKey: "stories",
+      },
+      {
+        id: "dance-music-performance",
+        title: "Бүжиг, хөгжим болон тоглолт",
+        body:
+          "Бүжиг, хөгжим, хоол болон тоглолт нь уулзалтыг хүмүүсийн мэдэрч, санаж үлдэх соёлын орон зай болгодог.",
+        imageKey: "dance",
+      },
+    ],
+
+    items: [
+      {
+        id: "stampede-naadam",
+        title: "Stampede болон Наадам хамтдаа",
+        body:
+          "Calgary Stampede Breakfast-ийн уур амьсгалыг Монгол Наадамтай холбосон хамтын баяр.",
+        imageKey: "stampedeNaadam",
+        href: "/events",
+      },
+      {
+        id: "community-performance",
+        title: "55 хүний хамтын тоглолт",
+        body:
+          "Хүүхдүүд, эцэг эхчүүд, уран бүтээлчид болон сайн дурынхан бэлтгэл, дуу, тоглолтоор дамжин хамтдаа нэгдсэн.",
+        imageKey: "communitySong",
+        href: "/events",
+      },
+      {
+        id: "youth-spaces",
+        title: "Хүүхэд залууст зориулсан орон зай",
+        body:
+          "Хөтөлбөрүүд болон цугларалтууд нь залууст Монгол соёлыг идэвхтэй, хамтын зүйл болгон мэдрэхэд тусалдаг.",
+        imageKey: "youthCulture",
+        href: "/gallery",
+      },
+    ],
+  },
+} as const satisfies Record<Lang, Copy>;
+
 function OurImpactMain({ lang }: OurImpactMainProps) {
   const copy = COPY[lang];
   const [main, performance, youth] = copy.items;
@@ -193,17 +260,28 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
       <main>
         <Hero copy={copy} />
 
-        <FeaturedImpact item={main} quote={copy.quoteA} viewMore={copy.viewMore} />
+        <FeaturedImpact
+          item={main}
+          quote={copy.quoteA}
+          label={copy.featuredLabel}
+          viewMore={copy.viewMore}
+        />
 
         <PerformanceBand
           item={performance}
           quote={copy.quoteB}
+          label={copy.performanceLabel}
           viewMore={copy.viewMore}
         />
 
         <CultureSection copy={copy} />
 
-        <YouthBlock item={youth} quote={copy.quoteC} viewMore={copy.viewMore} />
+        <YouthBlock
+          item={youth}
+          quote={copy.quoteC}
+          label={copy.youthLabel}
+          viewMore={copy.viewMore}
+        />
 
         <FinalLinks events={copy.events} gallery={copy.gallery} />
       </main>
@@ -211,11 +289,11 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
   );
 }
 
-function Hero({ copy }: { copy: (typeof COPY)[Lang] }) {
+const Hero = memo(function Hero({ copy }: { copy: Copy }) {
   return (
     <section className="relative overflow-hidden px-6 pb-24 pt-28 md:px-10 lg:pt-32">
       <img
-        src="/landingpage.webp"
+        src={IMAGE_PATHS.landing}
         alt=""
         loading="eager"
         fetchPriority="high"
@@ -247,15 +325,17 @@ function Hero({ copy }: { copy: (typeof COPY)[Lang] }) {
       </motion.div>
     </section>
   );
-}
+});
 
-function FeaturedImpact({
+const FeaturedImpact = memo(function FeaturedImpact({
   item,
   quote,
+  label,
   viewMore,
 }: {
   item: ImpactItem;
   quote: string;
+  label: string;
   viewMore: string;
 }) {
   return (
@@ -269,7 +349,7 @@ function FeaturedImpact({
       >
         <div className="max-w-xl">
           <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            Featured
+            {label}
           </p>
 
           <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
@@ -287,19 +367,21 @@ function FeaturedImpact({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock src={item.image} alt={item.title} tall />
+        <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
       </motion.article>
     </section>
   );
-}
+});
 
-function PerformanceBand({
+const PerformanceBand = memo(function PerformanceBand({
   item,
   quote,
+  label,
   viewMore,
 }: {
   item: ImpactItem;
   quote: string;
+  label: string;
   viewMore: string;
 }) {
   return (
@@ -311,11 +393,11 @@ function PerformanceBand({
         viewport={{ once: true, amount: 0.18 }}
         className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
       >
-        <ImageBlock src={item.image} alt={item.title} tall />
+        <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
 
         <div className="max-w-xl lg:justify-self-end">
           <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-            Performance
+            {label}
           </p>
 
           <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
@@ -335,15 +417,17 @@ function PerformanceBand({
             className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
           >
             {viewMore}
-            <span className="ml-3">→</span>
+            <span className="ml-3" aria-hidden="true">
+              →
+            </span>
           </Link>
         </div>
       </motion.article>
     </section>
   );
-}
+});
 
-function CultureSection({ copy }: { copy: (typeof COPY)[Lang] }) {
+const CultureSection = memo(function CultureSection({ copy }: { copy: Copy }) {
   return (
     <section className="bg-[#fffaf0]">
       <div className="px-6 py-20 text-center md:px-10">
@@ -370,7 +454,7 @@ function CultureSection({ copy }: { copy: (typeof COPY)[Lang] }) {
 
       {copy.cultureActivities.map((activity, index) => (
         <CultureActivityRow
-          key={activity.title}
+          key={activity.id}
           activity={activity}
           reverse={index % 2 === 1}
           large={index === 0 || index === 3}
@@ -379,9 +463,9 @@ function CultureSection({ copy }: { copy: (typeof COPY)[Lang] }) {
       ))}
     </section>
   );
-}
+});
 
-function CultureActivityRow({
+const CultureActivityRow = memo(function CultureActivityRow({
   activity,
   reverse = false,
   large = false,
@@ -439,32 +523,35 @@ function CultureActivityRow({
           ].join(" ")}
         >
           <img
-            src={activity.image}
+            src={IMAGE_PATHS[activity.imageKey]}
             alt={activity.title}
             loading="lazy"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
           />
+
           <div className="absolute inset-0 bg-black/10" />
         </motion.div>
       </motion.article>
     </section>
   );
-}
+});
 
-function YouthBlock({
+const YouthBlock = memo(function YouthBlock({
   item,
   quote,
+  label,
   viewMore,
 }: {
   item: ImpactItem;
   quote: string;
+  label: string;
   viewMore: string;
 }) {
   return (
     <section className="relative overflow-hidden px-6 py-24 md:px-10">
       <img
-        src="/landingpage.webp"
+        src={IMAGE_PATHS.landing}
         alt=""
         loading="lazy"
         decoding="async"
@@ -483,7 +570,7 @@ function YouthBlock({
       >
         <div className="text-[#fffaf0]">
           <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-            Youth
+            {label}
           </p>
 
           <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
@@ -503,17 +590,25 @@ function YouthBlock({
             className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
           >
             {viewMore}
-            <span className="ml-3">→</span>
+            <span className="ml-3" aria-hidden="true">
+              →
+            </span>
           </Link>
         </div>
 
-        <ImageBlock src={item.image} alt={item.title} tall />
+        <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
       </motion.article>
     </section>
   );
-}
+});
 
-function FinalLinks({ events, gallery }: { events: string; gallery: string }) {
+const FinalLinks = memo(function FinalLinks({
+  events,
+  gallery,
+}: {
+  events: string;
+  gallery: string;
+}) {
   return (
     <section className="bg-[#27301d] px-6 py-14 text-center md:px-10">
       <div className="flex flex-wrap justify-center gap-4">
@@ -533,9 +628,9 @@ function FinalLinks({ events, gallery }: { events: string; gallery: string }) {
       </div>
     </section>
   );
-}
+});
 
-function ImageBlock({
+const ImageBlock = memo(function ImageBlock({
   src,
   alt,
   tall = false,
@@ -562,10 +657,11 @@ function ImageBlock({
         decoding="async"
         className="absolute inset-0 h-full w-full object-cover"
       />
+
       <div className="absolute inset-0 bg-black/10" />
     </motion.div>
   );
-}
+});
 
 function TextLink({ to, children }: { to: string; children: string }) {
   return (
@@ -574,7 +670,9 @@ function TextLink({ to, children }: { to: string; children: string }) {
       className="mt-7 inline-flex bg-[#27301d] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
     >
       {children}
-      <span className="ml-3">→</span>
+      <span className="ml-3" aria-hidden="true">
+        →
+      </span>
     </Link>
   );
 }

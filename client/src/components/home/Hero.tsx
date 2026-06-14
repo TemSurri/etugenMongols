@@ -13,9 +13,16 @@ type HeroProps = {
   lang: Lang;
 };
 
+type StoryImageKey =
+  | "community"
+  | "culture"
+  | "founding"
+  | "children"
+  | "landing";
+
 type StoryItem = {
   body: string;
-  image: string;
+  imageKey: StoryImageKey;
 };
 
 type Copy = {
@@ -31,105 +38,43 @@ type Copy = {
   story: readonly StoryItem[];
 };
 
-/**
- * RESOURCE:
- * Replace with the YouTube ID for the featured event video.
- * Example: https://www.youtube.com/watch?v=abc123 -> "abc123"
- */
+type StoryRowProps = {
+  body: string;
+  image: string;
+  reverse?: boolean;
+  tone?: "cream" | "green";
+  imageLarge?: boolean;
+};
+
 const FEATURED_VIDEO_ID = "YOUR_FEATURED_EVENT_VIDEO_ID";
 
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+const IMAGE_PATHS: Record<StoryImageKey, string> = {
+  community: "/about/story-community.webp",
+  culture: "/about/story-culture.webp",
+  founding: "/about/founding-group.webp",
+  children: "/about/story-children.webp",
+  landing: "/landingpage.webp",
+};
 
-/**
- * IMAGE RESOURCES:
- * public/landingpage.webp
- * public/about/story-community.webp
- * public/about/story-culture.webp
- * public/about/founding-group.webp
- * public/about/story-children.webp
- */
-const COPY = {
-  en: {
-    brand: "Etugen Mongols",
-    title: "Preserving heritage through culture, language, and tradition.",
-    subtitle:
-      "A Calgary-based Mongolian non-profit built by families, volunteers, and community members.",
-    storyButton: "Our Story",
-    eventHosted: "An event we hosted",
-    viewEvents: "View Events",
-    viewPrograms: "View Programs",
-    meetTeam: "Meet the Team",
-    closing:
-      "We officially host events and programs for the Mongolian community in Calgary.",
-    story: [
-      {
-        body:
-          "We are first-generation immigrant parents from Mongolia. A few of us arrived in Calgary, Alberta, in 2006, drawn here in part because it felt familiar — a similar climate, mountains and rivers that remind us of our homeland, and vast open fields dotted with livestock that echo our nomadic roots. Above all, it is a country that welcomes not only people from every corner of the world, but the cultures and traditions they bring with them. Here we found our footing, grew our careers, and raised our families far from the land where we were born.",
-        image: "/about/story-community.webp",
-      },
-      {
-        body:
-          "There is an old Mongolian saying: when you drink the water of a land, you honour its traditions and live by its values. We carry that wisdom with us every day, weaving our lives, our values, and our hearts into Canadian soil, as every Canadian does. At the same time, we hold our heritage close to our hearts, cherishing where we come from.",
-        image: "/about/story-culture.webp",
-      },
-      {
-        body:
-          "Back then, the Mongolian community in Calgary numbered fewer than a hundred people. We knew nearly every face. And whenever our small community held an event, we showed up — each of us doing a small piece to help, to organize, and to take part with pride, simply as neighbours who didn't want our traditions to fade so far from home.",
-        image: "/about/founding-group.webp",
-      },
-      {
-        body:
-          'In June 2011, a group of mothers organized our very first Children’s Day festival, "Mom, Dad and Me," at Bowness Park. With no budget and no grand plan, we simply shared a dream of building a home away from home.',
-        image: "/about/story-children.webp",
-      },
-      {
-        body:
-          "From that single day, Etugen Mongols was born — not on paper, but in our shared goals and dreams. For years, we poured our open hearts into it — organizing events, bringing families together, and keeping our kids connected to their roots. As our community grew, so did the need for a true foundation. That's why we officially stepped up to establish our non-profit organization, giving us a lasting way to lead, gather, and pass our heritage on to every generation to come.",
-        image: "/landingpage.webp",
-      },
-    ],
+const FLAG_IMAGES = [
+  {
+    src: mongoliaFlag,
+    alt: "Mongolia flag",
   },
-  mn: {
-    brand: "Этүгэн Монголчууд",
-    title: "Соёл, хэл, уламжлалаараа дамжуулан өв соёлоо хадгална.",
-    subtitle:
-      "Калгари дахь Монгол гэр бүлүүд, сайн дурынхан, хамт олноор бүтсэн ашгийн бус байгууллага.",
-    storyButton: "Бидний түүх",
-    eventHosted: "Бидний зохион байгуулсан арга хэмжээ",
-    viewEvents: "Арга хэмжээнүүд",
-    viewPrograms: "Хөтөлбөрүүд",
-    meetTeam: "Багтай танилцах",
-    closing:
-      "Бид Калгари дахь Монгол хамт олонд зориулсан арга хэмжээ, хөтөлбөрүүдийг албан ёсоор зохион байгуулдаг.",
-    story: [
-      {
-        body:
-          "Бид бол Монголоос ирсэн анхны үеийн цагаач эцэг эхчүүд. Бидний зарим нь 2006 онд Альберта мужийн Калгари хотод ирсэн. Эндхийн цаг агаар, уулс, гол мөрөн, мал бэлчсэн уудам тал нутаг нь эх орноо санагдуулам танил мэдрэмж төрүүлсэн. Хамгийн гол нь Канад улс дэлхийн өнцөг булан бүрээс ирсэн хүмүүсийг төдийгүй тэдний соёл, уламжлалыг хүндэтгэн хүлээн авдаг орон байлаа. Энд бид амьдралаа төвхнүүлж, ажил мэргэжлээ хөгжүүлж, төрсөн нутгаасаа хол гэр бүлээ өсгөсөн.",
-        image: "/about/story-community.webp",
-      },
-      {
-        body:
-          "Монголчуудын дунд нэгэн үг бий: нутгийн ус уувал ёсыг нь дагана. Бид энэ ухааныг өдөр бүр сэтгэлдээ тээж, Канадын үнэт зүйлсийг хүндэтгэхийн зэрэгцээ өөрсдийн өв соёл, эх нутгаа зүрхэндээ нандигнан хадгалсаар ирсэн.",
-        image: "/about/story-culture.webp",
-      },
-      {
-        body:
-          "Тэр үед Калгари дахь Монголчуудын тоо зуугаас ч цөөн байлаа. Бид бараг хүн бүрийг таньдаг байсан. Жижигхэн хамт олон маань ямар нэгэн арга хэмжээ зохион байгуулахад хүн бүр өөрийн чадах зүйлээр тусалж, оролцож, уламжлалаа эх нутгаасаа холдсон ч мартагдуулахгүй гэсэн сэтгэлээр нэгддэг байсан.",
-        image: "/about/founding-group.webp",
-      },
-      {
-        body:
-          "2011 оны зургаадугаар сард хэсэг ээжүүд Боунис Паркт анхны Хүүхдийн баярын арга хэмжээ болох “Ээж, аав бид гурав”-ыг зохион байгуулсан. Төсөв ч үгүй, том төлөвлөгөө ч үгүй байсан ч бидэнд Монгол гэр бүлүүдэд зориулсан эх орноосоо хол дахь гэр мэт орон зайг бий болгох нэгэн мөрөөдөл байсан.",
-        image: "/about/story-children.webp",
-      },
-      {
-        body:
-          "Тэр нэг өдрөөс Этүгэн Монголчууд төрсөн — цаасан дээр биш, харин бидний хамтын зорилго, мөрөөдөл дунд. Олон жилийн турш бид нээлттэй сэтгэлээрээ арга хэмжээ зохион байгуулж, гэр бүлүүдийг нэгтгэж, хүүхдүүдээ үндэс угсаатай нь холбосоор ирсэн. Хамт олон маань өсөхийн хэрээр бат бөх суурь хэрэгтэй болсон. Тиймээс бид ашгийн бус байгууллагаа албан ёсоор байгуулж, хойч үедээ өв соёлоо өвлүүлэн үлдээх, хамтдаа цуглах, манлайлах тогтвортой замыг бий болгосон.",
-        image: "/landingpage.webp",
-      },
-    ],
+  {
+    src: canadaFlag,
+    alt: "Canada flag",
   },
-} as const satisfies Record<Lang, Copy>;
+] as const;
+
+const STORY_ROW_CONFIG = [
+  { reverse: false, tone: "cream", imageLarge: false },
+  { reverse: true, tone: "green", imageLarge: false },
+  { reverse: false, tone: "cream", imageLarge: true },
+  { reverse: true, tone: "cream", imageLarge: false },
+] as const;
+
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const heroMotion: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -160,15 +105,99 @@ const imageMotion: Variants = {
 
 const flagClassName = "h-6 object-contain shadow-lg md:h-8 lg:h-9";
 
+const COPY = {
+  en: {
+    brand: "Etugen Mongols",
+    title: "Preserving heritage through culture, language, and tradition.",
+    subtitle:
+      "A Calgary-based Mongolian not-for-profit built by families, for families.",
+    storyButton: "Our Story",
+    eventHosted: "An event we hosted",
+    viewEvents: "View Events",
+    viewPrograms: "View Programs",
+    meetTeam: "Meet the Team",
+    closing:
+      "We officially host events and programs for the Mongolian community in Calgary.",
+    story: [
+      {
+        body:
+          "We are first-generation immigrant parents from Mongolia. A few of us arrived in Calgary, Alberta, in 2006, drawn here in part because it felt familiar — a similar climate, mountains and rivers that remind us of our homeland, and vast open fields dotted with livestock that echo our nomadic roots. Above all, it is a country that welcomes not only people from every corner of the world, but the cultures and traditions they bring with them. Here we found our footing, grew our careers, and raised our families far from the land where we were born.",
+        imageKey: "community",
+      },
+      {
+        body:
+          "There is an old Mongolian saying: when you drink the water of a land, you honour its traditions and live by its values. We carry that wisdom with us every day, weaving our lives, our values, and our hearts into Canadian soil, as every Canadian does. At the same time, we hold our heritage close to our hearts, cherishing where we come from.",
+        imageKey: "culture",
+      },
+      {
+        body:
+          "Back then, the Mongolian community in Calgary numbered fewer than a hundred people. We knew nearly every face. And whenever our small community held an event, we showed up — each of us doing a small piece to help, to organize, and to take part with pride, simply as neighbours who didn't want our traditions to fade so far from home.",
+        imageKey: "founding",
+      },
+      {
+        body:
+          'In June 2011, a group of mothers organized our very first Children’s Day festival, "Mom, Dad and Me," at Bowness Park. With no budget and no grand plan, we simply shared a dream of building a home away from home.',
+        imageKey: "children",
+      },
+      {
+        body:
+          "From that single day, Etugen Mongols was born — not on paper, but in our shared goals and dreams. For years, we poured our open hearts into it — organizing events, bringing families together, and keeping our kids connected to their roots. As our community grew, so did the need for a true foundation. That's why we officially stepped up to establish our non-profit organization, giving us a lasting way to lead, gather, and pass our heritage on to every generation to come.",
+        imageKey: "landing",
+      },
+    ],
+  },
+  mn: {
+    brand: "Этүгэн Монголчууд",
+    title: "Соёл, хэл, уламжлалаараа дамжуулан өв соёлоо хадгална.",
+    subtitle:
+      "Калгари дахь Монгол гэр бүлүүдийн төлөө, Монгол гэр бүлүүдийн бүтээсэн ашгийн бус байгууллага.",
+    storyButton: "Бидний түүх",
+    eventHosted: "Бидний зохион байгуулсан арга хэмжээ",
+    viewEvents: "Арга хэмжээнүүд",
+    viewPrograms: "Хөтөлбөрүүд",
+    meetTeam: "Багтай танилцах",
+    closing:
+      "Бид Калгари дахь Монгол хамт олонд зориулсан арга хэмжээ, хөтөлбөрүүдийг албан ёсоор зохион байгуулдаг.",
+    story: [
+      {
+        body:
+          "Бид бол Монголоос ирсэн анхны үеийн цагаач эцэг эхчүүд. Бидний зарим нь 2006 онд Альберта мужийн Калгари хотод ирсэн. Эндхийн цаг агаар, уулс, гол мөрөн, мал бэлчсэн уудам тал нутаг нь эх орноо санагдуулам танил мэдрэмж төрүүлсэн. Хамгийн гол нь Канад улс дэлхийн өнцөг булан бүрээс ирсэн хүмүүсийг төдийгүй тэдний соёл, уламжлалыг хүндэтгэн хүлээн авдаг орон байлаа. Энд бид амьдралаа төвхнүүлж, ажил мэргэжлээ хөгжүүлж, төрсөн нутгаасаа хол гэр бүлээ өсгөсөн.",
+        imageKey: "community",
+      },
+      {
+        body:
+          "Монголчуудын дунд нэгэн үг бий: нутгийн ус уувал ёсыг нь дагана. Бид энэ ухааныг өдөр бүр сэтгэлдээ тээж, Канадын үнэт зүйлсийг хүндэтгэхийн зэрэгцээ өөрсдийн өв соёл, эх нутгаа зүрхэндээ нандигнан хадгалсаар ирсэн.",
+        imageKey: "culture",
+      },
+      {
+        body:
+          "Тэр үед Калгари дахь Монголчуудын тоо зуугаас ч цөөн байлаа. Бид бараг хүн бүрийг таньдаг байсан. Жижигхэн хамт олон маань ямар нэгэн арга хэмжээ зохион байгуулахад хүн бүр өөрийн чадах зүйлээр тусалж, оролцож, уламжлалаа эх нутгаасаа холдсон ч мартагдуулахгүй гэсэн сэтгэлээр нэгддэг байсан.",
+        imageKey: "founding",
+      },
+      {
+        body:
+          "2011 оны зургаадугаар сард хэсэг ээжүүд Боунис Паркт анхны Хүүхдийн баярын арга хэмжээ болох “Ээж, аав бид гурав”-ыг зохион байгуулсан. Төсөв ч үгүй, том төлөвлөгөө ч үгүй байсан ч бидэнд эх орноосоо хол Монгол гэр бүлүүдэд зориулсан гэр мэт орон зайг бий болгох нэгэн мөрөөдөл байсан.",
+        imageKey: "children",
+      },
+      {
+        body:
+          "Тэр нэг өдрөөс Этүгэн Монголчууд төрсөн — цаасан дээр биш, харин бидний хамтын зорилго, мөрөөдөл дунд. Олон жилийн турш бид нээлттэй сэтгэлээрээ арга хэмжээ зохион байгуулж, гэр бүлүүдийг нэгтгэж, хүүхдүүдээ үндэс угсаатай нь холбосоор ирсэн. Хамт олон маань өсөхийн хэрээр бат бөх суурь хэрэгтэй болсон. Тиймээс бид ашгийн бус байгууллагаа албан ёсоор байгуулж, хойч үедээ өв соёлоо өвлүүлэн үлдээх, хамтдаа цуглах, манлайлах тогтвортой замыг бий болгосон.",
+        imageKey: "landing",
+      },
+    ],
+  },
+} as const satisfies Record<Lang, Copy>;
+
 function Hero({ lang }: HeroProps) {
   const copy = COPY[lang];
+  const mainStoryRows = copy.story.slice(0, 4);
+  const finalStoryRow = copy.story[4];
 
   return (
     <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
-      {/* HERO RESOURCE: public/landingpage.webp */}
       <section className="relative min-h-screen overflow-hidden bg-[#2f3320]">
         <img
-          src="/landingpage.webp"
+          src={IMAGE_PATHS.landing}
           alt=""
           loading="eager"
           fetchPriority="high"
@@ -187,22 +216,17 @@ function Hero({ lang }: HeroProps) {
             animate="show"
             className="max-w-2xl"
           >
-            {/* FLAG RESOURCES: imported assets */}
             <div className="mb-7 flex items-center gap-3">
-              <img
-                src={mongoliaFlag}
-                alt="Mongolia flag"
-                loading="eager"
-                decoding="async"
-                className={flagClassName}
-              />
-              <img
-                src={canadaFlag}
-                alt="Canada flag"
-                loading="eager"
-                decoding="async"
-                className={flagClassName}
-              />
+              {FLAG_IMAGES.map((flag) => (
+                <img
+                  key={flag.alt}
+                  src={flag.src}
+                  alt={flag.alt}
+                  loading="eager"
+                  decoding="async"
+                  className={flagClassName}
+                />
+              ))}
             </div>
 
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
@@ -222,16 +246,18 @@ function Hero({ lang }: HeroProps) {
               className="mt-9 inline-flex items-center bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline shadow-[0_18px_50px_rgba(0,0,0,0.25)] transition-colors duration-200 hover:bg-[#e1d2a6]"
             >
               {copy.storyButton}
-              <span className="ml-3">↓</span>
+              <span className="ml-3" aria-hidden="true">
+                ↓
+              </span>
             </a>
           </motion.div>
 
-          {/* FEATURED VIDEO RESOURCE: replace FEATURED_VIDEO_ID */}
           <motion.aside
             variants={heroMotion}
             initial="hidden"
             animate="show"
             className="hidden justify-self-end lg:block"
+            aria-label="Featured event video"
           >
             <div className="w-[28rem] border border-[#e1d2a6]/45 bg-[#fffaf0]/94 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm">
               <div className="h-[15.75rem] overflow-hidden bg-[#27301d]">
@@ -262,20 +288,22 @@ function Hero({ lang }: HeroProps) {
         </div>
       </section>
 
-      {/* STORY TARGET: scroll-mt accounts for fixed header */}
       <main id="story" className="scroll-mt-20 bg-[#fffaf0]">
-        {copy.story.slice(0, 4).map((item, index) => (
-          <StoryRow
-            key={`${lang}-${index}`}
-            body={item.body}
-            image={item.image}
-            reverse={index % 2 === 1}
-            tone={index === 1 ? "green" : "cream"}
-            imageLarge={index === 2}
-          />
-        ))}
+        {mainStoryRows.map((item, index) => {
+          const config = STORY_ROW_CONFIG[index];
 
-        {/* FINAL STORY ROW RESOURCE: public/landingpage.webp */}
+          return (
+            <StoryRow
+              key={item.imageKey}
+              body={item.body}
+              image={IMAGE_PATHS[item.imageKey]}
+              reverse={config.reverse}
+              tone={config.tone}
+              imageLarge={config.imageLarge}
+            />
+          );
+        })}
+
         <section className="bg-[#efefec]">
           <motion.article
             variants={rowMotion}
@@ -286,7 +314,7 @@ function Hero({ lang }: HeroProps) {
           >
             <div className="flex h-full items-center px-6 py-14 text-center md:px-10 lg:px-12 lg:py-18">
               <p className="mx-auto max-w-lg text-[15px] leading-8 text-[#4e593c] sm:text-base sm:leading-8">
-                {copy.story[4].body}
+                {finalStoryRow.body}
               </p>
             </div>
 
@@ -298,7 +326,7 @@ function Hero({ lang }: HeroProps) {
               className="relative h-[22rem] overflow-hidden sm:h-[28rem] lg:h-full"
             >
               <img
-                src={copy.story[4].image}
+                src={IMAGE_PATHS[finalStoryRow.imageKey]}
                 alt=""
                 loading="lazy"
                 decoding="async"
@@ -309,7 +337,6 @@ function Hero({ lang }: HeroProps) {
           </motion.article>
         </section>
 
-        {/* FINAL CTA */}
         <section className="bg-[#fffaf0] px-6 py-20 text-center md:px-10">
           <motion.div
             variants={rowMotion}
@@ -342,7 +369,7 @@ function Hero({ lang }: HeroProps) {
               </Link>
 
               <Link
-                to="/about/programs"
+                to="/programs"
                 className="inline-flex border border-[#b39135]/45 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#b39135] hover:text-[#fffaf0]"
               >
                 {copy.viewPrograms}
@@ -355,15 +382,7 @@ function Hero({ lang }: HeroProps) {
   );
 }
 
-type StoryRowProps = {
-  body: string;
-  image: string;
-  reverse?: boolean;
-  tone?: "cream" | "green";
-  imageLarge?: boolean;
-};
-
-function StoryRow({
+const StoryRow = memo(function StoryRow({
   body,
   image,
   reverse = false,
@@ -397,7 +416,6 @@ function StoryRow({
           </p>
         </div>
 
-        {/* STORY IMAGE RESOURCE: image path comes from COPY.story */}
         <motion.div
           variants={imageMotion}
           initial="hidden"
@@ -419,6 +437,6 @@ function StoryRow({
       </motion.article>
     </section>
   );
-}
+});
 
 export default memo(Hero);

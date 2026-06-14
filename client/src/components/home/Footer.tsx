@@ -4,8 +4,6 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaYoutube } from "react-icons/fa";
 
-import logo from "../../assets/logo.webp";
-
 const SOCIAL_LINKS = [
   {
     label: "Facebook",
@@ -32,7 +30,7 @@ function Footer() {
         >
           <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#d8caa5]/70 bg-white/60 shadow-[0_8px_22px_rgba(88,72,38,0.08)]">
             <img
-              src={logo}
+              src="/logo.webp"
               alt="Etugen Mongols logo"
               loading="lazy"
               decoding="async"
@@ -45,7 +43,7 @@ function Footer() {
               Etugen Mongols
             </span>
             <span className="mt-1 block text-[10px] uppercase tracking-[0.2em] text-[#9a7b26]">
-              Strengthening the mongolian calgary community
+              We want every child to know: your roots are your wings
             </span>
           </span>
         </Link>

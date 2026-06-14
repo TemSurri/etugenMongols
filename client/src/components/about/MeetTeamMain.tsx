@@ -10,13 +10,68 @@ type MeetTeamMainProps = {
   lang: Lang;
 };
 
+type LocalizedText = Record<Lang, string>;
+
 type TeamMember = {
+  id: string;
   name: string;
-  role: { en: string; mn: string };
-  image: string;
+  role: LocalizedText;
+  imageKey: TeamImageKey;
 };
 
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+type TeamImageKey =
+  | "landing"
+  | "founding1"
+  | "founding2"
+  | "founding3"
+  | "founding4"
+  | "founding5"
+  | "community1"
+  | "community2"
+  | "community3"
+  | "community4"
+  | "communityWide1"
+  | "communityWide2"
+  | "communityWide3";
+
+type Copy = {
+  eyebrow: string;
+  boardTitle: string;
+  boardBody: string;
+  appreciationTitle: string;
+  appreciationIntro: string;
+  contributorBody: string;
+  communityTitle: string;
+  communityBody: string;
+  impactTitle: string;
+  impactBody: string;
+  impactButton: string;
+};
+
+const IMAGE_PATHS: Record<TeamImageKey, string> = {
+  landing: "/landingpage.webp",
+
+  founding1: "/about/founding-1.webp",
+  founding2: "/about/founding-2.webp",
+  founding3: "/about/founding-3.webp",
+  founding4: "/about/founding-4.webp",
+  founding5: "/about/founding-5.webp",
+
+  community1: "/about/community-1.webp",
+  community2: "/about/community-2.webp",
+  community3: "/about/community-3.webp",
+  community4: "/about/community-4.webp",
+
+  communityWide1: "/about/community-wide-1.webp",
+  communityWide2: "/about/community-wide-2.webp",
+  communityWide3: "/about/community-wide-3.webp",
+};
+
+const COMMUNITY_WIDE_IMAGE_KEYS: TeamImageKey[] = [
+  "communityWide1",
+  "communityWide2",
+  "communityWide3",
+];
 
 const COPY = {
   en: {
@@ -41,78 +96,83 @@ const COPY = {
     eyebrow: "Манай хамт олон",
     boardTitle: "Удирдах зөвлөлийн гишүүд",
     boardBody:
-      "Удирдах зөвлөлийн гишүүд Этүгэн Монголчуудын үйл ажиллагааг зохион байгуулж, чиглүүлж, дэмждэг. Тэд арга хэмжээ зохицуулах, хөтөлбөр хөгжүүлэх, гэр бүлүүдийг холбох болон хамтын ажлыг жилийн турш урагшлуулахад оролцдог.",
-    appreciationTitle: "Талархалтайгаар",
+      "Манай удирдах зөвлөлийн гишүүд Этүгэн Монголчуудын үйл ажиллагааг зохион байгуулж, чиглүүлж, дэмждэг. Тэд арга хэмжээ зохицуулах, хөтөлбөр хөгжүүлэх, гэр бүлүүдийг холбох болон хамтын ажлыг жилийн турш урагшлуулахад хувь нэмэр оруулдаг.",
+    appreciationTitle: "Гүн талархал илэрхийлье",
     appreciationIntro:
-      "Манай үйл ажиллагааг онцгой болгохын төлөө их цаг, сэтгэл, хүч хөдөлмөр, бодит хувь нэмрээ зориулсан хүмүүст талархал илэрхийлье.",
+      "Манай үйл ажиллагааг хамт олонд онцгой болгохын төлөө цаг зав, эрч хүч, сэтгэл, хөдөлмөрөө зориулсан хүмүүст гүн талархал илэрхийлье.",
     contributorBody:
-      "Арга хэмжээ, тоглолт, медиа, зохион байгуулалт болон хамтын дэмжлэгийг бүтээхэд оролцдог өргөн багийн нэг хэсэг.",
+      "Арга хэмжээ, тоглолт, медиа, зохион байгуулалт болон хамтын дэмжлэгийг амьдруулахад хувь нэмэр оруулдаг өргөн багийн нэг хэсэг.",
     communityTitle: "Манай хамт олон",
     communityBody:
-      "Оролцож, дэмжиж, сайн дураар тусалж, уран бүтээлээ хуваалцаж, хамт олноо холбож байдаг бүх хүмүүст зориулав.",
-    impactTitle: "Бидний нөлөө",
+      "Оролцож, дэмжиж, сайн дураар тусалж, тоглож, зохион байгуулж, хамт олноо холбоотой байлгахад хувь нэмэр оруулдаг бүх хүнд зориулав.",
+    impactTitle: "Бидний нөлөөг харах",
     impactBody:
-      "Соёл, сайн дурын оролцоо, гэр бүлийн хамтын ажиллагаа болон халуун сэтгэлээр хамтдаа бүтээсэн нөлөөг хараарай.",
-    impactButton: "Нөлөөг үзэх",
+      "Соёл, сайн дурын оролцоо, гэр бүлийн оролцоо болон хамтын халамжаар бид хамтдаа юу бүтээснийг хараарай.",
+    impactButton: "Бидний нөлөөг үзэх",
   },
-} as const;
+} as const satisfies Record<Lang, Copy>;
 
 const BOARD_MEMBERS: TeamMember[] = [
   {
+    id: "board-1",
     name: "Member One",
     role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    image: "/about/founding-1.webp",
+    imageKey: "founding1",
   },
   {
+    id: "board-2",
     name: "Member Two",
     role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    image: "/about/founding-2.webp",
+    imageKey: "founding2",
   },
   {
+    id: "board-3",
     name: "Member Three",
     role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    image: "/about/founding-3.webp",
+    imageKey: "founding3",
   },
   {
+    id: "board-4",
     name: "Member Four",
     role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    image: "/about/founding-4.webp",
+    imageKey: "founding4",
   },
   {
+    id: "board-5",
     name: "Member Five",
     role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    image: "/about/founding-5.webp",
+    imageKey: "founding5",
   },
 ];
 
 const COMMUNITY_MEMBERS: TeamMember[] = [
   {
+    id: "contributor-1",
     name: "Contributor One",
     role: { en: "Volunteer", mn: "Сайн дурын ажилтан" },
-    image: "/about/community-1.webp",
+    imageKey: "community1",
   },
   {
+    id: "contributor-2",
     name: "Contributor Two",
     role: { en: "Performer / Artist", mn: "Уран бүтээлч" },
-    image: "/about/community-2.webp",
+    imageKey: "community2",
   },
   {
+    id: "contributor-3",
     name: "Contributor Three",
     role: { en: "Community Supporter", mn: "Хамт олны дэмжигч" },
-    image: "/about/community-3.webp",
+    imageKey: "community3",
   },
   {
+    id: "contributor-4",
     name: "Contributor Four",
     role: { en: "Photographer", mn: "Зурагчин" },
-    image: "/about/community-4.webp",
+    imageKey: "community4",
   },
 ];
 
-const COMMUNITY_IMAGES = [
-  "/about/community-wide-1.webp",
-  "/about/community-wide-2.webp",
-  "/about/community-wide-3.webp",
-];
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const sectionMotion: Variants = {
   hidden: { opacity: 0, y: 12 },
@@ -139,7 +199,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
       <main>
         <section className="relative overflow-hidden px-6 pb-20 pt-28 md:px-10 lg:pt-32">
           <img
-            src="/landingpage.webp"
+            src={IMAGE_PATHS.landing}
             alt=""
             loading="eager"
             fetchPriority="high"
@@ -172,7 +232,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
             <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5">
               {BOARD_MEMBERS.map((member) => (
-                <BoardCard key={member.name} member={member} lang={lang} />
+                <BoardCard key={member.id} member={member} lang={lang} />
               ))}
             </div>
           </motion.div>
@@ -204,7 +264,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
         {COMMUNITY_MEMBERS.map((member, index) => (
           <ContributorStoryRow
-            key={member.name}
+            key={member.id}
             member={member}
             lang={lang}
             body={copy.contributorBody}
@@ -221,14 +281,20 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
   );
 }
 
-function BoardCard({ member, lang }: { member: TeamMember; lang: Lang }) {
+const BoardCard = memo(function BoardCard({
+  member,
+  lang,
+}: {
+  member: TeamMember;
+  lang: Lang;
+}) {
   return (
     <motion.article
       variants={sectionMotion}
       className="group relative aspect-[4/5] overflow-hidden bg-[#e8ebe3] shadow-[0_14px_34px_rgba(39,48,29,0.10)]"
     >
       <img
-        src={member.image}
+        src={IMAGE_PATHS[member.imageKey]}
         alt={member.name}
         loading="lazy"
         decoding="async"
@@ -246,9 +312,9 @@ function BoardCard({ member, lang }: { member: TeamMember; lang: Lang }) {
       </div>
     </motion.article>
   );
-}
+});
 
-function ContributorStoryRow({
+const ContributorStoryRow = memo(function ContributorStoryRow({
   member,
   lang,
   body,
@@ -300,20 +366,25 @@ function ContributorStoryRow({
           }`}
         >
           <img
-            src={member.image}
+            src={IMAGE_PATHS[member.imageKey]}
             alt={member.name}
             loading="lazy"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover object-top"
           />
+
           <div className="absolute inset-0 bg-black/10" />
         </motion.div>
       </motion.article>
     </section>
   );
-}
+});
 
-function CommunityDedication({ copy }: { copy: (typeof COPY)[Lang] }) {
+const CommunityDedication = memo(function CommunityDedication({
+  copy,
+}: {
+  copy: Copy;
+}) {
   return (
     <section className="bg-[#fffaf0] px-6 py-20 text-center md:px-10">
       <motion.div
@@ -338,21 +409,22 @@ function CommunityDedication({ copy }: { copy: (typeof COPY)[Lang] }) {
         </div>
 
         <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {COMMUNITY_IMAGES.map((src, index) => (
+          {COMMUNITY_WIDE_IMAGE_KEYS.map((imageKey, index) => (
             <div
-              key={src}
+              key={imageKey}
               className={[
                 "relative h-[18rem] overflow-hidden bg-[#e8dcc2]",
                 index === 1 ? "md:mt-10" : "",
               ].join(" ")}
             >
               <img
-                src={src}
+                src={IMAGE_PATHS[imageKey]}
                 alt=""
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
               />
+
               <div className="absolute inset-0 bg-black/10" />
             </div>
           ))}
@@ -360,13 +432,13 @@ function CommunityDedication({ copy }: { copy: (typeof COPY)[Lang] }) {
       </motion.div>
     </section>
   );
-}
+});
 
-function ImpactCta({ copy }: { copy: (typeof COPY)[Lang] }) {
+const ImpactCta = memo(function ImpactCta({ copy }: { copy: Copy }) {
   return (
     <section className="relative overflow-hidden px-6 py-24 text-center md:px-10">
       <img
-        src="/landingpage.webp"
+        src={IMAGE_PATHS.landing}
         alt=""
         loading="lazy"
         decoding="async"
@@ -400,11 +472,13 @@ function ImpactCta({ copy }: { copy: (typeof COPY)[Lang] }) {
           className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
         >
           {copy.impactButton}
-          <span className="ml-3">→</span>
+          <span className="ml-3" aria-hidden="true">
+            →
+          </span>
         </Link>
       </motion.div>
     </section>
   );
-}
+});
 
 export default memo(MeetTeamMain);
