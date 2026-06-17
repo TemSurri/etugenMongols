@@ -6,7 +6,7 @@ import GalleryPage from "./pages/galleryItem";
 import Gallery from "./pages/gallery";
 import Contact from "./pages/contact";
 import VolunteerPage from "./pages/VolunteerPage";
-import BecomeMemberPage from "./pages/BecomeMemberPage";
+
 import DonatePage from "./pages/DonatePage";
 import MeetTeamPage from "./pages/MeetTeamPage";
 import OurImpactPage from "./pages/OurImpactPage";
@@ -31,7 +31,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
-        <Route path="/get-involved/member" element={<BecomeMemberPage />} />
+        
         <Route path="/get-involved/donate" element={<DonatePage />} />
 
         <Route path="/about/team" element={<MeetTeamPage />} />
