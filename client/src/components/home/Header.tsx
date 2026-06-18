@@ -90,13 +90,13 @@ function Header({ lang, setLang }: HeaderProps) {
         <Link
           to="/"
           onClick={closeMenu}
-          className="flex items-center gap-0 transition-opacity hover:opacity-85"
+          className="flex items-center gap-2 transition-opacity hover:opacity-85"
           aria-label="Go to homepage"
         >
           <img
             src="/logo.webp"
             alt="Etugen Mongols logo"
-            className="h-20 w-20 object-contain"
+            className="h-16 w-16 object-contain"
             loading="eager"
             decoding="async"
           />
