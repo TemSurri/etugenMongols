@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://etugen-mongols.ca/sitemap.xml

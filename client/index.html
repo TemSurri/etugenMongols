@@ -3,10 +3,52 @@
   <head>
     <meta charset="UTF-8" />
 
-    <!-- 
-      Preload the hero background early.
-      This helps reduce the black flash before the hero image renders.
-    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Etugen Mongols | Mongolian Community in Calgary</title>
+
+    <meta
+      name="description"
+      content="Etugen Mongols is a Calgary-based Mongolian community organization hosting cultural events, traditional programs, volunteer opportunities, and community gatherings throughout Alberta."
+    />
+
+    <meta name="theme-color" content="#2f3320" />
+
+    <!-- Open Graph / social preview -->
+    <meta
+      property="og:title"
+      content="Etugen Mongols | Mongolian Community in Calgary"
+    />
+    <meta
+      property="og:description"
+      content="A Calgary-based Mongolian community organization hosting cultural events, traditional programs, volunteer opportunities, and community gatherings."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://etugen-mongols.ca" />
+    <meta
+      property="og:image"
+      content="https://etugen-mongols.ca/logo.webp"
+    />
+
+    <!-- Twitter / Discord preview -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Etugen Mongols | Mongolian Community in Calgary"
+    />
+    <meta
+      name="twitter:description"
+      content="A Calgary-based Mongolian community organization hosting cultural events, traditional programs, volunteer opportunities, and community gatherings."
+    />
+    <meta
+      name="twitter:image"
+      content="https://etugen-mongols.ca/logo.webp"
+    />
+
+    <link rel="canonical" href="https://etugen-mongols.ca" />
+
+    <link rel="icon" href="/logo.webp" type="image/webp" />
+
     <link
       rel="preload"
       as="image"
@@ -15,24 +57,17 @@
       fetchpriority="high"
     />
 
-    <!-- 
-      Use a real favicon path if you have one.
-      Remove this line if you do not have /favicon.ico in public.
-    -->
-    <link rel="icon" href="/logo.webp" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Etugen Mongols",
+        "url": "https://etugen-mongols.ca",
+        "logo": "https://etugen-mongols.ca/logo.webp",
+        "description": "Etugen Mongols is a Calgary-based Mongolian community organization hosting cultural events, traditional programs, volunteer opportunities, and community gatherings throughout Alberta."
+      }
+    </script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Etugen Mongols is a Calgary-based Mongolian non-profit organization focused on community, culture, language, and tradition."
-    />
-
-    <title>Etugen Mongols</title>
-
-    <!-- 
-      This gives the browser a better first paint color before React loads.
-      It should match the hero instead of flashing pure black.
-    -->
     <style>
       html,
       body,
