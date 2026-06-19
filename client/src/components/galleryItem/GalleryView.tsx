@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
