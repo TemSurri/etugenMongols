@@ -26,7 +26,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "Who We Are",
     to: "/about",
     children: [
-      { label: "Home", to: "/" },
+      { label: "Our Story", to: "/#story" },
       { label: "Meet the Bigger Team", to: "/about/team" },
       { label: "Our Impact", to: "/about/impact" },
     ],
@@ -44,33 +44,40 @@ const NAV_ITEMS: NavItem[] = [
     to: "/get-involved",
     children: [
       { label: "Volunteer", to: "/get-involved/volunteer" },
-      
       { label: "Donate", to: "/get-involved/donate" },
     ],
   },
-  {
-    label: "Gallery",
-    to: "/gallery",
-  },
-  {
-    label: "Contact",
-    to: "/contact",
-  },
+  { label: "Gallery", to: "/gallery" },
+  { label: "Contact", to: "/contact" },
 ];
 
-const isRouteActive = (pathname: string, to: string) => {
-  return pathname === to || pathname.startsWith(`${to}/`);
+const isRouteActive = (currentPath: string, to: string) => {
+  if (to.includes("#")) return currentPath === to;
+  if (to === "/") return currentPath === "/";
+  return currentPath === to || currentPath.startsWith(`${to}/`);
 };
 
-const isParentActive = (pathname: string, item: NavItem) => {
-  return (
-    isRouteActive(pathname, item.to) ||
-    item.children?.some((child) => isRouteActive(pathname, child.to))
+const isParentActive = (currentPath: string, item: NavItem) => {
+  return Boolean(
+    item.children?.some((child) => isRouteActive(currentPath, child.to))
   );
 };
 
+const scrollToHashTarget = (to: string) => {
+  const hash = to.split("#")[1];
+  if (!hash) return;
+
+  requestAnimationFrame(() => {
+    document.getElementById(hash)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+};
+
 function Header({ lang, setLang }: HeaderProps) {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const currentPath = `${location.pathname}${location.hash}`;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
@@ -78,6 +85,14 @@ function Header({ lang, setLang }: HeaderProps) {
   const closeMenu = () => {
     setMenuOpen(false);
     setOpenMobileGroup(null);
+  };
+
+  const handleNavClick = (to: string) => {
+    closeMenu();
+
+    if (to.includes("#")) {
+      scrollToHashTarget(to);
+    }
   };
 
   const toggleLang = () => {
@@ -105,7 +120,6 @@ function Header({ lang, setLang }: HeaderProps) {
             <p className="text-lg font-semibold tracking-wide">
               Etugen Mongols
             </p>
-
             <p className="mt-1 hidden text-[11px] uppercase tracking-[0.22em] text-[#4e593c]/65 sm:block">
               Not For Profit
             </p>
@@ -118,21 +132,22 @@ function Header({ lang, setLang }: HeaderProps) {
         >
           {NAV_ITEMS.map((item) => {
             const hasDropdown = Boolean(item.children?.length);
-            const parentActive = isParentActive(pathname, item);
+            const parentActive = isParentActive(currentPath, item);
 
             if (!hasDropdown) {
+              const itemActive = isRouteActive(currentPath, item.to);
+
               return (
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  className={({ isActive }) =>
-                    [
-                      "text-sm font-medium tracking-wide transition-colors",
-                      isActive
-                        ? "text-[#9a7b26]"
-                        : "text-[#4e593c]/78 hover:text-[#27301d]",
-                    ].join(" ")
-                  }
+                  onClick={() => handleNavClick(item.to)}
+                  className={[
+                    "text-sm font-medium tracking-wide transition-colors",
+                    itemActive
+                      ? "text-[#9a7b26]"
+                      : "text-[#4e593c]/78 hover:text-[#27301d]",
+                  ].join(" ")}
                 >
                   {item.label}
                 </NavLink>
@@ -170,22 +185,25 @@ function Header({ lang, setLang }: HeaderProps) {
                 <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-56 -translate-x-1/2 border border-[#d8caa5]/65 bg-[#fffaf0] p-2 opacity-0 shadow-[0_18px_45px_rgba(88,72,38,0.16)] transition-all duration-150 group-hover:visible group-hover:mt-3 group-hover:opacity-100">
                   <div className="absolute -top-3 left-0 h-3 w-full" />
 
-                  {item.children?.map((child) => (
-                    <NavLink
-                      key={child.to}
-                      to={child.to}
-                      className={({ isActive }) =>
-                        [
+                  {item.children?.map((child) => {
+                    const childActive = isRouteActive(currentPath, child.to);
+
+                    return (
+                      <NavLink
+                        key={child.to}
+                        to={child.to}
+                        onClick={() => handleNavClick(child.to)}
+                        className={[
                           "block px-3 py-2.5 text-sm font-medium transition-colors",
-                          isActive
+                          childActive
                             ? "bg-[#efe2bf]/70 text-[#9a7b26]"
                             : "text-[#4e593c]/82 hover:bg-[#efe2bf]/45 hover:text-[#27301d]",
-                        ].join(" ")
-                      }
-                    >
-                      {child.label}
-                    </NavLink>
-                  ))}
+                        ].join(" ")}
+                      >
+                        {child.label}
+                      </NavLink>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -210,26 +228,12 @@ function Header({ lang, setLang }: HeaderProps) {
             aria-controls="mobile-navigation"
           >
             {menuOpen ? (
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M6 6l12 12" />
                 <path d="M18 6L6 18" />
               </svg>
             ) : (
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M4 7h16" />
                 <path d="M4 12h16" />
                 <path d="M4 17h16" />
@@ -251,22 +255,22 @@ function Header({ lang, setLang }: HeaderProps) {
             {NAV_ITEMS.map((item) => {
               const hasDropdown = Boolean(item.children?.length);
               const isOpen = openMobileGroup === item.label;
-              const parentActive = isParentActive(pathname, item);
+              const parentActive = isParentActive(currentPath, item);
 
               if (!hasDropdown) {
+                const itemActive = isRouteActive(currentPath, item.to);
+
                 return (
                   <NavLink
                     key={item.to}
                     to={item.to}
-                    onClick={closeMenu}
-                    className={({ isActive }) =>
-                      [
-                        "px-1 py-3 text-base font-medium transition-colors",
-                        isActive
-                          ? "text-[#9a7b26]"
-                          : "text-[#4e593c]/80 hover:text-[#27301d]",
-                      ].join(" ")
-                    }
+                    onClick={() => handleNavClick(item.to)}
+                    className={[
+                      "px-1 py-3 text-base font-medium transition-colors",
+                      itemActive
+                        ? "text-[#9a7b26]"
+                        : "text-[#4e593c]/80 hover:text-[#27301d]",
+                    ].join(" ")}
                   >
                     {item.label}
                   </NavLink>
@@ -289,10 +293,7 @@ function Header({ lang, setLang }: HeaderProps) {
                     <span>{item.label}</span>
 
                     <svg
-                      className={[
-                        "h-4 w-4 transition-transform",
-                        isOpen ? "rotate-180" : "",
-                      ].join(" ")}
+                      className={["h-4 w-4 transition-transform", isOpen ? "rotate-180" : ""].join(" ")}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                       aria-hidden="true"
@@ -307,23 +308,25 @@ function Header({ lang, setLang }: HeaderProps) {
 
                   {isOpen && (
                     <div className="pb-3 pl-4">
-                      {item.children?.map((child) => (
-                        <NavLink
-                          key={child.to}
-                          to={child.to}
-                          onClick={closeMenu}
-                          className={({ isActive }) =>
-                            [
+                      {item.children?.map((child) => {
+                        const childActive = isRouteActive(currentPath, child.to);
+
+                        return (
+                          <NavLink
+                            key={child.to}
+                            to={child.to}
+                            onClick={() => handleNavClick(child.to)}
+                            className={[
                               "block px-2 py-2 text-sm font-medium transition-colors",
-                              isActive
+                              childActive
                                 ? "text-[#9a7b26]"
                                 : "text-[#4e593c]/75 hover:text-[#27301d]",
-                            ].join(" ")
-                          }
-                        >
-                          {child.label}
-                        </NavLink>
-                      ))}
+                            ].join(" ")}
+                          >
+                            {child.label}
+                          </NavLink>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

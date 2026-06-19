@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
@@ -28,20 +28,22 @@ const IMAGES_PER_PAGE = 9;
 
 const COPY = {
   en: {
-    back: "Back to Gallery",
+    back: "Back",
     overview: "Event Overview",
     general: "General",
     performances: "Performances",
     behindTheScenes: "Behind the Scenes",
     noMedia: "No media has been added for this section yet.",
+    galleryUnavailable: "Gallery not available.",
   },
   mn: {
-    back: "Цомог руу буцах",
+    back: "Буцах",
     overview: "Арга хэмжээний тойм",
     general: "Ерөнхий",
     performances: "Тоглолтууд",
     behindTheScenes: "Ар тал",
     noMedia: "Энэ хэсэгт одоогоор зураг, бичлэг нэмэгдээгүй байна.",
+    galleryUnavailable: "Цомог одоогоор байхгүй байна.",
   },
 } as const;
 
@@ -55,26 +57,48 @@ function getSectionImages(
   gallery: NonNullable<Event["gallery"]>,
   activePerformance?: PerformanceItem
 ): EventImage[] {
-  if (key === "performances") return activePerformance?.images ?? [];
-  return gallery.sections[key].images;
+  if (key === "performances") {
+    return activePerformance?.images ?? [];
+  }
+
+  if (key === "behindTheScenes") {
+    return gallery.sections.behindTheScenes?.images ?? [];
+  }
+
+  return gallery.sections.general.images;
+}
+
+function useSmartBack(fallbackPath = "/gallery") {
+  const navigate = useNavigate();
+
+  return useCallback(() => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(fallbackPath);
+  }, [navigate, fallbackPath]);
 }
 
 export default function GalleryView({ event, lang }: GalleryViewProps) {
   const copy = COPY[lang];
+  const goBack = useSmartBack("/gallery");
 
   if (!event.gallery) {
     return (
       <main className="min-h-screen bg-[#f4ecd9] pt-28 text-[#27301d]">
         <div className="mx-auto max-w-4xl px-5 py-12">
-          <Link
-            to="/gallery"
+          <button
+            type="button"
+            onClick={goBack}
             className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7b26]"
           >
             ← {copy.back}
-          </Link>
+          </button>
 
           <h1 className="mt-6 text-3xl font-semibold">
-            Gallery not available.
+            {copy.galleryUnavailable}
           </h1>
         </div>
       </main>
@@ -82,28 +106,55 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
   }
 
   const gallery = event.gallery;
+  const performances = gallery.sections.performances;
+  const firstPerformance = performances?.items[0];
+
+  const availableSections = useMemo<SectionKey[]>(() => {
+    const sections: SectionKey[] = ["general"];
+
+    if (performances && performances.items.length > 0) {
+      sections.push("performances");
+    }
+
+    if (gallery.sections.behindTheScenes) {
+      sections.push("behindTheScenes");
+    }
+
+    return sections;
+  }, [gallery.sections.behindTheScenes, performances]);
 
   const [activeSectionKey, setActiveSectionKey] =
     useState<SectionKey>("general");
-
-  const firstPerformance = gallery.sections.performances.items[0];
 
   const [activePerformanceId, setActivePerformanceId] = useState<string | null>(
     firstPerformance?.id ?? null
   );
 
-  const activePerformance = useMemo(
-    () =>
-      gallery.sections.performances.items.find(
-        (item) => item.id === activePerformanceId
-      ) ?? firstPerformance,
-    [activePerformanceId, firstPerformance, gallery.sections.performances.items]
-  );
+  useEffect(() => {
+    if (!availableSections.includes(activeSectionKey)) {
+      setActiveSectionKey("general");
+    }
+  }, [activeSectionKey, availableSections]);
 
-  const activeStaticSection =
+  useEffect(() => {
+    setActivePerformanceId(firstPerformance?.id ?? null);
+  }, [firstPerformance]);
+
+  const activePerformance = useMemo(() => {
+    if (!performances) return undefined;
+
+    return (
+      performances.items.find((item) => item.id === activePerformanceId) ??
+      firstPerformance
+    );
+  }, [activePerformanceId, firstPerformance, performances]);
+
+  const activeStaticSection: GallerySection | undefined =
     activeSectionKey === "performances"
-      ? null
-      : (gallery.sections[activeSectionKey] as GallerySection);
+      ? undefined
+      : activeSectionKey === "behindTheScenes"
+        ? gallery.sections.behindTheScenes
+        : gallery.sections.general;
 
   const images = useMemo(
     () => getSectionImages(activeSectionKey, gallery, activePerformance),
@@ -178,12 +229,13 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
       <div className="absolute inset-x-0 top-0 h-[38rem] bg-gradient-to-b from-[#f4ecd9]/10 via-[#f4ecd9]/55 to-[#f4ecd9]" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12">
-        <Link
-          to="/gallery"
+        <button
+          type="button"
+          onClick={goBack}
           className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#27301d] transition-colors hover:text-[#9a7b26]"
         >
           ← {copy.back}
-        </Link>
+        </button>
 
         <section className="mt-8 border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-6 shadow-[0_18px_50px_rgba(88,72,38,0.10)] sm:p-8">
           <GalleryHeader
@@ -202,22 +254,20 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
         </section>
 
         <div className="mt-8 flex flex-wrap gap-2">
-          {(["general", "performances", "behindTheScenes"] as SectionKey[]).map(
-            (key) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setActiveSectionKey(key)}
-                className={`border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
-                  activeSectionKey === key
-                    ? "border-[#27301d] bg-[#27301d] text-[#fffaf0]"
-                    : "border-[#d8caa5] bg-[#fffaf0]/95 text-[#9a7b26] hover:border-[#9a7b26]"
-                }`}
-              >
-                {copy[key]}
-              </button>
-            )
-          )}
+          {availableSections.map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setActiveSectionKey(key)}
+              className={`border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] transition ${
+                activeSectionKey === key
+                  ? "border-[#27301d] bg-[#27301d] text-[#fffaf0]"
+                  : "border-[#d8caa5] bg-[#fffaf0]/95 text-[#9a7b26] hover:border-[#9a7b26]"
+              }`}
+            >
+              {copy[key]}
+            </button>
+          ))}
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[19rem_minmax(0,1fr)] lg:items-start">
@@ -227,27 +277,30 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
               sectionKey={activeSectionKey}
               sectionTitle={
                 activeSectionKey === "performances"
-                  ? gallery.sections.performances.title[lang]
+                  ? performances?.title[lang]
                   : activeStaticSection?.title[lang]
               }
               description={
                 activeSectionKey === "performances"
-                  ? gallery.sections.performances.description[lang]
+                  ? performances?.description[lang]
                   : activeStaticSection?.description[lang]
               }
               montageVideo={
-                activeSectionKey === "general" ? gallery.montageVideo : undefined
+                activeSectionKey === "general" && gallery.montageVideo?.url
+                  ? gallery.montageVideo
+                  : undefined
               }
-              performances={gallery.sections.performances.items}
+              performances={performances?.items ?? []}
               activePerformance={activePerformance}
               onSelectPerformance={setActivePerformanceId}
               performanceVideos={
                 activeSectionKey === "performances"
-                  ? activePerformance?.videos
+                  ? activePerformance?.videos?.filter((video) => video.url)
                   : undefined
               }
               thankYouVideo={
-                activeSectionKey === "behindTheScenes"
+                activeSectionKey === "behindTheScenes" &&
+                gallery.thankYouVideo?.url
                   ? gallery.thankYouVideo
                   : undefined
               }
