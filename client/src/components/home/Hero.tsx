@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, cubicBezier, type Variants } from "framer-motion";
 
@@ -11,6 +11,11 @@ type Lang = "en" | "mn";
 
 type HeroProps = {
   lang: Lang;
+};
+
+type ActionLink = {
+  label: string;
+  to: string;
 };
 
 const HERO_IMAGE = "/landingpage.webp";
@@ -40,32 +45,38 @@ const COPY = {
     intro:
       "A Calgary-based non-profit preserving Mongolian culture and bringing the community together through events, programs, and performances.",
     learnMore: "Learn More",
+
     whatKicker: "What We Do",
     whatBody:
       "We host cultural events, performances, gatherings, and community programs that help Mongolian traditions stay active in Calgary. From Naadam to family celebrations, our goal is to create spaces where people can participate, practice, perform, and pass culture forward.",
     eventsButton: "View Events",
-    impactButton: "See Our Impact",
+    programsButton: "Programs",
+
     whoKicker: "Who We Are",
     whoBody:
       "Etugen Mongols is built by families, volunteers, organizers, artists, performers, and community members who care about keeping Mongolian heritage visible, shared, and meaningful for the next generation.",
     storyButton: "Our Story",
     teamButton: "Meet the Team",
+    impactButton: "Our Impact",
   },
   mn: {
     brand: "Этүгэн Монголчууд",
     intro:
       "Калгари дахь Монгол соёлыг хадгалж, арга хэмжээ, хөтөлбөр, тоглолтоор хамт олноо нэгтгэх ашгийн бус байгууллага.",
     learnMore: "Дэлгэрэнгүй",
+
     whatKicker: "Бид юу хийдэг вэ",
     whatBody:
       "Бид Монгол уламжлалаа Калгари хотод амьд байлгахын тулд соёлын арга хэмжээ, тоглолт, уулзалт, хөтөлбөрүүдийг зохион байгуулдаг. Наадам, гэр бүлийн баяр, хамтын үйл ажиллагаагаар дамжуулан хүмүүс оролцож, дадлага хийж, соёлоо хойч үедээ өвлүүлэх орон зайг бий болгодог.",
     eventsButton: "Арга хэмжээнүүд",
-    impactButton: "Бидний нөлөө",
+    programsButton: "Хөтөлбөрүүд",
+
     whoKicker: "Бид хэн бэ",
     whoBody:
       "Этүгэн Монголчууд нь Монгол өв соёлоо хадгалж, бусадтай хуваалцаж, дараагийн үедээ утга учиртайгаар өвлүүлэхийг хүссэн гэр бүлүүд, сайн дурынхан, зохион байгуулагчид, уран бүтээлчид, хамт олноос бүрддэг.",
     storyButton: "Бидний түүх",
     teamButton: "Багтай танилцах",
+    impactButton: "Бидний нөлөө",
   },
 } as const;
 
@@ -124,23 +135,30 @@ function Hero({ lang }: HeroProps) {
           viewport={{ once: true, amount: 0.2 }}
           className="mx-auto grid max-w-6xl lg:grid-cols-2"
         >
-          <FeaturedVideo />
+          <FeaturedVideo className="order-1" />
 
           <InfoPanel
+            className="order-2"
             kicker={copy.whatKicker}
             body={copy.whatBody}
-            primary={{ label: copy.eventsButton, to: "/events" }}
-            secondary={{ label: copy.impactButton, to: "/about/impact" }}
+            actions={[
+              { label: copy.eventsButton, to: "/events" },
+              { label: copy.programsButton, to: "/programs" },
+            ]}
           />
+
+          <SingleImage className="order-3 lg:order-4" />
 
           <InfoPanel
+            className="order-4 lg:order-3"
             kicker={copy.whoKicker}
             body={copy.whoBody}
-            primary={{ label: copy.storyButton, to: "/about/story" }}
-            secondary={{ label: copy.teamButton, to: "/about/team" }}
+            actions={[
+              { label: copy.storyButton, to: "/about/story" },
+              { label: copy.teamButton, to: "/about/team" },
+              { label: copy.impactButton, to: "/about/impact" },
+            ]}
           />
-
-          <SingleImage />
         </motion.div>
       </section>
     </main>
@@ -149,6 +167,17 @@ function Hero({ lang }: HeroProps) {
 
 function HeroSlowScroll() {
   const scrollingImages = [...HERO_SLIDES, ...HERO_SLIDES];
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+
+    const update = () => setIsMobile(media.matches);
+    update();
+
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   return (
     <div className="relative h-[43vh] min-h-[21rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
@@ -156,7 +185,11 @@ function HeroSlowScroll() {
         aria-hidden="true"
         className="absolute inset-0 flex w-[200%]"
         animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 42, ease: "linear", repeat: Infinity }}
+        transition={{
+          duration: isMobile ? 24 : 42,
+          ease: "linear",
+          repeat: Infinity,
+        }}
       >
         {scrollingImages.map((src, index) => (
           <img
@@ -182,16 +215,18 @@ function HeroSlowScroll() {
 function InfoPanel({
   kicker,
   body,
-  primary,
-  secondary,
+  actions,
+  className = "",
 }: {
   kicker: string;
   body: string;
-  primary: { label: string; to: string };
-  secondary: { label: string; to: string };
+  actions: ActionLink[];
+  className?: string;
 }) {
   return (
-    <div className="flex min-h-[20rem] flex-col justify-center bg-white p-7 md:p-10 lg:min-h-[25rem]">
+    <div
+      className={`flex min-h-[20rem] flex-col justify-center bg-white p-7 md:p-10 lg:min-h-[25rem] ${className}`}
+    >
       <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#9a7b26]">
         {kicker}
       </p>
@@ -201,27 +236,30 @@ function InfoPanel({
       </p>
 
       <div className="mt-7 flex flex-wrap gap-3">
-        <Link
-          to={primary.to}
-          className="bg-[#27301d] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
-        >
-          {primary.label}
-        </Link>
-
-        <Link
-          to={secondary.to}
-          className="border border-[#27301d]/30 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#27301d] no-underline transition-colors hover:bg-[#27301d] hover:text-white"
-        >
-          {secondary.label}
-        </Link>
+        {actions.map((action, index) => (
+          <Link
+            key={action.to}
+            to={action.to}
+            className={[
+              "px-5 py-3 text-[11px] font-bold uppercase tracking-[0.18em] no-underline transition-colors",
+              index === 0
+                ? "bg-[#27301d] text-white hover:bg-[#9a7b26]"
+                : "border border-[#27301d]/30 text-[#27301d] hover:bg-[#27301d] hover:text-white",
+            ].join(" ")}
+          >
+            {action.label}
+          </Link>
+        ))}
       </div>
     </div>
   );
 }
 
-function SingleImage() {
+function SingleImage({ className = "" }: { className?: string }) {
   return (
-    <div className="flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem]">
+    <div
+      className={`flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem] ${className}`}
+    >
       <img
         src={HERO_IMAGE}
         alt=""
@@ -235,12 +273,14 @@ function SingleImage() {
   );
 }
 
-function FeaturedVideo() {
+function FeaturedVideo({ className = "" }: { className?: string }) {
   const [showVideo, setShowVideo] = useState(false);
   const hasVideo = FEATURED_VIDEO_ID !== "YOUR_FEATURED_EVENT_VIDEO_ID";
 
   return (
-    <div className="flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem]">
+    <div
+      className={`flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem] ${className}`}
+    >
       <div className="relative aspect-video w-full overflow-hidden bg-[#27301d]">
         {showVideo && hasVideo ? (
           <iframe
