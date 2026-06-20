@@ -186,7 +186,7 @@ function HeroSlowScroll() {
         className="absolute inset-0 flex w-[200%]"
         animate={{ x: ["0%", "-50%"] }}
         transition={{
-          duration: isMobile ? 24 : 42,
+          duration: isMobile ? 10 : 42,
           ease: "linear",
           repeat: Infinity,
         }}
