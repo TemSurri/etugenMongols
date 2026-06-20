@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, cubicBezier, type Variants } from "framer-motion";
 
@@ -45,38 +45,38 @@ const COPY = {
     intro:
       "A Calgary-based non-profit preserving Mongolian culture and bringing the community together through events, programs, and performances.",
     learnMore: "Learn More",
-
     whatKicker: "What We Do",
     whatBody:
       "We host cultural events, performances, gatherings, and community programs that help Mongolian traditions stay active in Calgary. From Naadam to family celebrations, our goal is to create spaces where people can participate, practice, perform, and pass culture forward.",
     eventsButton: "View Events",
     programsButton: "Programs",
-
     whoKicker: "Who We Are",
     whoBody:
       "Etugen Mongols is built by families, volunteers, organizers, artists, performers, and community members who care about keeping Mongolian heritage visible, shared, and meaningful for the next generation.",
     storyButton: "Our Story",
     teamButton: "Meet the Team",
     impactButton: "Our Impact",
+    pause: "Pause",
+    paused: "Paused",
   },
   mn: {
     brand: "Этүгэн Монголчууд",
     intro:
       "Калгари дахь Монгол соёлыг хадгалж, арга хэмжээ, хөтөлбөр, тоглолтоор хамт олноо нэгтгэх ашгийн бус байгууллага.",
     learnMore: "Дэлгэрэнгүй",
-
     whatKicker: "Бид юу хийдэг вэ",
     whatBody:
       "Бид Монгол уламжлалаа Калгари хотод амьд байлгахын тулд соёлын арга хэмжээ, тоглолт, уулзалт, хөтөлбөрүүдийг зохион байгуулдаг. Наадам, гэр бүлийн баяр, хамтын үйл ажиллагаагаар дамжуулан хүмүүс оролцож, дадлага хийж, соёлоо хойч үедээ өвлүүлэх орон зайг бий болгодог.",
     eventsButton: "Арга хэмжээнүүд",
     programsButton: "Хөтөлбөрүүд",
-
     whoKicker: "Бид хэн бэ",
     whoBody:
       "Этүгэн Монголчууд нь Монгол өв соёлоо хадгалж, бусадтай хуваалцаж, дараагийн үедээ утга учиртайгаар өвлүүлэхийг хүссэн гэр бүлүүд, сайн дурынхан, зохион байгуулагчид, уран бүтээлчид, хамт олноос бүрддэг.",
     storyButton: "Бидний түүх",
     teamButton: "Багтай танилцах",
     impactButton: "Бидний нөлөө",
+    pause: "Зогсоох",
+    paused: "Зогссон",
   },
 } as const;
 
@@ -93,7 +93,7 @@ function Hero({ lang }: HeroProps) {
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">
       <section className="flex min-h-screen flex-col bg-white pt-16 md:pt-20">
-        <HeroSlowScroll />
+        <HeroSlowScroll pauseText={copy.pause} pausedText={copy.paused} />
 
         <motion.div
           variants={fadeIn}
@@ -165,46 +165,143 @@ function Hero({ lang }: HeroProps) {
   );
 }
 
-function HeroSlowScroll() {
+function HeroSlowScroll({
+  pauseText,
+  pausedText,
+}: {
+  pauseText: string;
+  pausedText: string;
+}) {
+  const [paused, setPaused] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
   const scrollingImages = [...HERO_SLIDES, ...HERO_SLIDES];
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 767px)");
+  const goToPrevious = () => {
+    setActiveIndex((current) =>
+      current === 0 ? HERO_SLIDES.length - 1 : current - 1
+    );
+  };
 
-    const update = () => setIsMobile(media.matches);
-    update();
+  const goToNext = () => {
+    setActiveIndex((current) =>
+      current === HERO_SLIDES.length - 1 ? 0 : current + 1
+    );
+  };
 
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
+  const handleTouchEnd = (x: number) => {
+    if (touchStart === null) return;
+
+    const distance = touchStart - x;
+
+    if (distance > 45) goToNext();
+    if (distance < -45) goToPrevious();
+
+    setTouchStart(null);
+  };
 
   return (
     <div className="relative h-[43vh] min-h-[21rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
-      <motion.div
-        aria-hidden="true"
-        className="absolute inset-0 flex w-[200%]"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          duration: isMobile ? 10 : 42,
-          ease: "linear",
-          repeat: Infinity,
-        }}
+      <style>
+        {`
+          @keyframes etugenHeroScroll {
+            from { transform: translateX(0%); }
+            to { transform: translateX(-50%); }
+          }
+
+          .etugen-hero-scroll {
+            animation: etugenHeroScroll 42s linear infinite;
+          }
+
+          .etugen-hero-scroll-paused {
+            animation-play-state: paused;
+          }
+        `}
+      </style>
+
+      <div className="absolute inset-0 hidden overflow-hidden md:block">
+        <div
+          aria-hidden="true"
+          className={[
+            "etugen-hero-scroll flex h-full w-[200%]",
+            paused ? "etugen-hero-scroll-paused" : "",
+          ].join(" ")}
+        >
+          {scrollingImages.map((src, index) => (
+            <img
+              key={`${src}-${index}`}
+              src={src}
+              alt=""
+              width={1920}
+              height={1080}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+              className="h-full w-1/4 shrink-0 object-cover"
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setPaused((current) => !current)}
+          className="absolute bottom-4 right-4 z-20 min-w-[7rem] bg-white/90 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#27301d] shadow-sm transition-colors hover:bg-white"
+          aria-pressed={paused}
+        >
+          {paused ? pausedText : pauseText}
+        </button>
+      </div>
+
+      <div
+        className="absolute inset-0 md:hidden"
+        onTouchStart={(event) => setTouchStart(event.touches[0].clientX)}
+        onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0].clientX)}
       >
-        {scrollingImages.map((src, index) => (
-          <img
-            key={`${src}-${index}`}
-            src={src}
-            alt=""
-            width={1920}
-            height={1080}
-            loading={index === 0 ? "eager" : "lazy"}
-            fetchPriority={index === 0 ? "high" : "auto"}
-            decoding="async"
-            className="h-full min-w-[20rem] shrink-0 object-cover md:min-w-0 md:w-1/4"
-          />
-        ))}
-      </motion.div>
+        <img
+          src={HERO_SLIDES[activeIndex]}
+          alt=""
+          width={1920}
+          height={1080}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
+
+        <button
+          type="button"
+          onClick={goToPrevious}
+          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center bg-white/90 text-lg font-bold text-[#27301d] shadow-sm"
+          aria-label="Previous image"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          onClick={goToNext}
+          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center bg-white/90 text-lg font-bold text-[#27301d] shadow-sm"
+          aria-label="Next image"
+        >
+          ›
+        </button>
+
+        <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2">
+          {HERO_SLIDES.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => setActiveIndex(index)}
+              className={[
+                "h-2.5 w-2.5 rounded-full border border-white transition-colors",
+                activeIndex === index ? "bg-white" : "bg-white/30",
+              ].join(" ")}
+              aria-label={`Go to image ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
 
       <div className="absolute inset-0 bg-black/18" />
       <div className="absolute inset-0 bg-linear-to-b from-black/10 via-transparent to-black/25" />
@@ -235,13 +332,13 @@ function InfoPanel({
         {body}
       </p>
 
-      <div className="mt-7 flex flex-wrap gap-3">
+      <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
         {actions.map((action, index) => (
           <Link
             key={action.to}
             to={action.to}
             className={[
-              "px-5 py-3 text-[11px] font-bold uppercase tracking-[0.18em] no-underline transition-colors",
+              "flex min-h-12 w-full items-center justify-center px-5 py-3 text-center text-[11px] font-bold uppercase leading-snug tracking-[0.18em] no-underline transition-colors sm:w-auto sm:min-w-[10.5rem]",
               index === 0
                 ? "bg-[#27301d] text-white hover:bg-[#9a7b26]"
                 : "border border-[#27301d]/30 text-[#27301d] hover:bg-[#27301d] hover:text-white",
