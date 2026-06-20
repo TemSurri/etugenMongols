@@ -84,11 +84,16 @@ function Hero({ lang }: HeroProps) {
   const copy = COPY[lang];
 
   const scrollToLearnMore = () => {
-    document.getElementById("learn-more")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
+  const target = document.getElementById("learn-more");
+  if (!target) return;
+
+  const offset = 40;
+
+  window.scrollTo({
+    top: target.offsetTop - offset,
+    behavior: "smooth",
+  });
+};
 
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">

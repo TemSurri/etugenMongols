@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { cubicBezier, motion, type Variants } from "framer-motion";
 
@@ -30,6 +30,7 @@ type Copy = {
   communityTitle: string;
   communityBody: string;
   galleryButton: string;
+  tapHint: string;
 };
 
 const IMAGE_PATHS: Record<TeamImageKey, string> = {
@@ -49,6 +50,7 @@ const COPY = {
     communityBody:
       "Etugen Mongols is only possible because of everyone who shows up: families, volunteers, performers, artists, organizers, photographers, supporters, and community members. Every bit of help matters. You can explore our work in the gallery and see the moments, preparation, and behind-the-scenes effort that bring our community together.",
     galleryButton: "View Gallery",
+    tapHint: "Tap to read",
   },
   mn: {
     eyebrow: "Манай хамт олон",
@@ -62,6 +64,7 @@ const COPY = {
     communityBody:
       "Этүгэн Монголчууд нь оролцож, дэмжиж, сайн дураар тусалж, тоглож, зохион байгуулж, зураг авч, хамт олноо нэгтгэдэг бүх хүмүүсийн хүчээр оршдог. Хүн бүрийн тус нэмэр үнэ цэнтэй. Та бидний ажлыг зургийн цомгоос харж, арга хэмжээний мөчүүд, бэлтгэл болон арын ажлыг үзэх боломжтой.",
     galleryButton: "Зургийн цомог",
+    tapHint: "Дарж унших",
   },
 } as const satisfies Record<Lang, Copy>;
 
@@ -185,7 +188,12 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
     <main className="overflow-hidden bg-white text-[#27301d]">
       <PageIntro copy={copy} />
 
-      <MemberGrid members={BOARD_MEMBERS} lang={lang} columns="board" />
+      <MemberGrid
+        members={BOARD_MEMBERS}
+        lang={lang}
+        columns="board"
+        tapHint={copy.tapHint}
+      />
 
       <section className="bg-white px-6 py-16 text-center md:px-10 md:py-18">
         <SectionHeader
@@ -199,6 +207,7 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
         members={MAJOR_CONTRIBUTORS}
         lang={lang}
         columns="contributors"
+        tapHint={copy.tapHint}
       />
 
       <CommunitySection copy={copy} />
@@ -263,10 +272,12 @@ function MemberGrid({
   members,
   lang,
   columns,
+  tapHint,
 }: {
   members: TeamMember[];
   lang: Lang;
   columns: "board" | "contributors";
+  tapHint: string;
 }) {
   return (
     <section className="bg-white px-6 pb-16 md:px-10 md:pb-20">
@@ -278,12 +289,17 @@ function MemberGrid({
         className={[
           "mx-auto grid max-w-7xl gap-3 md:gap-4",
           columns === "board"
-            ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+            ? "grid-cols-1 sm:grid-cols-3 lg:grid-cols-5"
             : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
         ].join(" ")}
       >
         {members.map((member) => (
-          <MemberCard key={member.id} member={member} lang={lang} />
+          <MemberCard
+            key={member.id}
+            member={member}
+            lang={lang}
+            tapHint={tapHint}
+          />
         ))}
       </motion.div>
     </section>
@@ -293,33 +309,84 @@ function MemberGrid({
 const MemberCard = memo(function MemberCard({
   member,
   lang,
+  tapHint,
 }: {
   member: TeamMember;
   lang: Lang;
+  tapHint: string;
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <article className="group relative aspect-[4/5] overflow-hidden bg-[#27301d]">
+    <article
+      className="group relative aspect-[4/5] cursor-pointer overflow-hidden bg-[#27301d] outline-none"
+      tabIndex={0}
+      onClick={() => setOpen((current) => !current)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          setOpen((current) => !current);
+        }
+      }}
+      aria-expanded={open}
+    >
       <img
         src={IMAGE_PATHS[member.imageKey]}
         alt={member.name}
         loading="lazy"
         decoding="async"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+        className={[
+          "absolute inset-0 h-full w-full object-cover transition-transform duration-500",
+          open ? "scale-[1.035]" : "group-hover:scale-[1.035]",
+        ].join(" ")}
       />
 
-      <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/90 via-[#27301d]/20 to-transparent" />
+      <div
+        className={[
+          "absolute inset-0 bg-[#27301d]/0 transition-colors duration-300",
+          open ? "bg-[#27301d]/70" : "group-hover:bg-[#27301d]/70",
+        ].join(" ")}
+      />
 
-      <div className="absolute inset-x-0 bottom-0 p-4 text-white transition-transform duration-300 group-hover:-translate-y-2">
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#e1d2a6]">
+      <div
+        className={[
+          "absolute inset-0 bg-linear-to-t from-[#10150d]/95 via-[#27301d]/80 to-[#27301d]/25 opacity-0 transition-opacity duration-300",
+          open ? "opacity-100" : "group-hover:opacity-100",
+        ].join(" ")}
+      />
+
+      <div
+        className={[
+          "absolute inset-x-0 bottom-0 p-5 text-white transition-transform duration-300",
+          open ? "-translate-y-2" : "group-hover:-translate-y-2",
+        ].join(" ")}
+      >
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#e1d2a6] drop-shadow-sm">
           {member.role[lang]}
         </p>
 
-        <h3 className="mt-2 text-lg font-semibold leading-tight">
+        <h3 className="mt-2 text-xl font-semibold leading-tight text-white drop-shadow-sm">
           {member.name}
         </h3>
 
-        <p className="mt-3 max-h-0 overflow-hidden text-sm leading-6 text-[#f3ead2] opacity-0 transition-all duration-300 group-hover:max-h-44 group-hover:opacity-100">
+        <p
+          className={[
+            "mt-3 overflow-hidden text-sm leading-6 text-[#fff7df] opacity-0 transition-all duration-300",
+            open
+              ? "max-h-56 opacity-100"
+              : "max-h-0 group-hover:max-h-56 group-hover:opacity-100",
+          ].join(" ")}
+        >
           {member.description[lang]}
+        </p>
+
+        <p
+          className={[
+            "mt-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e1d2a6]/85 transition-opacity duration-300 md:hidden",
+            open ? "opacity-0" : "opacity-100",
+          ].join(" ")}
+        >
+          {tapHint}
         </p>
       </div>
     </article>
