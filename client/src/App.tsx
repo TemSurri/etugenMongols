@@ -9,6 +9,7 @@ import VolunteerPage from "./pages/VolunteerPage";
 
 import DonatePage from "./pages/DonatePage";
 import MeetTeamPage from "./pages/MeetTeamPage";
+import StoryPage from "./pages/StoryPage";
 import OurImpactPage from "./pages/OurImpactPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
@@ -22,7 +23,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        
+        <Route path="/about/story" element={<StoryPage />} />
         <Route path="/programs" element={<ProgramsPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventPage />} />

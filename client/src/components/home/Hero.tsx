@@ -13,371 +13,235 @@ type HeroProps = {
   lang: Lang;
 };
 
-type StoryImageKey =
-  | "community"
-  | "culture"
-  | "founding"
-  | "children"
-  | "landing";
-
-type StoryItem = {
-  body: string;
-  imageKey: StoryImageKey;
-};
-
-type Copy = {
-  brand: string;
-  title: string;
-  subtitle: string;
-  storyButton: string;
-  eventHosted: string;
-  viewEvents: string;
-  viewPrograms: string;
-  meetTeam: string;
-  closing: string;
-  story: readonly StoryItem[];
-};
-
-type StoryRowProps = {
-  body: string;
-  image: string;
-  reverse?: boolean;
-  tone?: "cream" | "green";
-  imageLarge?: boolean;
-};
-
+const HERO_IMAGE = "/landingpage.webp";
 const FEATURED_VIDEO_ID = "YOUR_FEATURED_EVENT_VIDEO_ID";
 
-const IMAGE_PATHS: Record<StoryImageKey, string> = {
-  community: "/about/story-community.webp",
-  culture: "/about/story-culture.webp",
-  founding: "/about/founding-group.webp",
-  children: "/about/story-children.webp",
-  landing: "/landingpage.webp",
-};
-
-const FLAG_IMAGES = [
-  { src: mongoliaFlag, alt: "Mongolia flag" },
-  { src: canadaFlag, alt: "Canada flag" },
-] as const;
-
-const STORY_ROW_CONFIG = [
-  { reverse: false, tone: "cream", imageLarge: false },
-  { reverse: true, tone: "green", imageLarge: false },
-  { reverse: false, tone: "cream", imageLarge: true },
-  { reverse: true, tone: "cream", imageLarge: false },
+const HERO_SLIDES = [
+  "/landingpage.webp",
+  "/landingpage.webp",
+  "/landingpage.webp",
+  "/landingpage.webp",
 ] as const;
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
-const heroMotion: Variants = {
-  hidden: { opacity: 0, y: 24 },
+const fadeIn: Variants = {
+  hidden: { opacity: 0, y: 16 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.78, ease: easeOut },
+    transition: { duration: 0.55, ease: easeOut },
   },
 };
-
-const rowMotion: Variants = {
-  hidden: { opacity: 0, y: 34 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: easeOut },
-  },
-};
-
-const imageMotion: Variants = {
-  hidden: { opacity: 0, scale: 1.025 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 1, ease: easeOut },
-  },
-};
-
-const flagClassName = "h-6 object-contain shadow-lg md:h-8 lg:h-9";
 
 const COPY = {
   en: {
     brand: "Etugen Mongols",
-    title: "Preserving heritage through culture, language, and tradition.",
-    subtitle:
-      "A Calgary-based Mongolian not-for-profit built by families, for families.",
+    intro:
+      "A Calgary-based non-profit preserving Mongolian culture and bringing the community together through events, programs, and performances.",
+    learnMore: "Learn More",
+    whatKicker: "What We Do",
+    whatBody:
+      "We host cultural events, performances, gatherings, and community programs that help Mongolian traditions stay active in Calgary. From Naadam to family celebrations, our goal is to create spaces where people can participate, practice, perform, and pass culture forward.",
+    eventsButton: "View Events",
+    impactButton: "See Our Impact",
+    whoKicker: "Who We Are",
+    whoBody:
+      "Etugen Mongols is built by families, volunteers, organizers, artists, performers, and community members who care about keeping Mongolian heritage visible, shared, and meaningful for the next generation.",
     storyButton: "Our Story",
-    eventHosted: "An event we hosted",
-    viewEvents: "View Events",
-    viewPrograms: "View Programs",
-    meetTeam: "Meet the Team",
-    closing:
-      "We officially host events and programs for the Mongolian community in Calgary.",
-    story: [
-      {
-        body:
-          "We are first-generation immigrant parents from Mongolia. A few of us arrived in Calgary, Alberta, in 2006, drawn here in part because it felt familiar — a similar climate, mountains and rivers that remind us of our homeland, and vast open fields dotted with livestock that echo our nomadic roots. Above all, it is a country that welcomes not only people from every corner of the world, but the cultures and traditions they bring with them. Here we found our footing, grew our careers, and raised our families far from the land where we were born.",
-        imageKey: "community",
-      },
-      {
-        body:
-          "There is an old Mongolian saying: when you drink the water of a land, you honour its traditions and live by its values. We carry that wisdom with us every day, weaving our lives, our values, and our hearts into Canadian soil, as every Canadian does. At the same time, we hold our heritage close to our hearts, cherishing where we come from.",
-        imageKey: "culture",
-      },
-      {
-        body:
-          "Back then, the Mongolian community in Calgary numbered fewer than a hundred people. We knew nearly every face. And whenever our small community held an event, we showed up — each of us doing a small piece to help, to organize, and to take part with pride, simply as neighbours who didn't want our traditions to fade so far from home.",
-        imageKey: "founding",
-      },
-      {
-        body:
-          'In June 2011, a group of mothers organized our very first Children’s Day festival, "Mom, Dad and Me," at Bowness Park. With no budget and no grand plan, we simply shared a dream of building a home away from home.',
-        imageKey: "children",
-      },
-      {
-        body:
-          "From that single day, Etugen Mongols was born — not on paper, but in our shared goals and dreams. For years, we poured our open hearts into it — organizing events, bringing families together, and keeping our kids connected to their roots. As our community grew, so did the need for a true foundation. That's why we officially stepped up to establish our non-profit organization, giving us a lasting way to lead, gather, and pass our heritage on to every generation to come.",
-        imageKey: "landing",
-      },
-    ],
+    teamButton: "Meet the Team",
   },
   mn: {
     brand: "Этүгэн Монголчууд",
-    title: "Соёл, хэл, уламжлалаараа дамжуулан өв соёлоо хадгална.",
-    subtitle:
-      "Калгари дахь Монгол гэр бүлүүдийн төлөө, Монгол гэр бүлүүдийн бүтээсэн ашгийн бус байгууллага.",
+    intro:
+      "Калгари дахь Монгол соёлыг хадгалж, арга хэмжээ, хөтөлбөр, тоглолтоор хамт олноо нэгтгэх ашгийн бус байгууллага.",
+    learnMore: "Дэлгэрэнгүй",
+    whatKicker: "Бид юу хийдэг вэ",
+    whatBody:
+      "Бид Монгол уламжлалаа Калгари хотод амьд байлгахын тулд соёлын арга хэмжээ, тоглолт, уулзалт, хөтөлбөрүүдийг зохион байгуулдаг. Наадам, гэр бүлийн баяр, хамтын үйл ажиллагаагаар дамжуулан хүмүүс оролцож, дадлага хийж, соёлоо хойч үедээ өвлүүлэх орон зайг бий болгодог.",
+    eventsButton: "Арга хэмжээнүүд",
+    impactButton: "Бидний нөлөө",
+    whoKicker: "Бид хэн бэ",
+    whoBody:
+      "Этүгэн Монголчууд нь Монгол өв соёлоо хадгалж, бусадтай хуваалцаж, дараагийн үедээ утга учиртайгаар өвлүүлэхийг хүссэн гэр бүлүүд, сайн дурынхан, зохион байгуулагчид, уран бүтээлчид, хамт олноос бүрддэг.",
     storyButton: "Бидний түүх",
-    eventHosted: "Бидний зохион байгуулсан арга хэмжээ",
-    viewEvents: "Арга хэмжээнүүд",
-    viewPrograms: "Хөтөлбөрүүд",
-    meetTeam: "Багтай танилцах",
-    closing:
-      "Бид Калгари дахь Монгол хамт олонд зориулсан арга хэмжээ, хөтөлбөрүүдийг албан ёсоор зохион байгуулдаг.",
-    story: [
-      {
-        body:
-          "Бид бол Монголоос ирсэн анхны үеийн цагаач эцэг эхчүүд. Бидний зарим нь 2006 онд Альберта мужийн Калгари хотод ирсэн. Эндхийн цаг агаар, уулс, гол мөрөн, мал бэлчсэн уудам тал нутаг нь эх орноо санагдуулам танил мэдрэмж төрүүлсэн. Хамгийн гол нь Канад улс дэлхийн өнцөг булан бүрээс ирсэн хүмүүсийг төдийгүй тэдний соёл, уламжлалыг хүндэтгэн хүлээн авдаг орон байлаа. Энд бид амьдралаа төвхнүүлж, ажил мэргэжлээ хөгжүүлж, төрсөн нутгаасаа хол гэр бүлээ өсгөсөн.",
-        imageKey: "community",
-      },
-      {
-        body:
-          "Монголчуудын дунд нэгэн үг бий: нутгийн ус уувал ёсыг нь дагана. Бид энэ ухааныг өдөр бүр сэтгэлдээ тээж, Канадын үнэт зүйлсийг хүндэтгэхийн зэрэгцээ өөрсдийн өв соёл, эх нутгаа зүрхэндээ нандигнан хадгалсаар ирсэн.",
-        imageKey: "culture",
-      },
-      {
-        body:
-          "Тэр үед Калгари дахь Монголчуудын тоо зуугаас ч цөөн байлаа. Бид бараг хүн бүрийг таньдаг байсан. Жижигхэн хамт олон маань ямар нэгэн арга хэмжээ зохион байгуулахад хүн бүр өөрийн чадах зүйлээр тусалж, оролцож, уламжлалаа эх нутгаасаа холдсон ч мартагдуулахгүй гэсэн сэтгэлээр нэгддэг байсан.",
-        imageKey: "founding",
-      },
-      {
-        body:
-          "2011 оны зургаадугаар сард хэсэг ээжүүд Боунис Паркт анхны Хүүхдийн баярын арга хэмжээ болох “Ээж, аав бид гурав”-ыг зохион байгуулсан. Төсөв ч үгүй, том төлөвлөгөө ч үгүй байсан ч бидэнд эх орноосоо хол Монгол гэр бүлүүдэд зориулсан гэр мэт орон зайг бий болгох нэгэн мөрөөдөл байсан.",
-        imageKey: "children",
-      },
-      {
-        body:
-          "Тэр нэг өдрөөс Этүгэн Монголчууд төрсөн — цаасан дээр биш, харин бидний хамтын зорилго, мөрөөдөл дунд. Олон жилийн турш бид нээлттэй сэтгэлээрээ арга хэмжээ зохион байгуулж, гэр бүлүүдийг нэгтгэж, хүүхдүүдээ үндэс угсаатай нь холбосоор ирсэн. Хамт олон маань өсөхийн хэрээр бат бөх суурь хэрэгтэй болсон. Тиймээс бид ашгийн бус байгууллагаа албан ёсоор байгуулж, хойч үедээ өв соёлоо өвлүүлэн үлдээх, хамтдаа цуглах, манлайлах тогтвортой замыг бий болгосон.",
-        imageKey: "landing",
-      },
-    ],
+    teamButton: "Багтай танилцах",
   },
-} as const satisfies Record<Lang, Copy>;
+} as const;
 
 function Hero({ lang }: HeroProps) {
   const copy = COPY[lang];
-  const mainStoryRows = copy.story.slice(0, 4);
-  const finalStoryRow = copy.story[4];
+
+  const scrollToLearnMore = () => {
+    document.getElementById("learn-more")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
-    <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
-      <section className="relative min-h-screen overflow-hidden bg-[#2f3320]">
-        <img
-          src={IMAGE_PATHS.landing}
-          alt=""
-          width={1920}
-          height={1080}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+    <main className="overflow-hidden bg-white text-[#27301d]">
+      <section className="flex min-h-screen flex-col bg-white pt-16 md:pt-20">
+        <HeroSlowScroll />
 
-        <div className="absolute inset-0 bg-black/28" />
-        <div className="absolute inset-0 bg-linear-to-r from-black/72 via-black/42 to-transparent" />
-        <div className="absolute inset-0 bg-linear-to-b from-black/18 via-transparent to-black/52" />
+        <motion.div
+          variants={fadeIn}
+          initial="hidden"
+          animate="show"
+          className="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-center px-6 py-6 text-center md:px-10"
+        >
+          <div className="flex justify-center gap-3">
+            <img src={mongoliaFlag} alt="Mongolia flag" className="h-7 md:h-9" />
+            <img src={canadaFlag} alt="Canada flag" className="h-7 md:h-9" />
+          </div>
 
-        <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-12 px-6 pb-16 pt-28 md:px-10 lg:grid-cols-[0.95fr_0.85fr] lg:px-12">
-          <motion.div
-            variants={heroMotion}
-            initial="hidden"
-            animate="show"
-            className="max-w-2xl"
+          <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.32em] text-[#9a7b26]">
+            {copy.brand}
+          </p>
+
+          <h1 className="mx-auto mt-4 max-w-3xl text-lg font-semibold leading-tight text-[#27301d] md:text-2xl">
+            {copy.intro}
+          </h1>
+
+          <button
+            type="button"
+            onClick={scrollToLearnMore}
+            className="mt-6 inline-flex bg-[#27301d] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-colors hover:bg-[#9a7b26]"
           >
-            <div className="mb-7 flex items-center gap-3">
-              {FLAG_IMAGES.map((flag) => (
-                <img
-                  key={flag.alt}
-                  src={flag.src}
-                  alt={flag.alt}
-                  width={48}
-                  height={32}
-                  loading="eager"
-                  decoding="async"
-                  className={flagClassName}
-                />
-              ))}
-            </div>
-
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-              {copy.brand}
-            </p>
-
-            <h1 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-[#fffaf0] sm:text-5xl lg:text-6xl">
-              {copy.title}
-            </h1>
-
-            <p className="mt-6 max-w-xl text-base leading-8 text-[#f3ead2] md:text-lg md:leading-9">
-              {copy.subtitle}
-            </p>
-
-            <a
-              href="#story"
-              className="mt-9 inline-flex items-center bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline shadow-[0_18px_50px_rgba(0,0,0,0.25)] transition-colors duration-200 hover:bg-[#e1d2a6]"
-            >
-              {copy.storyButton}
-              <span className="ml-3" aria-hidden="true">
-                ↓
-              </span>
-            </a>
-          </motion.div>
-
-          <motion.aside
-            variants={heroMotion}
-            initial="hidden"
-            animate="show"
-            className="hidden justify-self-end lg:block"
-            aria-label="Featured event video"
-          >
-            <FeaturedVideoCard
-              eventHosted={copy.eventHosted}
-              viewEvents={copy.viewEvents}
-            />
-          </motion.aside>
-        </div>
+            {copy.learnMore}
+          </button>
+        </motion.div>
       </section>
 
-      <main id="story" className="scroll-mt-20 bg-[#fffaf0]">
-        {mainStoryRows.map((item, index) => {
-          const config = STORY_ROW_CONFIG[index];
+      <section
+        id="learn-more"
+        className="scroll-mt-0 bg-white px-6 py-14 md:px-10 md:py-18"
+      >
+        <motion.div
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="mx-auto grid max-w-6xl lg:grid-cols-2"
+        >
+          <FeaturedVideo />
 
-          return (
-            <StoryRow
-              key={item.imageKey}
-              body={item.body}
-              image={IMAGE_PATHS[item.imageKey]}
-              reverse={config.reverse}
-              tone={config.tone}
-              imageLarge={config.imageLarge}
-            />
-          );
-        })}
+          <InfoPanel
+            kicker={copy.whatKicker}
+            body={copy.whatBody}
+            primary={{ label: copy.eventsButton, to: "/events" }}
+            secondary={{ label: copy.impactButton, to: "/about/impact" }}
+          />
 
-        <section className="bg-[#efefec]">
-          <motion.article
-            variants={rowMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.24 }}
-            className="mx-auto grid max-w-6xl items-center lg:min-h-[34rem] lg:grid-cols-2"
-          >
-            <div className="flex h-full items-center px-6 py-14 text-center md:px-10 lg:px-12 lg:py-18">
-              <p className="mx-auto max-w-lg text-[15px] leading-8 text-[#4e593c] sm:text-base sm:leading-8">
-                {finalStoryRow.body}
-              </p>
-            </div>
+          <InfoPanel
+            kicker={copy.whoKicker}
+            body={copy.whoBody}
+            primary={{ label: copy.storyButton, to: "/about/story" }}
+            secondary={{ label: copy.teamButton, to: "/about/team" }}
+          />
 
-            <motion.div
-              variants={imageMotion}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.25 }}
-              className="relative h-[22rem] overflow-hidden sm:h-[28rem] lg:h-full"
-            >
-              <img
-                src={IMAGE_PATHS[finalStoryRow.imageKey]}
-                alt=""
-                width={1200}
-                height={800}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-[#27301d]/10" />
-            </motion.div>
-          </motion.article>
-        </section>
-
-        <section className="bg-[#fffaf0] px-6 py-20 text-center md:px-10">
-          <motion.div
-            variants={rowMotion}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.35 }}
-            className="mx-auto max-w-4xl"
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-              {copy.brand}
-            </p>
-
-            <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-              {copy.closing}
-            </h2>
-
-            <div className="mt-9 flex flex-wrap justify-center gap-4">
-              <Link
-                to="/about/team"
-                className="inline-flex bg-[#27301d] px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
-              >
-                {copy.meetTeam}
-              </Link>
-
-              <Link
-                to="/events"
-                className="inline-flex border border-[#27301d]/25 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#27301d] hover:text-[#fffaf0]"
-              >
-                {copy.viewEvents}
-              </Link>
-
-              <Link
-                to="/programs"
-                className="inline-flex border border-[#b39135]/45 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#b39135] hover:text-[#fffaf0]"
-              >
-                {copy.viewPrograms}
-              </Link>
-            </div>
-          </motion.div>
-        </section>
-      </main>
-    </section>
+          <SingleImage />
+        </motion.div>
+      </section>
+    </main>
   );
 }
 
-const FeaturedVideoCard = memo(function FeaturedVideoCard({
-  eventHosted,
-  viewEvents,
+function HeroSlowScroll() {
+  const scrollingImages = [...HERO_SLIDES, ...HERO_SLIDES];
+
+  return (
+    <div className="relative h-[43vh] min-h-[21rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-0 flex w-[200%]"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 42, ease: "linear", repeat: Infinity }}
+      >
+        {scrollingImages.map((src, index) => (
+          <img
+            key={`${src}-${index}`}
+            src={src}
+            alt=""
+            width={1920}
+            height={1080}
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            decoding="async"
+            className="h-full min-w-[20rem] shrink-0 object-cover md:min-w-0 md:w-1/4"
+          />
+        ))}
+      </motion.div>
+
+      <div className="absolute inset-0 bg-black/18" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/10 via-transparent to-black/25" />
+    </div>
+  );
+}
+
+function InfoPanel({
+  kicker,
+  body,
+  primary,
+  secondary,
 }: {
-  eventHosted: string;
-  viewEvents: string;
+  kicker: string;
+  body: string;
+  primary: { label: string; to: string };
+  secondary: { label: string; to: string };
 }) {
+  return (
+    <div className="flex min-h-[20rem] flex-col justify-center bg-white p-7 md:p-10 lg:min-h-[25rem]">
+      <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#9a7b26]">
+        {kicker}
+      </p>
+
+      <p className="mt-5 max-w-2xl text-sm font-medium leading-7 text-[#667056] md:text-base md:leading-8">
+        {body}
+      </p>
+
+      <div className="mt-7 flex flex-wrap gap-3">
+        <Link
+          to={primary.to}
+          className="bg-[#27301d] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
+        >
+          {primary.label}
+        </Link>
+
+        <Link
+          to={secondary.to}
+          className="border border-[#27301d]/30 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#27301d] no-underline transition-colors hover:bg-[#27301d] hover:text-white"
+        >
+          {secondary.label}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function SingleImage() {
+  return (
+    <div className="flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem]">
+      <img
+        src={HERO_IMAGE}
+        alt=""
+        width={1000}
+        height={650}
+        loading="lazy"
+        decoding="async"
+        className="h-auto max-h-[20rem] w-full object-cover lg:max-h-[22rem]"
+      />
+    </div>
+  );
+}
+
+function FeaturedVideo() {
   const [showVideo, setShowVideo] = useState(false);
   const hasVideo = FEATURED_VIDEO_ID !== "YOUR_FEATURED_EVENT_VIDEO_ID";
 
-  const thumbnailSrc = hasVideo
-    ? `https://img.youtube.com/vi/${FEATURED_VIDEO_ID}/hqdefault.jpg`
-    : IMAGE_PATHS.landing;
-
   return (
-    <div className="w-[28rem] border border-[#e1d2a6]/45 bg-[#fffaf0]/94 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm">
-      <div className="relative h-[15.75rem] overflow-hidden bg-[#27301d]">
+    <div className="flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem]">
+      <div className="relative aspect-video w-full overflow-hidden bg-[#27301d]">
         {showVideo && hasVideo ? (
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${FEATURED_VIDEO_ID}?autoplay=1&rel=0`}
@@ -391,103 +255,29 @@ const FeaturedVideoCard = memo(function FeaturedVideoCard({
           <button
             type="button"
             onClick={() => hasVideo && setShowVideo(true)}
+            className="group h-full w-full"
             aria-label="Play featured event video"
-            className="group relative h-full w-full cursor-pointer overflow-hidden"
           >
             <img
-              src={thumbnailSrc}
+              src={HERO_IMAGE}
               alt=""
-              width={480}
-              height={270}
+              width={960}
+              height={540}
               loading="lazy"
               decoding="async"
-              className="h-full w-full object-cover opacity-90 transition-opacity duration-200 group-hover:opacity-100"
+              className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
             />
 
             <span className="absolute inset-0 flex items-center justify-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#fffaf0] text-[#27301d] shadow-lg">
-                <span className="ml-1 text-lg" aria-hidden="true">
-                  ▶
-                </span>
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#27301d] shadow-lg">
+                <span className="ml-1 text-base">▶</span>
               </span>
             </span>
           </button>
         )}
       </div>
-
-      <div className="flex min-h-[3.75rem] items-center justify-between gap-4 px-2 pb-2 pt-4">
-        <p className="max-w-[12rem] text-[11px] font-bold uppercase tracking-[0.24em] text-[#9a7b26]">
-          {eventHosted}
-        </p>
-
-        <Link
-          to="/events"
-          className="shrink-0 bg-[#27301d] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
-        >
-          {viewEvents}
-        </Link>
-      </div>
     </div>
   );
-});
-
-const StoryRow = memo(function StoryRow({
-  body,
-  image,
-  reverse = false,
-  tone = "cream",
-  imageLarge = false,
-}: StoryRowProps) {
-  const isGreen = tone === "green";
-
-  return (
-    <section className={isGreen ? "bg-[#27301d]" : "bg-[#fffaf0]"}>
-      <motion.article
-        variants={rowMotion}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.24 }}
-        className={`mx-auto grid max-w-6xl items-center lg:grid-cols-2 ${
-          imageLarge ? "lg:min-h-[39rem]" : "lg:min-h-[32rem]"
-        }`}
-      >
-        <div
-          className={`flex h-full items-center px-6 py-14 md:px-10 lg:px-12 lg:py-16 ${
-            reverse ? "lg:order-2" : "lg:order-1"
-          }`}
-        >
-          <p
-            className={`max-w-lg text-[15px] leading-8 sm:text-base sm:leading-8 ${
-              isGreen ? "text-[#f3ead2]" : "text-[#4e593c]"
-            }`}
-          >
-            {body}
-          </p>
-        </div>
-
-        <motion.div
-          variants={imageMotion}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.25 }}
-          className={`relative h-[22rem] overflow-hidden sm:h-[28rem] lg:h-full ${
-            reverse ? "lg:order-1" : "lg:order-2"
-          }`}
-        >
-          <img
-            src={image}
-            alt=""
-            width={1200}
-            height={800}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-[#27301d]/10" />
-        </motion.div>
-      </motion.article>
-    </section>
-  );
-});
+}
 
 export default memo(Hero);

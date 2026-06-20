@@ -57,12 +57,10 @@ type Copy = {
 
 const IMAGE_PATHS: Record<ImpactImageKey, string> = {
   landing: "/landingpage.webp",
-
   archery: "/about/impact/archery.webp",
   wrestling: "/about/impact/wrestling.webp",
   stories: "/about/impact/stories.webp",
   dance: "/about/impact/dance.webp",
-
   stampedeNaadam: "/about/impact/stampede-naadam.webp",
   communitySong: "/about/impact/community-song.webp",
   youthCulture: "/about/impact/youth-culture.webp",
@@ -71,19 +69,20 @@ const IMAGE_PATHS: Record<ImpactImageKey, string> = {
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const sectionMotion: Variants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 16 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.38, ease: easeOut },
+    transition: { duration: 0.55, ease: easeOut },
   },
 };
 
 const imageMotion: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, scale: 1.015 },
   show: {
     opacity: 1,
-    transition: { duration: 0.45, ease: easeOut },
+    scale: 1,
+    transition: { duration: 0.75, ease: easeOut },
   },
 };
 
@@ -256,70 +255,55 @@ function OurImpactMain({ lang }: OurImpactMainProps) {
   const [main, performance, youth] = copy.items;
 
   return (
-    <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
-      <main>
-        <Hero copy={copy} />
+    <main className="overflow-hidden bg-white text-[#27301d]">
+      <Hero copy={copy} />
 
-        <FeaturedImpact
-          item={main}
-          quote={copy.quoteA}
-          label={copy.featuredLabel}
-          viewMore={copy.viewMore}
-        />
+      <FeaturedImpact
+        item={main}
+        quote={copy.quoteA}
+        label={copy.featuredLabel}
+        viewMore={copy.viewMore}
+      />
 
-        <PerformanceBand
-          item={performance}
-          quote={copy.quoteB}
-          label={copy.performanceLabel}
-          viewMore={copy.viewMore}
-        />
+      <PerformanceBand
+        item={performance}
+        quote={copy.quoteB}
+        label={copy.performanceLabel}
+        viewMore={copy.viewMore}
+      />
 
-        <CultureSection copy={copy} />
+      <CultureSection copy={copy} />
 
-        <YouthBlock
-          item={youth}
-          quote={copy.quoteC}
-          label={copy.youthLabel}
-          viewMore={copy.viewMore}
-        />
+      <YouthBlock
+        item={youth}
+        quote={copy.quoteC}
+        label={copy.youthLabel}
+        viewMore={copy.viewMore}
+      />
 
-        <FinalLinks events={copy.events} gallery={copy.gallery} />
-      </main>
-    </section>
+      <FinalLinks events={copy.events} gallery={copy.gallery} />
+    </main>
   );
 }
 
 const Hero = memo(function Hero({ copy }: { copy: Copy }) {
   return (
-    <section className="relative overflow-hidden px-6 pb-24 pt-28 md:px-10 lg:pt-32">
-      <img
-        src={IMAGE_PATHS.landing}
-        alt=""
-        loading="eager"
-        fetchPriority="high"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="absolute inset-0 bg-linear-to-r from-black/76 via-black/42 to-black/16" />
-      <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/58" />
-
+    <section className="bg-white px-6 pb-14 pt-32 text-center md:px-10 md:pt-36">
       <motion.div
         variants={sectionMotion}
         initial="hidden"
         animate="show"
-        className="relative z-10 mx-auto max-w-6xl text-[#fffaf0]"
+        className="mx-auto max-w-4xl"
       >
-        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
           {copy.eyebrow}
         </p>
 
-        <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+        <h1 className="mt-4 text-4xl font-semibold leading-tight text-[#27301d] md:text-6xl">
           {copy.title}
         </h1>
 
-        <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#f3ead2] md:text-base">
+        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-8 text-[#667056]">
           {copy.intro}
         </p>
       </motion.div>
@@ -339,7 +323,7 @@ const FeaturedImpact = memo(function FeaturedImpact({
   viewMore: string;
 }) {
   return (
-    <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
+    <section className="bg-white px-6 py-16 md:px-10 md:py-20">
       <motion.article
         variants={sectionMotion}
         initial="hidden"
@@ -348,21 +332,17 @@ const FeaturedImpact = memo(function FeaturedImpact({
         className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.62fr_1.38fr] lg:items-center"
       >
         <div className="max-w-xl">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            {label}
-          </p>
+          <Label>{label}</Label>
 
           <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
             {item.title}
           </h2>
 
-          <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
+          <p className="mt-6 text-[15px] leading-8 text-[#667056]">
             {item.body}
           </p>
 
-          <p className="mt-8 text-2xl font-semibold italic leading-9 text-[#27301d]">
-            “{quote}”
-          </p>
+          <Quote>{quote}</Quote>
 
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
@@ -385,42 +365,30 @@ const PerformanceBand = memo(function PerformanceBand({
   viewMore: string;
 }) {
   return (
-    <section className="bg-[#27301d] px-6 py-20 text-[#fffaf0] md:px-10">
+    <section className="bg-[#f7f7f4] px-6 py-16 md:px-10 md:py-20">
       <motion.article
         variants={sectionMotion}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.18 }}
-        className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
+        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
       >
         <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
 
         <div className="max-w-xl lg:justify-self-end">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-            {label}
-          </p>
+          <Label>{label}</Label>
 
           <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
             {item.title}
           </h2>
 
-          <p className="mt-6 text-[15px] leading-8 text-[#f3ead2]">
+          <p className="mt-6 text-[15px] leading-8 text-[#667056]">
             {item.body}
           </p>
 
-          <p className="mt-8 text-2xl font-semibold italic leading-9 text-[#fffaf0]">
-            “{quote}”
-          </p>
+          <Quote>{quote}</Quote>
 
-          <Link
-            to={item.href}
-            className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
-          >
-            {viewMore}
-            <span className="ml-3" aria-hidden="true">
-              →
-            </span>
-          </Link>
+          <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
       </motion.article>
     </section>
@@ -429,8 +397,8 @@ const PerformanceBand = memo(function PerformanceBand({
 
 const CultureSection = memo(function CultureSection({ copy }: { copy: Copy }) {
   return (
-    <section className="bg-[#fffaf0]">
-      <div className="px-6 py-20 text-center md:px-10">
+    <section className="bg-white">
+      <div className="px-6 py-16 text-center md:px-10 md:py-20">
         <motion.div
           variants={sectionMotion}
           initial="hidden"
@@ -438,15 +406,13 @@ const CultureSection = memo(function CultureSection({ copy }: { copy: Copy }) {
           viewport={{ once: true, amount: 0.2 }}
           className="mx-auto max-w-3xl"
         >
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            {copy.cultureEyebrow}
-          </p>
+          <Label>{copy.cultureEyebrow}</Label>
 
-          <h2 className="mt-5 text-4xl font-semibold leading-tight md:text-6xl">
+          <h2 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">
             {copy.cultureTitle}
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-8 text-[#4e593c]">
+          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-8 text-[#667056]">
             {copy.cultureIntro}
           </p>
         </motion.div>
@@ -477,7 +443,7 @@ const CultureActivityRow = memo(function CultureActivityRow({
   muted?: boolean;
 }) {
   return (
-    <section className={muted ? "bg-[#efefec]" : "bg-[#fffaf0]"}>
+    <section className={muted ? "bg-[#f7f7f4]" : "bg-white"}>
       <motion.article
         variants={sectionMotion}
         initial="hidden"
@@ -505,33 +471,18 @@ const CultureActivityRow = memo(function CultureActivityRow({
               {activity.title}
             </h3>
 
-            <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
+            <p className="mt-6 text-[15px] leading-8 text-[#667056]">
               {activity.body}
             </p>
           </div>
         </div>
 
-        <motion.div
-          variants={imageMotion}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className={[
-            "relative overflow-hidden bg-[#27301d]",
-            large ? "h-[26rem] lg:h-full" : "h-[21rem] lg:h-full",
-            reverse ? "lg:order-1" : "lg:order-2",
-          ].join(" ")}
-        >
-          <img
-            src={IMAGE_PATHS[activity.imageKey]}
-            alt={activity.title}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-black/10" />
-        </motion.div>
+        <ImageBlock
+          src={IMAGE_PATHS[activity.imageKey]}
+          alt={activity.title}
+          tall={large}
+          reverse={reverse}
+        />
       </motion.article>
     </section>
   );
@@ -549,51 +500,28 @@ const YouthBlock = memo(function YouthBlock({
   viewMore: string;
 }) {
   return (
-    <section className="relative overflow-hidden px-6 py-24 md:px-10">
-      <img
-        src={IMAGE_PATHS.landing}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-
-      <div className="absolute inset-0 bg-black/48" />
-      <div className="absolute inset-0 bg-linear-to-r from-black/68 via-black/42 to-black/20" />
-
+    <section className="bg-[#f7f7f4] px-6 py-16 md:px-10 md:py-20">
       <motion.article
         variants={sectionMotion}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="relative z-10 mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
+        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
       >
-        <div className="text-[#fffaf0]">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-            {label}
-          </p>
+        <div>
+          <Label>{label}</Label>
 
           <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
             {item.title}
           </h2>
 
-          <p className="mt-6 max-w-xl text-[15px] leading-8 text-[#f3ead2]">
+          <p className="mt-6 max-w-xl text-[15px] leading-8 text-[#667056]">
             {item.body}
           </p>
 
-          <p className="mt-8 max-w-xl text-2xl font-semibold italic leading-9 text-[#fffaf0]">
-            “{quote}”
-          </p>
+          <Quote>{quote}</Quote>
 
-          <Link
-            to={item.href}
-            className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
-          >
-            {viewMore}
-            <span className="ml-3" aria-hidden="true">
-              →
-            </span>
-          </Link>
+          <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
         <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
@@ -610,18 +538,18 @@ const FinalLinks = memo(function FinalLinks({
   gallery: string;
 }) {
   return (
-    <section className="bg-[#27301d] px-6 py-14 text-center md:px-10">
+    <section className="bg-white px-6 pb-24 pt-6 text-center md:px-10">
       <div className="flex flex-wrap justify-center gap-4">
         <Link
           to="/events"
-          className="inline-flex bg-[#fffaf0] px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
+          className="inline-flex bg-[#27301d] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
         >
           {events}
         </Link>
 
         <Link
           to="/gallery"
-          className="inline-flex border border-[#fffaf0]/35 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#fffaf0] hover:text-[#27301d]"
+          className="inline-flex border border-[#27301d]/30 px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors hover:bg-[#27301d] hover:text-white"
         >
           {gallery}
         </Link>
@@ -634,10 +562,12 @@ const ImageBlock = memo(function ImageBlock({
   src,
   alt,
   tall = false,
+  reverse = false,
 }: {
   src: string;
   alt: string;
   tall?: boolean;
+  reverse?: boolean;
 }) {
   return (
     <motion.div
@@ -647,7 +577,8 @@ const ImageBlock = memo(function ImageBlock({
       viewport={{ once: true, amount: 0.2 }}
       className={[
         "relative overflow-hidden bg-[#27301d]",
-        tall ? "h-[24rem] lg:h-[36rem]" : "h-[18rem]",
+        tall ? "h-[24rem] lg:h-[34rem]" : "h-[20rem] lg:h-full",
+        reverse ? "lg:order-1" : "lg:order-2",
       ].join(" ")}
     >
       <img
@@ -663,11 +594,27 @@ const ImageBlock = memo(function ImageBlock({
   );
 });
 
+function Label({ children }: { children: string }) {
+  return (
+    <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+      {children}
+    </p>
+  );
+}
+
+function Quote({ children }: { children: string }) {
+  return (
+    <p className="mt-8 text-2xl font-semibold italic leading-9 text-[#27301d]">
+      “{children}”
+    </p>
+  );
+}
+
 function TextLink({ to, children }: { to: string; children: string }) {
   return (
     <Link
       to={to}
-      className="mt-7 inline-flex bg-[#27301d] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
+      className="mt-7 inline-flex bg-[#27301d] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
     >
       {children}
       <span className="ml-3" aria-hidden="true">
