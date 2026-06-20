@@ -206,32 +206,33 @@ function Header({ lang, setLang }: HeaderProps) {
 
         <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
           <button
-            type="button"
-            onClick={toggleLang}
-            className="grid h-10 w-[5.75rem] grid-cols-2 border border-[#e6dcc3] bg-[#fffaf0] p-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#27301d] transition-colors hover:border-[#d8caa5] sm:h-11 sm:w-[8.75rem] sm:p-1 sm:text-[11px] sm:tracking-[0.12em]"
-            aria-label="Toggle language"
-          >
-            <span
-              className={[
-                "flex items-center justify-center transition-colors",
-                lang === "en"
-                  ? "bg-white text-[#9a7b26] shadow-sm"
-                  : "text-[#27301d]/55",
-              ].join(" ")}
-            >
-              EN
-            </span>
-            <span
-              className={[
-                "flex items-center justify-center transition-colors",
-                lang === "mn"
-                  ? "bg-white text-[#9a7b26] shadow-sm"
-                  : "text-[#27301d]/55",
-              ].join(" ")}
-            >
-              MN
-            </span>
-          </button>
+  type="button"
+  onClick={toggleLang}
+  className="grid h-11 w-[8.75rem] grid-cols-2 border border-[#e6dcc3] bg-[#fffaf0] p-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#27301d] transition-colors hover:border-[#d8caa5]"
+  aria-label="Toggle language"
+>
+  <span
+    className={[
+      "flex h-full w-full items-center justify-center transition-colors",
+      lang === "en"
+        ? "bg-white text-[#9a7b26] shadow-sm"
+        : "text-[#27301d]/55",
+    ].join(" ")}
+  >
+    EN
+  </span>
+
+  <span
+    className={[
+      "flex h-full w-full items-center justify-center transition-colors",
+      lang === "mn"
+        ? "bg-white text-[#9a7b26] shadow-sm"
+        : "text-[#27301d]/55",
+    ].join(" ")}
+  >
+    MN
+  </span>
+</button>
 
           <button
             type="button"
