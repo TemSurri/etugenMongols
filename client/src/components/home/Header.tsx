@@ -95,7 +95,7 @@ function Header({ lang, setLang }: HeaderProps) {
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full border-b border-[#efe7d4] bg-white text-[#27301d] shadow-[0_10px_34px_rgba(39,48,29,0.07)]">
-      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between gap-4 px-5 sm:px-6 lg:px-10">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:h-24 sm:px-6 lg:px-10">
         <Link
           to="/"
           onClick={closeMenu}
@@ -105,7 +105,7 @@ function Header({ lang, setLang }: HeaderProps) {
           <img
             src="/logo.webp"
             alt="Etugen Mongols logo"
-            className="h-18 w-18 object-contain md:h-20 md:w-20"
+            className="h-14 w-14 object-contain sm:h-16 sm:w-16 md:h-20 md:w-20"
             loading="eager"
             decoding="async"
           />
@@ -208,7 +208,7 @@ function Header({ lang, setLang }: HeaderProps) {
           <button
             type="button"
             onClick={toggleLang}
-            className="grid h-11 w-[8.75rem] grid-cols-2 border border-[#e6dcc3] bg-[#fffaf0] p-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#27301d] transition-colors hover:border-[#d8caa5]"
+            className="grid h-10 w-[5.75rem] grid-cols-2 border border-[#e6dcc3] bg-[#fffaf0] p-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#27301d] transition-colors hover:border-[#d8caa5] sm:h-11 sm:w-[8.75rem] sm:p-1 sm:text-[11px] sm:tracking-[0.12em]"
             aria-label="Toggle language"
           >
             <span
@@ -236,7 +236,7 @@ function Header({ lang, setLang }: HeaderProps) {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex h-11 w-11 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] text-[#27301d] transition-colors hover:border-[#d8caa5] hover:bg-white xl:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] text-lg text-[#27301d] transition-colors hover:border-[#d8caa5] hover:bg-white sm:h-11 sm:w-11 xl:hidden"
             aria-label="Toggle navigation menu"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
@@ -249,9 +249,12 @@ function Header({ lang, setLang }: HeaderProps) {
       {menuOpen && (
         <div
           id="mobile-navigation"
-          className="border-t border-[#efe7d4] bg-white px-5 py-5 xl:hidden"
+          className="border-t border-[#efe7d4] bg-white px-4 py-4 shadow-[0_18px_45px_rgba(39,48,29,0.08)] xl:hidden"
         >
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1">
+          <nav
+            className="mx-auto flex max-w-7xl flex-col gap-1"
+            aria-label="Mobile navigation"
+          >
             {NAV_ITEMS.map((item) => {
               const hasDropdown = Boolean(item.children?.length);
               const isOpen = openMobileGroup === item.label;
@@ -262,7 +265,14 @@ function Header({ lang, setLang }: HeaderProps) {
                     key={item.to}
                     to={item.to}
                     onClick={() => handleNavClick(item.to)}
-                    className="px-1 py-3 text-base font-semibold no-underline text-[#27301d]/82"
+                    className={({ isActive }) =>
+                      [
+                        "px-1 py-3 text-base font-semibold no-underline transition-colors",
+                        isActive
+                          ? "text-[#9a7b26]"
+                          : "text-[#27301d]/82 hover:text-[#27301d]",
+                      ].join(" ")
+                    }
                   >
                     {item.label}
                   </NavLink>
@@ -276,24 +286,44 @@ function Header({ lang, setLang }: HeaderProps) {
                     onClick={() =>
                       setOpenMobileGroup(isOpen ? null : item.label)
                     }
-                    className="flex w-full items-center justify-between px-1 py-3 text-left text-base font-semibold text-[#27301d]/85"
+                    className={[
+                      "flex w-full items-center justify-between px-1 py-3 text-left text-base font-semibold transition-colors",
+                      isParentActive(currentPath, item)
+                        ? "text-[#9a7b26]"
+                        : "text-[#27301d]/85",
+                    ].join(" ")}
+                    aria-expanded={isOpen}
                   >
-                    {item.label}
-                    <span>{isOpen ? "−" : "+"}</span>
+                    <span>{item.label}</span>
+                    <span className="text-xl leading-none">
+                      {isOpen ? "−" : "+"}
+                    </span>
                   </button>
 
                   {isOpen && (
                     <div className="pb-3 pl-4">
-                      {item.children?.map((child) => (
-                        <NavLink
-                          key={child.to}
-                          to={child.to}
-                          onClick={() => handleNavClick(child.to)}
-                          className="block px-2 py-2 text-sm font-medium no-underline text-[#27301d]/72"
-                        >
-                          {child.label}
-                        </NavLink>
-                      ))}
+                      {item.children?.map((child) => {
+                        const childActive = isRouteActive(
+                          currentPath,
+                          child.to
+                        );
+
+                        return (
+                          <NavLink
+                            key={child.to}
+                            to={child.to}
+                            onClick={() => handleNavClick(child.to)}
+                            className={[
+                              "block px-2 py-2 text-sm font-medium no-underline transition-colors",
+                              childActive
+                                ? "text-[#9a7b26]"
+                                : "text-[#27301d]/72 hover:text-[#27301d]",
+                            ].join(" ")}
+                          >
+                            {child.label}
+                          </NavLink>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
