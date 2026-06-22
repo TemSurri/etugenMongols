@@ -17,11 +17,11 @@ type ProgramItem = {
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const sectionMotion: Variants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.38, ease: easeOut },
+    transition: { duration: 0.42, ease: easeOut },
   },
 };
 
@@ -101,9 +101,9 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
   const copy = COPY[lang];
 
   return (
-    <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
+    <section className="overflow-hidden bg-[#f6f0df] text-[#25301f]">
       <main>
-        <section className="relative overflow-hidden px-6 pb-24 pt-28 md:px-10 lg:pt-32">
+        <section className="relative min-h-[72vh] overflow-hidden px-6 pb-24 pt-32 md:px-10 lg:pt-36">
           <img
             src="/landingpage.webp"
             alt=""
@@ -114,40 +114,42 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-black/48" />
-          <div className="absolute inset-0 bg-linear-to-r from-black/76 via-black/42 to-black/16" />
-          <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/58" />
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/82 via-black/48 to-black/18" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/12 via-transparent to-black/64" />
 
           <motion.div
             variants={sectionMotion}
             initial="hidden"
             animate="show"
-            className="relative z-10 mx-auto max-w-6xl text-[#fffaf0]"
+            className="relative z-10 mx-auto flex min-h-[48vh] max-w-6xl items-end text-[#fffaf0]"
           >
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-              {copy.eyebrow}
-            </p>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.36em] text-[#e4d4a4]">
+                {copy.eyebrow}
+              </p>
 
-            <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-              {copy.title}
-            </h1>
+              <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+                {copy.title}
+              </h1>
 
-            <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#f3ead2] md:text-base">
-              {copy.intro}
-            </p>
+              <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#f4ecd7] md:text-base">
+                {copy.intro}
+              </p>
+            </div>
           </motion.div>
         </section>
 
-        <section className="bg-[#fffaf0] px-6 py-20 md:px-10">
+        <section className="bg-[#f6f0df] px-6 py-20 md:px-10">
           <motion.div
             variants={sectionMotion}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
-            className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start"
+            className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:items-start"
           >
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
+            <div className="border-l border-[#b59a54] pl-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#927322]">
                 {copy.eyebrow}
               </p>
 
@@ -155,28 +157,27 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
                 {copy.mainTitle}
               </h2>
 
-              <p className="mt-6 text-[15px] leading-8 text-[#4e593c]">
+              <p className="mt-6 text-[15px] leading-8 text-[#4f5a40]">
                 {copy.mainBody}
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {PROGRAMS.map((program) => (
-                <motion.article
-                  key={program.title.en}
-                  variants={sectionMotion}
-                  className="bg-[#efefec] p-6 shadow-[0_14px_34px_rgba(39,48,29,0.08)]"
-                >
-                  <h3 className="text-2xl font-semibold leading-tight text-[#27301d]">
-                    {program.title[lang]}
-                  </h3>
+            <div className="border-y border-[#d8cba8]">
+  {PROGRAMS.map((program) => (
+    <article
+      key={program.title.en}
+      className="grid gap-3 border-b border-[#d8cba8] py-6 last:border-b-0 sm:grid-cols-[220px_1fr]"
+    >
+      <h3 className="text-xl font-semibold text-[#27301d]">
+        {program.title[lang]}
+      </h3>
 
-                  <p className="mt-4 text-sm leading-7 text-[#4e593c]">
-                    {program.body[lang]}
-                  </p>
-                </motion.article>
-              ))}
-            </div>
+      <p className="text-[15px] leading-7 text-[#4e593c]">
+        {program.body[lang]}
+      </p>
+    </article>
+  ))}
+</div>
           </motion.div>
         </section>
 
@@ -190,17 +191,17 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-black/46" />
-          <div className="absolute inset-0 bg-linear-to-b from-black/36 via-black/28 to-black/54" />
+          <div className="absolute inset-0 bg-black/52" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/42 via-black/30 to-black/62" />
 
           <motion.div
             variants={sectionMotion}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.24 }}
-            className="relative z-10 mx-auto max-w-3xl text-[#fffaf0]"
+            className="relative z-10 mx-auto max-w-3xl border border-white/18 bg-black/18 px-6 py-10 text-[#fffaf0] backdrop-blur-[2px] md:px-10"
           >
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e4d4a4]">
               {copy.eyebrow}
             </p>
 
@@ -208,7 +209,7 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
               {copy.noteTitle}
             </h2>
 
-            <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#f3ead2]">
+            <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#f4ecd7]">
               {copy.noteBody}
             </p>
           </motion.div>
