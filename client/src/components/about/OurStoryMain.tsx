@@ -251,19 +251,6 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
               {copy.meetTeam}
             </Link>
 
-            <Link
-              to="/events"
-              className="inline-flex border border-[#27301d]/25 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#27301d] hover:text-[#fffaf0]"
-            >
-              {copy.viewEvents}
-            </Link>
-
-            <Link
-              to="/programs"
-              className="inline-flex border border-[#b39135]/45 px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#b39135] hover:text-[#fffaf0]"
-            >
-              {copy.viewPrograms}
-            </Link>
           </div>
         </motion.div>
       </section>

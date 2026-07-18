@@ -68,6 +68,7 @@ const COPY = {
     emptyTitle: "No gallery items yet",
     emptyBody: "Past event galleries will appear here once they are added.",
   },
+
   mn: {
     eyebrow: "Цомог",
     pastEventsTitle: "Өнгөрсөн арга хэмжээнүүд",
@@ -83,11 +84,19 @@ const COPY = {
 } as const satisfies Record<Lang, GalleryCopy>;
 
 const entranceVariants: Variants = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: {
+    opacity: 0,
+    y: 18,
+  },
+
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
+
+    transition: {
+      duration: 0.55,
+      ease: "easeOut",
+    },
   },
 };
 
@@ -96,15 +105,25 @@ function getYearFromDate(date: string) {
 }
 
 function getLayoutClass(count: number) {
-  if (count <= 1) return "mx-auto max-w-3xl";
-  if (count === 2) return "grid gap-10 md:grid-cols-2";
-  if (count <= 5) return "grid gap-8 sm:grid-cols-2 xl:grid-cols-3";
+  if (count <= 1) {
+    return "mx-auto max-w-3xl";
+  }
+
+  if (count === 2) {
+    return "grid gap-10 md:grid-cols-2";
+  }
+
+  if (count <= 5) {
+    return "grid gap-8 sm:grid-cols-2 xl:grid-cols-3";
+  }
 
   return "columns-1 gap-7 sm:columns-2 xl:columns-3";
 }
 
 function getAlbumFrame(index: number, isLargeSet: boolean) {
-  if (isLargeSet) return ALBUM_STYLES[index % ALBUM_STYLES.length];
+  if (isLargeSet) {
+    return ALBUM_STYLES[index % ALBUM_STYLES.length];
+  }
 
   return index % 2 === 0 ? "aspect-[4/3]" : "aspect-[5/4]";
 }
@@ -141,17 +160,26 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
             imageAlt: event.coverImage.alt[safeLang],
           };
         }),
-    [safeLang]
+    [safeLang],
   );
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = normalizeSearchValue(query);
 
-    if (!normalizedQuery) return galleryItems;
+    if (!normalizedQuery) {
+      return galleryItems;
+    }
 
     return galleryItems.filter((item) => {
-      const searchableText =
-        `${item.title} ${item.desc} ${item.date} ${item.year} ${item.id}`.toLowerCase();
+      const searchableText = [
+        item.title,
+        item.desc,
+        item.date,
+        item.year,
+        item.id,
+      ]
+        .join(" ")
+        .toLowerCase();
 
       return searchableText.includes(normalizedQuery);
     });
@@ -170,7 +198,10 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
         variants={entranceVariants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.12 }}
+        viewport={{
+          once: true,
+          amount: 0.12,
+        }}
         className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12"
       >
         <GalleryHeader copy={copy} />
@@ -184,7 +215,7 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
                 copy={copy}
                 query={query}
                 setQuery={setQuery}
-                items={galleryItems}
+                items={filteredItems}
               />
             </div>
 
@@ -194,7 +225,9 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
                   {filteredItems.map((item, index) => (
                     <div
                       key={item.id}
-                      className={isLargeSet ? "mb-12 break-inside-avoid" : ""}
+                      className={
+                        isLargeSet ? "mb-12 break-inside-avoid" : ""
+                      }
                     >
                       <GalleryCard
                         item={item}
@@ -232,6 +265,7 @@ const PageBackground = memo(function PageBackground() {
       />
 
       <div className="absolute inset-0 bg-black/82" />
+
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(179,145,53,0.24),transparent_34%),linear-gradient(to_bottom,rgba(0,0,0,0.16),rgba(0,0,0,0.92))]" />
     </>
   );
@@ -300,10 +334,6 @@ const GalleryCard = memo(function GalleryCard({
           <h2 className="text-lg font-semibold leading-tight tracking-tight text-white">
             {item.title}
           </h2>
-
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-white/68">
-            {item.desc}
-          </p>
         </div>
       </article>
     </Link>
@@ -343,21 +373,27 @@ const GalleryLegend = memo(function GalleryLegend({
       </label>
 
       <div className="mt-5 flex max-h-[22rem] flex-col gap-3 overflow-y-auto pr-1">
-        {items.map((item) => (
-          <Link
-            key={item.id}
-            to={item.link}
-            className="text-sm leading-5 text-[#4e593c]/82 transition-colors hover:text-[#27301d]"
-          >
-            <span className="block font-medium">{item.title}</span>
+        {items.length > 0 ? (
+          items.map((item) => (
+            <Link
+              key={item.id}
+              to={item.link}
+              className="text-sm leading-5 text-[#4e593c]/82 transition-colors hover:text-[#27301d]"
+            >
+              <span className="block font-medium">{item.title}</span>
 
-            {item.year && (
-              <span className="mt-0.5 block text-xs text-[#9a7b26]/80">
-                {item.year}
-              </span>
-            )}
-          </Link>
-        ))}
+              {item.year && (
+                <span className="mt-0.5 block text-xs text-[#9a7b26]/80">
+                  {item.year}
+                </span>
+              )}
+            </Link>
+          ))
+        ) : (
+          <p className="text-sm leading-6 text-[#4e593c]/65">
+            {copy.noResults}
+          </p>
+        )}
       </div>
     </aside>
   );
@@ -370,13 +406,22 @@ const EmptyGallery = memo(function EmptyGallery({
 }) {
   return (
     <div className="mx-auto max-w-xl border border-white/12 bg-white/[0.08] p-7 text-center backdrop-blur-sm">
-      <h2 className="text-2xl font-semibold text-white">{copy.emptyTitle}</h2>
-      <p className="mt-3 text-sm leading-7 text-white/65">{copy.emptyBody}</p>
+      <h2 className="text-2xl font-semibold text-white">
+        {copy.emptyTitle}
+      </h2>
+
+      <p className="mt-3 text-sm leading-7 text-white/65">
+        {copy.emptyBody}
+      </p>
     </div>
   );
 });
 
-const NoResults = memo(function NoResults({ copy }: { copy: GalleryCopy }) {
+const NoResults = memo(function NoResults({
+  copy,
+}: {
+  copy: GalleryCopy;
+}) {
   return (
     <p className="border border-white/12 bg-white/[0.08] p-6 text-sm text-white/70 backdrop-blur-sm">
       {copy.noResults}

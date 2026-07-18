@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { cubicBezier, motion, type Variants } from "framer-motion";
 
@@ -11,60 +11,97 @@ type MeetTeamMainProps = {
 };
 
 type LocalizedText = Record<Lang, string>;
-type TeamImageKey = "landing";
 
 type TeamMember = {
   id: string;
   name: string;
   role: LocalizedText;
-  description: LocalizedText;
-  imageKey: TeamImageKey;
+  bio: LocalizedText;
+  image: string;
+  imagePosition?: string;
+};
+
+type CommunityImage = {
+  id: string;
+  src: string;
+  alt: LocalizedText;
+  imagePosition?: string;
 };
 
 type Copy = {
   eyebrow: string;
+
   boardTitle: string;
   boardBody: string;
+
+  creativeTitle: string;
+  creativeBody: string;
+
+  appreciationEyebrow: string;
   contributorsTitle: string;
   contributorsBody: string;
+
   communityTitle: string;
   communityBody: string;
-  galleryButton: string;
-  tapHint: string;
-};
 
-const IMAGE_PATHS: Record<TeamImageKey, string> = {
-  landing: "/landingpage.webp",
+  impactTitle: string;
+  impactBody: string;
+  impactButton: string;
 };
 
 const COPY = {
   en: {
     eyebrow: "Our Community",
+
     boardTitle: "Board Members",
     boardBody:
-      "Our board members organize and guide the work behind Etugen Mongols. They help plan events, coordinate programs, support volunteers, and make sure the community has a steady foundation throughout the year.",
-    contributorsTitle: "With Deep Appreciation",
+      "Our board provides leadership, supports our programs, and guides the long-term growth of Etugen Mongols.",
+
+    creativeTitle: "Etugen Creative Team",
+    creativeBody:
+      "Our creative team brings our work to life through design, photography, media, storytelling, performance, and culture.",
+
+    appreciationEyebrow: "With Deep Appreciation",
+    contributorsTitle: "Major Contributors",
     contributorsBody:
-      "These are people who pour a significant amount of their time, energy, and skill into helping make our events, performances, programs, and community work possible.",
+      "We recognize the people whose time, knowledge, care, and dedication have made a lasting contribution to our work and community.",
+
     communityTitle: "The Wider Community",
     communityBody:
-      "Etugen Mongols is only possible because of everyone who shows up: families, volunteers, performers, artists, organizers, photographers, supporters, and community members. Every bit of help matters. You can explore our work in the gallery and see the moments, preparation, and behind-the-scenes effort that bring our community together.",
-    galleryButton: "View Gallery",
-    tapHint: "Tap to read",
+      "Etugen Mongols is built by everyone who attends, volunteers, performs, organizes, supports, and celebrates with us.",
+
+    impactTitle: "See the impact we have made together",
+    impactBody:
+      "Explore the programs, events, initiatives, and shared experiences made possible by our community.",
+
+    impactButton: "See Our Impact",
   },
+
   mn: {
     eyebrow: "Манай хамт олон",
+
     boardTitle: "Удирдах зөвлөлийн гишүүд",
     boardBody:
-      "Манай удирдах зөвлөлийн гишүүд Этүгэн Монголчуудын ажлыг зохион байгуулж, чиглүүлдэг. Тэд арга хэмжээ төлөвлөх, хөтөлбөр зохицуулах, сайн дурынхныг дэмжих, хамт олны ажлыг жилийн турш тогтвортой байлгахад тусалдаг.",
-    contributorsTitle: "Гүн талархал илэрхийлье",
+      "Манай удирдах зөвлөл манлайлал үзүүлж, хөтөлбөрүүдийг дэмжин, Этүгэн Монголчуудын урт хугацааны хөгжлийг чиглүүлдэг.",
+
+    creativeTitle: "Этүгэн бүтээлч баг",
+    creativeBody:
+      "Манай бүтээлч баг дизайн, гэрэл зураг, медиа, түүх өгүүлэмж, тоглолт болон соёлоор дамжуулан бидний ажлыг амьдруулдаг.",
+
+    appreciationEyebrow: "Гүн талархал илэрхийлье",
+    contributorsTitle: "Онцгой хувь нэмэр оруулагчид",
     contributorsBody:
-      "Эдгээр хүмүүс арга хэмжээ, тоглолт, хөтөлбөр болон хамтын ажлыг боломжтой болгохын тулд цаг зав, эрч хүч, ур чадвараа харамгүй зориулдаг.",
+      "Манай ажил болон хамт олонд үнэтэй цаг, мэдлэг, сэтгэл, тууштай хөдөлмөрөө зориулсан хүмүүстээ талархал илэрхийлье.",
+
     communityTitle: "Өргөн хамт олон",
     communityBody:
-      "Этүгэн Монголчууд нь оролцож, дэмжиж, сайн дураар тусалж, тоглож, зохион байгуулж, зураг авч, хамт олноо нэгтгэдэг бүх хүмүүсийн хүчээр оршдог. Хүн бүрийн тус нэмэр үнэ цэнтэй. Та бидний ажлыг зургийн цомгоос харж, арга хэмжээний мөчүүд, бэлтгэл болон арын ажлыг үзэх боломжтой.",
-    galleryButton: "Зургийн цомог",
-    tapHint: "Дарж унших",
+      "Этүгэн Монголчууд нь оролцож, сайн дураар ажиллаж, тоглож, зохион байгуулж, дэмжиж, хамтдаа баярладаг хүн бүрийн хүчээр бүрддэг.",
+
+    impactTitle: "Хамтдаа бий болгосон үр нөлөөгөө харна уу",
+    impactBody:
+      "Манай хамт олны дэмжлэгээр хэрэгжсэн хөтөлбөр, арга хэмжээ, санаачилга болон дурсамжуудыг үзээрэй.",
+
+    impactButton: "Үр нөлөөг харах",
   },
 } as const satisfies Record<Lang, Copy>;
 
@@ -72,52 +109,131 @@ const BOARD_MEMBERS: TeamMember[] = [
   {
     id: "board-1",
     name: "Member One",
-    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    description: {
-      en: "Helps organize events, guide planning, support volunteers, and keep the organization moving forward.",
-      mn: "Арга хэмжээ зохион байгуулах, төлөвлөлт чиглүүлэх, сайн дурынхныг дэмжихэд тусалдаг.",
+    role: {
+      en: "Board Chair",
+      mn: "Удирдах зөвлөлийн дарга",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Provides leadership and helps guide the long-term direction, priorities, and community work of Etugen Mongols.",
+      mn: "Этүгэн Монголчуудын урт хугацааны чиглэл, зорилт болон олон нийтийн ажлыг удирдан чиглүүлдэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "board-2",
     name: "Member Two",
-    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    description: {
-      en: "Supports coordination, communication, programming, and the behind-the-scenes work of the organization.",
-      mn: "Зохицуулалт, харилцаа, хөтөлбөр болон байгууллагын арын ажлыг дэмждэг.",
+    role: {
+      en: "Vice Chair",
+      mn: "Удирдах зөвлөлийн дэд дарга",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Supports planning, coordination, partnerships, and the continued growth of Etugen Mongols.",
+      mn: "Төлөвлөлт, зохицуулалт, хамтын ажиллагаа болон байгууллагын хөгжлийг дэмждэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "board-3",
     name: "Member Three",
-    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    description: {
-      en: "Contributes leadership, care, and steady support for cultural events and community programs.",
-      mn: "Соёлын арга хэмжээ, хөтөлбөрүүдэд манлайлал, сэтгэл, тогтвортой дэмжлэг үзүүлдэг.",
+    role: {
+      en: "Board Member",
+      mn: "Удирдах зөвлөлийн гишүүн",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Helps organize programs, events, volunteer involvement, and community initiatives.",
+      mn: "Хөтөлбөр, арга хэмжээ, сайн дурынхны оролцоо болон олон нийтийн ажлыг зохион байгуулахад тусалдаг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "board-4",
     name: "Member Four",
-    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    description: {
-      en: "Helps make sure events, volunteers, and community needs are organized with care.",
-      mn: "Арга хэмжээ, сайн дурынхан, хамтын хэрэгцээг нямбай зохион байгуулахад тусалдаг.",
+    role: {
+      en: "Board Member",
+      mn: "Удирдах зөвлөлийн гишүүн",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Supports communication, administration, preparation, and the work behind each event.",
+      mn: "Харилцаа, захиргаа, бэлтгэл болон арга хэмжээний арын ажлыг дэмждэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "board-5",
     name: "Member Five",
-    role: { en: "Board Member", mn: "Удирдах зөвлөлийн гишүүн" },
-    description: {
-      en: "Supports the structure and planning needed to keep Etugen Mongols active throughout the year.",
-      mn: "Этүгэн Монголчуудыг жилийн турш идэвхтэй байлгах бүтэц, төлөвлөлтийг дэмждэг.",
+    role: {
+      en: "Board Member",
+      mn: "Удирдах зөвлөлийн гишүүн",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Contributes community knowledge, leadership, and consistent support throughout the year.",
+      mn: "Хамт олны мэдлэг, манлайлал болон тогтвортой дэмжлэг үзүүлдэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
+  },
+];
+
+const CREATIVE_TEAM: TeamMember[] = [
+  {
+    id: "creative-1",
+    name: "Creative Member One",
+    role: {
+      en: "Creative Direction",
+      mn: "Бүтээлч чиглэл",
+    },
+    bio: {
+      en: "Shapes the visual direction and creative presentation of events, campaigns, and community initiatives.",
+      mn: "Арга хэмжээ, кампанит ажил болон олон нийтийн санаачилгын бүтээлч дүр төрхийг чиглүүлдэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
+  },
+  {
+    id: "creative-2",
+    name: "Creative Member Two",
+    role: {
+      en: "Photography and Media",
+      mn: "Гэрэл зураг ба медиа",
+    },
+    bio: {
+      en: "Captures meaningful moments and helps share the people, culture, and stories behind our community.",
+      mn: "Чухал мөчүүдийг баримтжуулж, хамт олны хүмүүс, соёл болон түүхийг хуваалцдаг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
+  },
+  {
+    id: "creative-3",
+    name: "Creative Member Three",
+    role: {
+      en: "Design and Communications",
+      mn: "Дизайн ба харилцаа",
+    },
+    bio: {
+      en: "Creates visual materials and supports clear, consistent communication across our programs.",
+      mn: "Дүрслэлийн материал бүтээж, хөтөлбөрүүдийн нэгдсэн харилцааг дэмждэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
+  },
+  {
+    id: "creative-4",
+    name: "Creative Member Four",
+    role: {
+      en: "Culture and Performance",
+      mn: "Соёл ба тоглолт",
+    },
+    bio: {
+      en: "Supports performances and cultural experiences that preserve traditions and connect generations.",
+      mn: "Уламжлалыг хадгалж, үе үеийг холбодог тоглолт болон соёлын үйл ажиллагааг дэмждэг.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
 ];
 
@@ -125,59 +241,115 @@ const MAJOR_CONTRIBUTORS: TeamMember[] = [
   {
     id: "contributor-1",
     name: "Contributor One",
-    role: { en: "Volunteer", mn: "Сайн дурын ажилтан" },
-    description: {
-      en: "Gives time and energy to help events run smoothly and support families during gatherings.",
-      mn: "Арга хэмжээг амжилттай явуулах, гэр бүлүүдийг дэмжихэд цаг зав, эрч хүчээ зориулдаг.",
+    role: {
+      en: "Community Leadership",
+      mn: "Хамт олны манлайлал",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Has provided meaningful leadership, knowledge, and long-term support to our organization.",
+      mn: "Байгууллагад үнэтэй манлайлал, мэдлэг болон урт хугацааны дэмжлэг үзүүлсэн.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "contributor-2",
     name: "Contributor Two",
-    role: { en: "Performer / Artist", mn: "Уран бүтээлч" },
-    description: {
-      en: "Uses talent and creativity to bring performances, cultural moments, and celebrations to life.",
-      mn: "Тоглолт, соёлын мөчүүд, баярыг амьдруулахад авьяас, бүтээлч чадвараа зориулдаг.",
+    role: {
+      en: "Cultural Contribution",
+      mn: "Соёлын хувь нэмэр",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Has helped preserve and celebrate Mongolian culture through performance and community participation.",
+      mn: "Тоглолт болон олон нийтийн оролцоогоор Монгол соёлыг хадгалж, түгээн дэлгэрүүлэхэд тусалсан.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "contributor-3",
     name: "Contributor Three",
-    role: { en: "Community Supporter", mn: "Хамт олны дэмжигч" },
-    description: {
-      en: "Supports planning, setup, coordination, and the practical work that makes events possible.",
-      mn: "Төлөвлөлт, бэлтгэл, зохицуулалт болон арга хэмжээг боломжтой болгодог ажлыг дэмждэг.",
+    role: {
+      en: "Volunteer Coordination",
+      mn: "Сайн дурынхны зохицуулалт",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Has contributed substantial time and care to volunteer coordination and event preparation.",
+      mn: "Сайн дурынхны зохицуулалт болон арга хэмжээний бэлтгэлд ихээхэн цаг, сэтгэлээ зориулсан.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
   {
     id: "contributor-4",
     name: "Contributor Four",
-    role: { en: "Media / Photography", mn: "Медиа / Зурагчин" },
-    description: {
-      en: "Helps capture memories, document the process, and share the work of the community.",
-      mn: "Дурсамж хадгалах, үйл явцыг баримтжуулах, хамтын ажлыг хуваалцахад тусалдаг.",
+    role: {
+      en: "Community Support",
+      mn: "Хамт олны дэмжлэг",
     },
-    imageKey: "landing",
+    bio: {
+      en: "Has consistently supported the people, programs, events, and cultural work of Etugen Mongols.",
+      mn: "Этүгэн Монголчуудын хүмүүс, хөтөлбөр, арга хэмжээ болон соёлын ажлыг тогтмол дэмжсэн.",
+    },
+    image: "/landingpage.webp",
+    imagePosition: "center",
   },
 ];
 
-const COMMUNITY_IMAGES = [
-  "/landingpage.webp",
-  "/landingpage.webp",
-  "/landingpage.webp",
-] as const;
+const COMMUNITY_IMAGES: CommunityImage[] = [
+  {
+    id: "community-1",
+    src: "/landingpage.webp",
+    alt: {
+      en: "Etugen Mongols community gathering",
+      mn: "Этүгэн Монголчуудын хамтын цугларалт",
+    },
+    imagePosition: "center",
+  },
+  {
+    id: "community-2",
+    src: "/landingpage.webp",
+    alt: {
+      en: "Families attending a community event",
+      mn: "Олон нийтийн арга хэмжээнд оролцож буй гэр бүлүүд",
+    },
+    imagePosition: "center",
+  },
+  {
+    id: "community-3",
+    src: "/landingpage.webp",
+    alt: {
+      en: "Etugen Mongols community group photo",
+      mn: "Этүгэн Монголчуудын хамтын зураг",
+    },
+    imagePosition: "center",
+  },
+];
 
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+const smoothEase = cubicBezier(0.22, 1, 0.36, 1);
 
-const fadeIn: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: {
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: easeOut },
+    transition: {
+      duration: 0.65,
+      ease: smoothEase,
+    },
+  },
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.07,
+      delayChildren: 0.03,
+    },
   },
 };
 
@@ -186,111 +358,168 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">
-      <PageIntro copy={copy} />
-
-      <MemberGrid
-        members={BOARD_MEMBERS}
-        lang={lang}
-        columns="board"
-        tapHint={copy.tapHint}
-      />
-
-      <section className="bg-white px-6 py-16 text-center md:px-10 md:py-18">
-        <SectionHeader
-          eyebrow={copy.eyebrow}
-          title={copy.contributorsTitle}
-          body={copy.contributorsBody}
-        />
-      </section>
-
-      <MemberGrid
-        members={MAJOR_CONTRIBUTORS}
-        lang={lang}
-        columns="contributors"
-        tapHint={copy.tapHint}
-      />
-
-      <CommunitySection copy={copy} />
-    </main>
-  );
-}
-
-function PageIntro({ copy }: { copy: Copy }) {
-  return (
-    <section className="bg-white px-6 pb-12 pt-32 text-center md:px-10 md:pt-36">
-      <SectionHeader
+      <SectionIntro
         eyebrow={copy.eyebrow}
         title={copy.boardTitle}
         body={copy.boardBody}
         large
+        first
       />
+
+      <MemberGrid
+        members={BOARD_MEMBERS}
+        lang={lang}
+        layout="board"
+      />
+
+      <ContentSection>
+        <SectionIntro
+          eyebrow={copy.eyebrow}
+          title={copy.creativeTitle}
+          body={copy.creativeBody}
+          embedded
+        />
+
+        <MemberGrid
+          members={CREATIVE_TEAM}
+          lang={lang}
+          layout="standard"
+          embedded
+        />
+      </ContentSection>
+
+      <ContentSection muted>
+        <SectionIntro
+          eyebrow={copy.appreciationEyebrow}
+          title={copy.contributorsTitle}
+          body={copy.contributorsBody}
+          embedded
+        />
+
+        <MemberGrid
+          members={MAJOR_CONTRIBUTORS}
+          lang={lang}
+          layout="contributors"
+          embedded
+        />
+      </ContentSection>
+
+      <CommunityGallery copy={copy} lang={lang} />
+
+      <ImpactSection copy={copy} />
+    </main>
+  );
+}
+
+function ContentSection({
+  children,
+  muted = false,
+}: {
+  children: ReactNode;
+  muted?: boolean;
+}) {
+  return (
+    <section
+      className={[
+        "px-5 py-20 sm:px-6 md:px-10 md:py-28",
+        muted ? "bg-[#f6f5ef]" : "bg-white",
+      ].join(" ")}
+    >
+      <div className="mx-auto max-w-7xl">{children}</div>
     </section>
   );
 }
 
-function SectionHeader({
+function SectionIntro({
   eyebrow,
   title,
   body,
   large = false,
+  first = false,
+  embedded = false,
+  hideEyebrow = false,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   body: string;
   large?: boolean;
+  first?: boolean;
+  embedded?: boolean;
+  hideEyebrow?: boolean;
 }) {
   return (
-    <motion.div
-      variants={fadeIn}
-      initial="hidden"
-      animate="show"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.25 }}
-      className="mx-auto max-w-4xl"
+    <section
+      className={[
+        embedded ? "" : "px-5 text-center sm:px-6 md:px-10",
+        first ? "pb-12 pt-32 md:pb-16 md:pt-40" : "",
+      ].join(" ")}
     >
-      <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-        {eyebrow}
-      </p>
-
-      <h1
-        className={[
-          "mt-4 font-semibold leading-tight text-[#27301d]",
-          large ? "text-4xl md:text-6xl" : "text-3xl md:text-5xl",
-        ].join(" ")}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.25,
+        }}
+        className="mx-auto max-w-3xl text-center"
       >
-        {title}
-      </h1>
+        {!hideEyebrow && eyebrow ? (
+          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#9a7b26] sm:text-[11px]">
+            {eyebrow}
+          </p>
+        ) : null}
 
-      <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-8 text-[#667056]">
-        {body}
-      </p>
-    </motion.div>
+        <h1
+          className={[
+            "font-semibold leading-[1.08] tracking-[-0.025em] text-[#27301d]",
+            hideEyebrow ? "mt-0" : "mt-4",
+            large
+              ? "text-4xl sm:text-5xl md:text-6xl"
+              : "text-3xl sm:text-4xl md:text-5xl",
+          ].join(" ")}
+        >
+          {title}
+        </h1>
+
+        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-7 text-[#68705c] md:text-base md:leading-8">
+          {body}
+        </p>
+      </motion.div>
+    </section>
   );
 }
 
 function MemberGrid({
   members,
   lang,
-  columns,
-  tapHint,
+  layout,
+  embedded = false,
 }: {
   members: TeamMember[];
   lang: Lang;
-  columns: "board" | "contributors";
-  tapHint: string;
+  layout: "board" | "standard" | "contributors";
+  embedded?: boolean;
 }) {
   return (
-    <section className="bg-white px-6 pb-16 md:px-10 md:pb-20">
+    <section
+      className={
+        embedded
+          ? "mt-14 md:mt-16"
+          : "px-5 pb-20 sm:px-6 md:px-10 md:pb-28"
+      }
+    >
       <motion.div
-        variants={fadeIn}
+        variants={staggerContainer}
         initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.1,
+        }}
         className={[
-          "mx-auto grid max-w-7xl gap-3 md:gap-4",
-          columns === "board"
-            ? "grid-cols-1 sm:grid-cols-3 lg:grid-cols-5"
-            : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+          "mx-auto grid max-w-7xl gap-x-8 gap-y-14 md:gap-x-10 md:gap-y-16",
+          getGridColumns(layout, members.length),
         ].join(" ")}
       >
         {members.map((member) => (
@@ -298,7 +527,6 @@ function MemberGrid({
             key={member.id}
             member={member}
             lang={lang}
-            tapHint={tapHint}
           />
         ))}
       </motion.div>
@@ -306,140 +534,214 @@ function MemberGrid({
   );
 }
 
+function getGridColumns(
+  layout: "board" | "standard" | "contributors",
+  count: number,
+) {
+  if (layout === "board") {
+    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5";
+  }
+
+  if (layout === "contributors" && count === 3) {
+    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  }
+
+  return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+}
+
 const MemberCard = memo(function MemberCard({
   member,
   lang,
-  tapHint,
 }: {
   member: TeamMember;
   lang: Lang;
-  tapHint: string;
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <article
-      className="group relative aspect-[4/5] cursor-pointer overflow-hidden bg-[#27301d] outline-none"
-      tabIndex={0}
-      onClick={() => setOpen((current) => !current)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          setOpen((current) => !current);
-        }
-      }}
-      aria-expanded={open}
+    <motion.article
+      variants={fadeUp}
+      className="group mx-auto flex w-full max-w-[16rem] flex-col items-center text-center"
     >
-      <img
-        src={IMAGE_PATHS[member.imageKey]}
-        alt={member.name}
-        loading="lazy"
-        decoding="async"
-        className={[
-          "absolute inset-0 h-full w-full object-cover transition-transform duration-500",
-          open ? "scale-[1.035]" : "group-hover:scale-[1.035]",
-        ].join(" ")}
-      />
+      <div className="relative aspect-square w-full overflow-hidden rounded-full bg-[#27301d] shadow-[0_14px_36px_rgba(39,48,29,0.12)] ring-1 ring-[#27301d]/10">
+        <img
+          src={member.image}
+          alt={member.name}
+          loading="lazy"
+          decoding="async"
+          style={{
+            objectPosition: member.imagePosition ?? "center",
+          }}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
 
-      <div
-        className={[
-          "absolute inset-0 bg-[#27301d]/0 transition-colors duration-300",
-          open ? "bg-[#27301d]/70" : "group-hover:bg-[#27301d]/70",
-        ].join(" ")}
-      />
+        <div
+          className={[
+            "absolute inset-0 bg-[#27301d]/0",
+            "transition-colors duration-300",
+            "ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "group-hover:bg-[#27301d]/82",
+          ].join(" ")}
+        />
 
-      <div
-        className={[
-          "absolute inset-0 bg-linear-to-t from-[#10150d]/95 via-[#27301d]/80 to-[#27301d]/25 opacity-0 transition-opacity duration-300",
-          open ? "opacity-100" : "group-hover:opacity-100",
-        ].join(" ")}
-      />
+        <div
+          className={[
+            "absolute inset-0 flex items-center justify-center p-7",
+            "opacity-0",
+            "transition-opacity duration-300",
+            "ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "group-hover:opacity-100",
+          ].join(" ")}
+        >
+          <p className="text-sm leading-6 text-white">
+            {member.bio[lang]}
+          </p>
+        </div>
+      </div>
 
-      <div
-        className={[
-          "absolute inset-x-0 bottom-0 p-5 text-white transition-transform duration-300",
-          open ? "-translate-y-2" : "group-hover:-translate-y-2",
-        ].join(" ")}
-      >
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#e1d2a6] drop-shadow-sm">
+      <div className="mt-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
           {member.role[lang]}
         </p>
 
-        <h3 className="mt-2 text-xl font-semibold leading-tight text-white drop-shadow-sm">
+        <h3 className="mt-2 text-xl font-semibold leading-tight tracking-[-0.015em] text-[#27301d]">
           {member.name}
         </h3>
-
-        <p
-          className={[
-            "mt-3 overflow-hidden text-sm leading-6 text-[#fff7df] opacity-0 transition-all duration-300",
-            open
-              ? "max-h-56 opacity-100"
-              : "max-h-0 group-hover:max-h-56 group-hover:opacity-100",
-          ].join(" ")}
-        >
-          {member.description[lang]}
-        </p>
-
-        <p
-          className={[
-            "mt-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e1d2a6]/85 transition-opacity duration-300 md:hidden",
-            open ? "opacity-0" : "opacity-100",
-          ].join(" ")}
-        >
-          {tapHint}
-        </p>
       </div>
-    </article>
+    </motion.article>
   );
 });
 
-function CommunitySection({ copy }: { copy: Copy }) {
+function CommunityGallery({
+  copy,
+  lang,
+}: {
+  copy: Copy;
+  lang: Lang;
+}) {
   return (
-    <section className="bg-white px-6 pb-24 pt-8 text-center md:px-10">
-      <motion.div
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.25 }}
-        className="mx-auto max-w-7xl"
-      >
-        <div className="mx-auto max-w-3xl">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            {copy.eyebrow}
-          </p>
+    <section className="bg-white px-5 py-20 sm:px-6 md:px-10 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <SectionIntro
+          title={copy.communityTitle}
+          body={copy.communityBody}
+          hideEyebrow
+          embedded
+        />
 
-          <h2 className="mt-4 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-            {copy.communityTitle}
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-[#667056]">
-            {copy.communityBody}
-          </p>
-
-          <Link
-            to="/gallery"
-            className="mt-8 inline-flex bg-[#27301d] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
-          >
-            {copy.galleryButton}
-          </Link>
-        </div>
-
-        <div className="mt-12 grid gap-3 md:grid-cols-3">
-          {COMMUNITY_IMAGES.map((src, index) => (
-            <div
-              key={`${src}-${index}`}
-              className="relative h-[18rem] overflow-hidden bg-[#27301d]"
-            >
-              <img
-                src={src}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </div>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.12,
+          }}
+          className="mt-14 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-12"
+        >
+          {COMMUNITY_IMAGES.map((image, index) => (
+            <CommunityImageCard
+              key={image.id}
+              image={image}
+              lang={lang}
+              index={index}
+            />
           ))}
-        </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function CommunityImageCard({
+  image,
+  lang,
+  index,
+}: {
+  image: CommunityImage;
+  lang: Lang;
+  index: number;
+}) {
+  const layout =
+    index === 0
+      ? "md:col-span-7 md:row-span-2"
+      : "md:col-span-5";
+
+  const height =
+    index === 0
+      ? "h-[24rem] md:h-[41rem]"
+      : "h-[20rem] md:h-[20rem]";
+
+  return (
+    <motion.figure
+      variants={fadeUp}
+      className={[
+        "relative overflow-hidden bg-[#27301d]",
+        layout,
+        height,
+      ].join(" ")}
+    >
+      <img
+        src={image.src}
+        alt={image.alt[lang]}
+        loading="lazy"
+        decoding="async"
+        style={{
+          objectPosition: image.imagePosition ?? "center",
+        }}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/20 via-transparent to-transparent" />
+    </motion.figure>
+  );
+}
+
+function ImpactSection({ copy }: { copy: Copy }) {
+  return (
+    <section className="relative isolate overflow-hidden bg-[#27301d] px-5 py-24 text-center sm:px-6 md:px-10 md:py-32">
+      <div
+        aria-hidden="true"
+        className="absolute left-1/2 top-0 h-px w-[70%] max-w-5xl -translate-x-1/2 bg-white/10"
+      />
+
+      <div
+        aria-hidden="true"
+        className="absolute left-1/2 top-1/2 -z-10 h-80 w-80 -translate-x-1/2 -translate-y-1/2 bg-[#9a7b26]/10 blur-3xl"
+      />
+
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.25,
+        }}
+        className="mx-auto max-w-3xl"
+      >
+        <h2 className="text-3xl font-semibold leading-[1.1] tracking-[-0.025em] text-white sm:text-4xl md:text-5xl">
+          {copy.impactTitle}
+        </h2>
+
+        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-7 text-[#d3d8ca] md:text-base md:leading-8">
+          {copy.impactBody}
+        </p>
+
+        <Link
+          to="/about/impact"
+          className={[
+            "mt-9 inline-flex min-h-12 items-center justify-center",
+            "border border-white bg-white px-8 py-3.5",
+            "text-[10px] font-bold uppercase tracking-[0.22em] text-[#27301d]",
+            "no-underline",
+            "transition-colors duration-300",
+            "hover:bg-transparent hover:text-white",
+            "focus-visible:outline-none focus-visible:ring-2",
+            "focus-visible:ring-white focus-visible:ring-offset-4",
+            "focus-visible:ring-offset-[#27301d]",
+          ].join(" ")}
+        >
+          {copy.impactButton}
+        </Link>
       </motion.div>
     </section>
   );

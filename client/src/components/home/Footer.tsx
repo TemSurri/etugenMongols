@@ -12,7 +12,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: "YouTube",
-    href: "https://www.youtube.com/@MrBeast",
+    href: "https://www.youtube.com/@etugenmongols",
     Icon: FaYoutube,
   },
 ] as const;
