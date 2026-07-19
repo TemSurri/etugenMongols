@@ -1,9 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import { motion } from "framer-motion";
-import type { Variants } from "framer-motion";
-import { FaEnvelope, FaFacebook } from "react-icons/fa";
+import { motion, type Variants } from "framer-motion";
+import { FaArrowRight, FaEnvelope, FaFacebook } from "react-icons/fa";
 import heroBg from "../../assets/landingpage.webp";
 
 type Lang = "en" | "mn";
@@ -14,26 +13,31 @@ type ContactProps = {
 
 const COPY = {
   en: {
-    eyebrow: "Contact",
-    title: "Have Questions or Ideas?",
+    albumTitle: "Contact",
+    title: "Have questions or ideas?",
     body:
-      "Whether you want to collaborate, volunteer, suggest an event, or simply learn more, we’d love to hear from you.",
-    emailLabel: "Email",
-    facebookLabel: "Facebook",
+      "Whether you want to collaborate, volunteer, suggest an event, or simply learn more about Etugen Mongols, we would be glad to hear from you. Reach out by email or connect with us on Facebook, and our team will respond when possible.",
+    emailLabel: "Send us an email",
+    facebookLabel: "Visit our Facebook page",
     email: "info@etugen-mongols.ca",
     facebook: "Etugen Mongols",
-    facebookUrl: "https://www.facebook.com/profile.php?id=61584273744310",
+    facebookUrl:
+      "https://www.facebook.com/profile.php?id=61584273744310",
+    
   },
+
   mn: {
-    eyebrow: "Холбоо барих",
+    albumTitle: "Холбоо барих",
     title: "Асуух зүйл эсвэл санал байна уу?",
     body:
-      "Хамтран ажиллах, сайн дурын ажилд оролцох, арга хэмжээ санал болгох эсвэл дэлгэрэнгүй мэдэхийг хүсвэл бидэнтэй холбогдоорой.",
-    emailLabel: "Имэйл",
-    facebookLabel: "Фэйсбүүк",
+      "Хамтран ажиллах, сайн дурын ажилд оролцох, арга хэмжээ санал болгох эсвэл Этүгэн Монголчуудын талаар дэлгэрэнгүй мэдэхийг хүсвэл бидэнтэй холбогдоорой. Та бидэнд имэйл илгээх эсвэл Фэйсбүүк хуудсаар дамжуулан холбогдох боломжтой.",
+    emailLabel: "Бидэнд имэйл илгээх",
+    facebookLabel: "Фэйсбүүк хуудсыг үзэх",
     email: "info@etugen-mongols.ca",
     facebook: "Этүгэн Монголчууд",
-    facebookUrl: "https://www.facebook.com/profile.php?id=61584273744310",
+    facebookUrl:
+      "https://www.facebook.com/profile.php?id=61584273744310",
+    
   },
 } as const;
 
@@ -55,8 +59,23 @@ const fadeUpVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5,
-      ease: "easeOut",
+      duration: 0.55,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const imageVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.98,
+  },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.75,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
@@ -66,62 +85,93 @@ function Contact({ lang = "mn" }: ContactProps) {
   const copy = COPY[safeLang];
 
   return (
-    <section className="relative min-h-[calc(100vh-5rem)] overflow-hidden bg-black pt-20 text-white">
-      <img
-        src={heroBg}
-        alt=""
-        aria-hidden="true"
-        loading="eager"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-
-      <div className="absolute inset-0 bg-black/74" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(179,145,53,0.28),transparent_36%),linear-gradient(to_bottom,rgba(0,0,0,0.08),rgba(0,0,0,0.94))]" />
-
+    <main className="min-h-screen overflow-hidden bg-[#fffaf0] text-[#27301d]">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="relative z-10 mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-[1fr_0.85fr] md:px-10 lg:px-12"
+        className="
+          mx-auto grid max-w-[1400px] gap-10
+          px-6 pb-16 pt-36
+          md:px-10 md:pb-20 md:pt-40
+          lg:min-h-screen
+          lg:grid-cols-[0.88fr_1.12fr]
+          lg:items-center
+          lg:gap-16
+          lg:px-12
+          lg:pb-28 lg:pt-40
+        "
       >
-        <motion.div variants={fadeUpVariants} className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d8caa5]">
-            {copy.eyebrow}
-          </p>
-
-          <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
-            {copy.title}
-          </h1>
-
-          <div className="mt-6 h-px w-40 bg-[#d8caa5]/55" />
-
-          <p className="mt-6 max-w-2xl text-sm leading-7 text-white/76 md:text-base md:leading-8">
-            {copy.body}
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={fadeUpVariants}
-          className="border border-white/14 bg-white/[0.08] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-md md:p-6"
+        <motion.figure
+          variants={imageVariants}
+          className="
+            group relative isolate
+            h-[340px] overflow-hidden
+            border border-[#27301d]/15
+            bg-[#e9e1d2]
+            shadow-[0_24px_60px_rgba(39,48,29,0.16)]
+            sm:h-[440px]
+            lg:h-[min(650px,70vh)]
+          "
         >
-          <div className="grid gap-4">
+          <img
+            src={heroBg}
+            className="
+              h-full w-full object-cover object-center
+              transition-transform duration-700
+              ease-[cubic-bezier(0.22,1,0.36,1)]
+              group-hover:scale-[1.025]
+            "
+          />
+
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#17200f]/75 via-transparent to-[#fffaf0]/10" />
+
+          <div className="pointer-events-none absolute inset-3 border border-white/25 sm:inset-4" />
+        </motion.figure>
+
+        <motion.section variants={fadeUpVariants} className="w-full">
+          <header className="max-w-3xl">
+            <span className="mb-5 block text-xs font-medium uppercase tracking-[0.24em] text-[#927322]">
+              {copy.albumTitle}
+            </span>
+
+            <h1 className="text-3xl font-normal leading-[1.08] tracking-tight sm:text-4xl md:text-5xl lg:text-[3.5rem]">
+              {copy.title}
+            </h1>
+
+            <p className="mt-7 max-w-2xl text-[15px] leading-8 text-[#566044] md:text-base">
+              {copy.body}
+            </p>
+          </header>
+
+          <section className="mt-10 border-t border-[#27301d]/20">
             <a
               href={`mailto:${copy.email}`}
-              className="group flex items-center gap-4 border border-white/14 bg-black/28 px-5 py-5 text-white transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[#d8caa5]/70 hover:bg-black/42"
+              className="
+                group grid gap-5 border-b border-[#27301d]/20 py-7
+                text-[#27301d] no-underline
+                transition-colors duration-200
+                hover:text-[#927322]
+                sm:grid-cols-[56px_1fr_auto]
+                sm:items-center sm:gap-6
+              "
             >
-              <span className="flex size-11 shrink-0 items-center justify-center border border-[#d8caa5]/35 bg-[#d8caa5]/10 text-[#d8caa5]">
+              <span className="flex size-12 items-center justify-center border border-[#27301d]/25 bg-[#eee7d8] transition-colors duration-200 group-hover:border-[#b8953b] group-hover:bg-[#e4d8bd]">
                 <FaEnvelope size={17} />
               </span>
 
               <span className="min-w-0">
-                <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                <span className="block text-xl font-normal leading-tight sm:text-2xl">
                   {copy.emailLabel}
                 </span>
 
-                <span className="mt-1 block truncate text-sm font-semibold tracking-wide md:text-base">
+                <span className="mt-2 block break-all text-sm leading-6 text-[#697259] sm:text-base">
                   {copy.email}
                 </span>
+              </span>
+
+              <span className="hidden size-10 items-center justify-center border border-[#27301d]/20 transition-all duration-200 group-hover:translate-x-1 group-hover:border-[#b8953b] sm:flex">
+                <FaArrowRight size={12} />
               </span>
             </a>
 
@@ -129,26 +179,37 @@ function Contact({ lang = "mn" }: ContactProps) {
               href={copy.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-4 border border-white/14 bg-black/28 px-5 py-5 text-white transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[#d8caa5]/70 hover:bg-black/42"
+              className="
+                group grid gap-5 border-b border-[#27301d]/20 py-7
+                text-[#27301d] no-underline
+                transition-colors duration-200
+                hover:text-[#927322]
+                sm:grid-cols-[56px_1fr_auto]
+                sm:items-center sm:gap-6
+              "
             >
-              <span className="flex size-11 shrink-0 items-center justify-center border border-[#d8caa5]/35 bg-[#d8caa5]/10 text-[#d8caa5]">
+              <span className="flex size-12 items-center justify-center border border-[#27301d]/25 bg-[#eee7d8] transition-colors duration-200 group-hover:border-[#b8953b] group-hover:bg-[#e4d8bd]">
                 <FaFacebook size={18} />
               </span>
 
               <span className="min-w-0">
-                <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                <span className="block text-xl font-normal leading-tight sm:text-2xl">
                   {copy.facebookLabel}
                 </span>
 
-                <span className="mt-1 block truncate text-sm font-semibold tracking-wide md:text-base">
+                <span className="mt-2 block text-sm leading-6 text-[#697259] sm:text-base">
                   {copy.facebook}
                 </span>
               </span>
+
+              <span className="hidden size-10 items-center justify-center border border-[#27301d]/20 transition-all duration-200 group-hover:translate-x-1 group-hover:border-[#b8953b] sm:flex">
+                <FaArrowRight size={12} />
+              </span>
             </a>
-          </div>
-        </motion.div>
+          </section>
+        </motion.section>
       </motion.div>
-    </section>
+    </main>
   );
 }
 

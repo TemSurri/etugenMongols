@@ -158,7 +158,7 @@ function Volunteer({ lang }: VolunteerProps) {
 
   return (
     <main className="min-h-screen overflow-visible bg-[#27301d] text-[#fffaf0]">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 pb-24 pt-32 md:px-10 md:pb-28 md:pt-36 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16 lg:px-12 lg:py-32">
+      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 pb-24 pt-36 md:px-10 md:pb-28 md:pt-40 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16 lg:px-12 lg:pb-32 lg:pt-40">
         <motion.aside
           variants={imageMotion}
           initial="hidden"
