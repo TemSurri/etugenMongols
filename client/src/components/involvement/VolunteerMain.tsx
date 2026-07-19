@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import { motion, cubicBezier, type Variants } from "framer-motion";
+import { cubicBezier, motion, type Variants } from "framer-motion";
 
 type Lang = "en" | "mn";
 
@@ -14,11 +14,11 @@ type VolunteerListing = {
   eventTitle: Record<Lang, string>;
   role: Record<Lang, string>;
   description: Record<Lang, string>;
-  date: string;
+  date: Record<Lang, string>;
   href: string;
 };
 
-const EXAMPLE_LISTINGS: VolunteerListing[] = [
+const VOLUNTEER_LISTINGS: VolunteerListing[] = [
   {
     id: "naadam-setup",
     eventTitle: {
@@ -30,10 +30,13 @@ const EXAMPLE_LISTINGS: VolunteerListing[] = [
       mn: "Бэлтгэл болон арга хэмжээний тусламж",
     },
     description: {
-      en: "Help with tables, decorations, guest flow, and general event setup before the celebration begins.",
-      mn: "Арга хэмжээ эхлэхээс өмнө ширээ, чимэглэл, зочдын чиглүүлэлт болон ерөнхий бэлтгэлд туслах.",
+      en: "Help prepare tables, decorations, guest areas, and event spaces before the celebration.",
+      mn: "Баяр эхлэхээс өмнө ширээ, чимэглэл, зочдын хэсэг болон арга хэмжээний орчныг бэлтгэхэд тусална.",
     },
-    date: "Summer 2026",
+    date: {
+      en: "Summer 2026",
+      mn: "2026 оны зун",
+    },
     href: "/events",
   },
   {
@@ -43,181 +46,217 @@ const EXAMPLE_LISTINGS: VolunteerListing[] = [
       mn: "Соёлын тоглолтын өдөр",
     },
     role: {
-      en: "Photo and Media Helper",
-      mn: "Зураг, медиа туслах",
+      en: "Photo and Media Support",
+      mn: "Зураг болон медиа тусламж",
     },
     description: {
-      en: "Support the media team by capturing moments, helping organize photos, or assisting with short video clips.",
-      mn: "Зураг авах, зураг зохион байгуулах, богино бичлэг хийхэд медиа багт туслах.",
+      en: "Help document the event through photography, short videos, and basic media organization.",
+      mn: "Арга хэмжээг зураг, богино бичлэг болон медиа материалын зохион байгуулалтаар баримтжуулахад тусална.",
     },
-    date: "Upcoming",
+    date: {
+      en: "Upcoming",
+      mn: "Удахгүй",
+    },
+    href: "/events",
+  },
+  {
+    id: "guest-support",
+    eventTitle: {
+      en: "Community Gathering",
+      mn: "Олон нийтийн уулзалт",
+    },
+    role: {
+      en: "Guest Welcome and Coordination",
+      mn: "Зочин угтах болон зохицуулалт",
+    },
+    description: {
+      en: "Welcome guests, provide directions, and help activities remain organized.",
+      mn: "Зочдыг угтах, чиглэл өгөх болон үйл ажиллагааг зохион байгуулалттай явуулахад тусална.",
+    },
+    date: {
+      en: "Date to be confirmed",
+      mn: "Тов батлагдана",
+    },
     href: "/events",
   },
 ];
 
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
-
-const sectionMotion: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.42, ease: easeOut },
-  },
-};
-
 const COPY = {
   en: {
-    eyebrow: "Get Involved",
-    title: "Volunteer With Us",
+    imageTitle: "Volunteer",
+
+    heading: "Get involved",
+
     body:
-      "Support Etugen Mongols by helping with events, cultural programs, setup, coordination, media, and community outreach.",
-    secondary: "View Openings",
-    listingsTitle: "Current Volunteer Openings",
-    listingsIntro:
-      "These are current or upcoming ways to support community events through volunteering.",
-    noListings: "No help is needed right now. Please check back later.",
-    viewEvent: "View Event",
+      "Volunteers play an important role in helping Etugen Mongols bring community events and cultural activities to life. Opportunities may include preparing event spaces, welcoming guests, supporting performers, helping with activities, documenting important moments, and assisting with general coordination. Whether you can offer a few hours or contribute a particular skill, your support helps make each gathering more organized, welcoming, and meaningful for the community.",
+
+    listingsTitle: "Current opportunities",
+
+    noListings:
+      "There are no volunteer opportunities available right now. New roles will be posted here when support is needed.",
+
+    viewEvent: "View event",
   },
+
   mn: {
-    eyebrow: "Оролцох",
-    title: "Сайн дурын ажилтан болох",
+    imageTitle: "Сайн дурын ажил",
+
+    heading: "Бидэнтэй нэгдээрэй",
+
     body:
-      "Арга хэмжээ, соёлын хөтөлбөр, зохион байгуулалт, зураг бичлэг, олон нийттэй харилцах ажилд бидэнтэй хамтран оролцоорой.",
-    secondary: "Боломжуудыг үзэх",
-    listingsTitle: "Одоогийн сайн дурын боломжууд",
-    listingsIntro:
-      "Одоогийн болон удахгүй болох арга хэмжээнд сайн дураар туслах боломжууд.",
-    noListings: "Одоогоор тусламж шаардлагатай арга хэмжээ байхгүй байна.",
+      "Сайн дурын ажилтнууд Этүгэн Монголчуудын олон нийтийн арга хэмжээ болон соёлын үйл ажиллагааг зохион байгуулахад чухал үүрэг гүйцэтгэдэг. Арга хэмжээний орчныг бэлтгэх, зочдыг угтах, оролцогчдыг дэмжих, үйл ажиллагаанд туслах, чухал мөчүүдийг баримтжуулах болон ерөнхий зохицуулалтад оролцох зэрэг боломжууд байж болно. Та хэдхэн цагийн турш туслах эсвэл өөрийн тодорхой ур чадвараар хувь нэмэр оруулах боломжтой бөгөөд таны дэмжлэг арга хэмжээ бүрийг илүү зохион байгуулалттай, тав тухтай, утга учиртай болгоход тусална.",
+
+    listingsTitle: "Одоогийн боломжууд",
+
+    noListings:
+      "Одоогоор сайн дурын ажлын боломж байхгүй байна. Тусламж хэрэгтэй үед шинэ боломжуудыг энд нийтэлнэ.",
+
     viewEvent: "Арга хэмжээг үзэх",
   },
 } as const;
 
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const sectionMotion: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.5,
+      ease: easeOut,
+    },
+  },
+};
+
+const imageMotion: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.985,
+  },
+
+  show: {
+    opacity: 1,
+    scale: 1,
+
+    transition: {
+      duration: 0.65,
+      ease: easeOut,
+    },
+  },
+};
+
 function Volunteer({ lang }: VolunteerProps) {
-  const copy = COPY[lang];
-  const listings = EXAMPLE_LISTINGS;
+  const safeLang: Lang = lang === "mn" ? "mn" : "en";
+  const copy = COPY[safeLang];
+  const listings = VOLUNTEER_LISTINGS;
 
   return (
-    <section className="overflow-hidden bg-[#fffaf0] text-[#27301d]">
-      <section className="relative min-h-screen overflow-hidden bg-[#2f3320]">
-        <img
-          src="/about/founding-group.webp"
-          alt=""
-          aria-hidden="true"
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
-
-        <div className="absolute inset-0 bg-black/46" />
-        <div className="absolute inset-0 bg-linear-to-r from-black/78 via-black/44 to-black/16" />
-        <div className="absolute inset-0 bg-linear-to-b from-black/8 via-transparent to-black/66" />
-
-        <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6 pb-20 pt-28 md:px-10 lg:px-12 lg:pt-32">
-          <motion.div
-            variants={sectionMotion}
-            initial="hidden"
-            animate="show"
-            className="max-w-3xl text-[#fffaf0]"
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#e1d2a6]">
-              {copy.eyebrow}
-            </p>
-
-            <h1 className="mt-5 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              {copy.title}
+    <main className="min-h-screen overflow-visible bg-[#27301d] text-[#fffaf0]">
+      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 pb-24 pt-32 md:px-10 md:pb-28 md:pt-36 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16 lg:px-12 lg:py-32">
+        <motion.aside
+          variants={imageMotion}
+          initial="hidden"
+          animate="show"
+          className="w-full max-w-[500px] self-start lg:sticky lg:top-32"
+        >
+          <div className="bg-[#fffaf0] p-4 text-[#27301d] shadow-[0_20px_55px_rgba(0,0,0,0.18)] sm:p-5">
+            <h1 className="px-1 pb-4 text-4xl font-normal leading-none tracking-tight sm:text-5xl lg:text-6xl">
+              {copy.imageTitle}
             </h1>
 
-            <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#f3ead2] md:text-base md:leading-8">
-              {copy.body}
-            </p>
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#39422c]">
+              <img
+                src="/about/founding-group.webp"
+                alt={copy.imageTitle}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
 
-            <a
-              href="#volunteer-listings"
-              className="mt-8 inline-flex bg-[#fffaf0] px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[#27301d] no-underline transition-colors duration-200 hover:bg-[#e1d2a6]"
-            >
-              {copy.secondary}
-              <span className="ml-3">↓</span>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+              <div className="absolute inset-0 bg-black/10" />
 
-      <section
-        id="volunteer-listings"
-        className="relative scroll-mt-0 overflow-hidden bg-[#fffaf0] px-6 py-20 md:px-10"
-      >
-        <motion.div
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/65 via-black/15 to-transparent px-5 pb-5 pt-16">
+                <p className="text-[10px] uppercase tracking-[0.28em] text-[#fffaf0]">
+                  Etugen Mongols
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.aside>
+
+        <motion.section
           variants={sectionMotion}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className="relative z-10 mx-auto max-w-6xl"
+          animate="show"
+          className="w-full"
         >
-          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-                {copy.eyebrow}
-              </p>
+          <header className="max-w-2xl">
+            <h2 className="text-3xl font-normal leading-tight tracking-tight sm:text-4xl md:text-5xl">
+              {copy.heading}
+            </h2>
 
-              <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
-                {copy.listingsTitle}
-              </h2>
-            </div>
-
-            <p className="max-w-2xl text-[15px] leading-8 text-[#4e593c] lg:justify-self-end">
-              {listings.length > 0 ? copy.listingsIntro : copy.noListings}
+            <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#e7dfc8] md:text-base">
+              {copy.body}
             </p>
-          </div>
+          </header>
 
-          {listings.length > 0 ? (
-            <div className="mt-12 grid gap-5">
-              {listings.map((listing) => (
-                <article
-                  key={listing.id}
-                  className="grid gap-6 bg-[#fffaf0] p-6 shadow-[0_16px_44px_rgba(39,48,29,0.10)] md:grid-cols-[0.28fr_1fr_auto] md:items-center md:p-7"
-                >
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
-                      {listing.date}
-                    </p>
+          <section className="mt-12">
+            <h2 className="pb-5 text-xl font-normal md:text-2xl">
+              {copy.listingsTitle}
+            </h2>
 
-                    <p className="mt-3 text-sm font-semibold leading-6 text-[#4e593c]">
-                      {listing.eventTitle[lang]}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl font-semibold leading-tight text-[#27301d]">
-                      {listing.role[lang]}
-                    </h3>
-
-                    <p className="mt-3 max-w-2xl text-sm leading-7 text-[#4e593c]">
-                      {listing.description[lang]}
-                    </p>
-                  </div>
-
-                  <Link
-                    to={listing.href}
-                    className="inline-flex justify-center bg-[#27301d] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#fffaf0] no-underline transition-colors duration-200 hover:bg-[#b39135]"
+            {listings.length > 0 ? (
+              <div>
+                {listings.map((listing) => (
+                  <article
+                    key={listing.id}
+                    className="grid gap-5 border-b border-[#fffaf0]/20 py-7 md:grid-cols-[120px_1fr_auto] md:items-start md:gap-7"
                   >
-                    {copy.viewEvent}
-                    <span className="ml-3">→</span>
-                  </Link>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-10 bg-[#fffaf0] p-6 shadow-[0_16px_44px_rgba(39,48,29,0.10)]">
-              <p className="text-base leading-8 text-[#4e593c]">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#d5bd79]">
+                        {listing.date[safeLang]}
+                      </p>
+
+                      <p className="mt-2 text-xs leading-5 text-[#cfc7b2]">
+                        {listing.eventTitle[safeLang]}
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-normal leading-6 text-[#fffaf0]">
+                        {listing.role[safeLang]}
+                      </h3>
+
+                      <p className="mt-2 max-w-xl text-sm leading-6 text-[#cfc7b2]">
+                        {listing.description[safeLang]}
+                      </p>
+                    </div>
+
+                    <Link
+                      to={listing.href}
+                      className="w-fit whitespace-nowrap border border-[#fffaf0]/50 px-4 py-2 text-[10px] uppercase tracking-[0.16em] text-[#fffaf0] no-underline transition-colors duration-200 hover:border-[#d5bd79] hover:bg-[#d5bd79] hover:text-[#27301d]"
+                    >
+                      {copy.viewEvent}
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="border-b border-[#fffaf0]/20 py-7 text-sm leading-7 text-[#cfc7b2]">
                 {copy.noListings}
               </p>
-            </div>
-          )}
-        </motion.div>
-      </section>
-    </section>
+            )}
+          </section>
+        </motion.section>
+      </div>
+    </main>
   );
 }
 
