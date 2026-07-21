@@ -18,63 +18,89 @@ type ActionLink = {
   to: string;
 };
 
-const HERO_IMAGE = "/landingpage.webp";
-const FEATURED_VIDEO_ID = "YOUR_FEATURED_EVENT_VIDEO_ID";
+const HERO_IMAGE = "/home/whoweare.webp";
+
+const FEATURED_VIDEO_ID: string = "SW_iujvUAzQ";
 
 const HERO_SLIDES = [
-  "/landingpage.webp",
-  "/landingpage.webp",
-  "/landingpage.webp",
-  "/landingpage.webp",
+  "/home/slideshow/1.webp",
+  "/home/slideshow/2.webp",
+  "/home/slideshow/3.webp",
+  "/home/slideshow/4.webp",
 ] as const;
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const fadeIn: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: {
+    opacity: 0,
+    y: 16,
+  },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: easeOut },
+    transition: {
+      duration: 0.55,
+      ease: easeOut,
+    },
   },
 };
 
 const COPY = {
   en: {
     brand: "Etugen Mongols",
+
     intro:
       "A Calgary-based non-profit preserving Mongolian culture and bringing the community together through events, programs, and performances.",
+
     learnMore: "Learn More",
+
     whatKicker: "What We Do",
+
     whatBody:
       "We host cultural events, performances, gatherings, and community programs that help Mongolian traditions stay active in Calgary. From Naadam to family celebrations, our goal is to create spaces where people can participate, practice, perform, and pass culture forward.",
+
     eventsButton: "View Events",
     programsButton: "Programs",
+
     whoKicker: "Who We Are",
+
     whoBody:
       "Etugen Mongols is built by families, volunteers, organizers, artists, performers, and community members who care about keeping Mongolian heritage visible, shared, and meaningful for the next generation.",
+
     storyButton: "Our Story",
     teamButton: "Meet the Team",
     impactButton: "Our Impact",
+
     pause: "Pause",
     paused: "Paused",
   },
+
   mn: {
     brand: "Этүгэн Монголчууд",
+
     intro:
       "Калгари дахь Монгол соёлыг хадгалж, арга хэмжээ, хөтөлбөр, тоглолтоор хамт олноо нэгтгэх ашгийн бус байгууллага.",
+
     learnMore: "Дэлгэрэнгүй",
+
     whatKicker: "Бид юу хийдэг вэ",
+
     whatBody:
       "Бид Монгол уламжлалаа Калгари хотод амьд байлгахын тулд соёлын арга хэмжээ, тоглолт, уулзалт, хөтөлбөрүүдийг зохион байгуулдаг. Наадам, гэр бүлийн баяр, хамтын үйл ажиллагаагаар дамжуулан хүмүүс оролцож, дадлага хийж, соёлоо хойч үедээ өвлүүлэх орон зайг бий болгодог.",
+
     eventsButton: "Арга хэмжээнүүд",
     programsButton: "Хөтөлбөрүүд",
+
     whoKicker: "Бид хэн бэ",
+
     whoBody:
       "Этүгэн Монголчууд нь Монгол өв соёлоо хадгалж, бусадтай хуваалцаж, дараагийн үедээ утга учиртайгаар өвлүүлэхийг хүссэн гэр бүлүүд, сайн дурынхан, зохион байгуулагчид, уран бүтээлчид, хамт олноос бүрддэг.",
+
     storyButton: "Бидний түүх",
     teamButton: "Багтай танилцах",
     impactButton: "Бидний нөлөө",
+
     pause: "Зогсоох",
     paused: "Зогссон",
   },
@@ -84,21 +110,27 @@ function Hero({ lang }: HeroProps) {
   const copy = COPY[lang];
 
   const scrollToLearnMore = () => {
-  const target = document.getElementById("learn-more");
-  if (!target) return;
+    const target = document.getElementById("learn-more");
 
-  const offset = 40;
+    if (!target) {
+      return;
+    }
 
-  window.scrollTo({
-    top: target.offsetTop - offset,
-    behavior: "smooth",
-  });
-};
+    const offset = 40;
+
+    window.scrollTo({
+      top: target.offsetTop - offset,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">
       <section className="flex min-h-screen flex-col bg-white pt-16 md:pt-20">
-        <HeroSlowScroll pauseText={copy.pause} pausedText={copy.paused} />
+        <HeroSlowScroll
+          pauseText={copy.pause}
+          pausedText={copy.paused}
+        />
 
         <motion.div
           variants={fadeIn}
@@ -107,8 +139,17 @@ function Hero({ lang }: HeroProps) {
           className="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-center px-6 py-6 text-center md:px-10"
         >
           <div className="flex justify-center gap-3">
-            <img src={mongoliaFlag} alt="Mongolia flag" className="h-7 md:h-9" />
-            <img src={canadaFlag} alt="Canada flag" className="h-7 md:h-9" />
+            <img
+              src={mongoliaFlag}
+              alt="Mongolia flag"
+              className="h-7 md:h-9"
+            />
+
+            <img
+              src={canadaFlag}
+              alt="Canada flag"
+              className="h-7 md:h-9"
+            />
           </div>
 
           <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.32em] text-[#9a7b26]">
@@ -137,7 +178,10 @@ function Hero({ lang }: HeroProps) {
           variants={fadeIn}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
           className="mx-auto grid max-w-6xl lg:grid-cols-2"
         >
           <FeaturedVideo className="order-1" />
@@ -147,8 +191,14 @@ function Hero({ lang }: HeroProps) {
             kicker={copy.whatKicker}
             body={copy.whatBody}
             actions={[
-              { label: copy.eventsButton, to: "/events" },
-              { label: copy.programsButton, to: "/programs" },
+              {
+                label: copy.eventsButton,
+                to: "/events",
+              },
+              {
+                label: copy.programsButton,
+                to: "/programs",
+              },
             ]}
           />
 
@@ -159,9 +209,18 @@ function Hero({ lang }: HeroProps) {
             kicker={copy.whoKicker}
             body={copy.whoBody}
             actions={[
-              { label: copy.storyButton, to: "/about/story" },
-              { label: copy.teamButton, to: "/about/team" },
-              { label: copy.impactButton, to: "/about/impact" },
+              {
+                label: copy.storyButton,
+                to: "/about/story",
+              },
+              {
+                label: copy.teamButton,
+                to: "/about/team",
+              },
+              {
+                label: copy.impactButton,
+                to: "/about/impact",
+              },
             ]}
           />
         </motion.div>
@@ -185,23 +244,30 @@ function HeroSlowScroll({
 
   const goToPrevious = () => {
     setActiveIndex((current) =>
-      current === 0 ? HERO_SLIDES.length - 1 : current - 1
+      current === 0 ? HERO_SLIDES.length - 1 : current - 1,
     );
   };
 
   const goToNext = () => {
     setActiveIndex((current) =>
-      current === HERO_SLIDES.length - 1 ? 0 : current + 1
+      current === HERO_SLIDES.length - 1 ? 0 : current + 1,
     );
   };
 
   const handleTouchEnd = (x: number) => {
-    if (touchStart === null) return;
+    if (touchStart === null) {
+      return;
+    }
 
     const distance = touchStart - x;
 
-    if (distance > 45) goToNext();
-    if (distance < -45) goToPrevious();
+    if (distance > 45) {
+      goToNext();
+    }
+
+    if (distance < -45) {
+      goToPrevious();
+    }
 
     setTouchStart(null);
   };
@@ -210,17 +276,58 @@ function HeroSlowScroll({
     <div className="relative h-[43vh] min-h-[21rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
       <style>
         {`
+          @keyframes etugenHeroEnter {
+            from {
+              transform: translate3d(100vw, 0, 0);
+            }
+
+            to {
+              transform: translate3d(0, 0, 0);
+            }
+          }
+
           @keyframes etugenHeroScroll {
-            from { transform: translateX(0%); }
-            to { transform: translateX(-50%); }
+            from {
+              transform: translate3d(0, 0, 0);
+            }
+
+            to {
+              transform: translate3d(-50%, 0, 0);
+            }
           }
 
           .etugen-hero-scroll {
+            animation:
+              etugenHeroEnter 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+              etugenHeroScroll 42s linear 1.2s infinite;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+          }
+                    .etugen-hero-scroll {
             animation: etugenHeroScroll 42s linear infinite;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform-style: preserve-3d;
           }
 
           .etugen-hero-scroll-paused {
             animation-play-state: paused;
+          }
+
+          .etugen-hero-image {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            image-rendering: auto;
+            filter: saturate(1.04) contrast(1.02);
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .etugen-hero-scroll {
+              animation-play-state: paused;
+            }
           }
         `}
       </style>
@@ -240,10 +347,11 @@ function HeroSlowScroll({
               alt=""
               width={1920}
               height={1080}
-              loading={index === 0 ? "eager" : "lazy"}
+              loading="eager"
               fetchPriority={index === 0 ? "high" : "auto"}
               decoding="async"
-              className="h-full w-1/4 shrink-0 object-cover"
+              draggable={false}
+              className="etugen-hero-image h-full w-1/4 shrink-0 select-none object-cover object-center"
             />
           ))}
         </div>
@@ -260,8 +368,12 @@ function HeroSlowScroll({
 
       <div
         className="absolute inset-0 md:hidden"
-        onTouchStart={(event) => setTouchStart(event.touches[0].clientX)}
-        onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0].clientX)}
+        onTouchStart={(event) =>
+          setTouchStart(event.touches[0].clientX)
+        }
+        onTouchEnd={(event) =>
+          handleTouchEnd(event.changedTouches[0].clientX)
+        }
       >
         <img
           src={HERO_SLIDES[activeIndex]}
@@ -271,7 +383,8 @@ function HeroSlowScroll({
           loading="eager"
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover"
+          draggable={false}
+          className="etugen-hero-image h-full w-full select-none object-cover object-center"
         />
 
         <button
@@ -300,7 +413,9 @@ function HeroSlowScroll({
               onClick={() => setActiveIndex(index)}
               className={[
                 "h-2.5 w-2.5 rounded-full border border-white transition-colors",
-                activeIndex === index ? "bg-white" : "bg-white/30",
+                activeIndex === index
+                  ? "bg-white"
+                  : "bg-white/30",
               ].join(" ")}
               aria-label={`Go to image ${index + 1}`}
             />
@@ -308,8 +423,9 @@ function HeroSlowScroll({
         </div>
       </div>
 
-      <div className="absolute inset-0 bg-black/18" />
-      <div className="absolute inset-0 bg-linear-to-b from-black/10 via-transparent to-black/25" />
+      <div className="pointer-events-none absolute inset-0 bg-black/5" />
+
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/5 via-transparent to-black/10" />
     </div>
   );
 }
@@ -357,7 +473,11 @@ function InfoPanel({
   );
 }
 
-function SingleImage({ className = "" }: { className?: string }) {
+function SingleImage({
+  className = "",
+}: {
+  className?: string;
+}) {
   return (
     <div
       className={`flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem] ${className}`}
@@ -369,15 +489,22 @@ function SingleImage({ className = "" }: { className?: string }) {
         height={650}
         loading="lazy"
         decoding="async"
-        className="h-auto max-h-[20rem] w-full object-cover lg:max-h-[22rem]"
+        className="h-auto max-h-[20rem] w-full object-cover saturate-[1.03] contrast-[1.02] lg:max-h-[22rem]"
       />
     </div>
   );
 }
 
-function FeaturedVideo({ className = "" }: { className?: string }) {
+function FeaturedVideo({
+  className = "",
+}: {
+  className?: string;
+}) {
   const [showVideo, setShowVideo] = useState(false);
-  const hasVideo = FEATURED_VIDEO_ID !== "YOUR_FEATURED_EVENT_VIDEO_ID";
+
+  const hasVideo =
+    FEATURED_VIDEO_ID.trim().length > 0 &&
+    FEATURED_VIDEO_ID !== "YOUR_FEATURED_EVENT_VIDEO_ID";
 
   return (
     <div
@@ -401,13 +528,16 @@ function FeaturedVideo({ className = "" }: { className?: string }) {
             aria-label="Play featured event video"
           >
             <img
-              src={HERO_IMAGE}
-              alt=""
-              width={960}
-              height={540}
+              src={`https://i.ytimg.com/vi/${FEATURED_VIDEO_ID}/maxresdefault.jpg`}
+              alt="Etugen Mongols featured event video"
+              width={1280}
+              height={720}
               loading="lazy"
               decoding="async"
               className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+              onError={(event) => {
+                event.currentTarget.src = HERO_IMAGE;
+              }}
             />
 
             <span className="absolute inset-0 flex items-center justify-center">
