@@ -20,7 +20,7 @@ type ActionLink = {
 
 const HERO_IMAGE = "/home/whoweare.webp";
 
-const FEATURED_VIDEO_ID: string = "SW_iujvUAzQ";
+const FEATURED_VIDEO_ID = "SW_iujvUAzQ";
 
 const HERO_SLIDES = [
   "/home/slideshow/1.webp",
@@ -142,13 +142,19 @@ function Hero({ lang }: HeroProps) {
             <img
               src={mongoliaFlag}
               alt="Mongolia flag"
-              className="h-7 md:h-9"
+              width={72}
+              height={36}
+              decoding="async"
+              className="h-7 w-auto md:h-9"
             />
 
             <img
               src={canadaFlag}
               alt="Canada flag"
-              className="h-7 md:h-9"
+              width={72}
+              height={36}
+              decoding="async"
+              className="h-7 w-auto md:h-9"
             />
           </div>
 
@@ -240,6 +246,15 @@ function HeroSlowScroll({
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
+  /*
+   * The second copy is required for the infinite loop.
+   *
+   * Visual sequence:
+   * 1 2 3 4 | 1 2 3 4
+   *
+   * When the strip reaches -50%, the second set is positioned exactly
+   * where the first set began, making the animation restart invisible.
+   */
   const scrollingImages = [...HERO_SLIDES, ...HERO_SLIDES];
 
   const goToPrevious = () => {
@@ -263,9 +278,7 @@ function HeroSlowScroll({
 
     if (distance > 45) {
       goToNext();
-    }
-
-    if (distance < -45) {
+    } else if (distance < -45) {
       goToPrevious();
     }
 
@@ -276,16 +289,6 @@ function HeroSlowScroll({
     <div className="relative h-[43vh] min-h-[21rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
       <style>
         {`
-          @keyframes etugenHeroEnter {
-            from {
-              transform: translate3d(100vw, 0, 0);
-            }
-
-            to {
-              transform: translate3d(0, 0, 0);
-            }
-          }
-
           @keyframes etugenHeroScroll {
             from {
               transform: translate3d(0, 0, 0);
@@ -297,15 +300,7 @@ function HeroSlowScroll({
           }
 
           .etugen-hero-scroll {
-            animation:
-              etugenHeroEnter 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-              etugenHeroScroll 42s linear 1.2s infinite;
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-          }
-                    .etugen-hero-scroll {
-            animation: etugenHeroScroll 42s linear infinite;
+            animation: etugenHeroScroll 48s linear infinite;
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
@@ -332,6 +327,7 @@ function HeroSlowScroll({
         `}
       </style>
 
+      {/* Desktop continuous scrolling strip */}
       <div className="absolute inset-0 hidden overflow-hidden md:block">
         <div
           aria-hidden="true"
@@ -345,10 +341,10 @@ function HeroSlowScroll({
               key={`${src}-${index}`}
               src={src}
               alt=""
-              width={1920}
-              height={1080}
-              loading="eager"
-              fetchPriority={index === 0 ? "high" : "auto"}
+              width={1280}
+              height={850}
+              loading={(index === 0 || index === 1) ? "eager" : "lazy"}
+              fetchPriority={(index === 0 || index === 1) ? "high" : "auto"}
               decoding="async"
               draggable={false}
               className="etugen-hero-image h-full w-1/4 shrink-0 select-none object-cover object-center"
@@ -366,20 +362,25 @@ function HeroSlowScroll({
         </button>
       </div>
 
+      {/* Mobile manual slideshow */}
       <div
         className="absolute inset-0 md:hidden"
-        onTouchStart={(event) =>
-          setTouchStart(event.touches[0].clientX)
-        }
-        onTouchEnd={(event) =>
-          handleTouchEnd(event.changedTouches[0].clientX)
-        }
+        onTouchStart={(event) => {
+          setTouchStart(event.touches[0]?.clientX ?? null);
+        }}
+        onTouchEnd={(event) => {
+          const x = event.changedTouches[0]?.clientX;
+
+          if (x !== undefined) {
+            handleTouchEnd(x);
+          }
+        }}
       >
         <img
           src={HERO_SLIDES[activeIndex]}
           alt=""
-          width={1920}
-          height={1080}
+          width={1280}
+          height={850}
           loading="eager"
           fetchPriority="high"
           decoding="async"
@@ -418,14 +419,17 @@ function HeroSlowScroll({
                   : "bg-white/30",
               ].join(" ")}
               aria-label={`Go to image ${index + 1}`}
+              aria-current={
+                activeIndex === index ? "true" : undefined
+              }
             />
           ))}
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-black/5" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-black/5" />
 
-      <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/5 via-transparent to-black/10" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-black/5 via-transparent to-black/10" />
     </div>
   );
 }
@@ -503,8 +507,7 @@ function FeaturedVideo({
   const [showVideo, setShowVideo] = useState(false);
 
   const hasVideo =
-    FEATURED_VIDEO_ID.trim().length > 0 &&
-    FEATURED_VIDEO_ID !== "YOUR_FEATURED_EVENT_VIDEO_ID";
+    FEATURED_VIDEO_ID.trim().length > 0;
 
   return (
     <div
