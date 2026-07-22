@@ -90,14 +90,14 @@ const IMAGE_PATHS: Record<ImpactImageKey, readonly string[]> = {
     "/impact/culture/1.webp",
     "/impact/culture/2.webp",
     "/impact/culture/3.webp",
-    
+    "/impact/culture/4.webp"
   ],
 
   dance: [
     "/impact/dance/1.webp",
     "/impact/dance/2.webp",
     "/impact/dance/3.webp",
-    "/impact/dance/4.webp",
+   
   ],
 
   stampedeNaadam: [
@@ -163,13 +163,6 @@ const COPY = {
 
     cultureActivities: [
       {
-        id: "archery-games",
-        title: "Archery and Traditional Games",
-        body:
-          "Activities like archery and traditional games help make culture visible, active, and memorable for families and youth.",
-        imageKey: "archery",
-      },
-      {
         id: "wrestling-activity",
         title: "Wrestling and Physical Activity",
         body:
@@ -178,7 +171,7 @@ const COPY = {
       },
       {
         id: "stories-memory",
-        title: "Culture and Shared Memory",
+        title: "Stories and Shared Heritage",
         body:
           "Dress, language, and shared memory help connect generations and keep cultural knowledge alive.",
         imageKey: "stories",
@@ -189,6 +182,13 @@ const COPY = {
         body:
           "Dance, music, food, and performance turn gatherings into cultural spaces people can feel and remember.",
         imageKey: "dance",
+      },
+      {
+        id: "archery-games",
+        title: "Archery and Traditional Games",
+        body:
+          "Activities like archery and traditional games help make culture visible, active, and memorable for families and youth.",
+        imageKey: "archery",
       },
     ],
 
@@ -245,13 +245,6 @@ const COPY = {
 
     cultureActivities: [
       {
-        id: "archery-games",
-        title: "Сур харваа болон уламжлалт тоглоом",
-        body:
-          "Сур харваа болон уламжлалт тоглоомууд соёлыг гэр бүл, хүүхэд залууст илүү бодит, идэвхтэй, дурсамжтай болгодог.",
-        imageKey: "archery",
-      },
-      {
         id: "wrestling-activity",
         title: "Бөх болон хөдөлгөөнт үйл ажиллагаа",
         body:
@@ -271,6 +264,13 @@ const COPY = {
         body:
           "Бүжиг, хөгжим, хоол болон тоглолт нь уулзалтыг хүмүүсийн мэдэрч, санаж үлдэх соёлын орон зай болгодог.",
         imageKey: "dance",
+      },
+      {
+        id: "archery-games",
+        title: "Сур харваа болон уламжлалт тоглоом",
+        body:
+          "Сур харваа болон уламжлалт тоглоомууд соёлыг гэр бүл, хүүхэд залууст илүү бодит, идэвхтэй, дурсамжтай болгодог.",
+        imageKey: "archery",
       },
     ],
 
@@ -587,7 +587,7 @@ const YouthBlock = memo(function YouthBlock({
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
+        className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.5fr_1.5fr] lg:items-center"
       >
         <div>
           <Label>{label}</Label>
@@ -605,7 +605,21 @@ const YouthBlock = memo(function YouthBlock({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="featured-right" />
+        <motion.div
+    variants={imageMotion}
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.2 }}
+    className="overflow-hidden bg-[#27301d] p-2 h-[26rem] lg:h-[36rem]"
+>
+    <img
+        src={IMAGE_PATHS[item.imageKey][0]}
+        alt={item.title}
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-cover"
+    />
+</motion.div>
       </motion.article>
     </section>
   );
