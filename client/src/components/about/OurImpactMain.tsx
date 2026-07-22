@@ -20,6 +20,8 @@ type ImpactImageKey =
   | "communitySong"
   | "youthCulture";
 
+type CollageLayout = "featured" | "reverse" | "grid";
+
 type ImpactItem = {
   id: string;
   title: string;
@@ -55,15 +57,61 @@ type Copy = {
   items: readonly [ImpactItem, ImpactItem, ImpactItem];
 };
 
-const IMAGE_PATHS: Record<ImpactImageKey, string> = {
-  landing: "/landingpage.webp",
-  archery: "/about/impact/archery.webp",
-  wrestling: "/about/impact/wrestling.webp",
-  stories: "/about/impact/stories.webp",
-  dance: "/about/impact/dance.webp",
-  stampedeNaadam: "/about/impact/stampede-naadam.webp",
-  communitySong: "/about/impact/community-song.webp",
-  youthCulture: "/about/impact/youth-culture.webp",
+const IMAGE_PATHS: Record<ImpactImageKey, readonly string[]> = {
+  landing: [
+    "/landingpage.webp",
+    "/impact/landing-2.webp",
+    "/impact/landing-3.webp",
+    "/impact/landing-4.webp",
+  ],
+
+  archery: [
+    "/impact/archery/1.webp",
+    "/impact/archery/2.webp",
+    "/impact/archery/3.webp",
+    "/impact/archery/4.webp",
+  ],
+
+  wrestling: [
+    "/impact/wrestling/1.webp",
+    "/impact/wrestling/2.webp",
+    "/impact/wrestling/3.webp",
+    "/impact/wrestling/4.webp",
+  ],
+
+  stories: [
+    "/impact/culture/1.webp",
+    "/impact/culture/2.webp",
+    "/impact/culture/3.webp",
+    "/impact/culture/4.webp",
+  ],
+
+  dance: [
+    "/impact/dance/1.webp",
+    "/impact/dance/2.webp",
+    "/impact/dance/3.webp",
+    "/impact/dance/4.webp",
+  ],
+
+  stampedeNaadam: [
+    "/impact/stampede-naadam.webp",
+    "/impact/stampede-naadam-2.webp",
+    "/impact/stampede-naadam-3.webp",
+    "/impact/stampede-naadam-4.webp",
+  ],
+
+  communitySong: [
+    "/impact/community-song.webp",
+    "/impact/community-song-2.webp",
+    "/impact/community-song-3.webp",
+  ],
+
+  youthCulture: [
+    "/impact/youth/1.webp",
+    "/impact/youth/2.webp",
+    "/impact/youth/3.webp",
+    "/impact/youth/4.webp",
+  ],
 };
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
@@ -126,9 +174,9 @@ const COPY = {
       },
       {
         id: "stories-memory",
-        title: "Stories and Shared Memory",
+        title: "Culture and Shared Memory",
         body:
-          "Stories, language, and shared memory help connect generations and keep cultural knowledge alive.",
+          "Dress, language, and shared memory help connect generations and keep cultural knowledge alive.",
         imageKey: "stories",
       },
       {
@@ -347,7 +395,7 @@ const FeaturedImpact = memo(function FeaturedImpact({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
+        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="featured"/>
       </motion.article>
     </section>
   );
@@ -373,7 +421,7 @@ const PerformanceBand = memo(function PerformanceBand({
         viewport={{ once: true, amount: 0.18 }}
         className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
       >
-        <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
+        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="grid"/>
 
         <div className="max-w-xl lg:justify-self-end">
           <Label>{label}</Label>
@@ -478,10 +526,11 @@ const CultureActivityRow = memo(function CultureActivityRow({
         </div>
 
         <ImageBlock
-          src={IMAGE_PATHS[activity.imageKey]}
+          images={IMAGE_PATHS[activity.imageKey]}
           alt={activity.title}
           tall={large}
           reverse={reverse}
+          layout={reverse ? "featured" : large ? "featured" : "grid"}
         />
       </motion.article>
     </section>
@@ -524,7 +573,7 @@ const YouthBlock = memo(function YouthBlock({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock src={IMAGE_PATHS[item.imageKey]} alt={item.title} tall />
+        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="grid" />
       </motion.article>
     </section>
   );
@@ -559,16 +608,46 @@ const FinalLinks = memo(function FinalLinks({
 });
 
 const ImageBlock = memo(function ImageBlock({
-  src,
+  images,
   alt,
   tall = false,
   reverse = false,
+  layout = "featured",
 }: {
-  src: string;
+  images: readonly string[];
   alt: string;
   tall?: boolean;
   reverse?: boolean;
+  layout?: CollageLayout;
 }) {
+  const visibleImages = images.slice(0, 4);
+
+  if (visibleImages.length === 1) {
+    return (
+      <motion.div
+        variants={imageMotion}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className={[
+          "relative overflow-hidden bg-[#27301d]",
+          tall ? "h-[24rem] lg:h-[34rem]" : "h-[20rem] lg:h-full",
+          reverse ? "lg:order-1" : "lg:order-2",
+        ].join(" ")}
+      >
+        <img
+          src={visibleImages[0]}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+        />
+
+        <div className="pointer-events-none absolute inset-0 bg-black/10" />
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       variants={imageMotion}
@@ -576,23 +655,96 @@ const ImageBlock = memo(function ImageBlock({
       whileInView="show"
       viewport={{ once: true, amount: 0.2 }}
       className={[
-        "relative overflow-hidden bg-[#27301d]",
+        "grid overflow-hidden bg-[#27301d] p-2",
         tall ? "h-[24rem] lg:h-[34rem]" : "h-[20rem] lg:h-full",
         reverse ? "lg:order-1" : "lg:order-2",
+        getCollageGrid(layout),
       ].join(" ")}
     >
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+      {visibleImages.map((src, index) => (
+        <div
+          key={`${src}-${index}`}
+          className={[
+            "group relative min-h-0 overflow-hidden",
+            getCollageItemClass(layout, index, visibleImages.length),
+          ].join(" ")}
+        >
+          <img
+            src={src}
+            alt={`${alt} ${index + 1}`}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+          />
 
-      <div className="absolute inset-0 bg-black/10" />
+          <div className="pointer-events-none absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-black/5" />
+        </div>
+      ))}
     </motion.div>
   );
 });
+
+function getCollageGrid(layout: CollageLayout) {
+  switch (layout) {
+    case "reverse":
+      return "grid-cols-3 grid-rows-3 gap-2";
+
+    case "grid":
+      return "grid-cols-2 grid-rows-2 gap-2";
+
+    case "featured":
+    default:
+      return "grid-cols-3 grid-rows-3 gap-2";
+  }
+}
+
+function getCollageItemClass(
+  layout: CollageLayout,
+  index: number,
+  imageCount: number,
+) {
+  if (imageCount === 2) {
+    return index === 0
+      ? "col-span-2 row-span-3"
+      : "col-span-1 row-span-3";
+  }
+
+  if (imageCount === 3) {
+    if (layout === "reverse") {
+      return index === 0
+        ? "col-span-1 row-span-3"
+        : "col-span-2 row-span-1";
+    }
+
+    if (layout === "grid") {
+      return index === 0
+        ? "col-span-2 row-span-1"
+        : "col-span-1 row-span-1";
+    }
+
+    return index === 0
+      ? "col-span-2 row-span-3"
+      : "col-span-1 row-span-1";
+  }
+
+  if (layout === "reverse") {
+    if (index === 0) {
+      return "col-span-1 row-span-3";
+    }
+
+    return "col-span-2 row-span-1";
+  }
+
+  if (layout === "grid") {
+    return "col-span-1 row-span-1";
+  }
+
+  if (index === 0) {
+    return "col-span-2 row-span-3";
+  }
+
+  return "col-span-1 row-span-1";
+}
 
 function Label({ children }: { children: string }) {
   return (
