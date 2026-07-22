@@ -17,10 +17,16 @@ type ImpactImageKey =
   | "stories"
   | "dance"
   | "stampedeNaadam"
-  | "communitySong"
+  | "performanceCover"
   | "youthCulture";
 
-type CollageLayout = "featured" | "reverse" | "grid";
+
+type CollageLayout =
+  | "featured-left"
+  | "featured-right"
+  | "staggered";
+
+
 
 type ImpactItem = {
   id: string;
@@ -28,6 +34,7 @@ type ImpactItem = {
   body: string;
   imageKey: ImpactImageKey;
   href: string;
+  youtubeUrl?: string;
 };
 
 type CultureActivity = {
@@ -83,7 +90,7 @@ const IMAGE_PATHS: Record<ImpactImageKey, readonly string[]> = {
     "/impact/culture/1.webp",
     "/impact/culture/2.webp",
     "/impact/culture/3.webp",
-    "/impact/culture/4.webp",
+    
   ],
 
   dance: [
@@ -100,12 +107,9 @@ const IMAGE_PATHS: Record<ImpactImageKey, readonly string[]> = {
     "/impact/stampede-naadam-4.webp",
   ],
 
-  communitySong: [
-    "/impact/community-song.webp",
-    "/impact/community-song-2.webp",
-    "/impact/community-song-3.webp",
-  ],
-
+  performanceCover: [
+  "/impact/perf.JPG",
+],
   youthCulture: [
     "/impact/youth/1.webp",
     "/impact/youth/2.webp",
@@ -201,9 +205,10 @@ const COPY = {
         id: "community-performance",
         title: "55-Person Community Performance",
         body:
-          "Children, parents, performers, and volunteers came together through rehearsal, song, and performance.",
-        imageKey: "communitySong",
-        href: "/events",
+        "Presented during Naadam 2022, this performance brought together 55 children, parents, performers, and volunteers through music, storytelling, and shared preparation.",
+        imageKey: "performanceCover",
+        href: "/gallery",
+        youtubeUrl: "https://www.youtube.com/watch?v=NcmXN1s5kS8",
       },
       {
         id: "youth-spaces",
@@ -282,9 +287,10 @@ const COPY = {
         id: "community-performance",
         title: "55 хүний хамтын тоглолт",
         body:
-          "Хүүхдүүд, эцэг эхчүүд, уран бүтээлчид болон сайн дурынхан бэлтгэл, дуу, тоглолтоор дамжин хамтдаа нэгдсэн.",
-        imageKey: "communitySong",
-        href: "/events",
+          "Наадам 2022 арга хэмжээний үеэр толилуулсан энэхүү тоглолтод 55 хүүхэд, эцэг эх, уран бүтээлч, сайн дурынхан хөгжим, түүх болон хамтын бэлтгэлээр нэгдсэн.",
+        imageKey: "performanceCover",
+        href: "/gallery",
+        youtubeUrl: "https://www.youtube.com/watch?v=NcmXN1s5kS8",
       },
       {
         id: "youth-spaces",
@@ -395,7 +401,7 @@ const FeaturedImpact = memo(function FeaturedImpact({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="featured"/>
+        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="featured-left"/>
       </motion.article>
     </section>
   );
@@ -421,7 +427,33 @@ const PerformanceBand = memo(function PerformanceBand({
         viewport={{ once: true, amount: 0.18 }}
         className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
       >
-        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="grid"/>
+      {item.youtubeUrl && (
+        <a
+          href={item.youtubeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Watch ${item.title} on YouTube`}
+          className="group relative block h-[24rem] overflow-hidden bg-[#27301d] lg:h-[34rem]"
+        >
+          <img
+            src={IMAGE_PATHS[item.imageKey][0]}
+            alt={item.title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+
+          <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
+
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 text-[#27301d] shadow-xl transition-transform duration-300 group-hover:scale-105">
+              <span className="ml-1 text-3xl" aria-hidden="true">
+                ▶
+              </span>
+            </div>
+          </div>
+        </a>
+      )}
 
         <div className="max-w-xl lg:justify-self-end">
           <Label>{label}</Label>
@@ -530,7 +562,7 @@ const CultureActivityRow = memo(function CultureActivityRow({
           alt={activity.title}
           tall={large}
           reverse={reverse}
-          layout={reverse ? "featured" : large ? "featured" : "grid"}
+          layout={reverse ? "featured-right" : large ? "featured-left" : "staggered"}
         />
       </motion.article>
     </section>
@@ -573,7 +605,7 @@ const YouthBlock = memo(function YouthBlock({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="grid" />
+        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="featured-right" />
       </motion.article>
     </section>
   );
@@ -612,7 +644,7 @@ const ImageBlock = memo(function ImageBlock({
   alt,
   tall = false,
   reverse = false,
-  layout = "featured",
+  layout = "featured-left",
 }: {
   images: readonly string[];
   alt: string;
@@ -620,33 +652,10 @@ const ImageBlock = memo(function ImageBlock({
   reverse?: boolean;
   layout?: CollageLayout;
 }) {
-  const visibleImages = images.slice(0, 4);
-
-  if (visibleImages.length === 1) {
-    return (
-      <motion.div
-        variants={imageMotion}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        className={[
-          "relative overflow-hidden bg-[#27301d]",
-          tall ? "h-[24rem] lg:h-[34rem]" : "h-[20rem] lg:h-full",
-          reverse ? "lg:order-1" : "lg:order-2",
-        ].join(" ")}
-      >
-        <img
-          src={visibleImages[0]}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
-        />
-
-        <div className="pointer-events-none absolute inset-0 bg-black/10" />
-      </motion.div>
-    );
-  }
+  const visibleImages =
+  layout === "staggered"
+    ? images.slice(0, 3)
+    : images.slice(0, 4);
 
   return (
     <motion.div
@@ -656,7 +665,7 @@ const ImageBlock = memo(function ImageBlock({
       viewport={{ once: true, amount: 0.2 }}
       className={[
         "grid overflow-hidden bg-[#27301d] p-2",
-        tall ? "h-[24rem] lg:h-[34rem]" : "h-[20rem] lg:h-full",
+        tall ? "h-[26rem] lg:h-[36rem]" : "h-[22rem] lg:h-[30rem]",
         reverse ? "lg:order-1" : "lg:order-2",
         getCollageGrid(layout),
       ].join(" ")}
@@ -665,8 +674,8 @@ const ImageBlock = memo(function ImageBlock({
         <div
           key={`${src}-${index}`}
           className={[
-            "group relative min-h-0 overflow-hidden",
-            getCollageItemClass(layout, index, visibleImages.length),
+            "relative min-h-0 overflow-hidden",
+            getCollageItemClass(layout, index),
           ].join(" ")}
         >
           <img
@@ -674,10 +683,10 @@ const ImageBlock = memo(function ImageBlock({
             alt={`${alt} ${index + 1}`}
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+            className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="pointer-events-none absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-black/5" />
+          <div className="pointer-events-none absolute inset-0 bg-black/10" />
         </div>
       ))}
     </motion.div>
@@ -686,13 +695,13 @@ const ImageBlock = memo(function ImageBlock({
 
 function getCollageGrid(layout: CollageLayout) {
   switch (layout) {
-    case "reverse":
+    case "featured-left":
+    case "featured-right":
       return "grid-cols-3 grid-rows-3 gap-2";
 
-    case "grid":
-      return "grid-cols-2 grid-rows-2 gap-2";
+    case "staggered":
+      return "grid-cols-3 grid-rows-2 gap-2";
 
-    case "featured":
     default:
       return "grid-cols-3 grid-rows-3 gap-2";
   }
@@ -701,49 +710,81 @@ function getCollageGrid(layout: CollageLayout) {
 function getCollageItemClass(
   layout: CollageLayout,
   index: number,
-  imageCount: number,
 ) {
-  if (imageCount === 2) {
-    return index === 0
-      ? "col-span-2 row-span-3"
-      : "col-span-1 row-span-3";
-  }
+  switch (layout) {
+    /*
+      Layout 1
 
-  if (imageCount === 3) {
-    if (layout === "reverse") {
-      return index === 0
-        ? "col-span-1 row-span-3"
-        : "col-span-2 row-span-1";
-    }
+      ┌──────────────────────────┬─────────────┐
+      │                          │      2      │
+      │                          ├─────────────┤
+      │            1             │      3      │
+      │                          ├─────────────┤
+      │                          │      4      │
+      └──────────────────────────┴─────────────┘
+    */
+    case "featured-left":
+      if (index === 0) {
+        return "col-span-2 row-span-3";
+      }
 
-    if (layout === "grid") {
-      return index === 0
-        ? "col-span-2 row-span-1"
-        : "col-span-1 row-span-1";
-    }
+      return "col-span-1 row-span-1";
 
-    return index === 0
-      ? "col-span-2 row-span-3"
-      : "col-span-1 row-span-1";
-  }
+    /*
+      Layout 2
 
-  if (layout === "reverse") {
-    if (index === 0) {
-      return "col-span-1 row-span-3";
-    }
+      ┌─────────────┬──────────────────────────┐
+      │      2      │                          │
+      ├─────────────┤                          │
+      │      3      │            1             │
+      ├─────────────┤                          │
+      │      4      │                          │
+      └─────────────┴──────────────────────────┘
+    */
+    case "featured-right":
+      if (index === 0) {
+        return "col-span-2 row-span-3 col-start-2 row-start-1";
+      }
 
-    return "col-span-2 row-span-1";
-  }
+      if (index === 1) {
+        return "col-span-1 row-span-1 col-start-1 row-start-1";
+      }
 
-  if (layout === "grid") {
-    return "col-span-1 row-span-1";
-  }
+      if (index === 2) {
+        return "col-span-1 row-span-1 col-start-1 row-start-2";
+      }
 
+      return "col-span-1 row-span-1 col-start-1 row-start-3";
+
+    /*
+  Staggered layout — 3 images
+
+  ┌──────────────────────────┬─────────────┐
+  │                          │      2      │
+  │                          │             │
+  │            1             ├─────────────┤
+  │                          │      3      │
+  │                          │             │
+  └──────────────────────────┴─────────────┘
+
+  Grid:
+  - Photo 1: large highlighted image on the left
+  - Photo 2: square image on the top-right
+  - Photo 3: square image on the bottom-right
+*/
+case "staggered":
   if (index === 0) {
-    return "col-span-2 row-span-3";
+    return "col-span-2 row-span-2 col-start-1 row-start-1";
   }
 
-  return "col-span-1 row-span-1";
+  if (index === 1) {
+    return "col-span-1 row-span-1 col-start-3 row-start-1";
+  }
+
+  return "col-span-1 row-span-1 col-start-3 row-start-2";
+    default:
+      return "col-span-1 row-span-1";
+  }
 }
 
 function Label({ children }: { children: string }) {
