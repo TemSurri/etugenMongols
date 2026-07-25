@@ -1,7 +1,15 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import { cubicBezier, motion, type Variants } from "framer-motion";
+import {
+  cubicBezier,
+  motion,
+  type Variants,
+} from "framer-motion";
+
+/* -------------------------------------------------------------------------- */
+/*                                   Types                                    */
+/* -------------------------------------------------------------------------- */
 
 type Lang = "en" | "mn";
 
@@ -23,93 +31,246 @@ type VolunteerListing = {
 /* -------------------------------------------------------------------------- */
 
 const VOLUNTEER_IMAGES = {
-  top: "/impact/culture/1.webp",
-  bottom: "/impact/youth/1.webp",
+  topLeft: "/impact/culture/1.webp",
+  bottomRight: "/impact/youth/1.webp",
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/*                                  Colors                                    */
+/*                                   Theme                                    */
 /* -------------------------------------------------------------------------- */
 
 const COLORS = {
-  background: "#303824",
-  heading: "#fffaf0",
-  body: "#e9e2d1",
-  muted: "#cfc8b5",
-  accent: "#d6ba72",
+  green: "#303824",
+  cream: "#fffaf0",
+
+  darkText: "#303824",
+  bodyText: "#59604d",
+  mutedText: "#747b68",
+
+  lightText: "#fffaf0",
+  lightMuted: "#e9e2d1",
+
+  gold: "#d6ba72",
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/*                         Volunteer Opportunities                            */
+/*                           Volunteer Opportunities                          */
+/*                                                                            */
+/* Temporary example listings. Replace these with real opportunities later.  */
 /* -------------------------------------------------------------------------- */
 
 const VOLUNTEER_LISTINGS: VolunteerListing[] = [
   {
     id: "naadam-setup",
+
     eventTitle: {
       en: "Naadam Community Celebration",
       mn: "Наадмын олон нийтийн баяр",
     },
+
     role: {
       en: "Setup and Event Support",
       mn: "Бэлтгэл болон арга хэмжээний тусламж",
     },
+
     description: {
-      en: "Help prepare tables, decorations, guest areas, and event spaces before the celebration.",
-      mn: "Баяр эхлэхээс өмнө ширээ, чимэглэл, зочдын хэсэг болон арга хэмжээний орчныг бэлтгэхэд тусална.",
+      en: "Help prepare the event space, organize materials, and support general setup before guests arrive.",
+      mn: "Зочид ирэхээс өмнө арга хэмжээний орчныг бэлтгэх, материал зохион байгуулах болон ерөнхий бэлтгэлд тусална.",
     },
+
     date: {
       en: "Summer 2026",
       mn: "2026 оны зун",
     },
+
+    href: "/events",
+  },
+
+  {
+    id: "performance-support",
+
+    eventTitle: {
+      en: "Cultural Performance",
+      mn: "Соёлын тоглолт",
+    },
+
+    role: {
+      en: "Performance Support",
+      mn: "Тоглолтын туслах",
+    },
+
+    description: {
+      en: "Assist performers and organizers with preparation, materials, and coordination around the performance area.",
+      mn: "Тоглолтын хэсэгт бэлтгэл, материал болон зохицуулалтын ажилд оролцогчид, зохион байгуулагчдад тусална.",
+    },
+
+    date: {
+      en: "Upcoming",
+      mn: "Удахгүй",
+    },
+
+    href: "/events",
+  },
+
+  {
+    id: "guest-welcome",
+
+    eventTitle: {
+      en: "Community Gathering",
+      mn: "Олон нийтийн уулзалт",
+    },
+
+    role: {
+      en: "Guest Welcome",
+      mn: "Зочин угтах",
+    },
+
+    description: {
+      en: "Welcome community members, provide directions, and help guests find activities and event areas.",
+      mn: "Олон нийтийн гишүүдийг угтаж, чиглэл өгч, үйл ажиллагаа болон арга хэмжээний хэсгүүдийг олоход тусална.",
+    },
+
+    date: {
+      en: "Upcoming",
+      mn: "Удахгүй",
+    },
+
     href: "/events",
   },
 
   {
     id: "media-support",
+
     eventTitle: {
-      en: "Cultural Performance Day",
-      mn: "Соёлын тоглолтын өдөр",
+      en: "Community Events",
+      mn: "Олон нийтийн арга хэмжээ",
     },
+
     role: {
       en: "Photo and Media Support",
       mn: "Зураг болон медиа тусламж",
     },
+
     description: {
-      en: "Help document the event through photography, short videos, and basic media organization.",
-      mn: "Арга хэмжээг зураг, богино бичлэг болон медиа материалын зохион байгуулалтаар баримтжуулахад тусална.",
+      en: "Help document important moments through photography, short videos, and basic event media organization.",
+      mn: "Арга хэмжээний чухал мөчүүдийг зураг, богино бичлэг болон медиа материалын зохион байгуулалтаар баримтжуулахад тусална.",
     },
+
     date: {
-      en: "Upcoming",
-      mn: "Удахгүй",
+      en: "Ongoing",
+      mn: "Тогтмол",
     },
+
     href: "/events",
   },
 
   {
-    id: "guest-support",
+    id: "decoration-support",
+
     eventTitle: {
-      en: "Community Gathering",
-      mn: "Олон нийтийн уулзалт",
+      en: "Cultural Events",
+      mn: "Соёлын арга хэмжээ",
     },
+
     role: {
-      en: "Guest Welcome and Coordination",
-      mn: "Зочин угтах болон зохицуулалт",
+      en: "Decoration and Display Setup",
+      mn: "Чимэглэл болон үзүүлэнгийн бэлтгэл",
     },
+
     description: {
-      en: "Welcome guests, provide directions, and help activities remain organized.",
-      mn: "Зочдыг угтах, чиглэл өгөх болон үйл ажиллагааг зохион байгуулалттай явуулахад тусална.",
+      en: "Help arrange decorations, cultural displays, signs, and presentation areas before an event begins.",
+      mn: "Арга хэмжээ эхлэхээс өмнө чимэглэл, соёлын үзүүлэн, тэмдэглэгээ болон танилцуулгын хэсгүүдийг бэлтгэнэ.",
     },
+
     date: {
-      en: "Date to be confirmed",
-      mn: "Тов батлагдана",
+      en: "As needed",
+      mn: "Шаардлагатай үед",
     },
+
+    href: "/events",
+  },
+
+  {
+    id: "youth-support",
+
+    eventTitle: {
+      en: "Youth Activities",
+      mn: "Хүүхэд залуусын үйл ажиллагаа",
+    },
+
+    role: {
+      en: "Activity Support",
+      mn: "Үйл ажиллагааны туслах",
+    },
+
+    description: {
+      en: "Support organizers with materials, activity areas, and general coordination during youth programs.",
+      mn: "Хүүхэд залуусын хөтөлбөрийн үеэр материал, үйл ажиллагааны хэсэг болон ерөнхий зохицуулалтад тусална.",
+    },
+
+    date: {
+      en: "Upcoming",
+      mn: "Удахгүй",
+    },
+
+    href: "/events",
+  },
+
+  {
+    id: "cleanup-support",
+
+    eventTitle: {
+      en: "Community Events",
+      mn: "Олон нийтийн арга хэмжээ",
+    },
+
+    role: {
+      en: "Event Cleanup",
+      mn: "Арга хэмжээний цэвэрлэгээ",
+    },
+
+    description: {
+      en: "Help organize materials and restore the event space after activities have finished.",
+      mn: "Үйл ажиллагаа дууссаны дараа материалуудыг цэгцэлж, арга хэмжээний орчныг хэвийн байдалд оруулахад тусална.",
+    },
+
+    date: {
+      en: "As needed",
+      mn: "Шаардлагатай үед",
+    },
+
+    href: "/events",
+  },
+
+  {
+    id: "general-support",
+
+    eventTitle: {
+      en: "Etugen Mongols",
+      mn: "Этүгэн Монголчууд",
+    },
+
+    role: {
+      en: "General Volunteer Support",
+      mn: "Ерөнхий сайн дурын тусламж",
+    },
+
+    description: {
+      en: "Help wherever additional support is needed before, during, or after community activities.",
+      mn: "Олон нийтийн үйл ажиллагааны өмнө, үеэр эсвэл дараа шаардлагатай бусад ажилд тусална.",
+    },
+
+    date: {
+      en: "Ongoing",
+      mn: "Тогтмол",
+    },
+
     href: "/events",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                                   Copy                                     */
+/*                                    Copy                                    */
 /* -------------------------------------------------------------------------- */
 
 const COPY = {
@@ -117,9 +278,18 @@ const COPY = {
     heading: "Get involved",
 
     body:
-      "Volunteers play an important role in helping Etugen Mongols bring community events and cultural activities to life. Opportunities may include preparing event spaces, welcoming guests, supporting performers, helping with activities, documenting important moments, and assisting with general coordination. Whether you can offer a few hours or contribute a particular skill, your support helps make each gathering more organized, welcoming, and meaningful for the community.",
+      "Volunteers play an important role in bringing our community events and cultural activities to life. Whether you can offer a few hours or contribute a particular skill, your time helps us create welcoming, organized, and meaningful experiences for the community.",
+
+    opportunitiesButton: "View opportunities",
+
+    galleryText:
+      "Curious what volunteering looks like? Visit our gallery to see some of the preparation, practice, and behind-the-scenes work that goes into our events.",
+
+    galleryButton: "View gallery",
 
     listingsTitle: "Current opportunities",
+
+    listingsHint: "Explore available volunteer roles",
 
     noListings:
       "There are no volunteer opportunities available right now. New roles will be posted here when support is needed.",
@@ -131,9 +301,18 @@ const COPY = {
     heading: "Бидэнтэй нэгдээрэй",
 
     body:
-      "Сайн дурын ажилтнууд Этүгэн Монголчуудын олон нийтийн арга хэмжээ болон соёлын үйл ажиллагааг зохион байгуулахад чухал үүрэг гүйцэтгэдэг. Арга хэмжээний орчныг бэлтгэх, зочдыг угтах, оролцогчдыг дэмжих, үйл ажиллагаанд туслах, чухал мөчүүдийг баримтжуулах болон ерөнхий зохицуулалтад оролцох зэрэг боломжууд байж болно. Та хэдхэн цагийн турш туслах эсвэл өөрийн тодорхой ур чадвараар хувь нэмэр оруулах боломжтой бөгөөд таны дэмжлэг арга хэмжээ бүрийг илүү зохион байгуулалттай, тав тухтай, утга учиртай болгоход тусална.",
+      "Сайн дурын ажилтнууд манай олон нийтийн арга хэмжээ болон соёлын үйл ажиллагааг хэрэгжүүлэхэд чухал үүрэг гүйцэтгэдэг. Та хэдхэн цагийн турш туслах эсвэл өөрийн тодорхой ур чадвараар хувь нэмэр оруулснаар олон нийтэд зориулсан тав тухтай, зохион байгуулалттай, утга учиртай үйл ажиллагааг бий болгоход тусална.",
+
+    opportunitiesButton: "Боломжуудыг үзэх",
+
+    galleryText:
+      "Сайн дурын ажил ямар байдгийг сонирхож байна уу? Манай галерейгаас арга хэмжээний бэлтгэл, дадлага болон тайзны ард өрнөдөг ажлуудыг үзээрэй.",
+
+    galleryButton: "Галерей үзэх",
 
     listingsTitle: "Одоогийн боломжууд",
+
+    listingsHint: "Сайн дурын ажлын боломжуудыг үзэх",
 
     noListings:
       "Одоогоор сайн дурын ажлын боломж байхгүй байна. Тусламж хэрэгтэй үед шинэ боломжуудыг энд нийтэлнэ.",
@@ -150,6 +329,7 @@ const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const pageMotion: Variants = {
   hidden: {},
+
   show: {
     transition: {
       staggerChildren: 0.08,
@@ -157,10 +337,10 @@ const pageMotion: Variants = {
   },
 };
 
-const fadeUpMotion: Variants = {
+const sectionMotion: Variants = {
   hidden: {
     opacity: 0,
-    y: 18,
+    y: 16,
   },
 
   show: {
@@ -170,42 +350,6 @@ const fadeUpMotion: Variants = {
     transition: {
       duration: 0.55,
       ease: easeOut,
-    },
-  },
-};
-
-const listMotion: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const listingMotion: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 12,
-  },
-
-  show: {
-    opacity: 1,
-    y: 0,
-
-    transition: {
-      duration: 0.45,
-      ease: easeOut,
-    },
-  },
-};
-
-const imageColumnMotion: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
     },
   },
 };
@@ -221,7 +365,24 @@ const imageMotion: Variants = {
     scale: 1,
 
     transition: {
-      duration: 0.75,
+      duration: 0.7,
+      ease: easeOut,
+    },
+  },
+};
+
+const listingMotion: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 8,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.4,
       ease: easeOut,
     },
   },
@@ -235,137 +396,318 @@ function Volunteer({ lang }: VolunteerProps) {
   const safeLang: Lang = lang === "mn" ? "mn" : "en";
   const copy = COPY[safeLang];
 
+  /* Smoothly move from the introduction to the opportunities quadrant. */
+  const scrollToOpportunities = () => {
+    document
+      .getElementById("volunteer-opportunities")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  };
+
   return (
     <main
       className="min-h-screen"
       style={{
-        backgroundColor: COLORS.background,
-        color: COLORS.heading,
+        backgroundColor: COLORS.green,
       }}
     >
       <motion.div
         variants={pageMotion}
         initial="hidden"
         animate="show"
-        className="grid min-h-screen lg:grid-cols-[0.88fr_1.12fr]"
+        className="
+          grid
+          min-h-screen
+          lg:grid-cols-2
+        "
       >
-        {/* ---------------------------------------------------------------- */}
-        {/* Right Content                                                    */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================== */}
+        {/* Top Left — Photo                                                   */}
+        {/* ================================================================== */}
 
         <motion.section
-          variants={fadeUpMotion}
+          variants={imageMotion}
+          className="
+            order-2
+            relative
+            min-h-[340px]
+            overflow-hidden
+            sm:min-h-[440px]
+            lg:order-1
+            lg:min-h-[95vh]
+          "
+        >
+          <img
+            src={VOLUNTEER_IMAGES.topLeft}
+            alt=""
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            className="
+              absolute
+              inset-0
+              h-full
+              w-full
+              object-cover
+              object-center
+            "
+          />
+        </motion.section>
+
+        {/* ================================================================== */}
+        {/* Top Right — Introduction                                           */}
+        {/* ================================================================== */}
+
+        <motion.section
+          variants={sectionMotion}
           className="
             order-1
+            flex
+            bg-[#303824]
             px-6
             pb-16
-            pt-32
+            pt-36
+            text-[#fffaf0]
             sm:px-8
-            sm:pb-20
+            sm:pt-40
             md:px-10
-            md:pt-36
             lg:order-2
+            lg:min-h-[95vh]
+            lg:items-center
             lg:px-14
-            lg:pb-28
+            lg:pb-16
             lg:pt-40
-            xl:px-16
+            xl:px-20
           "
-          style={{
-            backgroundColor: COLORS.background,
-          }}
         >
-          <div className="mx-auto w-full max-w-[760px]">
-            {/* Intro */}
-            <motion.header
-              variants={fadeUpMotion}
-              className="max-w-2xl"
+          <div className="mx-auto w-full max-w-[620px]">
+            {/* Main volunteer introduction */}
+            <h1
+              className="
+                text-3xl
+                font-normal
+                leading-[1.08]
+                tracking-tight
+                sm:text-4xl
+                md:text-5xl
+              "
             >
-              <h1
+              {copy.heading}
+            </h1>
+
+            <p
+              className="
+                mt-6
+                max-w-xl
+                text-[15px]
+                leading-8
+                text-[#e9e2d1]
+                md:text-base
+              "
+            >
+              {copy.body}
+            </p>
+
+            {/* -------------------------------------------------------------- */}
+            {/* Opportunities action                                           */}
+            {/* -------------------------------------------------------------- */}
+
+            <button
+              type="button"
+              onClick={scrollToOpportunities}
+              className="
+                mt-8
+                border
+                border-[#fffaf0]
+                bg-[#fffaf0]
+                px-5
+                py-3
+                text-[10px]
+                font-medium
+                uppercase
+                tracking-[0.16em]
+                text-[#303824]
+                transition-colors
+                duration-200
+                hover:bg-transparent
+                hover:text-[#fffaf0]
+              "
+            >
+              {copy.opportunitiesButton}
+            </button>
+
+            {/* -------------------------------------------------------------- */}
+            {/* Gallery                                                        */}
+            {/* The copy and button stay together so the relationship is clear.*/}
+            {/* -------------------------------------------------------------- */}
+
+            <div
+              className="
+                mt-8
+                max-w-lg
+                border-t
+                border-[#fffaf0]/15
+                pt-6
+              "
+            >
+              <p
                 className="
-                  text-3xl
-                  font-normal
-                  leading-[1.08]
-                  tracking-tight
-                  sm:text-4xl
-                  md:text-5xl
+                  max-w-md
+                  text-sm
+                  leading-7
+                  text-[#cfc8b5]
                 "
-                style={{
-                  color: COLORS.heading,
-                }}
               >
-                {copy.heading}
-              </h1>
+                {copy.galleryText}
+              </p>
+
+              <Link
+                to="/gallery"
+                className="
+                  mt-4
+                  inline-block
+                  border
+                  border-[#fffaf0]/40
+                  px-5
+                  py-3
+                  text-[10px]
+                  font-medium
+                  uppercase
+                  tracking-[0.16em]
+                  text-[#fffaf0]
+                  no-underline
+                  transition-colors
+                  duration-200
+                  hover:border-[#fffaf0]
+                  hover:bg-[#fffaf0]
+                  hover:text-[#303824]
+                "
+              >
+                {copy.galleryButton}
+              </Link>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* ================================================================== */}
+        {/* Bottom Left — Opportunities                                        */}
+        {/* ================================================================== */}
+
+        <motion.section
+          id="volunteer-opportunities"
+          variants={sectionMotion}
+          className="
+            order-3
+            flex
+            scroll-mt-24
+            bg-[#fffaf0]
+            px-6
+            py-14
+            text-[#303824]
+            sm:px-8
+            md:px-10
+            lg:h-[75vh]
+            lg:px-14
+            lg:py-12
+            xl:px-20
+          "
+        >
+          <div
+            className="
+              mx-auto
+              flex
+              w-full
+              max-w-[660px]
+              flex-col
+              lg:min-h-0
+            "
+          >
+            {/* Opportunities heading */}
+            <header
+              className="
+                shrink-0
+                border-b
+                border-[#303824]/15
+                pb-5
+              "
+            >
+              <h2
+                className="
+                  text-2xl
+                  font-normal
+                  leading-tight
+                  tracking-tight
+                  md:text-3xl
+                "
+              >
+                {copy.listingsTitle}
+              </h2>
 
               <p
                 className="
-                  mt-6
-                  max-w-2xl
-                  text-[15px]
-                  leading-8
-                  md:text-base
+                  mt-2
+                  text-[10px]
+                  font-medium
+                  uppercase
+                  tracking-[0.18em]
+                  text-[#9a7b30]
                 "
-                style={{
-                  color: COLORS.body,
-                }}
               >
-                {copy.body}
+                {copy.listingsHint}
               </p>
-            </motion.header>
+            </header>
 
-            {/* Opportunities */}
-            <motion.section
-              variants={fadeUpMotion}
-              className="mt-11 md:mt-12"
-            >
-              <div className="border-b border-[#fffaf0]/12 pb-5">
-                <h2
-                  className="
-                    text-xl
-                    font-normal
-                    tracking-tight
-                    md:text-2xl
-                  "
-                  style={{
-                    color: COLORS.heading,
-                  }}
-                >
-                  {copy.listingsTitle}
-                </h2>
-              </div>
+            {/* -------------------------------------------------------------- */}
+            {/* Scrollable opportunities                                       */}
+            {/* Desktop scrolls internally; mobile expands naturally.          */}
+            {/* -------------------------------------------------------------- */}
 
-              {VOLUNTEER_LISTINGS.length > 0 ? (
-                <motion.div
-                  variants={listMotion}
-                  initial="hidden"
-                  animate="show"
-                >
-                  {VOLUNTEER_LISTINGS.map((listing) => (
-                    <motion.article
-                      key={listing.id}
-                      variants={listingMotion}
+            {VOLUNTEER_LISTINGS.length > 0 ? (
+              <div
+                className="
+                  mt-1
+                  lg:min-h-0
+                  lg:flex-1
+                  lg:overflow-y-auto
+                  lg:pr-3
+
+                  [&::-webkit-scrollbar]:w-[3px]
+                  [&::-webkit-scrollbar-track]:bg-transparent
+                  [&::-webkit-scrollbar-thumb]:bg-[#303824]/25
+                  hover:[&::-webkit-scrollbar-thumb]:bg-[#303824]/40
+                "
+              >
+                {VOLUNTEER_LISTINGS.map((listing) => (
+                  <motion.article
+                    key={listing.id}
+                    variants={listingMotion}
+                    className="
+                      border-b
+                      border-[#303824]/15
+                      py-6
+                    "
+                  >
+                    <div
                       className="
                         grid
-                        gap-5
-                        border-b
-                        border-[#fffaf0]/12
-                        py-7
-                        md:grid-cols-[120px_1fr_auto]
-                        md:items-start
-                        md:gap-7
+                        gap-4
+                        sm:grid-cols-[110px_1fr_auto]
+                        sm:items-start
+                        sm:gap-6
                       "
                     >
-                      {/* Date / Event */}
+                      {/* Date and event */}
                       <div>
                         <p
                           className="
-                            text-[10px]
+                            text-[9px]
                             font-medium
                             uppercase
-                            tracking-[0.2em]
+                            tracking-[0.18em]
+                            text-[#9a7b30]
                           "
-                          style={{
-                            color: COLORS.accent,
-                          }}
                         >
                           {listing.date[safeLang]}
                         </p>
@@ -375,27 +717,22 @@ function Volunteer({ lang }: VolunteerProps) {
                             mt-2
                             text-xs
                             leading-5
+                            text-[#747b68]
                           "
-                          style={{
-                            color: COLORS.muted,
-                          }}
                         >
                           {listing.eventTitle[safeLang]}
                         </p>
                       </div>
 
-                      {/* Role */}
+                      {/* Role information */}
                       <div>
                         <h3
                           className="
-                            text-lg
+                            text-base
                             font-normal
                             leading-6
-                            tracking-[-0.01em]
+                            text-[#303824]
                           "
-                          style={{
-                            color: COLORS.heading,
-                          }}
                         >
                           {listing.role[safeLang]}
                         </h3>
@@ -403,149 +740,82 @@ function Volunteer({ lang }: VolunteerProps) {
                         <p
                           className="
                             mt-2
-                            max-w-xl
-                            text-sm
+                            max-w-md
+                            text-[13px]
                             leading-6
+                            text-[#59604d]
                           "
-                          style={{
-                            color: COLORS.muted,
-                          }}
                         >
                           {listing.description[safeLang]}
                         </p>
                       </div>
 
-                      {/* Link */}
+                      {/* Related event */}
                       <Link
                         to={listing.href}
                         className="
                           w-fit
                           whitespace-nowrap
                           border
-                          border-[#fffaf0]/30
-                          px-4
+                          border-[#303824]/30
+                          px-3
                           py-2
-                          text-[10px]
+                          text-[9px]
                           font-medium
                           uppercase
-                          tracking-[0.16em]
-                          text-[#fffaf0]
+                          tracking-[0.14em]
+                          text-[#303824]
                           no-underline
                           transition-colors
                           duration-200
-                          hover:border-[#d6ba72]
-                          hover:bg-[#d6ba72]
-                          hover:text-[#303824]
+                          hover:border-[#303824]
+                          hover:bg-[#303824]
+                          hover:text-[#fffaf0]
                         "
                       >
                         {copy.viewEvent}
                       </Link>
-                    </motion.article>
-                  ))}
-                </motion.div>
-              ) : (
-                <motion.p
-                  variants={listingMotion}
-                  className="
-                    border-b
-                    border-[#fffaf0]/12
-                    py-7
-                    text-sm
-                    leading-7
-                  "
-                  style={{
-                    color: COLORS.muted,
-                  }}
-                >
-                  {copy.noListings}
-                </motion.p>
-              )}
-            </motion.section>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
+            ) : (
+              <p className="py-7 text-sm leading-7 text-[#59604d]">
+                {copy.noListings}
+              </p>
+            )}
           </div>
         </motion.section>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Left Photos                                                      */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================== */}
+        {/* Bottom Right — Photo                                               */}
+        {/* ================================================================== */}
 
         <motion.section
-          variants={imageColumnMotion}
-          initial="hidden"
-          animate="show"
+          variants={imageMotion}
           className="
+            order-4
             relative
-            order-2
+            min-h-[340px]
             overflow-hidden
-            lg:order-1
+            sm:min-h-[440px]
+            lg:min-h-[75vh]
           "
         >
-          <div
+          <img
+            src={VOLUNTEER_IMAGES.bottomRight}
+            alt=""
+            loading="lazy"
+            decoding="async"
             className="
-              relative
-              mx-auto
+              absolute
+              inset-0
+              h-full
               w-full
-              max-w-[760px]
-              lg:h-full
-              lg:max-w-none
+              object-cover
+              object-center
             "
-          >
-            {/* Top Photo */}
-            <motion.div
-              variants={imageMotion}
-              className="
-                relative
-                aspect-[16/10]
-                w-full
-                overflow-hidden
-                lg:aspect-auto
-                lg:h-1/2
-              "
-            >
-              <img
-                src={VOLUNTEER_IMAGES.top}
-                alt=""
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-                className="
-                  absolute
-                  inset-0
-                  h-full
-                  w-full
-                  object-cover
-                  object-center
-                "
-              />
-            </motion.div>
-
-            {/* Bottom Photo */}
-            <motion.div
-              variants={imageMotion}
-              className="
-                relative
-                aspect-[16/10]
-                w-full
-                overflow-hidden
-                lg:aspect-auto
-                lg:h-1/2
-              "
-            >
-              <img
-                src={VOLUNTEER_IMAGES.bottom}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="
-                  absolute
-                  inset-0
-                  h-full
-                  w-full
-                  object-cover
-                  object-center
-                "
-              />
-            </motion.div>
-          </div>
+          />
         </motion.section>
       </motion.div>
     </main>

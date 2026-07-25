@@ -1,7 +1,11 @@
 "use client";
 
 import { memo } from "react";
-import { cubicBezier, motion, type Variants } from "framer-motion";
+import {
+  cubicBezier,
+  motion,
+  type Variants,
+} from "framer-motion";
 
 type Lang = "en" | "mn";
 
@@ -13,7 +17,7 @@ type DonateProps = {
 /*                                  Config                                    */
 /* -------------------------------------------------------------------------- */
 
-const DONATION_EMAIL = "calgarymongolian@gmail.com";
+const DONATION_EMAIL = "info@etugen-mongols.ca";
 
 const DONATE_IMAGES = {
   topRight: "/impact/culture/1.webp",
@@ -23,10 +27,9 @@ const DONATE_IMAGES = {
 const COLORS = {
   green: "#303824",
   cream: "#fffaf0",
-  warmCream: "#e9e2d1",
+  body: "#59604d",
   muted: "#cfc8b5",
   gold: "#d6ba72",
-  darkText: "#303824",
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -35,73 +38,47 @@ const COLORS = {
 
 const COPY = {
   en: {
+    /* Financial donations */
     heading: "Donate with us",
 
     body:
-      "Your support helps Etugen Mongols continue creating cultural events, youth activities, performances, gatherings, and future community programs in Calgary. Every contribution helps us build welcoming spaces where culture and community can grow.",
+      "Donations help us cover the general costs of bringing our events to life, from preparation and volunteer practice to the event itself. Your support helps with event expenses, food and water, supplies, and the small details that help make sure everyone has a welcoming and enjoyable experience.",
 
-    waysTitle: "Two ways to support",
+    donateButton: "Donate",
 
-    moneyShortTitle: "Financial donations",
-    moneyShortBody:
-      "Support event costs, materials, equipment, food, transportation, and future programming.",
+    unavailable:
+      "Online donations are not available yet. For now, financial donations can be sent by bank e-transfer to:",
 
-    itemShortTitle: "Items and materials",
-    itemShortBody:
-      "Contribute useful supplies, equipment, food, decorations, or other materials needed for upcoming activities.",
-
-    actionHeading: "How to donate",
-
-    moneyTitle: "Financial donations",
-    moneyBody:
-      "Financial support helps cover event spaces, equipment, materials, food, transportation, and other costs connected to our programs and community events.",
-
-    moneyNote:
-      "We do not currently have an online donation portal. Financial donations can be sent by bank e-transfer to:",
-
+    /* Non-monetary donations */
     itemsTitle: "Items and materials",
+
     itemsBody:
-      "We may also accept useful supplies, equipment, decorations, food, and other materials that can support upcoming events and community activities.",
+      "We also appreciate decorations, Mongolian cultural items, and other materials that can help with performances, displays, and community events. Items can be donated permanently or, when appropriate, provided temporarily for a specific event.",
 
     itemsNote:
-      "Please contact us before donating items so we can confirm what is currently needed and arrange delivery or pickup:",
-
-    emailLabel: "Donation email",
+      "Please email us before donating or lending an item so we can confirm what is currently useful and arrange delivery, pickup, or return.",
   },
 
   mn: {
+    /* Financial donations */
     heading: "Биднийг хандиваар дэмжээрэй",
 
     body:
-      "Таны дэмжлэг Этүгэн Монголчуудын соёлын арга хэмжээ, хүүхэд залуусын үйл ажиллагаа, тоглолт, уулзалт болон Калгари хот дахь ирээдүйн олон нийтийн хөтөлбөрүүдийг үргэлжлүүлэн хөгжүүлэхэд тусалдаг. Таны оруулсан хувь нэмэр соёл, олон нийт хамтдаа хөгжих тав тухтай орчныг бүрдүүлэхэд дэмжлэг болно.",
+      "Хандив нь арга хэмжээний бэлтгэл, сайн дурын ажилтнуудын дадлагаас эхлээд арга хэмжээ зохион байгуулах хүртэлх ерөнхий зардлыг дэмжихэд тусалдаг. Таны дэмжлэг арга хэмжээний зардал, хоол хүнс, ус, хэрэгцээт материал болон хүн бүрийг тав тухтай, сайхан орчинд оролцоход шаардлагатай жижиг зүйлсийг бүрдүүлэхэд тусална.",
 
-    waysTitle: "Дэмжих хоёр арга",
+    donateButton: "Хандивлах",
 
-    moneyShortTitle: "Мөнгөн хандив",
-    moneyShortBody:
-      "Арга хэмжээ, материал, тоног төхөөрөмж, хоол хүнс, тээвэр болон ирээдүйн хөтөлбөрүүдийн зардлыг дэмжинэ.",
+    unavailable:
+      "Онлайн хандив одоогоор боломжгүй байна. Одоохондоо мөнгөн хандивыг банкны e-transfer хэлбэрээр дараах хаяг руу илгээж болно:",
 
-    itemShortTitle: "Эд зүйл болон материал",
-    itemShortBody:
-      "Удахгүй болох үйл ажиллагаанд шаардлагатай хэрэгсэл, тоног төхөөрөмж, хоол хүнс, чимэглэл болон бусад материалыг хандивлах боломжтой.",
-
-    actionHeading: "Хэрхэн хандивлах вэ",
-
-    moneyTitle: "Мөнгөн хандив",
-    moneyBody:
-      "Мөнгөн хандив нь арга хэмжээний байр, тоног төхөөрөмж, материал, хоол хүнс, тээвэр болон олон нийтийн хөтөлбөртэй холбоотой бусад зардлыг санхүүжүүлэхэд тусална.",
-
-    moneyNote:
-      "Одоогоор онлайн хандивын систем байхгүй байна. Мөнгөн хандивыг банкны e-transfer хэлбэрээр дараах хаяг руу илгээж болно:",
-
+    /* Non-monetary donations */
     itemsTitle: "Эд зүйл болон материал",
+
     itemsBody:
-      "Бид удахгүй болох арга хэмжээ болон олон нийтийн үйл ажиллагаанд ашиглах боломжтой хэрэгсэл, тоног төхөөрөмж, чимэглэл, хүнс болон бусад материалыг хүлээн авч болно.",
+      "Бид чимэглэл, Монголын соёлтой холбоотой эд зүйлс болон тоглолт, үзүүлэн, олон нийтийн арга хэмжээнд ашиглаж болох бусад материалыг талархан хүлээн авдаг. Эд зүйлсийг байнгын хандив хэлбэрээр эсвэл тохиромжтой тохиолдолд тодорхой арга хэмжээнд түр хугацаагаар ашиглуулахаар өгч болно.",
 
     itemsNote:
-      "Эд зүйл хандивлахаас өмнө одоогоор юу хэрэгтэй байгааг болон хүргэлт, хүлээн авах нөхцөлийг баталгаажуулахын тулд бидэнтэй холбогдоно уу:",
-
-    emailLabel: "Хандивын имэйл",
+      "Эд зүйл хандивлах эсвэл түр ашиглуулахаас өмнө одоогоор юу хэрэгтэй байгааг баталгаажуулж, хүргэлт, хүлээн авах эсвэл буцаах нөхцөлийг тохирохын тулд бидэнд имэйл илгээнэ үү.",
   },
 } as const;
 
@@ -113,6 +90,7 @@ const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const pageMotion: Variants = {
   hidden: {},
+
   show: {
     transition: {
       staggerChildren: 0.08,
@@ -165,7 +143,9 @@ function Donate({ lang }: DonateProps) {
   return (
     <main
       className="min-h-screen"
-      style={{ backgroundColor: COLORS.green }}
+      style={{
+        backgroundColor: COLORS.green,
+      }}
     >
       <motion.div
         variants={pageMotion}
@@ -178,9 +158,9 @@ function Donate({ lang }: DonateProps) {
           lg:grid-rows-2
         "
       >
-        {/* ---------------------------------------------------------------- */}
-        {/* Top Left — Intro                                                 */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================== */}
+        {/* Top Left — Financial Donations                                     */}
+        {/* ================================================================== */}
 
         <motion.section
           variants={sectionMotion}
@@ -190,19 +170,21 @@ function Donate({ lang }: DonateProps) {
             bg-[#fffaf0]
             px-6
             pb-16
-            pt-32
+            pt-36
             text-[#303824]
             sm:px-8
+            sm:pt-40
             md:px-10
-            md:pt-36
-            lg:min-h-[50vh]
+            lg:min-h-[95vh]
             lg:items-center
             lg:px-14
-            lg:py-16
+            lg:pb-16
+            lg:pt-40
             xl:px-20
           "
         >
           <div className="mx-auto w-full max-w-[620px]">
+            {/* Main heading */}
             <h1
               className="
                 text-3xl
@@ -216,6 +198,7 @@ function Donate({ lang }: DonateProps) {
               {copy.heading}
             </h1>
 
+            {/* Single financial donation explanation */}
             <p
               className="
                 mt-6
@@ -229,47 +212,62 @@ function Donate({ lang }: DonateProps) {
               {copy.body}
             </p>
 
-            <div className="mt-10 border-t border-[#303824]/15 pt-6">
-              <p
+            {/* Donate action */}
+            <div className="mt-7">
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
                 className="
-                  text-xs
+                  inline-flex
+                  cursor-not-allowed
+                  items-center
+                  justify-center
+                  bg-[#303824]/65
+                  px-7
+                  py-3
+                  text-sm
                   font-medium
-                  uppercase
-                  tracking-[0.2em]
-                  text-[#9a7b30]
+                  text-[#fffaf0]/90
                 "
               >
-                {copy.waysTitle}
-              </p>
+                {copy.donateButton}
+              </button>
 
-              <div className="mt-6 grid gap-7 sm:grid-cols-2">
-                <div>
-                  <h2 className="text-lg font-normal">
-                    {copy.moneyShortTitle}
-                  </h2>
+              {/* Current e-transfer method */}
+              <div className="mt-4 border-l-2 border-[#d6ba72] pl-4">
+                <p className="max-w-lg text-sm leading-6 text-[#69705c]">
+                  {copy.unavailable}
+                </p>
 
-                  <p className="mt-2 text-sm leading-6 text-[#69705c]">
-                    {copy.moneyShortBody}
-                  </p>
-                </div>
-
-                <div>
-                  <h2 className="text-lg font-normal">
-                    {copy.itemShortTitle}
-                  </h2>
-
-                  <p className="mt-2 text-sm leading-6 text-[#69705c]">
-                    {copy.itemShortBody}
-                  </p>
-                </div>
+                <a
+                  href={`mailto:${DONATION_EMAIL}`}
+                  className="
+                    mt-2
+                    block
+                    w-fit
+                    break-all
+                    text-sm
+                    font-medium
+                    text-[#303824]
+                    underline
+                    decoration-[#d6ba72]
+                    underline-offset-4
+                    transition-colors
+                    duration-200
+                    hover:text-[#9a7b30]
+                  "
+                >
+                  {DONATION_EMAIL}
+                </a>
               </div>
             </div>
           </div>
         </motion.section>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Top Right — Photo                                                */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================== */}
+        {/* Top Right — Photo                                                  */}
+        {/* ================================================================== */}
 
         <motion.section
           variants={imageMotion}
@@ -279,7 +277,7 @@ function Donate({ lang }: DonateProps) {
             min-h-[340px]
             overflow-hidden
             sm:min-h-[440px]
-            lg:min-h-[50vh]
+            lg:min-h-[65vh]
           "
         >
           <img
@@ -299,9 +297,9 @@ function Donate({ lang }: DonateProps) {
           />
         </motion.section>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Bottom Left — Photo                                              */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================== */}
+        {/* Bottom Left — Photo                                                */}
+        {/* ================================================================== */}
 
         <motion.section
           variants={imageMotion}
@@ -312,7 +310,7 @@ function Donate({ lang }: DonateProps) {
             overflow-hidden
             sm:min-h-[440px]
             lg:order-3
-            lg:min-h-[50vh]
+            lg:min-h-[70vh]
           "
         >
           <img
@@ -331,14 +329,15 @@ function Donate({ lang }: DonateProps) {
           />
         </motion.section>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Bottom Right — Donation Actions                                  */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================== */}
+        {/* Bottom Right — Non-Monetary Donations                              */}
+        {/* ================================================================== */}
 
         <motion.section
           variants={sectionMotion}
           className="
             order-3
+            flex
             bg-[#303824]
             px-6
             py-16
@@ -346,7 +345,8 @@ function Donate({ lang }: DonateProps) {
             sm:px-8
             md:px-10
             lg:order-4
-            lg:min-h-[50vh]
+            lg:min-h-[70vh]
+            lg:items-center
             lg:px-14
             lg:py-16
             xl:px-20
@@ -362,84 +362,55 @@ function Donate({ lang }: DonateProps) {
                 md:text-3xl
               "
             >
-              {copy.actionHeading}
+              {copy.itemsTitle}
             </h2>
 
-            {/* Financial Donation */}
-            <article className="mt-8 border-t border-[#fffaf0]/15 pt-7">
-              <h3 className="text-xl font-normal">
-                {copy.moneyTitle}
-              </h3>
+            <p
+              className="
+                mt-4
+                max-w-xl
+                text-sm
+                leading-7
+                text-[#d8d1bf]
+              "
+            >
+              {copy.itemsBody}
+            </p>
 
-              <p className="mt-3 text-sm leading-7 text-[#d8d1bf]">
-                {copy.moneyBody}
+            {/* Contact / donation procedure */}
+            <div className="mt-7 border-t border-[#fffaf0]/15 pt-7">
+              <p
+                className="
+                  max-w-xl
+                  text-sm
+                  leading-7
+                  text-[#cfc8b5]
+                "
+              >
+                {copy.itemsNote}
               </p>
 
-              <div className="mt-5 border-l-2 border-[#d6ba72] pl-4">
-                <p className="text-sm leading-7 text-[#cfc8b5]">
-                  {copy.moneyNote}
-                </p>
-
-                <a
-                  href={`mailto:${DONATION_EMAIL}`}
-                  className="
-                    mt-2
-                    block
-                    w-fit
-                    break-all
-                    text-sm
-                    font-medium
-                    text-[#fffaf0]
-                    underline
-                    decoration-[#d6ba72]
-                    underline-offset-4
-                    transition-colors
-                    duration-200
-                    hover:text-[#d6ba72]
-                  "
-                >
-                  {DONATION_EMAIL}
-                </a>
-              </div>
-            </article>
-
-            {/* Item Donation */}
-            <article className="mt-8 border-t border-[#fffaf0]/15 pt-7">
-              <h3 className="text-xl font-normal">
-                {copy.itemsTitle}
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-[#d8d1bf]">
-                {copy.itemsBody}
-              </p>
-
-              <div className="mt-5 border-l-2 border-[#d6ba72] pl-4">
-                <p className="text-sm leading-7 text-[#cfc8b5]">
-                  {copy.itemsNote}
-                </p>
-
-                <a
-                  href={`mailto:${DONATION_EMAIL}`}
-                  className="
-                    mt-2
-                    block
-                    w-fit
-                    break-all
-                    text-sm
-                    font-medium
-                    text-[#fffaf0]
-                    underline
-                    decoration-[#d6ba72]
-                    underline-offset-4
-                    transition-colors
-                    duration-200
-                    hover:text-[#d6ba72]
-                  "
-                >
-                  {DONATION_EMAIL}
-                </a>
-              </div>
-            </article>
+              <a
+                href={`mailto:${DONATION_EMAIL}`}
+                className="
+                  mt-4
+                  block
+                  w-fit
+                  break-all
+                  text-sm
+                  font-medium
+                  text-[#fffaf0]
+                  underline
+                  decoration-[#d6ba72]
+                  underline-offset-4
+                  transition-colors
+                  duration-200
+                  hover:text-[#d6ba72]
+                "
+              >
+                {DONATION_EMAIL}
+              </a>
+            </div>
           </div>
         </motion.section>
       </motion.div>
