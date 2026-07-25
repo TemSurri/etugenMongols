@@ -18,6 +18,31 @@ type VolunteerListing = {
   href: string;
 };
 
+/* -------------------------------------------------------------------------- */
+/*                                  Images                                    */
+/* -------------------------------------------------------------------------- */
+
+const VOLUNTEER_IMAGES = {
+  top: "/impact/culture/1.webp",
+  bottom: "/impact/youth/1.webp",
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/*                                  Colors                                    */
+/* -------------------------------------------------------------------------- */
+
+const COLORS = {
+  background: "#303824",
+  heading: "#fffaf0",
+  body: "#e9e2d1",
+  muted: "#cfc8b5",
+  accent: "#d6ba72",
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/*                         Volunteer Opportunities                            */
+/* -------------------------------------------------------------------------- */
+
 const VOLUNTEER_LISTINGS: VolunteerListing[] = [
   {
     id: "naadam-setup",
@@ -39,6 +64,7 @@ const VOLUNTEER_LISTINGS: VolunteerListing[] = [
     },
     href: "/events",
   },
+
   {
     id: "media-support",
     eventTitle: {
@@ -59,6 +85,7 @@ const VOLUNTEER_LISTINGS: VolunteerListing[] = [
     },
     href: "/events",
   },
+
   {
     id: "guest-support",
     eventTitle: {
@@ -81,10 +108,12 @@ const VOLUNTEER_LISTINGS: VolunteerListing[] = [
   },
 ];
 
+/* -------------------------------------------------------------------------- */
+/*                                   Copy                                     */
+/* -------------------------------------------------------------------------- */
+
 const COPY = {
   en: {
-    imageTitle: "Volunteer",
-
     heading: "Get involved",
 
     body:
@@ -99,8 +128,6 @@ const COPY = {
   },
 
   mn: {
-    imageTitle: "Сайн дурын ажил",
-
     heading: "Бидэнтэй нэгдээрэй",
 
     body:
@@ -115,12 +142,25 @@ const COPY = {
   },
 } as const;
 
+/* -------------------------------------------------------------------------- */
+/*                                Animation                                   */
+/* -------------------------------------------------------------------------- */
+
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
-const sectionMotion: Variants = {
+const pageMotion: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const fadeUpMotion: Variants = {
   hidden: {
     opacity: 0,
-    y: 14,
+    y: 18,
   },
 
   show: {
@@ -128,8 +168,44 @@ const sectionMotion: Variants = {
     y: 0,
 
     transition: {
-      duration: 0.5,
+      duration: 0.55,
       ease: easeOut,
+    },
+  },
+};
+
+const listMotion: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.07,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const listingMotion: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 12,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.45,
+      ease: easeOut,
+    },
+  },
+};
+
+const imageColumnMotion: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.12,
     },
   },
 };
@@ -137,7 +213,7 @@ const sectionMotion: Variants = {
 const imageMotion: Variants = {
   hidden: {
     opacity: 0,
-    scale: 0.985,
+    scale: 1.015,
   },
 
   show: {
@@ -145,117 +221,333 @@ const imageMotion: Variants = {
     scale: 1,
 
     transition: {
-      duration: 0.65,
+      duration: 0.75,
       ease: easeOut,
     },
   },
 };
 
+/* -------------------------------------------------------------------------- */
+/*                              Volunteer Page                                */
+/* -------------------------------------------------------------------------- */
+
 function Volunteer({ lang }: VolunteerProps) {
   const safeLang: Lang = lang === "mn" ? "mn" : "en";
   const copy = COPY[safeLang];
-  const listings = VOLUNTEER_LISTINGS;
 
   return (
-    <main className="min-h-screen overflow-visible bg-[#27301d] text-[#fffaf0]">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-6 pb-24 pt-36 md:px-10 md:pb-28 md:pt-40 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-16 lg:px-12 lg:pb-32 lg:pt-40">
-        <motion.aside
-          variants={imageMotion}
+    <main
+      className="min-h-screen"
+      style={{
+        backgroundColor: COLORS.background,
+        color: COLORS.heading,
+      }}
+    >
+      <motion.div
+        variants={pageMotion}
+        initial="hidden"
+        animate="show"
+        className="grid min-h-screen lg:grid-cols-[0.88fr_1.12fr]"
+      >
+        {/* ---------------------------------------------------------------- */}
+        {/* Right Content                                                    */}
+        {/* ---------------------------------------------------------------- */}
+
+        <motion.section
+          variants={fadeUpMotion}
+          className="
+            order-1
+            px-6
+            pb-16
+            pt-32
+            sm:px-8
+            sm:pb-20
+            md:px-10
+            md:pt-36
+            lg:order-2
+            lg:px-14
+            lg:pb-28
+            lg:pt-40
+            xl:px-16
+          "
+          style={{
+            backgroundColor: COLORS.background,
+          }}
+        >
+          <div className="mx-auto w-full max-w-[760px]">
+            {/* Intro */}
+            <motion.header
+              variants={fadeUpMotion}
+              className="max-w-2xl"
+            >
+              <h1
+                className="
+                  text-3xl
+                  font-normal
+                  leading-[1.08]
+                  tracking-tight
+                  sm:text-4xl
+                  md:text-5xl
+                "
+                style={{
+                  color: COLORS.heading,
+                }}
+              >
+                {copy.heading}
+              </h1>
+
+              <p
+                className="
+                  mt-6
+                  max-w-2xl
+                  text-[15px]
+                  leading-8
+                  md:text-base
+                "
+                style={{
+                  color: COLORS.body,
+                }}
+              >
+                {copy.body}
+              </p>
+            </motion.header>
+
+            {/* Opportunities */}
+            <motion.section
+              variants={fadeUpMotion}
+              className="mt-11 md:mt-12"
+            >
+              <div className="border-b border-[#fffaf0]/12 pb-5">
+                <h2
+                  className="
+                    text-xl
+                    font-normal
+                    tracking-tight
+                    md:text-2xl
+                  "
+                  style={{
+                    color: COLORS.heading,
+                  }}
+                >
+                  {copy.listingsTitle}
+                </h2>
+              </div>
+
+              {VOLUNTEER_LISTINGS.length > 0 ? (
+                <motion.div
+                  variants={listMotion}
+                  initial="hidden"
+                  animate="show"
+                >
+                  {VOLUNTEER_LISTINGS.map((listing) => (
+                    <motion.article
+                      key={listing.id}
+                      variants={listingMotion}
+                      className="
+                        grid
+                        gap-5
+                        border-b
+                        border-[#fffaf0]/12
+                        py-7
+                        md:grid-cols-[120px_1fr_auto]
+                        md:items-start
+                        md:gap-7
+                      "
+                    >
+                      {/* Date / Event */}
+                      <div>
+                        <p
+                          className="
+                            text-[10px]
+                            font-medium
+                            uppercase
+                            tracking-[0.2em]
+                          "
+                          style={{
+                            color: COLORS.accent,
+                          }}
+                        >
+                          {listing.date[safeLang]}
+                        </p>
+
+                        <p
+                          className="
+                            mt-2
+                            text-xs
+                            leading-5
+                          "
+                          style={{
+                            color: COLORS.muted,
+                          }}
+                        >
+                          {listing.eventTitle[safeLang]}
+                        </p>
+                      </div>
+
+                      {/* Role */}
+                      <div>
+                        <h3
+                          className="
+                            text-lg
+                            font-normal
+                            leading-6
+                            tracking-[-0.01em]
+                          "
+                          style={{
+                            color: COLORS.heading,
+                          }}
+                        >
+                          {listing.role[safeLang]}
+                        </h3>
+
+                        <p
+                          className="
+                            mt-2
+                            max-w-xl
+                            text-sm
+                            leading-6
+                          "
+                          style={{
+                            color: COLORS.muted,
+                          }}
+                        >
+                          {listing.description[safeLang]}
+                        </p>
+                      </div>
+
+                      {/* Link */}
+                      <Link
+                        to={listing.href}
+                        className="
+                          w-fit
+                          whitespace-nowrap
+                          border
+                          border-[#fffaf0]/30
+                          px-4
+                          py-2
+                          text-[10px]
+                          font-medium
+                          uppercase
+                          tracking-[0.16em]
+                          text-[#fffaf0]
+                          no-underline
+                          transition-colors
+                          duration-200
+                          hover:border-[#d6ba72]
+                          hover:bg-[#d6ba72]
+                          hover:text-[#303824]
+                        "
+                      >
+                        {copy.viewEvent}
+                      </Link>
+                    </motion.article>
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.p
+                  variants={listingMotion}
+                  className="
+                    border-b
+                    border-[#fffaf0]/12
+                    py-7
+                    text-sm
+                    leading-7
+                  "
+                  style={{
+                    color: COLORS.muted,
+                  }}
+                >
+                  {copy.noListings}
+                </motion.p>
+              )}
+            </motion.section>
+          </div>
+        </motion.section>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Left Photos                                                      */}
+        {/* ---------------------------------------------------------------- */}
+
+        <motion.section
+          variants={imageColumnMotion}
           initial="hidden"
           animate="show"
-          className="w-full max-w-[500px] self-start lg:sticky lg:top-32"
+          className="
+            relative
+            order-2
+            overflow-hidden
+            lg:order-1
+          "
         >
-          <div className="bg-[#fffaf0] p-4 text-[#27301d] shadow-[0_20px_55px_rgba(0,0,0,0.18)] sm:p-5">
-            <h1 className="px-1 pb-4 text-4xl font-normal leading-none tracking-tight sm:text-5xl lg:text-6xl">
-              {copy.imageTitle}
-            </h1>
-
-            <div className="relative aspect-[4/3] overflow-hidden bg-[#39422c]">
+          <div
+            className="
+              relative
+              mx-auto
+              w-full
+              max-w-[760px]
+              lg:h-full
+              lg:max-w-none
+            "
+          >
+            {/* Top Photo */}
+            <motion.div
+              variants={imageMotion}
+              className="
+                relative
+                aspect-[16/10]
+                w-full
+                overflow-hidden
+                lg:aspect-auto
+                lg:h-1/2
+              "
+            >
               <img
-                src="/about/founding-group.webp"
-                alt={copy.imageTitle}
+                src={VOLUNTEER_IMAGES.top}
+                alt=""
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+                className="
+                  absolute
+                  inset-0
+                  h-full
+                  w-full
+                  object-cover
+                  object-center
+                "
               />
+            </motion.div>
 
-              <div className="absolute inset-0 bg-black/10" />
-
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/65 via-black/15 to-transparent px-5 pb-5 pt-16">
-                <p className="text-[10px] uppercase tracking-[0.28em] text-[#fffaf0]">
-                  Etugen Mongols
-                </p>
-              </div>
-            </div>
+            {/* Bottom Photo */}
+            <motion.div
+              variants={imageMotion}
+              className="
+                relative
+                aspect-[16/10]
+                w-full
+                overflow-hidden
+                lg:aspect-auto
+                lg:h-1/2
+              "
+            >
+              <img
+                src={VOLUNTEER_IMAGES.bottom}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="
+                  absolute
+                  inset-0
+                  h-full
+                  w-full
+                  object-cover
+                  object-center
+                "
+              />
+            </motion.div>
           </div>
-        </motion.aside>
-
-        <motion.section
-          variants={sectionMotion}
-          initial="hidden"
-          animate="show"
-          className="w-full"
-        >
-          <header className="max-w-2xl">
-            <h2 className="text-3xl font-normal leading-tight tracking-tight sm:text-4xl md:text-5xl">
-              {copy.heading}
-            </h2>
-
-            <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#e7dfc8] md:text-base">
-              {copy.body}
-            </p>
-          </header>
-
-          <section className="mt-12">
-            <h2 className="pb-5 text-xl font-normal md:text-2xl">
-              {copy.listingsTitle}
-            </h2>
-
-            {listings.length > 0 ? (
-              <div>
-                {listings.map((listing) => (
-                  <article
-                    key={listing.id}
-                    className="grid gap-5 border-b border-[#fffaf0]/20 py-7 md:grid-cols-[120px_1fr_auto] md:items-start md:gap-7"
-                  >
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#d5bd79]">
-                        {listing.date[safeLang]}
-                      </p>
-
-                      <p className="mt-2 text-xs leading-5 text-[#cfc7b2]">
-                        {listing.eventTitle[safeLang]}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-normal leading-6 text-[#fffaf0]">
-                        {listing.role[safeLang]}
-                      </h3>
-
-                      <p className="mt-2 max-w-xl text-sm leading-6 text-[#cfc7b2]">
-                        {listing.description[safeLang]}
-                      </p>
-                    </div>
-
-                    <Link
-                      to={listing.href}
-                      className="w-fit whitespace-nowrap border border-[#fffaf0]/50 px-4 py-2 text-[10px] uppercase tracking-[0.16em] text-[#fffaf0] no-underline transition-colors duration-200 hover:border-[#d5bd79] hover:bg-[#d5bd79] hover:text-[#27301d]"
-                    >
-                      {copy.viewEvent}
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <p className="border-b border-[#fffaf0]/20 py-7 text-sm leading-7 text-[#cfc7b2]">
-                {copy.noListings}
-              </p>
-            )}
-          </section>
         </motion.section>
-      </div>
+      </motion.div>
     </main>
   );
 }
