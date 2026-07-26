@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Link } from "react-router-dom";
@@ -55,8 +56,6 @@ const COLORS = {
 
 /* -------------------------------------------------------------------------- */
 /*                           Volunteer Opportunities                          */
-/*                                                                            */
-/* Temporary example listings. Replace these with real opportunities later.  */
 /* -------------------------------------------------------------------------- */
 
 const VOLUNTEER_LISTINGS: VolunteerListing[] = [
@@ -354,15 +353,18 @@ const sectionMotion: Variants = {
   },
 };
 
+/*
+ * Fade images in without scaling the entire grid section.
+ * Scaling full-width sections can temporarily extend beyond
+ * the viewport and create horizontal scrollbar/layout shifts.
+ */
 const imageMotion: Variants = {
   hidden: {
     opacity: 0,
-    scale: 1.015,
   },
 
   show: {
     opacity: 1,
-    scale: 1,
 
     transition: {
       duration: 0.7,
@@ -396,7 +398,6 @@ function Volunteer({ lang }: VolunteerProps) {
   const safeLang: Lang = lang === "mn" ? "mn" : "en";
   const copy = COPY[safeLang];
 
-  /* Smoothly move from the introduction to the opportunities quadrant. */
   const scrollToOpportunities = () => {
     document
       .getElementById("volunteer-opportunities")
@@ -408,7 +409,7 @@ function Volunteer({ lang }: VolunteerProps) {
 
   return (
     <main
-      className="min-h-screen"
+      className="min-h-screen overflow-x-clip"
       style={{
         backgroundColor: COLORS.green,
       }}
@@ -483,7 +484,6 @@ function Volunteer({ lang }: VolunteerProps) {
           "
         >
           <div className="mx-auto w-full max-w-[620px]">
-            {/* Main volunteer introduction */}
             <h1
               className="
                 text-3xl
@@ -510,10 +510,6 @@ function Volunteer({ lang }: VolunteerProps) {
               {copy.body}
             </p>
 
-            {/* -------------------------------------------------------------- */}
-            {/* Opportunities action                                           */}
-            {/* -------------------------------------------------------------- */}
-
             <button
               type="button"
               onClick={scrollToOpportunities}
@@ -537,11 +533,6 @@ function Volunteer({ lang }: VolunteerProps) {
             >
               {copy.opportunitiesButton}
             </button>
-
-            {/* -------------------------------------------------------------- */}
-            {/* Gallery                                                        */}
-            {/* The copy and button stay together so the relationship is clear.*/}
-            {/* -------------------------------------------------------------- */}
 
             <div
               className="
@@ -624,7 +615,6 @@ function Volunteer({ lang }: VolunteerProps) {
               lg:min-h-0
             "
           >
-            {/* Opportunities heading */}
             <header
               className="
                 shrink-0
@@ -658,11 +648,6 @@ function Volunteer({ lang }: VolunteerProps) {
                 {copy.listingsHint}
               </p>
             </header>
-
-            {/* -------------------------------------------------------------- */}
-            {/* Scrollable opportunities                                       */}
-            {/* Desktop scrolls internally; mobile expands naturally.          */}
-            {/* -------------------------------------------------------------- */}
 
             {VOLUNTEER_LISTINGS.length > 0 ? (
               <div
@@ -698,7 +683,6 @@ function Volunteer({ lang }: VolunteerProps) {
                         sm:gap-6
                       "
                     >
-                      {/* Date and event */}
                       <div>
                         <p
                           className="
@@ -724,7 +708,6 @@ function Volunteer({ lang }: VolunteerProps) {
                         </p>
                       </div>
 
-                      {/* Role information */}
                       <div>
                         <h3
                           className="
@@ -750,7 +733,6 @@ function Volunteer({ lang }: VolunteerProps) {
                         </p>
                       </div>
 
-                      {/* Related event */}
                       <Link
                         to={listing.href}
                         className="
@@ -823,3 +805,4 @@ function Volunteer({ lang }: VolunteerProps) {
 }
 
 export default Volunteer;
+

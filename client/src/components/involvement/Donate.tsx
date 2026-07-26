@@ -1,3 +1,4 @@
+
 "use client";
 
 import { memo } from "react";
@@ -38,7 +39,6 @@ const COLORS = {
 
 const COPY = {
   en: {
-    /* Financial donations */
     heading: "Donate with us",
 
     body:
@@ -49,7 +49,6 @@ const COPY = {
     unavailable:
       "Online donations are not available yet. For now, financial donations can be sent by bank e-transfer to:",
 
-    /* Non-monetary donations */
     itemsTitle: "Items and materials",
 
     itemsBody:
@@ -60,7 +59,6 @@ const COPY = {
   },
 
   mn: {
-    /* Financial donations */
     heading: "Биднийг хандиваар дэмжээрэй",
 
     body:
@@ -71,7 +69,6 @@ const COPY = {
     unavailable:
       "Онлайн хандив одоогоор боломжгүй байна. Одоохондоо мөнгөн хандивыг банкны e-transfer хэлбэрээр дараах хаяг руу илгээж болно:",
 
-    /* Non-monetary donations */
     itemsTitle: "Эд зүйл болон материал",
 
     itemsBody:
@@ -115,15 +112,21 @@ const sectionMotion: Variants = {
   },
 };
 
+/*
+ * Images only fade in.
+ *
+ * We intentionally don't scale the section anymore.
+ * Scaling a full-width grid section can temporarily make
+ * its painted area wider than the viewport and cause
+ * scrollbar/layout-shift artifacts.
+ */
 const imageMotion: Variants = {
   hidden: {
     opacity: 0,
-    scale: 1.015,
   },
 
   show: {
     opacity: 1,
-    scale: 1,
 
     transition: {
       duration: 0.7,
@@ -142,7 +145,7 @@ function Donate({ lang }: DonateProps) {
 
   return (
     <main
-      className="min-h-screen"
+      className="min-h-screen overflow-x-clip"
       style={{
         backgroundColor: COLORS.green,
       }}
@@ -184,7 +187,6 @@ function Donate({ lang }: DonateProps) {
           "
         >
           <div className="mx-auto w-full max-w-[620px]">
-            {/* Main heading */}
             <h1
               className="
                 text-3xl
@@ -198,7 +200,6 @@ function Donate({ lang }: DonateProps) {
               {copy.heading}
             </h1>
 
-            {/* Single financial donation explanation */}
             <p
               className="
                 mt-6
@@ -212,7 +213,6 @@ function Donate({ lang }: DonateProps) {
               {copy.body}
             </p>
 
-            {/* Donate action */}
             <div className="mt-7">
               <button
                 type="button"
@@ -234,7 +234,6 @@ function Donate({ lang }: DonateProps) {
                 {copy.donateButton}
               </button>
 
-              {/* Current e-transfer method */}
               <div className="mt-4 border-l-2 border-[#d6ba72] pl-4">
                 <p className="max-w-lg text-sm leading-6 text-[#69705c]">
                   {copy.unavailable}
@@ -377,7 +376,6 @@ function Donate({ lang }: DonateProps) {
               {copy.itemsBody}
             </p>
 
-            {/* Contact / donation procedure */}
             <div className="mt-7 border-t border-[#fffaf0]/15 pt-7">
               <p
                 className="
@@ -419,3 +417,4 @@ function Donate({ lang }: DonateProps) {
 }
 
 export default memo(Donate);
+
