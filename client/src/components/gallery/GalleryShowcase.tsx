@@ -272,14 +272,31 @@ function GalleryShowcase({
   const hasResults = filteredItems.length > 0;
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] pt-20 text-[#fffaf0]">
+    /*
+     * IMPORTANT:
+     *
+     * Do not put overflow-hidden on this section.
+     * Sticky descendants need an unrestricted scroll ancestor.
+     */
+    <section className="relative min-h-screen bg-[#27301d] pt-20 text-[#fffaf0]">
+      {/* One fixed background shared by every view */}
       <PageBackground />
 
       <motion.div
         variants={entranceVariants}
         initial="hidden"
         animate="show"
-        className="relative z-10 mx-auto max-w-7xl px-5 pb-24 pt-10 sm:px-6 md:px-10 lg:px-12"
+        className="
+          relative z-10
+          mx-auto
+          max-w-7xl
+          px-5
+          pb-24
+          pt-18
+          sm:px-6
+          md:px-10
+          lg:px-12
+        "
       >
         <GalleryHeader copy={copy} />
 
@@ -288,7 +305,7 @@ function GalleryShowcase({
         ) : (
           <>
             {/* =============================================
-                DESKTOP PAGE-LEVEL VIEW CONTROL
+                DESKTOP VIEW CONTROL
             ============================================= */}
 
             <div className="hidden md:block">
@@ -300,13 +317,38 @@ function GalleryShowcase({
             </div>
 
             {/* =============================================
-                MAIN GALLERY LAYOUT
+                CONTENT + STICKY INDEX
             ============================================= */}
 
-            <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-10">
-              {/* Mobile: first
-                  Desktop: right-hand side */}
-              <div className="order-1 lg:order-2">
+            <div
+              className="
+                mt-8
+                grid
+                gap-8
+                lg:grid-cols-[minmax(0,1fr)_17rem]
+                lg:items-start
+                lg:gap-10
+              "
+            >
+              {/* =================================================
+                  SEARCH / INDEX
+
+                  Mobile:
+                  stays above content.
+
+                  Desktop:
+                  moves right and stays locked while page scrolls.
+              ================================================= */}
+
+              <div
+                className="
+                  order-1
+                  lg:order-2
+                  lg:sticky
+                  lg:top-28
+                  lg:self-start
+                "
+              >
                 <GalleryLegend
                   copy={copy}
                   query={query}
@@ -315,11 +357,15 @@ function GalleryShowcase({
                 />
               </div>
 
-              {/* Main content */}
+              {/* =================================================
+                  MAIN CONTENT
+              ================================================= */}
+
               <main className="order-2 min-w-0 lg:order-1">
                 {hasResults ? (
                   <>
                     {/* Mobile is always timeline */}
+
                     <div className="md:hidden">
                       <GalleryTimeline
                         items={filteredItems}
@@ -327,7 +373,8 @@ function GalleryShowcase({
                       />
                     </div>
 
-                    {/* Desktop follows selected view */}
+                    {/* Desktop follows selected mode */}
+
                     <div className="hidden md:block">
                       {viewMode === "grid" ? (
                         <GalleryGrid
@@ -355,28 +402,76 @@ function GalleryShowcase({
 }
 
 /* =========================================================
-   BACKGROUND
+   FIXED PAGE BACKGROUND
 ========================================================= */
 
 const PageBackground = memo(
   function PageBackground() {
     return (
-      <div className="absolute inset-0">
+      /*
+       * Fixed means:
+       *
+       * - always viewport-sized
+       * - never grows with gallery content
+       * - never gets stretched because the timeline is long
+       * - Grid and Timeline see the exact same image
+       * - content scrolls over it
+       */
+      <div
+        className="
+          pointer-events-none
+          fixed
+          inset-0
+          z-0
+          h-screen
+          w-screen
+          overflow-hidden
+        "
+        aria-hidden="true"
+      >
         <img
           src={BACKGROUND_IMAGE}
           alt=""
-          aria-hidden="true"
           width={1920}
           height={1080}
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          className="h-full w-full object-cover object-center"
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            object-center
+          "
         />
 
-        <div className="absolute inset-0 bg-[#27301d]/78" />
+        {/* Consistent overlay for both views */}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#27301d]/40 via-[#27301d]/64 to-[#202517]/95" />
+        <div className="absolute inset-0 bg-black/48" />
+
+        <div
+          className="
+            absolute
+            inset-0
+            bg-gradient-to-b
+            from-black/28
+            via-black/32
+            to-black/60
+          "
+        />
+
+        <div
+          className="
+            absolute
+            inset-0
+            bg-gradient-to-r
+            from-black/30
+            via-transparent
+            to-black/18
+          "
+        />
       </div>
     );
   },
@@ -419,24 +514,22 @@ const GalleryViewBar = memo(
     return (
       <div
         className="
-          flex items-center justify-between
-          border-y border-[#e1d2a6]/25
-          bg-[#fffaf0]/8
-          px-5 py-4
-          backdrop-blur-sm
+          flex
+          items-center
+          justify-between
+          border-y
+          border-[#fffaf0]/20
+          bg-[#fffaf0]/10
+          px-5
+          py-4
+          backdrop-blur-md
         "
       >
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e1d2a6]">
-            {copy.pastEventsTitle}
-          </p>
+        <h2 className="text-2xl font-semibold tracking-tight text-[#fffaf0] md:text-3xl">
+          {copy.pastEventsTitle}
+        </h2>
 
-          <p className="mt-1 text-sm text-[#f3ead2]/65">
-            {copy.view}
-          </p>
-        </div>
-
-        <div className="inline-flex border border-[#fffaf0]/20 bg-[#fffaf0]/8 p-1">
+        <div className="inline-flex border border-[#fffaf0]/20 bg-black/10 p-1">
           <ViewButton
             active={viewMode === "grid"}
             onClick={() =>
@@ -478,14 +571,18 @@ function ViewButton({
       aria-pressed={active}
       className={[
         `
-          flex items-center justify-center
+          flex
+          items-center
+          justify-center
           gap-2
-          px-5 py-2.5
+          px-5
+          py-2.5
           text-[10px]
           font-bold
           uppercase
           tracking-[0.17em]
           transition-all
+
           focus-visible:outline-none
           focus-visible:ring-2
           focus-visible:ring-[#fffaf0]/60
@@ -515,10 +612,33 @@ function GridIcon() {
       strokeWidth="1.8"
       className="h-4 w-4"
     >
-      <rect x="3" y="3" width="7" height="7" />
-      <rect x="14" y="3" width="7" height="7" />
-      <rect x="3" y="14" width="7" height="7" />
-      <rect x="14" y="14" width="7" height="7" />
+      <rect
+        x="3"
+        y="3"
+        width="7"
+        height="7"
+      />
+
+      <rect
+        x="14"
+        y="3"
+        width="7"
+        height="7"
+      />
+
+      <rect
+        x="3"
+        y="14"
+        width="7"
+        height="7"
+      />
+
+      <rect
+        x="14"
+        y="14"
+        width="7"
+        height="7"
+      />
     </svg>
   );
 }
@@ -534,9 +654,25 @@ function TimelineIcon() {
       className="h-4 w-4"
     >
       <path d="M7 3v18" />
-      <circle cx="7" cy="6" r="2" />
-      <circle cx="7" cy="12" r="2" />
-      <circle cx="7" cy="18" r="2" />
+
+      <circle
+        cx="7"
+        cy="6"
+        r="2"
+      />
+
+      <circle
+        cx="7"
+        cy="12"
+        r="2"
+      />
+
+      <circle
+        cx="7"
+        cy="18"
+        r="2"
+      />
+
       <path d="M11 6h10" />
       <path d="M11 12h7" />
       <path d="M11 18h10" />
@@ -561,7 +697,21 @@ const GalleryLegend = memo(
     items: GalleryCardItem[];
   }) {
     return (
-      <aside className="bg-[#fffaf0] p-5 text-[#27301d] shadow-[0_18px_50px_rgba(18,23,12,0.24)] lg:sticky lg:top-28">
+      /*
+       * Sticky is controlled by the outer grid column now.
+       *
+       * Keeping the aside itself simple avoids nested sticky
+       * positioning and makes Grid/Timeline behave identically.
+       */
+      <aside
+        className="
+          w-full
+          bg-[#fffaf0]
+          p-5
+          text-[#27301d]
+          shadow-[0_18px_50px_rgba(0,0,0,0.28)]
+        "
+      >
         <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a762f]">
           {copy.index}
         </p>
@@ -580,6 +730,10 @@ const GalleryLegend = memo(
     );
   },
 );
+
+/* =========================================================
+   SEARCH
+========================================================= */
 
 function GallerySearch({
   copy,
@@ -605,15 +759,20 @@ function GallerySearch({
         placeholder={copy.searchPlaceholder}
         autoComplete="off"
         className="
-          mt-2 w-full
-          border border-[#d8caa5]
+          mt-2
+          w-full
+          border
+          border-[#d8caa5]
           bg-white/70
-          px-3 py-2.5
+          px-3
+          py-2.5
           text-sm
           text-[#27301d]
           outline-none
           transition
+
           placeholder:text-[#4e593c]/40
+
           focus:border-[#7b844e]
           focus:bg-white
         "
@@ -621,6 +780,10 @@ function GallerySearch({
     </label>
   );
 }
+
+/* =========================================================
+   INDEX
+========================================================= */
 
 function GalleryIndex({
   copy,
@@ -631,13 +794,34 @@ function GalleryIndex({
 }) {
   return (
     <div className="mt-6 border-t border-[#d8caa5]/65 pt-5">
-      <div className="flex max-h-[22rem] flex-col gap-3 overflow-y-auto pr-1">
+      {/*
+       * Its own scroll area prevents a long index from
+       * pushing the search box off-screen.
+       */}
+      <div
+        className="
+          flex
+          max-h-[22rem]
+          flex-col
+          gap-3
+          overflow-y-auto
+          overscroll-contain
+          pr-1
+        "
+      >
         {items.length > 0 ? (
           items.map((item) => (
             <Link
               key={item.id}
               to={item.link}
-              className="group text-sm leading-5 text-[#4e593c]/80 transition-colors hover:text-[#27301d]"
+              className="
+                group
+                text-sm
+                leading-5
+                text-[#4e593c]/80
+                transition-colors
+                hover:text-[#27301d]
+              "
             >
               <span className="block font-medium">
                 {item.title}
@@ -661,7 +845,7 @@ function GalleryIndex({
 }
 
 /* =========================================================
-   GRID VIEW
+   GRID
 ========================================================= */
 
 const GalleryGrid = memo(
@@ -716,6 +900,10 @@ const GalleryGrid = memo(
   },
 );
 
+/* =========================================================
+   GRID CARD
+========================================================= */
+
 const GalleryCard = memo(
   function GalleryCard({
     item,
@@ -737,11 +925,32 @@ const GalleryCard = memo(
       <Link
         to={item.link}
         aria-label={`${viewAlbum}: ${item.title}`}
-        className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e1d2a6]"
+        className="
+          group
+          block
+
+          focus:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-[#e1d2a6]
+        "
       >
         <article>
           <div
-            className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_18px_55px_rgba(18,23,12,0.25)] transition duration-300 group-hover:-translate-y-1`}
+            className={`
+              ${frame}
+
+              relative
+              overflow-hidden
+              bg-[#27301d]/25
+
+              shadow-[0_18px_55px_rgba(0,0,0,0.28)]
+
+              transition
+              duration-300
+
+              group-hover:-translate-y-1
+              group-hover:shadow-[0_24px_68px_rgba(0,0,0,0.34)]
+            `}
           >
             <img
               src={item.imageSrc}
@@ -755,12 +964,41 @@ const GalleryCard = memo(
               fetchPriority={
                 index < 3 ? "high" : "auto"
               }
-              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              className="
+                h-full
+                w-full
+                object-cover
+
+                transition-transform
+                duration-700
+                ease-out
+
+                group-hover:scale-[1.04]
+              "
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#27301d]/50 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/44 via-transparent to-transparent" />
 
-            <span className="absolute bottom-3 right-3 bg-[#fffaf0]/92 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#27301d] shadow-sm">
+            <span
+              className="
+                absolute
+                bottom-3
+                right-3
+
+                bg-[#fffaf0]/92
+                px-3
+                py-1.5
+
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.16em]
+                text-[#27301d]
+
+                shadow-sm
+                backdrop-blur-sm
+              "
+            >
               {viewAlbum} →
             </span>
           </div>
@@ -777,7 +1015,7 @@ const GalleryCard = memo(
 );
 
 /* =========================================================
-   TIMELINE VIEW
+   TIMELINE
 ========================================================= */
 
 const GalleryTimeline = memo(
@@ -803,11 +1041,25 @@ const GalleryTimeline = memo(
           duration: 0.28,
           ease: "easeOut",
         }}
-        className="relative pb-6 md:pb-0"
+        className="
+          relative
+          pb-8
+          md:pb-12
+        "
       >
+        {/* Timeline line */}
+
         <div
           aria-hidden="true"
-          className="absolute left-4 top-0 h-full w-px bg-[#e1d2a6]/45 md:left-1/2"
+          className="
+            absolute
+            left-4
+            top-0
+            h-full
+            w-px
+            bg-[#e1d2a6]/45
+            md:left-1/2
+          "
         />
 
         <div className="space-y-16 md:space-y-20 lg:space-y-24">
@@ -824,6 +1076,10 @@ const GalleryTimeline = memo(
     );
   },
 );
+
+/* =========================================================
+   TIMELINE ITEM
+========================================================= */
 
 const GalleryTimelineItem = memo(
   function GalleryTimelineItem({
@@ -846,9 +1102,20 @@ const GalleryTimelineItem = memo(
           once: true,
           amount: 0.15,
         }}
-        className="relative grid gap-7 pl-10 md:grid-cols-2 md:gap-16 md:pl-0"
+        className="
+          relative
+          grid
+          gap-7
+          pl-10
+
+          md:grid-cols-2
+          md:gap-16
+          md:pl-0
+        "
       >
         <TimelineDot />
+
+        {/* Image/card side */}
 
         <div
           className={
@@ -870,6 +1137,8 @@ const GalleryTimelineItem = memo(
           />
         </div>
 
+        {/* Description side */}
+
         <TimelineGalleryDetails
           item={item}
           copy={copy}
@@ -880,16 +1149,38 @@ const GalleryTimelineItem = memo(
   },
 );
 
+/* =========================================================
+   TIMELINE DOT
+========================================================= */
+
 function TimelineDot() {
   return (
     <div
       aria-hidden="true"
-      className="absolute left-4 top-8 z-10 -translate-x-1/2 md:left-1/2"
+      className="
+        absolute
+        left-4
+        top-8
+        z-10
+        -translate-x-1/2
+        md:left-1/2
+      "
     >
-      <div className="h-3 w-3 bg-[#d7c896] shadow-[0_0_0_6px_rgba(47,51,32,0.92)]" />
+      <div
+        className="
+          h-3
+          w-3
+          bg-[#d7c896]
+          shadow-[0_0_0_6px_rgba(30,32,24,0.9)]
+        "
+      />
     </div>
   );
 }
+
+/* =========================================================
+   TIMELINE DATE
+========================================================= */
 
 function TimelineDate({
   item,
@@ -919,6 +1210,10 @@ function TimelineDate({
   );
 }
 
+/* =========================================================
+   TIMELINE CARD
+========================================================= */
+
 const TimelineGalleryCard = memo(
   function TimelineGalleryCard({
     item,
@@ -933,7 +1228,25 @@ const TimelineGalleryCard = memo(
       <Link
         to={item.link}
         aria-label={`${copy.viewAlbum}: ${item.title}`}
-        className="group block overflow-hidden bg-[#fffaf0] text-[#27301d] shadow-[0_18px_50px_rgba(18,23,12,0.28)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e1d2a6]"
+        className="
+          group
+          block
+          overflow-hidden
+
+          bg-[#fffaf0]
+          text-[#27301d]
+
+          shadow-[0_18px_50px_rgba(0,0,0,0.3)]
+
+          transition-transform
+          duration-300
+
+          hover:-translate-y-1
+
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-[#e1d2a6]
+        "
       >
         <div className="relative aspect-[16/10] overflow-hidden bg-[#efe2bf]">
           <img
@@ -948,14 +1261,37 @@ const TimelineGalleryCard = memo(
             fetchPriority={
               index < 2 ? "high" : "auto"
             }
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+            className="
+              h-full
+              w-full
+              object-cover
+
+              transition-transform
+              duration-700
+              ease-out
+
+              group-hover:scale-[1.035]
+            "
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#27301d]/35 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-transparent" />
         </div>
 
         <div className="p-5 md:p-6">
-          <span className="inline-flex bg-[#eee7d4] px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#6f7449]">
+          <span
+            className="
+              inline-flex
+              bg-[#eee7d4]
+              px-3
+              py-1.5
+
+              text-[9px]
+              font-bold
+              uppercase
+              tracking-[0.18em]
+              text-[#6f7449]
+            "
+          >
             {item.year || item.date}
           </span>
 
@@ -963,7 +1299,17 @@ const TimelineGalleryCard = memo(
             {item.title}
           </h2>
 
-          <span className="mt-5 inline-flex text-[10px] font-bold uppercase tracking-[0.18em] text-[#6f7449]">
+          <span
+            className="
+              mt-5
+              inline-flex
+              text-[10px]
+              font-bold
+              uppercase
+              tracking-[0.18em]
+              text-[#6f7449]
+            "
+          >
             {copy.viewAlbum} →
           </span>
         </div>
@@ -971,6 +1317,10 @@ const TimelineGalleryCard = memo(
     );
   },
 );
+
+/* =========================================================
+   TIMELINE DETAILS
+========================================================= */
 
 function TimelineGalleryDetails({
   item,
@@ -1008,13 +1358,30 @@ function TimelineGalleryDetails({
           {item.title}
         </h3>
 
-        <p className="mt-4 text-sm leading-7 text-[#f3ead2]/80 md:text-[15px] md:leading-8">
+        <p className="mt-4 text-sm leading-7 text-[#f3ead2]/88 md:text-[15px] md:leading-8">
           {item.desc}
         </p>
 
         <Link
           to={item.link}
-          className="mt-6 inline-flex border-b border-[#e1d2a6]/50 pb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1d2a6] transition-colors hover:text-[#fffaf0]"
+          className="
+            mt-6
+            inline-flex
+            border-b
+            border-[#e1d2a6]/50
+            pb-1
+
+            text-[10px]
+            font-bold
+            uppercase
+            tracking-[0.2em]
+            text-[#e1d2a6]
+
+            transition-colors
+
+            hover:border-[#fffaf0]
+            hover:text-[#fffaf0]
+          "
         >
           {copy.viewAlbum} →
         </Link>
@@ -1024,7 +1391,7 @@ function TimelineGalleryDetails({
 }
 
 /* =========================================================
-   EMPTY STATES
+   EMPTY GALLERY
 ========================================================= */
 
 const EmptyGallery = memo(
@@ -1034,18 +1401,33 @@ const EmptyGallery = memo(
     copy: GalleryCopy;
   }) {
     return (
-      <div className="mx-auto max-w-xl border border-[#fffaf0]/15 bg-[#fffaf0]/8 p-7 text-center backdrop-blur-sm">
+      <div
+        className="
+          mx-auto
+          max-w-xl
+          border
+          border-[#fffaf0]/15
+          bg-black/20
+          p-7
+          text-center
+          backdrop-blur-md
+        "
+      >
         <h2 className="text-2xl font-semibold text-[#fffaf0]">
           {copy.emptyTitle}
         </h2>
 
-        <p className="mt-3 text-sm leading-7 text-[#f3ead2]/65">
+        <p className="mt-3 text-sm leading-7 text-[#f3ead2]/70">
           {copy.emptyBody}
         </p>
       </div>
     );
   },
 );
+
+/* =========================================================
+   NO RESULTS
+========================================================= */
 
 const NoResults = memo(
   function NoResults({
@@ -1054,7 +1436,17 @@ const NoResults = memo(
     copy: GalleryCopy;
   }) {
     return (
-      <p className="border border-[#fffaf0]/15 bg-[#fffaf0]/8 p-6 text-sm text-[#f3ead2]/70 backdrop-blur-sm">
+      <p
+        className="
+          border
+          border-[#fffaf0]/15
+          bg-black/20
+          p-6
+          text-sm
+          text-[#f3ead2]/75
+          backdrop-blur-md
+        "
+      >
         {copy.noResults}
       </p>
     );
