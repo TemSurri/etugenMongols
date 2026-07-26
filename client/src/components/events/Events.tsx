@@ -2,421 +2,548 @@
 
 import { memo, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion, cubicBezier, type Variants } from "framer-motion";
+import {
+  cubicBezier,
+  motion,
+  type Variants,
+} from "framer-motion";
 
 import { events } from "../../static_events";
 
+/* =========================================================
+   TYPES
+========================================================= */
+
 type Lang = "en" | "mn";
 
-type EventsProps = {
+type EventsMainProps = {
   lang: Lang;
 };
 
-type TimelineItem = {
-  event: (typeof events)[number];
-  isUpcoming: boolean;
+type UpcomingEventItem = {
+  id: string;
   title: string;
-  description: string;
   imageSrc: string;
   imageAlt: string;
-  year: string;
+  date: string;
+  time?: string;
+  location?: string;
   href: string;
-  enabledActions: NonNullable<(typeof events)[number]["upcoming"]>["actions"];
 };
 
 type EventsCopy = {
-  timelineTitle: string;
-  timelineNote: string;
+  title: string;
+
   upcoming: string;
-  pastEvent: string;
   viewEvent: string;
-  viewGallery: string;
-  eventDetails: string;
-  time: string;
-  location: string;
-  actions: string;
+
+  noEventsTitle: string;
+  noEventsBody: string;
+  noEventsLink: string;
+
+  yearlyTitle: string;
+  yearlyBody: string;
+
+  naadamTitle: string;
+  naadamBody: string;
+
+  winterTitle: string;
+  winterBody: string;
+
+  galleryButton: string;
+  volunteerButton: string;
+  donateButton: string;
 };
 
-const BACKGROUND_IMAGE = "/landingpage.webp";
+/* =========================================================
+   COPY
+========================================================= */
 
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
-
-const itemMotion: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: easeOut },
-  },
-};
-
-const EVENTS_COPY = {
+const COPY = {
   en: {
-    timelineTitle: "Event Timeline",
-    timelineNote: "See upcoming and past events",
+    title: "Upcoming Events",
+
     upcoming: "Upcoming",
-    pastEvent: "Past Event",
     viewEvent: "View Event",
-    viewGallery: "View Gallery",
-    eventDetails: "Event Details",
-    time: "Time",
-    location: "Location",
-    actions: "Actions",
+
+    noEventsTitle: "No upcoming events right now",
+    noEventsBody:
+      "Nothing is currently scheduled, but we hold community events throughout the year. Read more below about the celebrations we usually organize.",
+    noEventsLink: "See what we usually do",
+
+    yearlyTitle: "Events throughout the year",
+
+    yearlyBody:
+      "Etugen Mongols brings the community together throughout the year through a small number of recurring celebrations and gatherings. These events are opportunities to reconnect, celebrate Mongolian culture, and spend time together as a community.",
+
+    naadamTitle: "Summer Naadam",
+    naadamBody:
+      "Each summer, usually around early to mid-July, we organize a Naadam celebration for the community. It is a chance for families and friends to gather, celebrate Mongolian culture, and take part in a tradition that remains an important part of Mongolian identity.",
+
+    winterTitle: "Winter & Christmas gatherings",
+    winterBody:
+      "During the winter, we also organize community parties and occasional Christmas celebrations. These gatherings are more relaxed and social, giving families and community members another chance to meet, celebrate together, and stay connected through the colder months.",
+
+    galleryButton: "Browse Past Events",
+    volunteerButton: "Volunteer With Us",
+    donateButton: "Support Our Events",
   },
+
   mn: {
-    timelineTitle: "Арга хэмжээний цаг хугацаа",
-    timelineNote: "Удахгүй болох болон өнгөрсөн арга хэмжээнүүдийг үзэх",
-    upcoming: "Удахгүй болох",
-    pastEvent: "Өнгөрсөн арга хэмжээ",
+    title: "Удахгүй болох арга хэмжээ",
+
+    upcoming: "Удахгүй",
     viewEvent: "Арга хэмжээг үзэх",
-    viewGallery: "Зургийн цомог үзэх",
-    eventDetails: "Арга хэмжээний мэдээлэл",
-    time: "Цаг",
-    location: "Байршил",
-    actions: "Үйлдлүүд",
+
+    noEventsTitle: "Одоогоор удахгүй болох арга хэмжээ алга",
+    noEventsBody:
+      "Одоогоор товлогдсон арга хэмжээ байхгүй байна. Гэхдээ бид жилийн турш олон нийтийн арга хэмжээ зохион байгуулдаг. Доорх хэсгээс бидний тогтмол зохион байгуулдаг баяр, уулзалтуудын талаар уншина уу.",
+    noEventsLink: "Бидний тогтмол арга хэмжээг үзэх",
+
+    yearlyTitle: "Жилийн турш зохион байгуулдаг арга хэмжээнүүд",
+
+    yearlyBody:
+      "Etugen Mongols нь жилийн турш цөөн хэдэн тогтмол баяр, уулзалтаар дамжуулан олон нийтийг нэгтгэдэг. Эдгээр арга хэмжээ нь хүмүүс дахин уулзах, Монголын соёлоо тэмдэглэх, хамтдаа цагийг өнгөрөөх боломж болдог.",
+
+    naadamTitle: "Зуны Наадам",
+    naadamBody:
+      "Жил бүрийн зун, ихэвчлэн долдугаар сарын эхэн болон дунд үеэр бид олон нийтэд зориулсан Наадмын баяр зохион байгуулдаг. Энэ нь гэр бүл, найз нөхөдтэйгээ уулзаж, Монголын соёлоо тэмдэглэн, Монголын үнэт уламжлалыг хамтдаа хуваалцах боломж юм.",
+
+    winterTitle: "Өвлийн болон Зул сарын уулзалтууд",
+    winterBody:
+      "Өвлийн улиралд бид олон нийтийн үдэшлэг болон зарим Зул сарын баярын уулзалтуудыг зохион байгуулдаг. Эдгээр нь илүү тайван, нийгмийн шинжтэй арга хэмжээ бөгөөд гэр бүл, олон нийтийн гишүүд дахин уулзаж, хамтдаа баярлах боломж болдог.",
+
+    galleryButton: "Өмнөх арга хэмжээнүүд",
+    volunteerButton: "Сайн дурын ажилтан болох",
+    donateButton: "Арга хэмжээг дэмжих",
   },
 } as const satisfies Record<Lang, EventsCopy>;
 
-function getYearFromDate(date: string) {
-  return date.match(/\b(20\d{2}|19\d{2})\b/)?.[0] ?? date;
-}
+/* =========================================================
+   MOTION
+========================================================= */
+
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
+
+const reveal: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 12,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.45,
+      ease: easeOut,
+    },
+  },
+};
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function getEventImage(event: (typeof events)[number]) {
   return event.coverImage.lowRes || event.coverImage.highRes;
 }
 
-function Events({ lang }: EventsProps) {
-  const copy = EVENTS_COPY[lang];
+/* =========================================================
+   MAIN
+========================================================= */
 
-  const timelineItems = useMemo<TimelineItem[]>(
+function EventsMain({ lang }: EventsMainProps) {
+  const safeLang: Lang =
+    lang === "en" || lang === "mn" ? lang : "en";
+
+  const copy = COPY[safeLang];
+
+  const upcomingEvents = useMemo<UpcomingEventItem[]>(
     () =>
-      events.map((event) => {
-        const isUpcoming = event.status === "upcoming";
-
-        return {
-          event,
-          isUpcoming,
-          title: event.title[lang],
-          description: event.description[lang],
+      events
+        .filter((event) => event.status === "upcoming")
+        .map((event) => ({
+          id: event.id,
+          title: event.title[safeLang],
           imageSrc: getEventImage(event),
-          imageAlt: event.coverImage.alt[lang],
-          year: getYearFromDate(event.date),
-          href: isUpcoming ? `/events/${event.id}` : `/gallery/${event.id}`,
-          enabledActions:
-            event.upcoming?.actions.filter((action) => action.enabled) ?? [],
-        };
-      }),
-    [lang]
+          imageAlt: event.coverImage.alt[safeLang],
+          date: event.date,
+          time: event.upcoming?.time,
+          location: event.location,
+          href: `/events/${event.id}`,
+        })),
+    [safeLang],
   );
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#2f3320] text-[#27301d]">
-      <FixedBackground />
+    <main className="min-h-screen bg-[#f6f0df] text-[#27301d]">
+      {/* =====================================================
+          UPCOMING EVENTS
+      ===================================================== */}
 
-      <div className="relative z-10 px-6 pb-24 pt-28 md:px-12 lg:pt-32">
-        <div className="mx-auto max-w-5xl">
-          <TimelineHeader copy={copy} />
+      <section className="relative min-h-[76vh] overflow-hidden px-6 pb-12 pt-28 md:px-10 md:pb-14 md:pt-32 lg:px-12">
+        <img
+          src="/landingpage.webp"
+          alt=""
+          aria-hidden="true"
+          width={1920}
+          height={1080}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
 
-          <div className="relative">
-            <div className="absolute left-4 top-0 h-full w-px bg-[#e1d2a6]/55 md:left-1/2" />
+        {/* Neutral darkening only */}
+        <div className="absolute inset-0 bg-black/44" />
 
-            <div className="space-y-16 md:space-y-20 lg:space-y-24">
-              {timelineItems.map((item, index) => (
-                <TimelineCard
-                  key={item.event.id}
-                  item={item}
-                  index={index}
-                  copy={copy}
-                  lang={lang}
-                />
-              ))}
-            </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/8 via-transparent to-black/38" />
+
+        <motion.div
+          variants={reveal}
+          initial="hidden"
+          animate="show"
+          className="relative z-10 mx-auto max-w-7xl"
+        >
+          <h1 className="text-3xl font-normal tracking-tight text-[#fffaf0] sm:text-4xl md:text-5xl">
+            {copy.title}
+          </h1>
+
+          <div className="mt-8">
+            {upcomingEvents.length > 0 ? (
+              <div
+                className="
+                  flex gap-6
+                  overflow-x-auto
+                  pb-3
+                  [scrollbar-width:none]
+                  [&::-webkit-scrollbar]:hidden
+                "
+              >
+                {upcomingEvents.map((event, index) => (
+                  <UpcomingEventCard
+                    key={event.id}
+                    event={event}
+                    copy={copy}
+                    index={index}
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyUpcoming copy={copy} />
+            )}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* =====================================================
+          YEARLY EVENTS / ABOUT
+      ===================================================== */}
+
+      <section
+        id="yearly-events"
+        className="border-t border-[#27301d]/8 bg-[#f6f0df]"
+      >
+        <motion.div
+          variants={reveal}
+          initial="hidden"
+          whileInView="show"
+          viewport={{
+            once: true,
+            amount: 0.12,
+          }}
+          className="mx-auto max-w-5xl px-6 py-16 md:px-10 md:py-20 lg:px-12"
+        >
+          {/* Intro */}
+
+          <div className="max-w-3xl">
+            <h2 className="text-2xl font-normal leading-tight tracking-tight md:text-3xl">
+              {copy.yearlyTitle}
+            </h2>
+
+            <p className="mt-5 text-[15px] leading-8 text-[#4e593c] md:text-base">
+              {copy.yearlyBody}
+            </p>
+          </div>
+
+          {/* Actual recurring events */}
+
+          <div className="mt-12 max-w-3xl space-y-10">
+            <YearlyEvent
+              title={copy.naadamTitle}
+              body={copy.naadamBody}
+            />
+
+            <YearlyEvent
+              title={copy.winterTitle}
+              body={copy.winterBody}
+            />
+          </div>
+
+          {/* Simple actions */}
+
+          <div className="mt-14 flex flex-wrap gap-x-7 gap-y-4 border-t border-[#27301d]/12 pt-8">
+            <SimpleAction
+              to="/gallery"
+              label={copy.galleryButton}
+            />
+
+            <SimpleAction
+              to="/volunteer"
+              label={copy.volunteerButton}
+            />
+
+            <SimpleAction
+              to="/donate"
+              label={copy.donateButton}
+            />
+          </div>
+        </motion.div>
+      </section>
+    </main>
+  );
+}
+
+/* =========================================================
+   EVENT CARD
+========================================================= */
+
+const UpcomingEventCard = memo(
+  function UpcomingEventCard({
+    event,
+    copy,
+    index,
+  }: {
+    event: UpcomingEventItem;
+    copy: EventsCopy;
+    index: number;
+  }) {
+    return (
+      <Link
+        to={event.href}
+        aria-label={`${copy.viewEvent}: ${event.title}`}
+        className="
+          group
+          relative
+          block
+
+          aspect-[1.1/1]
+          w-[min(84vw,27rem)]
+          shrink-0
+
+          overflow-hidden
+
+          bg-[#27301d]
+
+          shadow-[0_16px_42px_rgba(0,0,0,0.23)]
+
+          transition
+          duration-300
+
+          hover:-translate-y-1
+          hover:shadow-[0_22px_52px_rgba(0,0,0,0.29)]
+
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-[#fffaf0]
+          focus-visible:ring-offset-4
+          focus-visible:ring-offset-transparent
+
+          sm:w-[28rem]
+          md:w-[29rem]
+        "
+      >
+        <img
+          src={event.imageSrc}
+          alt={event.imageAlt}
+          width={900}
+          height={820}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={
+            index === 0 ? "high" : "auto"
+          }
+          className="
+            absolute inset-0
+            h-full w-full
+            object-cover
+            transition-transform
+            duration-700
+            ease-out
+            group-hover:scale-[1.025]
+          "
+        />
+
+        <div className="absolute inset-0 bg-black/16" />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/84 via-black/18 to-transparent" />
+
+        <div className="absolute inset-x-0 bottom-0 p-5 text-[#fffaf0] sm:p-6">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#eee0b7]">
+            {copy.upcoming}
+          </p>
+
+          <h2 className="mt-2 max-w-[23rem] text-2xl font-normal leading-tight tracking-tight">
+            {event.title}
+          </h2>
+
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] leading-5 text-[#fffaf0]/84">
+            <span className="font-medium">
+              {event.date}
+            </span>
+
+            {event.time && (
+              <span>{event.time}</span>
+            )}
+
+            {event.location && (
+              <span>{event.location}</span>
+            )}
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.17em] text-[#fffaf0]">
+            {copy.viewEvent}
+
+            <span
+              aria-hidden="true"
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            >
+              →
+            </span>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </Link>
+    );
+  },
+);
 
-const FixedBackground = memo(function FixedBackground() {
-  return (
-    <div className="fixed inset-0 z-0">
-      <img
-        src={BACKGROUND_IMAGE}
-        alt=""
-        aria-hidden="true"
-        width={1920}
-        height={1080}
-        loading="eager"
-        decoding="async"
-        fetchPriority="high"
-        className="h-full w-full object-cover object-center"
-      />
+/* =========================================================
+   NO UPCOMING EVENTS
+========================================================= */
 
-      <div className="absolute inset-0 bg-black/48" />
-      <div className="absolute inset-0 bg-linear-to-b from-black/36 via-black/28 to-black/68" />
-      <div className="absolute inset-0 bg-linear-to-r from-black/54 via-transparent to-black/36" />
-    </div>
-  );
-});
-
-const TimelineHeader = memo(function TimelineHeader({
+function EmptyUpcoming({
   copy,
 }: {
   copy: EventsCopy;
 }) {
   return (
-    <motion.div
-      variants={itemMotion}
-      initial="hidden"
-      animate="show"
-      className="mb-8 inline-flex flex-wrap items-center gap-3 bg-[#fffaf0]/10 px-4 py-2 text-[#fffaf0] backdrop-blur-sm"
+    <div
+      className="
+        max-w-lg
+        bg-[#fffaf0]/94
+        px-6 py-6
+        text-[#27301d]
+        shadow-[0_14px_36px_rgba(0,0,0,0.18)]
+        backdrop-blur-sm
+      "
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#e1d2a6]">
-        {copy.timelineTitle}
+      <h2 className="text-xl font-normal leading-tight">
+        {copy.noEventsTitle}
+      </h2>
+
+      <p className="mt-3 text-sm leading-7 text-[#4e593c]">
+        {copy.noEventsBody}
       </p>
 
-      <span className="h-1 w-1 bg-[#d6b04c]" aria-hidden="true" />
+      <a
+        href="#yearly-events"
+        className="
+          group
+          mt-5
+          inline-flex
+          items-center
+          gap-2
+          text-[10px]
+          font-semibold
+          uppercase
+          tracking-[0.14em]
+          text-[#596645]
+          transition-colors
+          hover:text-[#27301d]
+        "
+      >
+        {copy.noEventsLink}
 
-      <p className="text-xs font-medium text-[#f3ead2]/90">
-        {copy.timelineNote}
-      </p>
-    </motion.div>
-  );
-});
-
-const TimelineCard = memo(function TimelineCard({
-  item,
-  index,
-  copy,
-  lang,
-}: {
-  item: TimelineItem;
-  index: number;
-  copy: EventsCopy;
-  lang: Lang;
-}) {
-  const isLeftSide = index % 2 === 0;
-
-  return (
-    <motion.article
-      variants={itemMotion}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.16 }}
-      className="relative grid gap-8 pl-10 md:grid-cols-2 md:gap-16 md:pl-0"
-    >
-      <TimelineDot />
-
-      <div className={isLeftSide ? "md:col-start-1" : "md:col-start-2"}>
-        <TimelineDate item={item} copy={copy} isLeftSide={isLeftSide} />
-
-        <EventPreviewCard item={item} copy={copy} index={index} />
-      </div>
-
-      <DesktopEventDetails
-        item={item}
-        copy={copy}
-        lang={lang}
-        isLeftSide={isLeftSide}
-      />
-    </motion.article>
-  );
-});
-
-function TimelineDot() {
-  return (
-    <div className="absolute left-4 top-8 z-10 -translate-x-1/2 md:left-1/2">
-      <div className="h-3 w-3 bg-[#d6b04c] shadow-[0_0_0_6px_rgba(47,51,32,0.9)]" />
+        <span
+          aria-hidden="true"
+          className="transition-transform duration-200 group-hover:translate-y-0.5"
+        >
+          ↓
+        </span>
+      </a>
     </div>
   );
 }
 
-function TimelineDate({
-  item,
-  copy,
-  isLeftSide,
+/* =========================================================
+   YEARLY EVENT TEXT
+========================================================= */
+
+function YearlyEvent({
+  title,
+  body,
 }: {
-  item: TimelineItem;
-  copy: EventsCopy;
-  isLeftSide: boolean;
+  title: string;
+  body: string;
 }) {
   return (
-    <div className={isLeftSide ? "mb-4 md:text-right" : "mb-4 md:text-left"}>
-      <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
-        {item.isUpcoming ? copy.upcoming : copy.pastEvent}
-      </p>
+    <article>
+      <h3 className="text-xl font-normal leading-tight md:text-2xl">
+        {title}
+      </h3>
 
-      <p className="mt-1 text-2xl font-semibold tracking-tight text-[#fffaf0]">
-        {item.isUpcoming ? item.event.date : item.year}
+      <p className="mt-3 text-[15px] leading-8 text-[#4e593c] md:text-base">
+        {body}
       </p>
-    </div>
+    </article>
   );
 }
 
-function EventPreviewCard({
-  item,
-  copy,
-  index,
+/* =========================================================
+   SIMPLE ACTION LINKS
+========================================================= */
+
+function SimpleAction({
+  to,
+  label,
 }: {
-  item: TimelineItem;
-  copy: EventsCopy;
-  index: number;
+  to: string;
+  label: string;
 }) {
   return (
     <Link
-      to={item.href}
-      className="group block overflow-hidden bg-[#fffaf0]/96 shadow-[0_18px_50px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b04c]"
+      to={to}
+      className="
+        group
+        inline-flex
+        items-center
+        gap-2
+        text-xs
+        font-semibold
+        uppercase
+        tracking-[0.12em]
+        text-[#596645]
+        transition-colors
+        hover:text-[#27301d]
+        focus-visible:outline-none
+        focus-visible:ring-2
+        focus-visible:ring-[#596645]/30
+        focus-visible:ring-offset-4
+        focus-visible:ring-offset-[#f6f0df]
+      "
     >
-      <div className="relative aspect-[16/9] overflow-hidden bg-[#efe2bf]">
-        <img
-          src={item.imageSrc}
-          alt={item.imageAlt}
-          width={960}
-          height={540}
-          loading={index === 0 ? "eager" : "lazy"}
-          decoding="async"
-          fetchPriority={index === 0 ? "high" : "auto"}
-          className="h-full w-full object-cover"
-        />
+      {label}
 
-        <div className="absolute inset-0 bg-linear-to-t from-black/28 via-transparent to-transparent" />
-      </div>
-
-      <div className="p-6 md:p-7">
-        <span className="inline-flex bg-[#f4ecd9] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a7b26]">
-          {item.isUpcoming ? copy.upcoming : item.year}
-        </span>
-
-        <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-[#27301d]">
-          {item.title}
-        </h2>
-
-        <p className="mt-3 line-clamp-4 text-sm leading-7 text-[#4e593c]/88">
-          {item.description}
-        </p>
-
-        <span className="mt-6 inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26] transition-colors group-hover:text-[#27301d]">
-          {item.isUpcoming ? copy.viewEvent : copy.viewGallery} →
-        </span>
-      </div>
+      <span
+        aria-hidden="true"
+        className="transition-transform duration-200 group-hover:translate-x-1"
+      >
+        →
+      </span>
     </Link>
   );
 }
 
-function DesktopEventDetails({
-  item,
-  copy,
-  lang,
-  isLeftSide,
-}: {
-  item: TimelineItem;
-  copy: EventsCopy;
-  lang: Lang;
-  isLeftSide: boolean;
-}) {
-  return (
-    <div
-      className={[
-        "hidden md:flex md:items-center",
-        isLeftSide ? "md:col-start-2" : "md:col-start-1 md:row-start-1",
-      ].join(" ")}
-    >
-      <div
-        className={[
-          "max-w-md text-[#fffaf0]",
-          isLeftSide ? "text-left" : "ml-auto text-right",
-        ].join(" ")}
-      >
-        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d6b04c]">
-          {item.isUpcoming ? copy.upcoming : copy.pastEvent}
-        </p>
-
-        <h3 className="mt-3 text-3xl font-semibold leading-tight">
-          {item.title}
-        </h3>
-
-        <p className="mt-4 text-[15px] leading-8 text-[#f3ead2]">
-          {item.description}
-        </p>
-
-        {item.isUpcoming && (
-          <UpcomingDetails
-            item={item}
-            copy={copy}
-            lang={lang}
-            isLeftSide={isLeftSide}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function UpcomingDetails({
-  item,
-  copy,
-  lang,
-  isLeftSide,
-}: {
-  item: TimelineItem;
-  copy: EventsCopy;
-  lang: Lang;
-  isLeftSide: boolean;
-}) {
-  return (
-    <div className="mt-6 border-l-2 border-[#d6b04c] bg-[#fffaf0]/10 px-5 py-4 backdrop-blur-sm">
-      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#d6b04c]">
-        {copy.eventDetails}
-      </p>
-
-      <div className="mt-4 grid gap-3 text-sm text-[#f3ead2]">
-        {item.event.upcoming?.time && (
-          <EventDetail label={copy.time} value={item.event.upcoming.time} />
-        )}
-
-        {item.event.location && (
-          <EventDetail label={copy.location} value={item.event.location} />
-        )}
-
-        {item.enabledActions.length > 0 && (
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#d6b04c]/85">
-              {copy.actions}
-            </p>
-
-            <div
-              className={[
-                "mt-2 flex flex-wrap gap-2",
-                isLeftSide ? "justify-start" : "justify-end",
-              ].join(" ")}
-            >
-              {item.enabledActions.map((action) => (
-                <Link
-                  key={action.type}
-                  to={`/events/${item.event.id}`}
-                  className="bg-[#d6b04c] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#27301d] transition-colors hover:bg-[#fffaf0]"
-                >
-                  {action.label[lang]}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function EventDetail({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#d6b04c]/85">
-        {label}
-      </p>
-      <p className="mt-1 font-medium">{value}</p>
-    </div>
-  );
-}
-
-export default memo(Events);
+export default memo(EventsMain);
