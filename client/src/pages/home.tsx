@@ -2,10 +2,10 @@
 
 import { useLanguage } from "../context/LanguageContext";
 
-import Header from "../components/home/Header";
-import Hero from "../components/home/Hero";
+import Header from "../sections/home/Header";
+import Hero from "../sections/home/Hero";
 
-import Footer from "../components/home/Footer";
+import Footer from "../sections/home/Footer";
 
 
 export default function Home() {

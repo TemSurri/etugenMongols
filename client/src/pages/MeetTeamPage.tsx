@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "../components/home/Header";
-import Footer from "../components/home/Footer";
-import MeetTeamMain from "../components/about/MeetTeamMain";
+import Header from "../sections/home/Header";
+import Footer from "../sections/home/Footer";
+import MeetTeamMain from "../sections/about/MeetTeamMain";
 
 import { useLanguage } from "../context/LanguageContext";
 

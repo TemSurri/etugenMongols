@@ -1,9 +1,9 @@
 "use client";
 
 import { useLanguage } from "../context/LanguageContext";
-import Header from "../components/home/Header";
-import Footer from "../components/home/Footer";
-import Contact from "../components/contact/Contact";
+import Header from "../sections/home/Header";
+import Footer from "../sections/home/Footer";
+import Contact from "../sections/contact/Contact";
 
 
 

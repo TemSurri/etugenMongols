@@ -13,7 +13,7 @@ import StoryPage from "./pages/StoryPage";
 import OurImpactPage from "./pages/OurImpactPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {

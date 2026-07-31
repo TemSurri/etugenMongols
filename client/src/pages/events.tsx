@@ -2,9 +2,9 @@
 
 import { useLanguage } from "../context/LanguageContext";
 
-import Header from "../components/home/Header";
-import Events from "../components/events/Events";
-import Footer from "../components/home/Footer";
+import Header from "../sections/home/Header";
+import Events from "../sections/events/EventsMain";
+import Footer from "../sections/home/Footer";
 
 export default function EventsPage() {
   const { lang, setLang } = useLanguage();

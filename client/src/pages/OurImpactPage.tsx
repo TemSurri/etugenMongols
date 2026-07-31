@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "../components/home/Header";
-import Footer from "../components/home/Footer";
-import OurImpactMain from "../components/about/OurImpactMain";
+import Header from "../sections/home/Header";
+import Footer from "../sections/home/Footer";
+import OurImpactMain from "../sections/about/OurImpactMain";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function OurImpactPage() {

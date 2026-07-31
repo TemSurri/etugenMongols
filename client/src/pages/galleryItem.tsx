@@ -2,9 +2,9 @@
 
 import { useParams, Link } from "react-router-dom";
 
-import Header from "../components/home/Header";
-import Footer from "../components/home/Footer";
-import GalleryView from "../components/galleryItem/GalleryView";
+import Header from "../sections/home/Header";
+import Footer from "../sections/home/Footer";
+import GalleryView from "../sections/galleryItem/GalleryView";
 
 import { events } from "../static_events";
 import { useLanguage } from "../context/LanguageContext";

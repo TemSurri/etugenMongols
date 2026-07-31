@@ -3,8 +3,8 @@
 import { useLanguage } from "../context/LanguageContext";
 import { useParams } from "react-router-dom";
 
-import Header from "../components/home/Header";
-import EventView from "../components/eventItem/EventView";
+import Header from "../sections/home/Header";
+import EventView from "../sections/eventItem/EventView";
 import { events } from "../static_events";
 
 

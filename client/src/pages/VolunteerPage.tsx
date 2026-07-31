@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "../components/home/Header";
-import Footer from "../components/home/Footer";
-import VolunteerMain from "../components/involvement/VolunteerMain";
+import Header from "../sections/home/Header";
+import Footer from "../sections/home/Footer";
+import VolunteerMain from "../sections/involvement/VolunteerMain";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function VolunteerPage() {
