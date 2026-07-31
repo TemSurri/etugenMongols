@@ -1,0 +1,36 @@
+import type { GalleryCopy, Lang } from "./types";
+
+export const GALLERY_COPY = {
+  en: {
+    galleryTitle: "Gallery",
+    pastEventsTitle: "Past Events",
+    search: "Search Gallery",
+    searchPlaceholder: "Search title, description, or year...",
+    index: "Gallery Index",
+    view: "View Gallery As",
+    grid: "Grid",
+    timeline: "Timeline",
+    viewAlbum: "View Album",
+    noResults: "No matching galleries found.",
+    emptyTitle: "No gallery items yet",
+    emptyBody: "Past event galleries will appear here once they are added.",
+    pastEvent: "Past Event",
+    resultsLabel: "Gallery results",
+  },
+  mn: {
+    galleryTitle: "Цомог",
+    pastEventsTitle: "Өнгөрсөн арга хэмжээнүүд",
+    search: "Цомог хайх",
+    searchPlaceholder: "Гарчиг, тайлбар эсвэл жилээр хайх...",
+    index: "Цомгийн жагсаалт",
+    view: "Цомгийн харагдац",
+    grid: "Тор",
+    timeline: "Он цаг",
+    viewAlbum: "Цомог үзэх",
+    noResults: "Тохирох цомог олдсонгүй.",
+    emptyTitle: "Одоогоор цомог алга",
+    emptyBody: "Өнгөрсөн арга хэмжээний цомгууд нэмэгдмэгц энд харагдана.",
+    pastEvent: "Өнгөрсөн арга хэмжээ",
+    resultsLabel: "Цомгийн үр дүн",
+  },
+} as const satisfies Record<Lang, GalleryCopy>;
