@@ -1,6 +1,8 @@
 "use client";
 
 import { memo, useState } from "react";
+import { Link } from "react-router-dom";
+
 import {
     cubicBezier,
     motion,
@@ -11,17 +13,18 @@ import LoginForm from "./LoginForm";
 
 
 const LOGIN_BACKGROUNDS = [
-    // Main homepage images
     "/home/slideshow/1.webp",
     "/home/slideshow/2.webp",
     "/home/slideshow/3.webp",
     "/home/slideshow/4.webp",
-
-    // One representative image from each major section
     "/impact/culture/4.webp",
     "/impact/archery/3.webp",
-   
 ] as const;
+
+
+export type Language =
+    | "en"
+    | "mn";
 
 
 const easeOut =
@@ -49,20 +52,21 @@ const entranceMotion: Variants = {
 
 function LoginSection() {
 
-    // Pick once when this page mounts.
-    //
-    // Re-renders from typing/error/loading do NOT change the photo.
-    // Refreshing/revisiting the page may choose a new one.
-    const [background] = useState(() => {
+    const [language, setLanguage] =
+        useState<Language>("en");
 
-        const index =
-            Math.floor(
-                Math.random() *
-                LOGIN_BACKGROUNDS.length
-            );
 
-        return LOGIN_BACKGROUNDS[index];
-    });
+    const [background] =
+        useState(() => {
+
+            const index =
+                Math.floor(
+                    Math.random() *
+                    LOGIN_BACKGROUNDS.length
+                );
+
+            return LOGIN_BACKGROUNDS[index];
+        });
 
 
     return (
@@ -76,7 +80,7 @@ function LoginSection() {
             "
         >
 
-            {/* Background image */}
+            {/* Background */}
             <img
                 src={background}
                 alt=""
@@ -131,11 +135,14 @@ function LoginSection() {
                     min-h-screen
                     items-center
                     justify-center
+
                     px-5
-                    pb-14
-                    pt-28
+                    pb-10
+                    pt-20
+
                     md:px-10
-                    md:pt-32
+                    md:pb-12
+                    md:pt-24
                 "
             >
 
@@ -144,82 +151,180 @@ function LoginSection() {
                     initial="hidden"
                     animate="show"
                     className="
+                        relative
                         w-full
                         max-w-[29rem]
-                        border
-                        border-white/20
-                        bg-[#f7f7f4]
-                        shadow-2xl
-                        shadow-black/25
                     "
                 >
 
-                    {/* Header */}
+                    {/* Top controls */}
                     <div
                         className="
-                            border-b
-                            border-[#27301d]/10
-                            bg-white
-                            px-7
-                            pb-7
-                            pt-8
-                            text-center
-                            md:px-9
+                            absolute
+                            -top-9
+                            left-0
+
+                            flex
+                            w-full
+                            items-center
+                            justify-between
                         "
                     >
 
-                        <p
+                        <Link
+                            to="/"
                             className="
                                 text-[10px]
                                 font-bold
                                 uppercase
-                                tracking-[0.34em]
-                                text-[#9a7b26]
+                                tracking-[0.2em]
+                                text-white/75
+
+                                no-underline
+                                transition-colors
+
+                                hover:text-white
                             "
                         >
-                            Etugen Mongols
-                        </p>
+                            {language === "en"
+                                ? "Back to home"
+                                : "Нүүр хуудас"}
+                        </Link>
 
 
-                        <h1
+                        {/* Language */}
+                        <div
                             className="
-                                mt-4
-                                text-4xl
-                                font-semibold
-                                leading-tight
-                                text-[#27301d]
-                                md:text-[2.7rem]
+                                flex
+                                items-center
+
+                                text-[10px]
+                                font-bold
+                                uppercase
+                                tracking-[0.16em]
                             "
                         >
-                            Welcome back
-                        </h1>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setLanguage("en")
+                                }
+                                className={
+                                    language === "en"
+                                        ? "text-white"
+                                        : "text-white/45 transition-colors hover:text-white"
+                                }
+                            >
+                                EN
+                            </button>
 
 
-                        <p
-                            className="
-                                mx-auto
-                                mt-4
-                                max-w-sm
-                                text-sm
-                                leading-7
-                                text-[#667056]
-                            "
-                        >
-                            Sign in to continue to your account.
-                        </p>
+                            <span
+                                className="
+                                    mx-2
+                                    text-white/25
+                                "
+                            >
+                                |
+                            </span>
+
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setLanguage("mn")
+                                }
+                                className={
+                                    language === "mn"
+                                        ? "text-white"
+                                        : "text-white/45 transition-colors hover:text-white"
+                                }
+                            >
+                                MN
+                            </button>
+
+                        </div>
 
                     </div>
 
 
-                    {/* Form */}
+                    {/* Login card */}
                     <div
                         className="
-                            px-7
-                            py-8
-                            md:px-9
+                            border
+                            border-white/20
+                            bg-[#f7f7f4]
+
+                            shadow-2xl
+                            shadow-black/25
                         "
                     >
-                        <LoginForm />
+
+                        {/* Compact header */}
+                        <div
+                            className="
+                                border-b
+                                border-[#27301d]/10
+                                bg-white
+
+                                px-7
+                                py-6
+
+                                text-center
+
+                                md:px-9
+                            "
+                        >
+
+                            <h1
+                                className="
+                                    text-3xl
+                                    font-semibold
+                                    leading-tight
+                                    text-[#27301d]
+                                "
+                            >
+                                {language === "en"
+                                    ? "Welcome back"
+                                    : "Тавтай морил"}
+                            </h1>
+
+
+                            <p
+                                className="
+                                    mx-auto
+                                    mt-2
+                                    max-w-sm
+
+                                    text-sm
+                                    leading-6
+                                    text-[#667056]
+                                "
+                            >
+                                {language === "en"
+                                    ? "Sign in to continue to your account."
+                                    : "Өөрийн бүртгэлдээ нэвтэрч үргэлжлүүлнэ үү."}
+                            </p>
+
+                        </div>
+
+
+                        {/* Form */}
+                        <div
+                            className="
+                                px-7
+                                py-6
+                                md:px-9
+                            "
+                        >
+
+                            <LoginForm
+                                language={language}
+                            />
+
+                        </div>
+
                     </div>
 
                 </motion.div>

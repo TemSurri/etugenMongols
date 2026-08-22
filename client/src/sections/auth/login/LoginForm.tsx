@@ -2,18 +2,35 @@
 
 import { useState } from "react";
 import axios from "axios";
+
 import {
     Link,
     useNavigate
 } from "react-router-dom";
 
 import { api } from "../../../api/client";
+import { useAuth } from "../../../context/useAuth";
+
+import type {
+    Language
+} from "./LoginSection";
 
 
-export default function LoginForm() {
+type LoginFormProps = {
+    language: Language;
+};
+
+
+export default function LoginForm({
+    language,
+}: LoginFormProps) {
 
     const navigate =
         useNavigate();
+
+    const {
+        refreshAuth
+    } = useAuth();
 
 
     const [email, setEmail] =
@@ -25,8 +42,18 @@ export default function LoginForm() {
     const [error, setError] =
         useState("");
 
+    const [
+        needsVerification,
+        setNeedsVerification,
+    ] =
+        useState(false);
+
     const [loading, setLoading] =
         useState(false);
+
+
+    const mn =
+        language === "mn";
 
 
     async function handleSubmit(
@@ -42,7 +69,10 @@ export default function LoginForm() {
 
 
         setLoading(true);
+
         setError("");
+
+        setNeedsVerification(false);
 
 
         /*
@@ -50,24 +80,12 @@ export default function LoginForm() {
          * BACKEND LOGIN REQUEST
          * =====================================================
          *
-         * Sends:
-         *
          * POST /auth/login
          *
-         * JSON:
-         *
          * {
-         *   "email": "...",
-         *   "password": "..."
+         *     email,
+         *     password
          * }
-         *
-         * Your shared Axios client should already contain:
-         *
-         * baseURL: import.meta.env.VITE_API_URL
-         * withCredentials: true
-         *
-         * withCredentials is important because your backend
-         * authentication uses a SESSION cookie.
          */
         try {
 
@@ -81,34 +99,30 @@ export default function LoginForm() {
 
 
             /*
-             * =================================================
-             * LOGIN SUCCESS
-             * =================================================
+             * Login succeeded.
              *
-             * If Spring returns 2xx:
-             *
-             * - Axios resolves normally
-             * - browser keeps the SESSION cookie
-             * - user is authenticated
+             * Browser now has the SESSION cookie.
+             * Refresh global auth state so the header
+             * immediately knows the user is logged in.
              */
+            await refreshAuth();
+
 
             navigate("/");
 
 
         } catch (error) {
 
+
             /*
-             * =================================================
-             * LOGIN FAILURE
-             * =================================================
+             * Unexpected non-Axios failure.
              */
-
-
-            // Something unexpected outside Axios.
             if (!axios.isAxiosError(error)) {
 
                 setError(
-                    "Something went wrong. Please try again."
+                    mn
+                        ? "Алдаа гарлаа. Дахин оролдоно уу."
+                        : "Something went wrong. Please try again."
                 );
 
                 return;
@@ -116,104 +130,91 @@ export default function LoginForm() {
 
 
             /*
-             * No HTTP response from backend.
-             *
-             * Examples:
-             * - Spring isn't running
-             * - backend host is unreachable
-             * - connection refused
-             * - DNS/network problem
+             * No HTTP response.
              */
             if (!error.response) {
 
                 setError(
-                    "Unable to connect to the server. Please try again later."
+                    mn
+                        ? "Сервертэй холбогдож чадсангүй. Дараа дахин оролдоно уу."
+                        : "Unable to connect to the server. Please try again later."
                 );
 
                 return;
             }
 
 
-            /*
-             * Spring DID respond.
-             */
             const status =
                 error.response.status;
 
 
             switch (status) {
 
-                /*
-                 * Malformed/invalid request.
-                 */
                 case 400:
 
                     setError(
-                        "Please check the information you entered."
+                        mn
+                            ? "Оруулсан мэдээллээ шалгана уу."
+                            : "Please check the information you entered."
                     );
 
                     break;
 
 
-                /*
-                 * Authentication failed.
-                 *
-                 * Keep this generic so the UI doesn't reveal
-                 * whether a particular email exists.
-                 */
                 case 401:
 
                     setError(
-                        "Invalid email or password."
+                        mn
+                            ? "Имэйл эсвэл нууц үг буруу байна."
+                            : "Invalid email or password."
                     );
 
                     break;
 
 
                 /*
-                 * Your auth flow has used 403 for cases where
-                 * authentication is blocked, such as an account
-                 * still requiring verification.
-                 *
-                 * If you later return a specific backend error
-                 * code/body, you can make this message more exact.
+                 * Account exists but is not verified.
                  */
                 case 403:
 
                     setError(
-                        "Your account cannot sign in yet. Check your email for any required verification."
+                        mn
+                            ? "Таны бүртгэл хараахан баталгаажаагүй байна."
+                            : "Your account has not been verified yet."
                     );
+
+                    setNeedsVerification(true);
 
                     break;
 
 
-                /*
-                 * Rate limiting.
-                 */
                 case 429:
 
                     setError(
-                        "Too many login attempts. Please try again later."
+                        mn
+                            ? "Хэт олон удаа нэвтрэх оролдлого хийлээ. Дараа дахин оролдоно уу."
+                            : "Too many login attempts. Please try again later."
                     );
 
                     break;
 
 
-                /*
-                 * Backend/server failure.
-                 */
                 default:
 
                     if (status >= 500) {
 
                         setError(
-                            "The server is temporarily unavailable. Please try again later."
+                            mn
+                                ? "Сервер түр хугацаанд ажиллахгүй байна. Дараа дахин оролдоно уу."
+                                : "The server is temporarily unavailable. Please try again later."
                         );
 
                     } else {
 
                         setError(
-                            "Unable to sign in. Please try again."
+                            mn
+                                ? "Нэвтэрч чадсангүй. Дахин оролдоно уу."
+                                : "Unable to sign in. Please try again."
                         );
                     }
             }
@@ -238,14 +239,16 @@ export default function LoginForm() {
                 <label
                     htmlFor="email"
                     className="
-                        text-[10px]
+                        text-[9px]
                         font-bold
                         uppercase
-                        tracking-[0.22em]
+                        tracking-[0.2em]
                         text-[#27301d]
                     "
                 >
-                    Email
+                    {mn
+                        ? "Имэйл"
+                        : "Email"}
                 </label>
 
 
@@ -269,8 +272,8 @@ export default function LoginForm() {
                     disabled={loading}
 
                     className="
-                        mt-2.5
-                        min-h-12
+                        mt-2
+                        h-11
                         w-full
 
                         border
@@ -278,8 +281,7 @@ export default function LoginForm() {
 
                         bg-white
 
-                        px-4
-                        py-3
+                        px-3.5
 
                         text-sm
                         text-[#27301d]
@@ -287,7 +289,7 @@ export default function LoginForm() {
                         outline-none
                         transition-colors
 
-                        placeholder:text-[#667056]/50
+                        placeholder:text-[#667056]/45
 
                         focus:border-[#9a7b26]
 
@@ -300,7 +302,7 @@ export default function LoginForm() {
 
 
             {/* Password */}
-            <div className="mt-5">
+            <div className="mt-4">
 
                 <div
                     className="
@@ -314,14 +316,16 @@ export default function LoginForm() {
                     <label
                         htmlFor="password"
                         className="
-                            text-[10px]
+                            text-[9px]
                             font-bold
                             uppercase
-                            tracking-[0.22em]
+                            tracking-[0.2em]
                             text-[#27301d]
                         "
                     >
-                        Password
+                        {mn
+                            ? "Нууц үг"
+                            : "Password"}
                     </label>
 
 
@@ -331,13 +335,16 @@ export default function LoginForm() {
                             text-xs
                             font-medium
                             text-[#667056]
+
                             no-underline
                             transition-colors
 
                             hover:text-[#9a7b26]
                         "
                     >
-                        Forgot password?
+                        {mn
+                            ? "Нууц үгээ мартсан уу?"
+                            : "Forgot password?"}
                     </Link>
 
                 </div>
@@ -356,15 +363,20 @@ export default function LoginForm() {
                         )
                     }
 
-                    placeholder="Enter your password"
+                    placeholder={
+                        mn
+                            ? "Нууц үгээ оруулна уу"
+                            : "Enter your password"
+                    }
+
                     autoComplete="current-password"
 
                     required
                     disabled={loading}
 
                     className="
-                        mt-2.5
-                        min-h-12
+                        mt-2
+                        h-11
                         w-full
 
                         border
@@ -372,8 +384,7 @@ export default function LoginForm() {
 
                         bg-white
 
-                        px-4
-                        py-3
+                        px-3.5
 
                         text-sm
                         text-[#27301d]
@@ -381,7 +392,7 @@ export default function LoginForm() {
                         outline-none
                         transition-colors
 
-                        placeholder:text-[#667056]/50
+                        placeholder:text-[#667056]/45
 
                         focus:border-[#9a7b26]
 
@@ -393,7 +404,7 @@ export default function LoginForm() {
             </div>
 
 
-            {/* Backend/error message */}
+            {/* Error */}
             {error && (
 
                 <div
@@ -401,21 +412,53 @@ export default function LoginForm() {
                     aria-live="polite"
 
                     className="
-                        mt-5
+                        mt-4
+
                         border-l-2
                         border-[#9a7b26]
 
                         bg-white
 
                         px-4
-                        py-3
+                        py-2.5
 
                         text-sm
                         leading-6
                         text-[#667056]
                     "
                 >
+
                     {error}
+
+
+                    {needsVerification && (
+
+                        <>
+                            {" "}
+
+                            <Link
+                                to="/auth/verify"
+                                className="
+                                    font-semibold
+                                    text-[#27301d]
+
+                                    underline
+                                    underline-offset-2
+
+                                    transition-colors
+
+                                    hover:text-[#9a7b26]
+                                "
+                            >
+                                {mn
+                                    ? "Бүртгэлээ баталгаажуулах"
+                                    : "Verify account"}
+                            </Link>
+
+                        </>
+
+                    )}
+
                 </div>
 
             )}
@@ -427,9 +470,10 @@ export default function LoginForm() {
                 disabled={loading}
 
                 className="
-                    mt-7
+                    mt-5
+
                     flex
-                    min-h-12
+                    min-h-11
                     w-full
                     items-center
                     justify-center
@@ -437,12 +481,12 @@ export default function LoginForm() {
                     bg-[#27301d]
 
                     px-6
-                    py-3.5
+                    py-3
 
-                    text-[11px]
+                    text-[10px]
                     font-bold
                     uppercase
-                    tracking-[0.22em]
+                    tracking-[0.2em]
                     text-white
 
                     transition-colors
@@ -454,23 +498,29 @@ export default function LoginForm() {
                     disabled:hover:bg-[#27301d]
                 "
             >
-
-                {
-                    loading
-                        ? "Signing in..."
-                        : "Sign in"
-                }
-
+                {loading
+                    ? (
+                        mn
+                            ? "Нэвтэрч байна..."
+                            : "Signing in..."
+                    )
+                    : (
+                        mn
+                            ? "Нэвтрэх"
+                            : "Sign in"
+                    )}
             </button>
 
 
             {/* Signup */}
             <div
                 className="
-                    mt-7
+                    mt-5
+
                     border-t
                     border-[#27301d]/10
-                    pt-6
+
+                    pt-4
                     text-center
                 "
             >
@@ -481,21 +531,26 @@ export default function LoginForm() {
                         text-[#667056]
                     "
                 >
-                    Don't have an account?{" "}
+                    {mn
+                        ? "Бүртгэл байхгүй юу? "
+                        : "Don't have an account? "}
+
 
                     <Link
                         to="/auth/signup"
-
                         className="
                             font-semibold
                             text-[#27301d]
+
                             no-underline
                             transition-colors
 
                             hover:text-[#9a7b26]
                         "
                     >
-                        Create one
+                        {mn
+                            ? "Бүртгэл үүсгэх"
+                            : "Create one"}
                     </Link>
 
                 </p>

@@ -19,9 +19,15 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
 
+import {
+    AuthProvider
+} from "./context/AuthContext";
+
+
 function App() {
   return (
     <LanguageProvider>
+    <AuthProvider>
       <ScrollToTop />
 
       <Routes>
@@ -34,19 +40,18 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
 
-        <Route path="/auth/login" element={<LoginPage />}/>
 
+        <Route path="/auth/login" element={<LoginPage />}/>
         <Route path="/auth/signup" element={<SignupPage />}/>
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
-        
         <Route path="/get-involved/donate" element={<DonatePage />} />
-
         <Route path="/about/team" element={<MeetTeamPage />} />
         <Route path="/about/impact" element={<OurImpactPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </AuthProvider>
     </LanguageProvider>
   );
 }
