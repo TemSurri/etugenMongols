@@ -48,24 +48,31 @@ export function AuthProvider({
 
     async function refreshAuth() {
 
-        try {
+    try {
 
-            const response =
-                await api.get<AuthUser>(
-                    "/auth/me"
-                );
+        const response =
+            await api.get("/auth/me");
 
-            setUser(response.data);
 
-        } catch {
+        if (!isAuthUser(response.data)) {
 
             setUser(null);
 
-        } finally {
-
-            setLoading(false);
+            return;
         }
+
+
+        setUser(response.data);
+
+    } catch {
+
+        setUser(null);
+
+    } finally {
+
+        setLoading(false);
     }
+}
 
 
     async function logout() {
@@ -107,4 +114,25 @@ export function AuthProvider({
             {children}
         </AuthContext.Provider>
     );
+
+    function isAuthUser(
+            value: unknown
+        ): value is AuthUser {
+
+            if (
+                typeof value !== "object" ||
+                value === null
+            ) {
+                return false;
+            }
+
+            const user =
+                value as Partial<AuthUser>;
+
+            return (
+                typeof user.id === "number" &&
+                typeof user.firstName === "string" &&
+                typeof user.role === "string"
+            );
+        }
 }
