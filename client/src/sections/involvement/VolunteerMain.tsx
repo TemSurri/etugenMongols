@@ -32,8 +32,8 @@ type VolunteerListing = {
 /* -------------------------------------------------------------------------- */
 
 const VOLUNTEER_IMAGES = {
-  topLeft: "/impact/culture/1.webp",
-  bottomRight: "/impact/youth/1.webp",
+  topLeft: "/involv/volunteer/1.webp",
+  bottomRight: "/involv/volunteer/2.webp",
 } as const;
 
 /* -------------------------------------------------------------------------- */

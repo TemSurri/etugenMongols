@@ -21,8 +21,8 @@ type DonateProps = {
 const DONATION_EMAIL = "info@etugen-mongols.ca";
 
 const DONATE_IMAGES = {
-  topRight: "/impact/culture/1.webp",
-  bottomLeft: "/impact/youth/1.webp",
+  topRight: "/involv/donate/1.webp",
+  bottomLeft: "/involv/donate/2.webp",
 } as const;
 
 const COLORS = {
