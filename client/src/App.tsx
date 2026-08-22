@@ -12,6 +12,9 @@ import MeetTeamPage from "./pages/MeetTeamPage";
 import StoryPage from "./pages/StoryPage";
 import OurImpactPage from "./pages/OurImpactPage";
 
+import LoginPage from "./pages/auth/login";
+import SignupPage from "./pages/auth/signup";
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -30,6 +33,10 @@ function App() {
         <Route path="/gallery/:id" element={<GalleryPage />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
+
+        <Route path="/auth/login" element={<LoginPage />}/>
+
+        <Route path="/auth/signup" element={<SignupPage />}/>
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
         
