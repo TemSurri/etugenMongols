@@ -13,11 +13,13 @@ import type {
 
 type SignupFormProps = {
     language: Language;
+    onAccountCreated: () => void;
 };
 
 
 export default function SignupForm({
     language,
+    onAccountCreated,
 }: SignupFormProps) {
 
     const [firstName, setFirstName] =
@@ -38,11 +40,14 @@ export default function SignupForm({
     ] =
         useState("");
 
+    const [showPassword, setShowPassword] =
+        useState(false);
+
+    const [showConfirmPassword, setShowConfirmPassword] =
+        useState(false);
+
     const [error, setError] =
         useState("");
-
-    const [success, setSuccess] =
-        useState(false);
 
     const [loading, setLoading] =
         useState(false);
@@ -110,7 +115,7 @@ export default function SignupForm({
             );
 
 
-            setSuccess(true);
+            onAccountCreated();
 
 
         } catch (error) {
@@ -217,136 +222,6 @@ export default function SignupForm({
     }
 
 
-    /*
-     * SUCCESS
-     */
-    if (success) {
-
-        return (
-            <div className="py-2 text-center">
-
-                <p
-                    className="
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-[0.3em]
-                        text-[#9a7b26]
-                    "
-                >
-                    {mn
-                        ? "Бараг боллоо"
-                        : "Almost there"}
-                </p>
-
-
-                <h2
-                    className="
-                        mt-3
-                        text-2xl
-                        font-semibold
-                        text-[#27301d]
-                    "
-                >
-                    {mn
-                        ? "Имэйлээ шалгана уу"
-                        : "Check your email"}
-                </h2>
-
-
-                <p
-                    className="
-                        mx-auto
-                        mt-3
-                        max-w-sm
-                        text-sm
-                        leading-6
-                        text-[#667056]
-                    "
-                >
-                    {mn
-                        ? (
-                            <>
-                                Баталгаажуулах холбоосыг{" "}
-
-                                <span
-                                    className="
-                                        font-semibold
-                                        text-[#27301d]
-                                    "
-                                >
-                                    {email}
-                                </span>
-
-                                {" "}хаяг руу илгээлээ.
-                            </>
-                        )
-                        : (
-                            <>
-                                We sent a verification link to{" "}
-
-                                <span
-                                    className="
-                                        font-semibold
-                                        text-[#27301d]
-                                    "
-                                >
-                                    {email}
-                                </span>
-
-                                . Open the link to verify your account.
-                            </>
-                        )}
-                </p>
-
-
-                <div
-                    className="
-                        mt-5
-                        border-t
-                        border-[#27301d]/10
-                        pt-5
-                    "
-                >
-
-                    <Link
-                        to="/auth/login"
-                        className="
-                            inline-flex
-                            min-h-11
-                            w-full
-                            items-center
-                            justify-center
-
-                            bg-[#27301d]
-
-                            px-6
-                            py-3
-
-                            text-[10px]
-                            font-bold
-                            uppercase
-                            tracking-[0.2em]
-                            text-white
-
-                            no-underline
-                            transition-colors
-
-                            hover:bg-[#9a7b26]
-                        "
-                    >
-                        {mn
-                            ? "Нэвтрэх хэсэг рүү буцах"
-                            : "Return to login"}
-                    </Link>
-
-                </div>
-
-            </div>
-        );
-    }
-
-
     return (
         <form
             onSubmit={handleSubmit}
@@ -444,7 +319,7 @@ export default function SignupForm({
                             ? "Нууц үг"
                             : "Password"
                     }
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     placeholder={
                         mn
@@ -454,6 +329,12 @@ export default function SignupForm({
                     autoComplete="new-password"
                     disabled={loading}
                     onChange={setPassword}
+                    passwordToggle
+                    passwordVisible={showPassword}
+                    onTogglePassword={() =>
+                        setShowPassword((visible) => !visible)
+                    }
+                    language={language}
                 />
 
 
@@ -464,7 +345,7 @@ export default function SignupForm({
                             ? "Нууц үг давтах"
                             : "Confirm password"
                     }
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     placeholder={
                         mn
@@ -474,6 +355,12 @@ export default function SignupForm({
                     autoComplete="new-password"
                     disabled={loading}
                     onChange={setConfirmPassword}
+                    passwordToggle
+                    passwordVisible={showConfirmPassword}
+                    onTogglePassword={() =>
+                        setShowConfirmPassword((visible) => !visible)
+                    }
+                    language={language}
                 />
 
             </div>
@@ -614,6 +501,11 @@ type FieldProps = {
     onChange: (
         value: string
     ) => void;
+
+    passwordToggle?: boolean;
+    passwordVisible?: boolean;
+    onTogglePassword?: () => void;
+    language?: Language;
 };
 
 
@@ -626,6 +518,10 @@ function Field({
     autoComplete,
     disabled,
     onChange,
+    passwordToggle = false,
+    passwordVisible = false,
+    onTogglePassword,
+    language = "en",
 }: FieldProps) {
 
     return (
@@ -645,50 +541,108 @@ function Field({
             </label>
 
 
-            <input
-                id={id}
-                name={id}
-                type={type}
-                value={value}
+            <div className="relative mt-2">
 
-                onChange={(event) =>
-                    onChange(
-                        event.target.value
-                    )
-                }
+                <input
+                    id={id}
+                    name={id}
+                    type={type}
+                    value={value}
 
-                placeholder={placeholder}
-                autoComplete={autoComplete}
+                    onChange={(event) =>
+                        onChange(
+                            event.target.value
+                        )
+                    }
 
-                required
-                disabled={disabled}
+                    placeholder={placeholder}
+                    autoComplete={autoComplete}
 
-                className="
-                    mt-2
-                    h-11
-                    w-full
+                    required
+                    disabled={disabled}
 
-                    border
-                    border-[#27301d]/25
+                    className={`
+                        h-11
+                        w-full
 
-                    bg-white
+                        border
+                        border-[#27301d]/25
 
-                    px-3.5
+                        bg-white
 
-                    text-sm
-                    text-[#27301d]
+                        px-3.5
+                        ${passwordToggle ? "pr-16" : ""}
 
-                    outline-none
-                    transition-colors
+                        text-sm
+                        text-[#27301d]
 
-                    placeholder:text-[#667056]/45
+                        outline-none
+                        transition-colors
 
-                    focus:border-[#9a7b26]
+                        placeholder:text-[#667056]/45
 
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
-                "
-            />
+                        focus:border-[#9a7b26]
+
+                        disabled:cursor-not-allowed
+                        disabled:opacity-60
+                    `}
+                />
+
+                {passwordToggle && onTogglePassword && (
+
+                    <button
+                        type="button"
+                        onClick={onTogglePassword}
+                        disabled={disabled}
+                        aria-label={
+                            passwordVisible
+                                ? (
+                                    language === "mn"
+                                        ? "Нууц үгийг нуух"
+                                        : "Hide password"
+                                )
+                                : (
+                                    language === "mn"
+                                        ? "Нууц үгийг харуулах"
+                                        : "Show password"
+                                )
+                        }
+                        className="
+                            absolute
+                            right-3
+                            top-1/2
+                            -translate-y-1/2
+
+                            text-[9px]
+                            font-bold
+                            uppercase
+                            tracking-[0.12em]
+                            text-[#667056]
+
+                            transition-colors
+
+                            hover:text-[#9a7b26]
+
+                            disabled:cursor-not-allowed
+                            disabled:opacity-50
+                        "
+                    >
+                        {passwordVisible
+                            ? (
+                                language === "mn"
+                                    ? "Нуух"
+                                    : "Hide"
+                            )
+                            : (
+                                language === "mn"
+                                    ? "Харах"
+                                    : "Show"
+                            )}
+                    </button>
+
+                )}
+
+            </div>
 
         </div>
     );

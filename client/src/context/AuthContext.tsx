@@ -6,6 +6,8 @@ import {
 } from "react";
 
 import { api } from "../api/client";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 type AuthUser = {
@@ -45,34 +47,52 @@ export function AuthProvider({
     const [loading, setLoading] =
         useState(true);
 
+    const navigate = useNavigate();
+
 
     async function refreshAuth() {
 
-    try {
+        try {
 
-        const response =
-            await api.get("/auth/me");
+            const response =
+                await api.get("/auth/me");
 
 
-        if (!isAuthUser(response.data)) {
+            if (!isAuthUser(response.data)) {
+
+                setUser(null);
+                return;
+            }
+
+
+            setUser(response.data);
+            localStorage.setItem("wasLoggedIn", "true");
+
+        } catch (error) {
+
+            const wasLoggedIn =
+                localStorage.getItem("wasLoggedIn") === "true";
+
+            if (
+                axios.isAxiosError(error) &&
+                (error.response?.status === 401 ||
+                error.response?.status === 403) &&
+                wasLoggedIn
+            ) {
+                alert(
+                    "Sorry, your session has timed out. Please log in again."
+                );
+
+                localStorage.removeItem("wasLoggedIn");
+            }
 
             setUser(null);
 
-            return;
+        } finally {
+
+            setLoading(false);
         }
-
-
-        setUser(response.data);
-
-    } catch {
-
-        setUser(null);
-
-    } finally {
-
-        setLoading(false);
     }
-}
 
 
     async function logout() {
@@ -86,6 +106,12 @@ export function AuthProvider({
         } finally {
 
             setUser(null);
+            localStorage.removeItem("wasLoggedIn");
+
+            navigate(
+                "/auth/login",    
+            );
+
         }
     }
 
