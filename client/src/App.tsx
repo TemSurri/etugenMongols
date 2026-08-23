@@ -14,6 +14,8 @@ import OurImpactPage from "./pages/OurImpactPage";
 
 import LoginPage from "./pages/auth/login";
 import SignupPage from "./pages/auth/signup";
+import VerificationPage
+    from "./pages/auth/verification";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
@@ -43,6 +45,10 @@ function App() {
 
         <Route path="/auth/login" element={<LoginPage />}/>
         <Route path="/auth/signup" element={<SignupPage />}/>
+        <Route
+            path="/verify"
+            element={<VerificationPage />}
+        />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
         <Route path="/get-involved/donate" element={<DonatePage />} />
