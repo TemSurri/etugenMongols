@@ -505,7 +505,7 @@ export default function LoginForm({
                             {" "}
 
                             <Link
-                                to="/auth/verify"
+                                to="/auth/verify-account"
                                 className="
                                     font-semibold
                                     text-[#27301d]

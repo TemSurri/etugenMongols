@@ -15,7 +15,9 @@ import OurImpactPage from "./pages/OurImpactPage";
 import LoginPage from "./pages/auth/login";
 import SignupPage from "./pages/auth/signup";
 import VerificationPage
-    from "./pages/auth/verification";
+    from "./pages/auth/account_verification";
+import VerifyAccountPage
+    from "./pages/auth/send_account_verification";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
@@ -49,6 +51,10 @@ function App() {
             path="/verify"
             element={<VerificationPage />}
         />
+        <Route
+          path="/auth/verify-account"
+          element={<VerifyAccountPage />}
+         />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
         <Route path="/get-involved/donate" element={<DonatePage />} />
