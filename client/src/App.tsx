@@ -19,6 +19,12 @@ import VerificationPage
 import VerifyAccountPage
     from "./pages/auth/send_account_verification";
 
+import ForgotPasswordPage
+  from "./pages/auth/forgot_password";
+
+import ResetPasswordPage
+  from "./pages/auth/reset_password";
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -55,6 +61,16 @@ function App() {
           path="/auth/verify-account"
           element={<VerifyAccountPage />}
          />
+
+        <Route
+            path="/auth/forgot-password"
+            element={<ForgotPasswordPage />}
+        />
+
+        <Route
+            path="/auth/reset-password"
+            element={<ResetPasswordPage />}
+        />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
         <Route path="/get-involved/donate" element={<DonatePage />} />
