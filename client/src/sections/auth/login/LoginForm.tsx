@@ -39,6 +39,9 @@ export default function LoginForm({
     const [password, setPassword] =
         useState("");
 
+    const [showPassword, setShowPassword] =
+        useState(false);
+
     const [error, setError] =
         useState("");
 
@@ -350,56 +353,121 @@ export default function LoginForm({
                 </div>
 
 
-                <input
-                    id="password"
-                    name="password"
-                    type="password"
+                <div className="relative mt-2">
 
-                    value={password}
+                    <input
+                        id="password"
+                        name="password"
+                        type={
+                            showPassword
+                                ? "text"
+                                : "password"
+                        }
 
-                    onChange={(event) =>
-                        setPassword(
-                            event.target.value
-                        )
-                    }
+                        value={password}
 
-                    placeholder={
-                        mn
-                            ? "Нууц үгээ оруулна уу"
-                            : "Enter your password"
-                    }
+                        onChange={(event) =>
+                            setPassword(
+                                event.target.value
+                            )
+                        }
 
-                    autoComplete="current-password"
+                        placeholder={
+                            mn
+                                ? "Нууц үгээ оруулна уу"
+                                : "Enter your password"
+                        }
 
-                    required
-                    disabled={loading}
+                        autoComplete="current-password"
 
-                    className="
-                        mt-2
-                        h-11
-                        w-full
+                        required
+                        disabled={loading}
 
-                        border
-                        border-[#27301d]/25
+                        className="
+                            h-11
+                            w-full
 
-                        bg-white
+                            border
+                            border-[#27301d]/25
 
-                        px-3.5
+                            bg-white
 
-                        text-sm
-                        text-[#27301d]
+                            px-3.5
+                            pr-16
 
-                        outline-none
-                        transition-colors
+                            text-sm
+                            text-[#27301d]
 
-                        placeholder:text-[#667056]/45
+                            outline-none
+                            transition-colors
 
-                        focus:border-[#9a7b26]
+                            placeholder:text-[#667056]/45
 
-                        disabled:cursor-not-allowed
-                        disabled:opacity-60
-                    "
-                />
+                            focus:border-[#9a7b26]
+
+                            disabled:cursor-not-allowed
+                            disabled:opacity-60
+                        "
+                    />
+
+
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setShowPassword(
+                                (visible) => !visible
+                            )
+                        }
+                        disabled={loading}
+
+                        aria-label={
+                            showPassword
+                                ? (
+                                    mn
+                                        ? "Нууц үгийг нуух"
+                                        : "Hide password"
+                                )
+                                : (
+                                    mn
+                                        ? "Нууц үгийг харуулах"
+                                        : "Show password"
+                                )
+                        }
+
+                        className="
+                            absolute
+                            right-3
+                            top-1/2
+                            -translate-y-1/2
+
+                            text-[9px]
+                            font-bold
+                            uppercase
+                            tracking-[0.12em]
+                            text-[#667056]
+
+                            transition-colors
+
+                            hover:text-[#9a7b26]
+
+                            disabled:cursor-not-allowed
+                            disabled:opacity-50
+                        "
+                    >
+                        {showPassword
+                            ? (
+                                mn
+                                    ? "Нуух"
+                                    : "Hide"
+                            )
+                            : (
+                                mn
+                                    ? "Харах"
+                                    : "Show"
+                            )}
+                    </button>
+
+                </div>
 
             </div>
 
@@ -437,7 +505,7 @@ export default function LoginForm({
                             {" "}
 
                             <Link
-                                to="/auth/verify"
+                                to="/auth/verify-account"
                                 className="
                                     font-semibold
                                     text-[#27301d]

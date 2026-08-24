@@ -75,6 +75,10 @@ function SignupSection() {
     ] = useState(false);
 
 
+    const [accountCreated, setAccountCreated] =
+        useState(false);
+
+
     const [background] =
         useState(() => {
 
@@ -276,89 +280,204 @@ function SignupSection() {
                         "
                     >
 
-                        {/* Compact top area */}
-                        <div
-                            className="
-                                border-b
-                                border-[#27301d]/10
-                                bg-white
+                        {accountCreated ? (
 
-                                px-7
-                                py-5
-
-                                text-center
-
-                                md:px-9
-                            "
-                        >
-
-                            <h1
+                            <div
                                 className="
-                                    text-2xl
-                                    font-semibold
-                                    text-[#27301d]
-                                "
-                            >
-                                {language === "en"
-                                    ? "Create an account"
-                                    : "Бүртгэл үүсгэх"}
-                            </h1>
-
-
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    setShowWhyAccount(true)
-                                }
-                                className="
-                                    mt-3
-                                    inline-flex
+                                    flex
+                                    flex-col
                                     items-center
-                                    justify-center
 
-                                    border
-                                    border-[#9a7b26]/40
+                                    bg-white
 
-                                    bg-[#fffaf0]
+                                    px-7
+                                    py-10
 
-                                    px-4
-                                    py-2
+                                    text-center
 
-                                    text-[10px]
-                                    font-bold
-                                    uppercase
-                                    tracking-[0.15em]
-                                    text-[#9a7b26]
-
-                                    transition-colors
-
-                                    hover:border-[#9a7b26]
-                                    hover:bg-[#9a7b26]
-                                    hover:text-white
+                                    md:px-9
                                 "
                             >
-                                {language === "en"
-                                    ? "Why create an account?"
-                                    : "Яагаад бүртгэл үүсгэх вэ?"}
-                            </button>
 
-                        </div>
+                                <Link
+                                    to="/"
+                                    className="
+                                        inline-flex
+                                        items-center
+                                        justify-center
+
+                                        transition-opacity
+
+                                        hover:opacity-80
+                                    "
+                                >
+                                    <img
+                                        src="/logo.webp"
+                                        alt="Etugen Mongols logo"
+                                        loading="eager"
+                                        decoding="async"
+                                        className="
+                                            h-16
+                                            w-16
+                                            object-contain
+                                        "
+                                    />
+                                </Link>
 
 
-                        {/* Signup form */}
-                        <div
-                            className="
-                                px-7
-                                py-6
-                                md:px-9
-                            "
-                        >
+                                <h1
+                                    className="
+                                        mt-6
+                                        text-2xl
+                                        font-semibold
+                                        text-[#27301d]
+                                    "
+                                >
+                                    {language === "en"
+                                        ? "Check your email"
+                                        : "Имэйлээ шалгана уу"}
+                                </h1>
 
-                            <SignupForm
-                                language={language}
-                            />
 
-                        </div>
+                                <p
+                                    className="
+                                        mx-auto
+                                        mt-3
+                                        max-w-sm
+                                        text-sm
+                                        leading-6
+                                        text-[#667056]
+                                    "
+                                >
+                                    {language === "en"
+                                        ? "We've sent you a verification link. Open it to verify your Etugen Mongols account."
+                                        : "Бид танд баталгаажуулах холбоос илгээлээ. Etugen Mongols бүртгэлээ баталгаажуулахын тулд холбоосыг нээнэ үү."}
+                                </p>
+
+
+                                <div className="mt-8">
+
+                                    <p
+                                        className="
+                                            text-sm
+                                            font-semibold
+                                            text-[#27301d]
+                                        "
+                                    >
+                                        Etugen Mongols
+                                    </p>
+
+                                    <p
+                                        className="
+                                            mt-1
+                                            text-[8px]
+                                            font-bold
+                                            uppercase
+                                            tracking-[0.2em]
+                                            text-[#9a7b26]
+                                        "
+                                    >
+                                        Not For Profit
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        ) : (
+
+                            <>
+
+                                {/* Compact top area */}
+                                <div
+                                    className="
+                                        border-b
+                                        border-[#27301d]/10
+                                        bg-white
+
+                                        px-7
+                                        py-5
+
+                                        text-center
+
+                                        md:px-9
+                                    "
+                                >
+
+                                    <h1
+                                        className="
+                                            text-2xl
+                                            font-semibold
+                                            text-[#27301d]
+                                        "
+                                    >
+                                        {language === "en"
+                                            ? "Create an account"
+                                            : "Бүртгэл үүсгэх"}
+                                    </h1>
+
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowWhyAccount(true)
+                                        }
+                                        className="
+                                            mt-3
+                                            inline-flex
+                                            items-center
+                                            justify-center
+
+                                            border
+                                            border-[#9a7b26]/40
+
+                                            bg-[#fffaf0]
+
+                                            px-4
+                                            py-2
+
+                                            text-[10px]
+                                            font-bold
+                                            uppercase
+                                            tracking-[0.15em]
+                                            text-[#9a7b26]
+
+                                            transition-colors
+
+                                            hover:border-[#9a7b26]
+                                            hover:bg-[#9a7b26]
+                                            hover:text-white
+                                        "
+                                    >
+                                        {language === "en"
+                                            ? "Why create an account?"
+                                            : "Яагаад бүртгэл үүсгэх вэ?"}
+                                    </button>
+
+                                </div>
+
+
+                                {/* Signup form */}
+                                <div
+                                    className="
+                                        px-7
+                                        py-6
+                                        md:px-9
+                                    "
+                                >
+
+                                    <SignupForm
+                                        language={language}
+                                        onAccountCreated={() =>
+                                            setAccountCreated(true)
+                                        }
+                                    />
+
+                                </div>
+
+                            </>
+
+                        )}
 
                     </div>
 
