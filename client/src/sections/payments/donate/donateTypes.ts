@@ -13,6 +13,7 @@ export type DonationCopy = {
   donationTitle: string;
 
   amountLabel: string;
+  amountMinimum: string;
   amountPlaceholder: string;
 
   detailsTitle: string;

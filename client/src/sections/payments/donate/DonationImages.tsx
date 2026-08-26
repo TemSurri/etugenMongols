@@ -1,81 +1,82 @@
 import { memo } from "react";
 
-const DONATE_IMAGES = {
-  main: "/impact/dance/2.webp",
-  secondary: "/impact/archery/4.webp",
-} as const;
+const DONATE_IMAGES = [
+  "/impact/culture/4.webp",
+  "/impact/archery/3.webp",
+] as const;
 
 function DonationImages() {
   return (
     <aside
       className="
         hidden
+        min-w-0
+        overflow-hidden
         bg-[#303824]
-        lg:flex
-        lg:flex-col
+        lg:block
       "
     >
       <div
         className="
-          relative
-          min-h-[58%]
-          flex-1
-          overflow-hidden
+          flex
+          flex-col
+          gap-px
+          bg-[#fffaf0]/10
         "
       >
-        <img
-          src={DONATE_IMAGES.main}
-          alt=""
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          className="
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            object-center
-          "
-        />
+        {DONATE_IMAGES.map(
+          (image, index) => (
+            <div
+              key={image}
+              className="
+                relative
+                aspect-[4/5]
+                w-full
+                overflow-hidden
+                bg-[#303824]
+              "
+            >
+              <img
+                src={image}
+                alt=""
+                aria-hidden="true"
+                loading={
+                  index === 0
+                    ? "eager"
+                    : "lazy"
+                }
+                decoding="async"
+                fetchPriority={
+                  index === 0
+                    ? "high"
+                    : "auto"
+                }
+                draggable={false}
+                className="
+                  absolute
+                  inset-0
+                  h-full
+                  w-full
+                  select-none
+                  object-cover
+                  object-center
+                "
+              />
 
-        <div
-          className="
-            absolute
-            inset-0
-            bg-gradient-to-t
-            from-[#303824]/30
-            via-transparent
-            to-transparent
-          "
-        />
-      </div>
-
-      <div
-        className="
-          relative
-          min-h-[340px]
-          overflow-hidden
-          border-t
-          border-[#fffaf0]/10
-        "
-      >
-        <img
-          src={
-            DONATE_IMAGES.secondary
-          }
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            object-center
-          "
-        />
+              <div
+                className="
+                  pointer-events-none
+                  absolute
+                  inset-0
+                  bg-gradient-to-t
+                  from-[#303824]/10
+                  via-transparent
+                  to-transparent
+                "
+              />
+            </div>
+          )
+        )}
       </div>
     </aside>
   );

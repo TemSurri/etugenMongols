@@ -11,6 +11,8 @@ type DonationAmountProps = {
 
   numericAmount: number;
 
+  error: string | null;
+
   onAmountChange: (
     value: string
   ) => void;
@@ -31,6 +33,7 @@ function DonationAmount({
   copy,
   amount,
   numericAmount,
+  error,
   onAmountChange,
   onQuickAmountSelect,
 }: DonationAmountProps) {
@@ -62,17 +65,21 @@ function DonationAmount({
       </label>
 
       <div
-        className="
+        className={`
           mt-2
           flex
           overflow-hidden
           border
-          border-[#303824]/20
           bg-white
           transition-colors
           duration-150
-          focus-within:border-[#303824]/55
-        "
+
+          ${
+            error
+              ? "border-red-700/60"
+              : "border-[#303824]/20 focus-within:border-[#303824]/55"
+          }
+        `}
       >
         <div
           className="
@@ -92,7 +99,6 @@ function DonationAmount({
           id="donation-amount"
           type="number"
           inputMode="decimal"
-          min="1"
           step="0.01"
           value={amount}
           onChange={(event) =>
@@ -102,6 +108,16 @@ function DonationAmount({
           }
           placeholder={
             copy.amountPlaceholder
+          }
+          aria-invalid={
+            error
+              ? "true"
+              : "false"
+          }
+          aria-describedby={
+            error
+              ? "donation-amount-error"
+              : undefined
           }
           className="
             min-w-0
@@ -129,6 +145,21 @@ function DonationAmount({
           CAD
         </div>
       </div>
+
+      {error && (
+        <p
+          id="donation-amount-error"
+          role="alert"
+          className="
+            mt-2
+            text-sm
+            font-medium
+            text-red-700
+          "
+        >
+          {error}
+        </p>
+      )}
 
       <div
         className="

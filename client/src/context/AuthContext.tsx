@@ -33,6 +33,8 @@ type AuthContextType = {
     refreshAuth: () => Promise<void>;
 
     logout: () => Promise<void>;
+
+    clearAuth: () => void;
 };
 
 
@@ -161,6 +163,7 @@ export function AuthProvider({
 
                 refreshAuth,
                 logout,
+                clearAuth,
             }}
         >
             {children}
@@ -205,4 +208,13 @@ export function AuthProvider({
             typeof user.createdAt === "string"
         );
     }
+
+    function clearAuth() {
+
+    setUser(null);
+
+    localStorage.removeItem(
+        "wasLoggedIn"
+    );
+}
 }

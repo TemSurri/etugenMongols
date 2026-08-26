@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FormEvent,
 } from "react";
@@ -16,9 +17,8 @@ import {
 
 import {
   checkoutDonation,
+  verifyDonationSession,
 } from "./donateAPI";
-
-
 
 import type {
   DonationCheckoutRequest,
@@ -29,7 +29,6 @@ import type {
 import DonationAmount from "./DonationAmount";
 import DonationAccountStatus from "./DonationAccountStatus";
 import DonationDetails from "./DonationDetails";
-
 import DonationSummary from "./DonationSummary";
 import DonationImages from "./DonationImages";
 
@@ -50,6 +49,9 @@ const COPY: Record<
 
     amountPlaceholder:
       "Enter amount",
+
+    amountMinimum:
+      "The minimum donation amount is $1.00 CAD.",
 
     detailsTitle:
       "Your details",
@@ -82,10 +84,10 @@ const COPY: Record<
       "If you have something specific in mind for your donation, let us know here. You can tell us about a program, event, cultural activity, or other area you would especially like your contribution to support. You can also use this space to leave any other information you would like us to know.",
 
     messageLabel:
-      "Message or donation intent (optional)",
+      "Anything you'd like us to know? (optional)",
 
     messagePlaceholder:
-  "Tell us if there's something you'd especially like your donation to support, such as a particular event, program, or cultural activity. You can also leave any other information you'd like us to know.",
+      "Tell us if there's something you'd especially like your donation to support, such as a particular event, program, or cultural activity. You can also leave any other information you'd like us to know.",
 
     summaryTitle:
       "Summary",
@@ -103,7 +105,7 @@ const COPY: Record<
       "Preparing payment...",
 
     required:
-      "Please enter a valid donation amount and complete the required information.",
+      "Please complete the required information.",
 
     error:
       "We could not start your payment. Please try again.",
@@ -133,6 +135,9 @@ const COPY: Record<
 
     amountPlaceholder:
       "Дүн оруулна уу",
+
+    amountMinimum:
+      "Хандивын доод хэмжээ $1.00 CAD байна.",
 
     detailsTitle:
       "Таны мэдээлэл",
@@ -165,10 +170,10 @@ const COPY: Record<
       "Хэрэв та хандиваа тодорхой зүйлд зориулахыг хүсэж байвал энд бичиж болно. Та дэмжихийг хүссэн хөтөлбөр, арга хэмжээ, соёлын үйл ажиллагаа эсвэл бусад чиглэлийг бидэнд хэлээрэй. Мөн бидэнд мэдэгдэхийг хүссэн бусад мэдээллээ энд үлдээж болно.",
 
     messageLabel:
-      "Зурвас эсвэл хандивын зориулалт (сонголттой)",
+      "Бидэнд хэлэх зүйл байна уу? (сонголттой)",
 
     messagePlaceholder:
-  "Хандиваа тодорхой арга хэмжээ, хөтөлбөр, соёлын үйл ажиллагаа эсвэл бусад зүйлд түлхүү зориулахыг хүсэж байвал энд бичнэ үү. Мөн бидэнд мэдэгдэх бусад мэдээллээ үлдээж болно.",
+      "Хандиваа тодорхой арга хэмжээ, хөтөлбөр, соёлын үйл ажиллагаа эсвэл бусад зүйлд түлхүү зориулахыг хүсэж байвал энд бичнэ үү. Мөн бидэнд мэдэгдэх бусад мэдээллээ үлдээж болно.",
 
     summaryTitle:
       "Дүн",
@@ -186,7 +191,7 @@ const COPY: Record<
       "Төлбөр бэлдэж байна...",
 
     required:
-      "Хандивын зөв дүн болон шаардлагатай мэдээллийг оруулна уу.",
+      "Шаардлагатай мэдээллийг бөглөнө үү.",
 
     error:
       "Төлбөрийг эхлүүлж чадсангүй. Дахин оролдоно уу.",
@@ -232,17 +237,29 @@ function DonateCheckoutSection({
     user,
     loading: authLoading,
     isLoggedIn,
+    clearAuth,
   } = auth;
+
+  /* -------------------------------------------------------------------- */
+  /* Refs                                                                 */
+  /* -------------------------------------------------------------------- */
+
+  const amountSectionRef =
+    useRef<HTMLDivElement>(null);
 
   /* -------------------------------------------------------------------- */
   /* Form state                                                           */
   /* -------------------------------------------------------------------- */
 
-  const [amount, setAmount] =
-    useState("50");
+  const [
+    amount,
+    setAmount,
+  ] = useState("50");
 
-  const [email, setEmail] =
-    useState("");
+  const [
+    email,
+    setEmail,
+  ] = useState("");
 
   const [
     firstName,
@@ -272,6 +289,13 @@ function DonateCheckoutSection({
   const [
     error,
     setError,
+  ] = useState<
+    string | null
+  >(null);
+
+  const [
+    amountError,
+    setAmountError,
   ] = useState<
     string | null
   >(null);
@@ -341,6 +365,8 @@ function DonateCheckoutSection({
     useCallback(
       (value: string) => {
         setAmount(value);
+
+        setAmountError(null);
         setError(null);
       },
       []
@@ -353,6 +379,7 @@ function DonateCheckoutSection({
           String(value)
         );
 
+        setAmountError(null);
         setError(null);
       },
       []
@@ -375,6 +402,7 @@ function DonateCheckoutSection({
         }
 
         setError(null);
+        setAmountError(null);
 
         const cleanEmail =
           email.trim();
@@ -388,11 +416,43 @@ function DonateCheckoutSection({
         const cleanMessage =
           message.trim();
 
+        /* -------------------------------------------------------------- */
+        /* Amount validation                                              */
+        /* -------------------------------------------------------------- */
+
         if (
           !Number.isFinite(
             numericAmount
           ) ||
-          numericAmount <= 0 ||
+          numericAmount < 1
+        ) {
+          setAmountError(
+            copy.amountMinimum
+          );
+
+          /*
+           * Wait until React has rendered
+           * the error before scrolling.
+           */
+          requestAnimationFrame(() => {
+            amountSectionRef.current
+              ?.scrollIntoView({
+                behavior:
+                  "smooth",
+
+                block:
+                  "center",
+              });
+          });
+
+          return;
+        }
+
+        /* -------------------------------------------------------------- */
+        /* Required donor information                                    */
+        /* -------------------------------------------------------------- */
+
+        if (
           !cleanEmail ||
           !cleanFirstName ||
           !cleanLastName
@@ -403,6 +463,10 @@ function DonateCheckoutSection({
 
           return;
         }
+
+        /* -------------------------------------------------------------- */
+        /* Request                                                        */
+        /* -------------------------------------------------------------- */
 
         const request:
           DonationCheckoutRequest = {
@@ -425,6 +489,35 @@ function DonateCheckoutSection({
           request.message =
             cleanMessage;
         }
+
+        const wasLoggedIn =
+          localStorage.getItem(
+            "wasLoggedIn"
+          ) === "true";
+
+
+        if (wasLoggedIn) {
+
+          const sessionValid =
+            await verifyDonationSession();
+
+
+          if (!sessionValid) {
+
+            alert(
+              "Sorry, your session has timed out. Please log in again before continuing."
+            );
+
+            clearAuth();
+
+            return;
+          }
+        }
+
+
+        await checkoutDonation(
+          request
+        );
 
         try {
           setSubmitting(true);
@@ -457,6 +550,7 @@ function DonateCheckoutSection({
       },
       [
         anonymous,
+        copy.amountMinimum,
         copy.error,
         copy.required,
         email,
@@ -484,11 +578,17 @@ function DonateCheckoutSection({
         className="
           grid
           min-h-screen
+          items-start
           lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.72fr)]
         "
       >
+        {/* -------------------------------------------------------------- */}
+        {/* Form column                                                    */}
+        {/* -------------------------------------------------------------- */}
+
         <div
           className="
+            min-w-0
             px-6
             pb-20
             pt-32
@@ -511,19 +611,28 @@ function DonateCheckoutSection({
               max-w-[700px]
             "
           >
-            <DonationAmount
-              copy={copy}
-              amount={amount}
-              numericAmount={
-                numericAmount
+            <div
+              ref={
+                amountSectionRef
               }
-              onAmountChange={
-                handleAmountChange
-              }
-              onQuickAmountSelect={
-                handleQuickAmountSelect
-              }
-            />
+            >
+              <DonationAmount
+                copy={copy}
+                amount={amount}
+                numericAmount={
+                  numericAmount
+                }
+                error={
+                  amountError
+                }
+                onAmountChange={
+                  handleAmountChange
+                }
+                onQuickAmountSelect={
+                  handleQuickAmountSelect
+                }
+              />
+            </div>
 
             <DonationAccountStatus
               copy={copy}
@@ -539,32 +648,69 @@ function DonateCheckoutSection({
             <DonationDetails
               copy={copy}
               email={email}
-              firstName={firstName}
-              lastName={lastName}
-              anonymous={anonymous}
-              message={message}
+              firstName={
+                firstName
+              }
+              lastName={
+                lastName
+              }
+              anonymous={
+                anonymous
+              }
+              message={
+                message
+              }
 
-              onEmailChange={(value: string) => {
-                setEmail(value);
-                setError(null);
+              onEmailChange={(
+                value: string
+              ) => {
+                setEmail(
+                  value
+                );
+
+                setError(
+                  null
+                );
               }}
 
-              onFirstNameChange={(value: string) => {
-                setFirstName(value);
-                setError(null);
+              onFirstNameChange={(
+                value: string
+              ) => {
+                setFirstName(
+                  value
+                );
+
+                setError(
+                  null
+                );
               }}
 
-              onLastNameChange={(value: string) => {
-                setLastName(value);
-                setError(null);
+              onLastNameChange={(
+                value: string
+              ) => {
+                setLastName(
+                  value
+                );
+
+                setError(
+                  null
+                );
               }}
 
-              onAnonymousChange={(value: boolean) => {
-                setAnonymous(value);
+              onAnonymousChange={(
+                value: boolean
+              ) => {
+                setAnonymous(
+                  value
+                );
               }}
 
-              onMessageChange={(value: string) => {
-                setMessage(value);
+              onMessageChange={(
+                value: string
+              ) => {
+                setMessage(
+                  value
+                );
               }}
             />
 
@@ -579,10 +725,16 @@ function DonateCheckoutSection({
               authLoading={
                 authLoading
               }
-              error={error}
+              error={
+                error
+              }
             />
           </form>
         </div>
+
+        {/* -------------------------------------------------------------- */}
+        {/* Independent image column                                       */}
+        {/* -------------------------------------------------------------- */}
 
         <DonationImages />
       </div>
