@@ -1,7 +1,7 @@
-
 "use client";
 
 import { memo } from "react";
+import { Link } from "react-router-dom";
 import {
   cubicBezier,
   motion,
@@ -214,52 +214,27 @@ function Donate({ lang }: DonateProps) {
             </p>
 
             <div className="mt-7">
-              <button
-                type="button"
-                disabled
-                aria-disabled="true"
+              <Link
+                to="/payments/donate-money"
                 className="
                   inline-flex
-                  cursor-not-allowed
                   items-center
                   justify-center
-                  bg-[#303824]/65
+                  bg-[#303824]
                   px-7
                   py-3
                   text-sm
                   font-medium
-                  text-[#fffaf0]/90
+                  text-[#fffaf0]
+                  transition-all
+                  duration-200
+                  ease-out
+                  hover:-translate-y-px
+                  hover:bg-[#242a1b]
                 "
               >
                 {copy.donateButton}
-              </button>
-
-              <div className="mt-4 border-l-2 border-[#d6ba72] pl-4">
-                <p className="max-w-lg text-sm leading-6 text-[#69705c]">
-                  {copy.unavailable}
-                </p>
-
-                <a
-                  href={`mailto:${DONATION_EMAIL}`}
-                  className="
-                    mt-2
-                    block
-                    w-fit
-                    break-all
-                    text-sm
-                    font-medium
-                    text-[#303824]
-                    underline
-                    decoration-[#d6ba72]
-                    underline-offset-4
-                    transition-colors
-                    duration-200
-                    hover:text-[#9a7b30]
-                  "
-                >
-                  {DONATION_EMAIL}
-                </a>
-              </div>
+              </Link>
             </div>
           </div>
         </motion.section>
@@ -417,4 +392,3 @@ function Donate({ lang }: DonateProps) {
 }
 
 export default memo(Donate);
-
