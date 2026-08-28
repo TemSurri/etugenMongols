@@ -34,15 +34,11 @@ export async function checkoutDonation(
  * - return client secret
  */
 export async function continueDonationPayment(
-  jobId: string
-): Promise<PaymentIntentResult> {
+): Promise<string> {
 
   const response =
-    await api.post<PaymentIntentResult>(
-      "/payment/continue-donate",
-      {
-        jobId,
-      }
+    await api.post<string>(
+      "/payment/resume-donation",
     );
 
   return response.data;
@@ -53,19 +49,15 @@ export async function continueDonationPayment(
  * Cancel an existing donation payment.
  *
  * Expected backend behavior:
- * - verify ownership/session
+ * - find job ownership from session
  * - cancel PaymentIntent when appropriate
  * - mark PaymentJob cancelled
  */
-export async function cancelDonationPayment(
-  jobId: string
-): Promise<void> {
+export async function cancelDonationPayment():
+  Promise<void> {
 
   await api.post(
-    "/payment/cancel-donate",
-    {
-      jobId,
-    }
+    "/payment/cancel-donation"
   );
 }
 

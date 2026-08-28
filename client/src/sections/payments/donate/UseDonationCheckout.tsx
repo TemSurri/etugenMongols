@@ -313,23 +313,25 @@ export function useDonationCheckout(
         return;
       }
 
-
       try {
 
         setSubmitting(true);
-
         setError(null);
 
+        const clientSecret =
+          await continueDonationPayment();
 
-        const result =
-          await continueDonationPayment(
-            existingPayment.jobId
-          );
-
-
-        continueToStripe(
-          result
-        );
+        /*
+         * Resume returned a valid Stripe client secret.
+         *
+         * Preserve the existing payment information
+         * used by the UI, but replace the client secret
+         * with the server-validated one.
+         */
+        continueToStripe({
+          ...existingPayment,
+          clientSecret,
+        });
 
       } catch (error) {
 
@@ -337,7 +339,6 @@ export function useDonationCheckout(
           "Could not continue donation payment:",
           error
         );
-
 
         setError(
           copy.error
@@ -377,9 +378,7 @@ const handleCancelExistingPayment =
         setError(null);
 
 
-        await cancelDonationPayment(
-          existingPayment.jobId
-        );
+        await cancelDonationPayment();
 
 
         setExistingPayment(
@@ -420,9 +419,7 @@ const handleCancelExistingPayment =
       }
 
 
-      await cancelDonationPayment(
-        activePayment.jobId
-      );
+      await cancelDonationPayment();
 
 
       setActivePayment(
