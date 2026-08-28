@@ -298,17 +298,6 @@ export function useDonationCheckout(
       ]
     );
 
-
-  const returnFromStripe =
-    useCallback(() => {
-
-      setActivePayment(
-        null
-      );
-
-    }, []);
-
-
   /* ------------------------------------------------------------------ */
   /* Existing payment                                                   */
   /* ------------------------------------------------------------------ */
