@@ -112,6 +112,42 @@ export const DONATION_COPY: Record<
 
     cancelExisting:
       "Cancel and start again",
+
+      paymentTitle:
+  "Complete your donation",
+
+paymentDescription:
+  "Enter your payment information below to securely complete your donation.",
+
+paymentTotal:
+  "Total",
+
+paymentCancel:
+  "Cancel payment",
+
+paymentProcessing:
+  "Processing payment...",
+
+paymentSuccessTitle:
+  "Thank you for your donation",
+
+paymentSuccessDescription:
+  "Your donation has been received successfully. Thank you for supporting Etugen Mongols.",
+
+paymentSuccessEmail:
+  "A confirmation email will be sent to you shortly.",
+
+paymentDone:
+  "Done",
+
+paymentProcessingTitle:
+  "Your payment is processing",
+
+paymentProcessingDescription:
+  "Your payment has been submitted and is still being processed. We'll send you an email once it has been confirmed.",
+
+paymentCancelError:
+  "We could not cancel the payment. Please try again.",
   },
 
 
@@ -218,5 +254,41 @@ export const DONATION_COPY: Record<
 
     cancelExisting:
       "Цуцлаад дахин эхлэх",
+
+      paymentTitle:
+  "Хандиваа дуусгах",
+
+paymentDescription:
+  "Хандиваа аюулгүй дуусгахын тулд төлбөрийн мэдээллээ доор оруулна уу.",
+
+paymentTotal:
+  "Нийт",
+
+paymentCancel:
+  "Төлбөр цуцлах",
+
+paymentProcessing:
+  "Төлбөр боловсруулж байна...",
+
+paymentSuccessTitle:
+  "Хандив өгсөнд баярлалаа",
+
+paymentSuccessDescription:
+  "Таны хандив амжилттай хүлээн авлаа. Etugen Mongols-ыг дэмжсэн танд баярлалаа.",
+
+paymentSuccessEmail:
+  "Баталгаажуулах имэйл удахгүй танд илгээгдэх болно.",
+
+paymentDone:
+  "Дуусгах",
+
+paymentProcessingTitle:
+  "Таны төлбөр боловсруулагдаж байна",
+
+paymentProcessingDescription:
+  "Таны төлбөр илгээгдсэн бөгөөд одоогоор боловсруулагдаж байна. Баталгаажмагц бид танд имэйл илгээнэ.",
+
+paymentCancelError:
+  "Төлбөрийг цуцалж чадсангүй. Дахин оролдоно уу.",
   },
 };

@@ -13,7 +13,9 @@ import {
 } from "../../../context/AuthContext";
 
 import {
+  cancelDonationPayment,
   checkoutDonation,
+  continueDonationPayment,
   verifyDonationSession,
 } from "./donateApi";
 
@@ -312,64 +314,137 @@ export function useDonationCheckout(
   /* ------------------------------------------------------------------ */
 
   const handleContinueExistingPayment =
-    useCallback(() => {
+  useCallback(
+    async () => {
 
-      if (!existingPayment) {
+      if (
+        !existingPayment ||
+        submitting
+      ) {
         return;
       }
 
 
-      /*
-       * TODO:
-       *
-       * Call continue-existing endpoint.
-       *
-       * Backend should:
-       * - verify ownership
-       * - retrieve existing PaymentIntent
-       * - return its client secret
-       *
-       * Then call continueToStripe(result).
-       */
+      try {
 
-      console.log(
-        "continue existing payment:",
-        existingPayment.jobId
-      );
+        setSubmitting(true);
 
-    }, [
+        setError(null);
+
+
+        const result =
+          await continueDonationPayment(
+            existingPayment.jobId
+          );
+
+
+        continueToStripe(
+          result
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not continue donation payment:",
+          error
+        );
+
+
+        setError(
+          copy.error
+        );
+
+      } finally {
+
+        setSubmitting(false);
+      }
+
+    },
+    [
+      copy.error,
+      continueToStripe,
       existingPayment,
-    ]);
+      submitting,
+    ]
+  );
 
 
-  const handleCancelExistingPayment =
-    useCallback(() => {
+const handleCancelExistingPayment =
+  useCallback(
+    async () => {
 
-      if (!existingPayment) {
+      if (
+        !existingPayment ||
+        submitting
+      ) {
         return;
       }
 
 
-      /*
-       * TODO:
-       *
-       * Call cancel-existing endpoint.
-       *
-       * Backend should:
-       * - verify ownership
-       * - cancel Stripe PaymentIntent
-       * - mark PaymentJob CANCELLED
-       * - allow creation of a new payment
-       */
+      try {
 
-      console.log(
-        "cancel existing payment:",
-        existingPayment.jobId
+        setSubmitting(true);
+
+        setError(null);
+
+
+        await cancelDonationPayment(
+          existingPayment.jobId
+        );
+
+
+        setExistingPayment(
+          null
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not cancel donation payment:",
+          error
+        );
+
+
+        setError(
+          copy.error
+        );
+
+      } finally {
+
+        setSubmitting(false);
+      }
+
+    },
+    [
+      copy.error,
+      existingPayment,
+      submitting,
+    ]
+  );
+
+  const handleCancelActivePayment =
+  useCallback(
+    async () => {
+
+      if (!activePayment) {
+        return;
+      }
+
+
+      await cancelDonationPayment(
+        activePayment.jobId
       );
 
-    }, [
-      existingPayment,
-    ]);
+
+      setActivePayment(
+        null
+      );
+
+    },
+    [
+      activePayment,
+    ]
+  );
 
 
   /* ------------------------------------------------------------------ */
@@ -613,43 +688,42 @@ export function useDonationCheckout(
 
   return {
 
-    user,
-    authLoading,
-    isLoggedIn,
+  user,
+  authLoading,
+  isLoggedIn,
 
-    amount,
-    email,
-    firstName,
-    lastName,
-    anonymous,
-    message,
+  amount,
+  email,
+  firstName,
+  lastName,
+  anonymous,
+  message,
 
-    setEmail,
-    setFirstName,
-    setLastName,
-    setAnonymous,
-    setMessage,
+  setEmail,
+  setFirstName,
+  setLastName,
+  setAnonymous,
+  setMessage,
 
-    numericAmount,
-    formattedAmount,
+  numericAmount,
+  formattedAmount,
 
-    amountError,
-    error,
-    submitting,
+  amountError,
+  error,
+  submitting,
 
-    activePayment,
-    existingPayment,
+  activePayment,
+  existingPayment,
 
-    amountSectionRef,
+  amountSectionRef,
 
-    handleAmountChange,
-    handleQuickAmountSelect,
+  handleAmountChange,
+  handleQuickAmountSelect,
 
-    handleSubmit,
+  handleSubmit,
 
-    handleContinueExistingPayment,
-    handleCancelExistingPayment,
-
-    returnFromStripe,
-  };
+  handleContinueExistingPayment,
+  handleCancelExistingPayment,
+  handleCancelActivePayment,
+};
 }

@@ -10,20 +10,6 @@ import type {
 } from "./donateTypes";
 
 
-/*
- * Starts or seeks an existing donation payment.
- *
- * Backend may return:
- *
- * CREATED
- *      new PaymentJob + Stripe PaymentIntent
- *
- * EXISTING_DUPLICATE
- *      same payment request was recently made
- *
- * CONFIRM_EXISTING
- *      another INIT payment already exists
- */
 export async function checkoutDonation(
   request: DonationCheckoutRequest
 ): Promise<PaymentIntentResult> {
@@ -39,12 +25,51 @@ export async function checkoutDonation(
 
 
 /*
- * Used before checkout when the browser remembers
- * that this user was previously authenticated.
+ * Continue an existing INIT donation payment.
  *
- * Prevents silently falling back to a guest payment
- * after an authenticated session expires.
+ * Expected backend behavior:
+ * - verify ownership/session
+ * - verify payment is still continuable
+ * - retrieve/reuse Stripe PaymentIntent
+ * - return client secret
  */
+export async function continueDonationPayment(
+  jobId: string
+): Promise<PaymentIntentResult> {
+
+  const response =
+    await api.post<PaymentIntentResult>(
+      "/payment/continue-donate",
+      {
+        jobId,
+      }
+    );
+
+  return response.data;
+}
+
+
+/*
+ * Cancel an existing donation payment.
+ *
+ * Expected backend behavior:
+ * - verify ownership/session
+ * - cancel PaymentIntent when appropriate
+ * - mark PaymentJob cancelled
+ */
+export async function cancelDonationPayment(
+  jobId: string
+): Promise<void> {
+
+  await api.post(
+    "/payment/cancel-donate",
+    {
+      jobId,
+    }
+  );
+}
+
+
 export async function verifyDonationSession():
   Promise<boolean> {
 

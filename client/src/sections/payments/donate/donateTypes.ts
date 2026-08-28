@@ -147,4 +147,28 @@ export type DonationCopy = {
   continueExisting: string;
 
   cancelExisting: string;
+
+  paymentTitle: string;
+
+  paymentDescription: string;
+
+  paymentTotal: string;
+
+  paymentCancel: string;
+
+  paymentProcessing: string;
+
+  paymentSuccessTitle: string;
+
+  paymentSuccessDescription: string;
+
+  paymentSuccessEmail: string;
+
+  paymentDone: string;
+
+  paymentProcessingTitle: string;
+
+  paymentProcessingDescription: string;
+
+  paymentCancelError: string;
 };
