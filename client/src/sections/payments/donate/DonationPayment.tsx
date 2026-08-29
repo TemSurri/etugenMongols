@@ -33,7 +33,8 @@ type DonationPaymentProps = {
 type PaymentState =
   | "payment"
   | "processing"
-  | "success";
+  | "success"
+  | "invalid";
 
 
 function DonationPayment({
@@ -196,6 +197,26 @@ function DonationPayment({
 
         if (stripeError) {
 
+          /*
+           * A Stripe "unexpected state" response means this
+           * PaymentIntent is no longer safe to continue from
+           * this browser session.
+           *
+           * Ordinary card/validation errors remain retryable.
+           */
+          if (
+            stripeError.code ===
+              "payment_intent_unexpected_state"
+          ) {
+
+            setState(
+              "invalid"
+            );
+
+            return;
+          }
+
+
           setError(
             stripeError.message ??
             "Payment could not be completed."
@@ -206,42 +227,78 @@ function DonationPayment({
 
 
         /*
-         * Browser-side confirmation only.
+         * Stripe is the browser-side source of truth for the
+         * result of this confirmation attempt.
          *
-         * Your webhook remains authoritative
-         * for backend fulfillment.
+         * The webhook remains authoritative for backend
+         * payment state and fulfillment.
          */
-        if (
-          paymentIntent
-            ?.status ===
-            "succeeded"
+        switch (
+          paymentIntent?.status
         ) {
 
-          setState(
-            "success"
-          );
+          case "succeeded":
 
-          return;
+            setState(
+              "success"
+            );
+
+            return;
+
+
+          case "processing":
+
+            setState(
+              "processing"
+            );
+
+            return;
+
+
+          case "requires_payment_method":
+
+            setError(
+              "Your payment was not completed. Please check your payment method and try again."
+            );
+
+            return;
+
+
+          case "requires_action":
+          case "requires_confirmation":
+
+            setError(
+              "Your payment requires another confirmation step. Please try again."
+            );
+
+            return;
+
+
+          /*
+           * This application does not intentionally use
+           * manual capture or other unusual post-confirmation
+           * states. Fail closed rather than trying to recover
+           * an inconsistent client-side payment session.
+           */
+          case "requires_capture":
+          case "canceled":
+          case undefined:
+
+            setState(
+              "invalid"
+            );
+
+            return;
+
+
+          default:
+
+            setState(
+              "invalid"
+            );
+
+            return;
         }
-
-
-        if (
-          paymentIntent
-            ?.status ===
-            "processing"
-        ) {
-
-          setState(
-            "processing"
-          );
-
-          return;
-        }
-
-
-        setError(
-          "Your payment has not been completed yet. Please try again."
-        );
 
 
       } catch (error) {
@@ -262,6 +319,111 @@ function DonationPayment({
         setSubmitting(false);
       }
     };
+
+
+  /* -------------------------------------------- */
+  /* Invalid payment session                      */
+  /* -------------------------------------------- */
+
+  if (
+    state === "invalid"
+  ) {
+
+    return (
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        className="
+          w-full
+          max-w-[620px]
+          bg-white
+          text-[#303824]
+          shadow-2xl
+        "
+      >
+
+        <div
+          className="
+            px-7
+            py-12
+            text-center
+            sm:px-10
+          "
+        >
+
+          <img
+            src="/logo.webp"
+            alt="Etugen Mongols"
+            className="
+              mx-auto
+              h-16
+              w-16
+              object-contain
+            "
+          />
+
+
+          <h2
+            className="
+              mt-7
+              text-2xl
+              font-normal
+              tracking-tight
+            "
+          >
+            Payment session unavailable
+          </h2>
+
+
+          <p
+            className="
+              mx-auto
+              mt-4
+              max-w-md
+              text-sm
+              leading-7
+              text-[#69705c]
+            "
+          >
+            This payment session is no longer valid and cannot be safely continued.
+            Please return to the donation page and start a new payment.
+          </p>
+
+
+          <button
+            type="button"
+            onClick={
+              onComplete
+            }
+            className="
+              mt-8
+              inline-flex
+              min-w-48
+              items-center
+              justify-center
+              bg-[#303824]
+              px-7
+              py-3.5
+              text-sm
+              font-medium
+              text-white
+              transition-colors
+              duration-150
+              hover:bg-[#242a1b]
+              focus:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[#303824]
+              focus-visible:ring-offset-2
+            "
+          >
+            Go back to home
+          </button>
+
+        </div>
+
+      </section>
+    );
+  }
 
 
   /* -------------------------------------------- */

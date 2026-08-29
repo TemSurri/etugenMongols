@@ -313,25 +313,36 @@ export function useDonationCheckout(
         return;
       }
 
+
       try {
 
         setSubmitting(true);
+
         setError(null);
+
 
         const clientSecret =
           await continueDonationPayment();
 
-        /*
-         * Resume returned a valid Stripe client secret.
-         *
-         * Preserve the existing payment information
-         * used by the UI, but replace the client secret
-         * with the server-validated one.
-         */
+
+        // The backend reconciled the existing payment.
+        // It is no longer ACTIVE, so there is nothing to resume.
+        if (!clientSecret) {
+
+          setExistingPayment(
+            null
+          );
+
+          return;
+        }
+
+
+        // Resume using the server-validated Stripe client secret.
         continueToStripe({
           ...existingPayment,
           clientSecret,
         });
+
 
       } catch (error) {
 
@@ -340,13 +351,17 @@ export function useDonationCheckout(
           error
         );
 
+
         setError(
           copy.error
         );
 
+
       } finally {
 
-        setSubmitting(false);
+        setSubmitting(
+          false
+        );
       }
 
     },

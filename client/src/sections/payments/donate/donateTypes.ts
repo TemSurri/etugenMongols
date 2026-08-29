@@ -171,4 +171,7 @@ export type DonationCopy = {
   paymentProcessingDescription: string;
 
   paymentCancelError: string;
+
+  paymentInvalidTitle: string;
+paymentInvalidDescription: string;
 };

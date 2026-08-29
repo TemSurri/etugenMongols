@@ -33,13 +33,32 @@ export async function checkoutDonation(
  * - retrieve/reuse Stripe PaymentIntent
  * - return client secret
  */
-export async function continueDonationPayment(
-): Promise<string> {
+export async function continueDonationPayment():
+  Promise<string | null> {
 
   const response =
     await api.post<string>(
-      "/payment/resume-donation",
+      "/payment/continue-donation",
+      undefined,
+      {
+        validateStatus: (status) =>
+          status === 200 ||
+          status === 204 ||
+          status === 205,
+      }
     );
+
+
+  // Backend reconciled the payment and determined
+  // that there is nothing left to resume.
+  if (
+    response.status === 204 ||
+    response.status === 205
+  ) {
+
+    return null;
+  }
+
 
   return response.data;
 }

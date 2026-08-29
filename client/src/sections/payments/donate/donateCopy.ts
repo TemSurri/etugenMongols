@@ -148,6 +148,12 @@ paymentProcessingDescription:
 
 paymentCancelError:
   "We could not cancel the payment. Please try again.",
+
+paymentInvalidTitle:
+  "Payment session unavailable",
+
+paymentInvalidDescription:
+  "This payment session is no longer valid and cannot be safely continued. Please return to the donation page and start a new payment.",
   },
 
 
@@ -290,5 +296,12 @@ paymentProcessingDescription:
 
 paymentCancelError:
   "Төлбөрийг цуцалж чадсангүй. Дахин оролдоно уу.",
+
+  paymentInvalidTitle:
+  "Төлбөрийн сесс ашиглах боломжгүй",
+
+paymentInvalidDescription:
+  "Энэ төлбөрийн сесс цааш үргэлжлүүлэх боломжгүй болсон байна. Хандивын хуудас руу буцаж, шинэ төлбөр эхлүүлнэ үү.",
   },
+  
 };
