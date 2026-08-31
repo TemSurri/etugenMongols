@@ -38,7 +38,7 @@ export async function continueDonationPayment():
 
   const response =
     await api.post<string>(
-      "/payment/continue-donation",
+      "/payment/resume-donation",
       undefined,
       {
         validateStatus: (status) =>
