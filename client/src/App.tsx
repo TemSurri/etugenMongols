@@ -25,6 +25,10 @@ import ForgotPasswordPage
 import ResetPasswordPage
   from "./pages/auth/reset_password";
 
+
+import DonateMoneyPage from "./pages/payments/DonateMoneyPage";
+
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -70,6 +74,11 @@ function App() {
         <Route
             path="/auth/reset-password"
             element={<ResetPasswordPage />}
+        />
+
+        <Route
+          path="/payments/donate-money"
+          element={<DonateMoneyPage/>}
         />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
