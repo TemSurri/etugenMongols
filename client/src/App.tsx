@@ -28,6 +28,7 @@ import ResetPasswordPage
 
 import DonateMoneyPage from "./pages/payments/DonateMoneyPage";
 
+import AccountPage from "./pages/user/AccountPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
@@ -80,6 +81,11 @@ function App() {
           path="/payments/donate-money"
           element={<DonateMoneyPage/>}
         />
+
+        <Route
+  path="/account"
+  element={<AccountPage />}
+/>
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
         <Route path="/get-involved/donate" element={<DonatePage />} />
