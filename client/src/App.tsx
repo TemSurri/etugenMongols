@@ -27,6 +27,7 @@ import ResetPasswordPage
 
 
 import DonateMoneyPage from "./pages/payments/DonateMoneyPage";
+import AdminPage from "./pages/AdminPage";
 
 import AccountPage from "./pages/user/AccountPage";
 import RegistrationsPage from "./pages/user/RegistrationsPage";
@@ -41,6 +42,7 @@ import {
 import {
     AuthProvider
 } from "./context/AuthContext";
+import EmailChangeVerificationPage from "./pages/auth/email_change_verification";
 
 
 function App() {
@@ -59,7 +61,7 @@ function App() {
         <Route path="/gallery/:id" element={<GalleryPage />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
-
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route path="/auth/login" element={<LoginPage />}/>
         <Route path="/auth/signup" element={<SignupPage />}/>
@@ -80,6 +82,12 @@ function App() {
         <Route
             path="/auth/reset-password"
             element={<ResetPasswordPage />}
+        />
+        <Route
+            path="/auth/change-email"
+            element={
+                <EmailChangeVerificationPage />
+            }
         />
 
         <Route

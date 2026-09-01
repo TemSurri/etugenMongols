@@ -9,11 +9,13 @@ import type {
     ChangeEmailFormData
 } from "../types/accountTypes";
 
+
 interface UseChangeEmailOptions {
     emailMismatchMessage: string;
     invalidEmailMessage: string;
     genericErrorMessage: string;
 }
+
 
 export function useChangeEmail({
     emailMismatchMessage,
@@ -30,12 +32,14 @@ export function useChangeEmail({
     const [success, setSuccess] =
         useState(false);
 
+
     async function submit(
         form: ChangeEmailFormData
     ): Promise<boolean> {
 
         setError(null);
         setSuccess(false);
+
 
         const newEmail =
             form.newEmail
@@ -46,6 +50,7 @@ export function useChangeEmail({
             form.confirmEmail
                 .trim()
                 .toLowerCase();
+
 
         if (
             !newEmail ||
@@ -59,9 +64,9 @@ export function useChangeEmail({
             return false;
         }
 
+
         if (
-            newEmail !==
-            confirmEmail
+            newEmail !== confirmEmail
         ) {
 
             setError(
@@ -71,13 +76,13 @@ export function useChangeEmail({
             return false;
         }
 
+
         const emailPattern =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+
         if (
-            !emailPattern.test(
-                newEmail
-            )
+            !emailPattern.test(newEmail)
         ) {
 
             setError(
@@ -87,23 +92,15 @@ export function useChangeEmail({
             return false;
         }
 
+
         setLoading(true);
+
 
         try {
 
-            const requested =
-                await changeEmail({
-                    newEmail
-                });
-
-            if (!requested) {
-
-                setError(
-                    genericErrorMessage
-                );
-
-                return false;
-            }
+            await changeEmail({
+                newEmail
+            });
 
             setSuccess(true);
 
@@ -112,28 +109,32 @@ export function useChangeEmail({
         } catch (err) {
 
             if (
-                axios.isAxiosError(err)
+                axios.isAxiosError(err) &&
+                err.response?.status === 409
             ) {
 
                 setError(
-                    genericErrorMessage
+                    "That email address is already in use."
                 );
 
-            } else {
-
-                setError(
-                    genericErrorMessage
-                );
-
+                return false;
             }
+
+
+            setError(
+                genericErrorMessage
+            );
 
             return false;
 
         } finally {
 
             setLoading(false);
+
         }
+
     }
+
 
     return {
         submit,
@@ -141,4 +142,5 @@ export function useChangeEmail({
         error,
         success
     };
+
 }

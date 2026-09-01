@@ -54,6 +54,10 @@ export interface VerificationCopy {
     errorTitle: string;
     errorDescription: string;
 
+    redirectingText: string;
+
+    errorButtonText: string;
+
 }
 
 
@@ -62,6 +66,8 @@ interface VerificationSectionProps {
     endpoint: string;
 
     successRedirect: string;
+
+    errorRedirect?: string;
 
     english: VerificationCopy;
 
@@ -73,7 +79,12 @@ interface VerificationSectionProps {
 
 
 const easeOut =
-    cubicBezier(0.22, 1, 0.36, 1);
+    cubicBezier(
+        0.22,
+        1,
+        0.36,
+        1
+    );
 
 
 const entranceMotion: Variants = {
@@ -97,15 +108,24 @@ const entranceMotion: Variants = {
 
 
 function VerificationSection({
+
     endpoint,
+
     successRedirect,
+
+    errorRedirect = "/",
+
     english,
+
     mongolian,
+
     redirectDelay = 1800,
+
 }: VerificationSectionProps) {
 
     const navigate =
         useNavigate();
+
 
     const [searchParams] =
         useSearchParams();
@@ -114,6 +134,7 @@ function VerificationSection({
     const [language, setLanguage] =
         useState<Language>("en");
 
+
     const [status, setStatus] =
         useState<VerificationStatus>(
             "verifying"
@@ -121,9 +142,9 @@ function VerificationSection({
 
 
     /*
-        Prevent accidental duplicate requests
-        during React development StrictMode.
-    */
+     * Prevent duplicate verification requests
+     * during React StrictMode in development.
+     */
     const verificationStarted =
         useRef(false);
 
@@ -137,37 +158,40 @@ function VerificationSection({
                     VERIFICATION_BACKGROUNDS.length
                 );
 
-            return VERIFICATION_BACKGROUNDS[index];
+            return VERIFICATION_BACKGROUNDS[
+                index
+            ];
 
         });
 
 
     useEffect(() => {
 
-        /*
-            React StrictMode can execute effects
-            twice during development.
-
-            Verification tokens should only be
-            submitted once.
-        */
-        if (verificationStarted.current) {
+        if (
+            verificationStarted.current
+        ) {
             return;
         }
 
-        verificationStarted.current = true;
+
+        verificationStarted.current =
+            true;
 
 
         const token =
-            searchParams.get("token");
+            searchParams.get(
+                "token"
+            );
 
 
         /*
-            User reached /verify without a token.
-        */
+         * Missing verification token.
+         */
         if (!token) {
 
-            setStatus("error");
+            setStatus(
+                "error"
+            );
 
             return;
         }
@@ -190,13 +214,13 @@ function VerificationSection({
                 );
 
 
-                setStatus("success");
+                setStatus(
+                    "success"
+                );
 
 
                 redirectTimer =
                     setTimeout(() => {
-
-                        console.log("REDIRECTING TO:", successRedirect);
 
                         navigate(
                             successRedirect,
@@ -207,15 +231,18 @@ function VerificationSection({
 
                     }, redirectDelay);
 
-            }
-            catch (error) {
+
+            } catch (error) {
 
                 console.error(
                     "Verification failed:",
                     error
                 );
 
-                setStatus("error");
+
+                setStatus(
+                    "error"
+                );
 
             }
 
@@ -228,9 +255,11 @@ function VerificationSection({
         return () => {
 
             if (redirectTimer) {
+
                 clearTimeout(
                     redirectTimer
                 );
+
             }
 
         };
@@ -287,6 +316,7 @@ function VerificationSection({
 
 
     return (
+
         <main
             className="
                 relative
@@ -350,6 +380,7 @@ function VerificationSection({
                 className="
                     relative
                     z-10
+
                     flex
                     min-h-screen
                     items-center
@@ -366,7 +397,9 @@ function VerificationSection({
             >
 
                 <motion.div
-                    variants={entranceMotion}
+                    variants={
+                        entranceMotion
+                    }
                     initial="hidden"
                     animate="show"
                     className="
@@ -427,7 +460,9 @@ function VerificationSection({
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setLanguage("en")
+                                    setLanguage(
+                                        "en"
+                                    )
                                 }
                                 className={
                                     language === "en"
@@ -452,7 +487,9 @@ function VerificationSection({
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setLanguage("mn")
+                                    setLanguage(
+                                        "mn"
+                                    )
                                 }
                                 className={
                                     language === "mn"
@@ -515,7 +552,8 @@ function VerificationSection({
                                 "
                             >
 
-                                {status === "verifying" && (
+                                {status ===
+                                    "verifying" && (
 
                                     <div
                                         className="
@@ -535,7 +573,8 @@ function VerificationSection({
                                 )}
 
 
-                                {status === "success" && (
+                                {status ===
+                                    "success" && (
 
                                     <span
                                         className="
@@ -550,7 +589,8 @@ function VerificationSection({
                                 )}
 
 
-                                {status === "error" && (
+                                {status ===
+                                    "error" && (
 
                                     <span
                                         className="
@@ -597,7 +637,8 @@ function VerificationSection({
 
 
                             {/* Success */}
-                            {status === "success" && (
+                            {status ===
+                                "success" && (
 
                                 <p
                                     className="
@@ -610,16 +651,17 @@ function VerificationSection({
                                         text-[#667056]
                                     "
                                 >
-                                    {language === "en"
-                                        ? "Redirecting to login..."
-                                        : "Нэвтрэх хэсэг рүү шилжүүлж байна..."}
+                                    {
+                                        copy.redirectingText
+                                    }
                                 </p>
 
                             )}
 
 
                             {/* Error */}
-                            {status === "error" && (
+                            {status ===
+                                "error" && (
 
                                 <div
                                     className="
@@ -630,7 +672,9 @@ function VerificationSection({
                                 >
 
                                     <Link
-                                        to="/auth/login"
+                                        to={
+                                            errorRedirect
+                                        }
                                         className="
                                             border
                                             border-[#27301d]
@@ -652,9 +696,9 @@ function VerificationSection({
                                             hover:text-white
                                         "
                                     >
-                                        {language === "en"
-                                            ? "Go to login"
-                                            : "Нэвтрэх"}
+                                        {
+                                            copy.errorButtonText
+                                        }
                                     </Link>
 
                                 </div>
@@ -670,6 +714,7 @@ function VerificationSection({
             </section>
 
         </main>
+
     );
 
 }

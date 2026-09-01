@@ -2,7 +2,7 @@ import VerificationSection
     from "../../sections/auth/verification/VerificationSection";
 
 
-function VerificationPage() {
+function EmailChangeVerificationPage() {
 
     return (
 
@@ -10,73 +10,73 @@ function VerificationPage() {
 
             endpoint="/verify-token"
 
-            successRedirect="/auth/login"
+            successRedirect="/account"
 
-            errorRedirect="/auth/login"
+            errorRedirect="/account"
 
             redirectDelay={1800}
 
             english={{
 
                 verifyingTitle:
-                    "Verifying your account",
+                    "Verifying your new email",
 
                 verifyingDescription:
-                    "Please wait while we verify your account.",
+                    "Please wait while we confirm your new email address.",
 
 
                 successTitle:
-                    "Account verified",
+                    "Email updated",
 
                 successDescription:
-                    "Your account has been successfully verified. You can now sign in.",
+                    "Your email address has been successfully changed.",
 
 
                 errorTitle:
-                    "Verification failed",
+                    "Email change failed",
 
                 errorDescription:
                     "This verification link is invalid, expired, or has already been used.",
 
 
                 redirectingText:
-                    "Redirecting to login...",
+                    "Redirecting to your account...",
 
 
                 errorButtonText:
-                    "Go to login",
+                    "Back to account",
 
             }}
 
             mongolian={{
 
                 verifyingTitle:
-                    "Бүртгэлийг баталгаажуулж байна",
+                    "Шинэ имэйлийг баталгаажуулж байна",
 
                 verifyingDescription:
-                    "Таны бүртгэлийг баталгаажуулах хүртэл түр хүлээнэ үү.",
+                    "Таны шинэ имэйл хаягийг баталгаажуулах хүртэл түр хүлээнэ үү.",
 
 
                 successTitle:
-                    "Бүртгэл баталгаажлаа",
+                    "Имэйл шинэчлэгдлээ",
 
                 successDescription:
-                    "Таны бүртгэл амжилттай баталгаажлаа. Та одоо нэвтрэх боломжтой.",
+                    "Таны имэйл хаяг амжилттай шинэчлэгдлээ.",
 
 
                 errorTitle:
-                    "Баталгаажуулалт амжилтгүй",
+                    "Имэйл шинэчлэхэд алдаа гарлаа",
 
                 errorDescription:
                     "Энэ баталгаажуулах холбоос хүчингүй, хугацаа дууссан эсвэл өмнө нь ашиглагдсан байна.",
 
 
                 redirectingText:
-                    "Нэвтрэх хэсэг рүү шилжүүлж байна...",
+                    "Таны бүртгэл рүү шилжүүлж байна...",
 
 
                 errorButtonText:
-                    "Нэвтрэх",
+                    "Бүртгэл рүү буцах",
 
             }}
 
@@ -87,4 +87,4 @@ function VerificationPage() {
 }
 
 
-export default VerificationPage;
+export default EmailChangeVerificationPage;

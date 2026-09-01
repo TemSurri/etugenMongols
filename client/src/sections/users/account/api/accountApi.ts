@@ -30,16 +30,15 @@ export async function changePassword(
 
 export async function changeEmail(
     request: ChangeEmailRequest
-): Promise<boolean> {
+): Promise<void> {
 
-    const response =
-        await api.post<boolean>(
-            "/auth/user/update-email",
-            request
-        );
+    await api.post(
+        "/auth/user/update-email",
+        request
+    );
 
-    return response.data;
 }
+
 
 import type {
     UserHistoryPage
