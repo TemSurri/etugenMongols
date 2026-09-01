@@ -1,16 +1,11 @@
 export const accountCopy = {
-
     en: {
-
         title: "My Account",
-
         subtitle:
-            "Keep track of your account, security, and recent activity.",
+            "Manage your profile, security settings, and account activity.",
 
         profile: {
-
             title: "Profile",
-
             firstName: "First name",
             lastName: "Last name",
             email: "Email",
@@ -25,72 +20,45 @@ export const accountCopy = {
             save: "Save",
             cancel: "Cancel",
 
-            changingName:
-                "Updating name...",
-
+            changingName: "Saving...",
             nameSuccess:
                 "Your name has been updated.",
 
             invalidName:
-                "First name and last name are required.",
+                "Please enter a valid first and last name.",
 
             genericError:
-                "Unable to update your name. Please try again."
-
+                "Something went wrong. Please try again."
         },
 
         security: {
-
             title: "Security",
 
             email: "Email",
-            changeEmail:
-                "Change email",
+            changeEmail: "Change email",
 
             password: "Password",
             passwordValue: "••••••••",
+            changePassword: "Change password",
 
-            changePassword:
-                "Change password",
+            newEmail: "New email",
+            confirmEmail: "Confirm new email",
 
-            currentPassword:
-                "Current password",
-
-            newPassword:
-                "New password",
-
-            confirmPassword:
-                "Confirm new password",
-
-            newEmail:
-                "New email",
-
-            confirmEmail:
-                "Confirm new email",
-
-            save: "Save",
-            cancel: "Cancel",
-
-            changing:
-                "Changing password...",
-
-            success:
-                "Your password has been changed.",
+            currentPassword: "Current password",
+            newPassword: "New password",
+            confirmPassword: "Confirm new password",
 
             changingEmail:
-                "Sending verification email...",
+                "Sending verification...",
+
+            changingPassword:
+                "Changing password...",
 
             emailSuccess:
-                "A verification email has been sent to your new address. Your account email will only change after you verify it.",
+                "A verification link has been sent to your new email address. Your email will be updated after you click the verification link.",
 
-            incorrectPassword:
-                "Your current password is incorrect.",
-
-            mismatch:
-                "The new passwords do not match.",
-
-            weakPassword:
-                "Password must be at least 8 characters and contain one uppercase letter and one number or special character.",
+            passwordSuccess:
+                "Your password has been changed successfully.",
 
             emailMismatch:
                 "The email addresses do not match.",
@@ -98,136 +66,95 @@ export const accountCopy = {
             invalidEmail:
                 "Please enter a valid email address.",
 
-            genericError:
-                "Unable to update your account. Please try again."
+            passwordMismatch:
+                "The new passwords do not match.",
 
+            weakPassword:
+                "Password must be at least 8 characters and contain at least one uppercase letter and one number or special character.",
+
+            incorrectPassword:
+                "Your current password is incorrect.",
+
+            genericError:
+                "Something went wrong. Please try again.",
+
+            cancel: "Cancel",
+
+            show: "Show",
+            hide: "Hide"
         },
 
         history: {
-
             title: "History",
-
             emptyTitle:
                 "No activity yet",
-
             emptyBody:
-                "Your donations, registrations, and other account activity will appear here."
-
+                "Your recent account activity will appear here."
         }
-
     },
 
     mn: {
-
         title: "Миний бүртгэл",
-
         subtitle:
-            "Бүртгэл, аюулгүй байдал болон сүүлийн үйл ажиллагаагаа хянаарай.",
+            "Өөрийн мэдээлэл, аюулгүй байдлын тохиргоо болон бүртгэлийн үйл ажиллагааг удирдана уу.",
 
         profile: {
-
             title: "Хувийн мэдээлэл",
-
             firstName: "Нэр",
             lastName: "Овог",
             email: "Имэйл",
+            memberSince: "Бүртгүүлсэн огноо",
+            emailStatus: "Имэйлийн төлөв",
 
-            memberSince:
-                "Бүртгүүлсэн огноо",
+            verified: "Баталгаажсан",
+            notVerified: "Баталгаажаагүй",
 
-            emailStatus:
-                "Имэйлийн төлөв",
+            editName: "Нэр засах",
 
-            verified:
-                "Баталгаажсан",
-
-            notVerified:
-                "Баталгаажаагүй",
-
-            editName:
-                "Нэр засах",
-
-            save:
-                "Хадгалах",
-
-            cancel:
-                "Цуцлах",
+            save: "Хадгалах",
+            cancel: "Цуцлах",
 
             changingName:
-                "Нэрийг шинэчилж байна...",
+                "Хадгалж байна...",
 
             nameSuccess:
                 "Таны нэр амжилттай шинэчлэгдлээ.",
 
             invalidName:
-                "Нэр болон овгийг оруулна уу.",
+                "Нэр болон овгоо зөв оруулна уу.",
 
             genericError:
-                "Нэрийг шинэчлэх боломжгүй байна. Дахин оролдоно уу."
-
+                "Алдаа гарлаа. Дахин оролдоно уу."
         },
 
         security: {
+            title: "Аюулгүй байдал",
 
-            title:
-                "Аюулгүй байдал",
+            email: "Имэйл",
+            changeEmail: "Имэйл солих",
 
-            email:
-                "Имэйл",
+            password: "Нууц үг",
+            passwordValue: "••••••••",
+            changePassword: "Нууц үг солих",
 
-            changeEmail:
-                "Имэйл солих",
+            newEmail: "Шинэ имэйл",
+            confirmEmail: "Шинэ имэйлээ баталгаажуулах",
 
-            password:
-                "Нууц үг",
-
-            passwordValue:
-                "••••••••",
-
-            changePassword:
-                "Нууц үг солих",
-
-            currentPassword:
-                "Одоогийн нууц үг",
-
-            newPassword:
-                "Шинэ нууц үг",
-
-            confirmPassword:
-                "Шинэ нууц үгээ давтах",
-
-            newEmail:
-                "Шинэ имэйл",
-
-            confirmEmail:
-                "Шинэ имэйлээ давтах",
-
-            save:
-                "Хадгалах",
-
-            cancel:
-                "Цуцлах",
-
-            changing:
-                "Нууц үгийг сольж байна...",
-
-            success:
-                "Таны нууц үг амжилттай солигдлоо.",
+            currentPassword: "Одоогийн нууц үг",
+            newPassword: "Шинэ нууц үг",
+            confirmPassword: "Шинэ нууц үгээ баталгаажуулах",
 
             changingEmail:
-                "Баталгаажуулах имэйл илгээж байна...",
+                "Баталгаажуулах холбоос илгээж байна...",
+
+            changingPassword:
+                "Нууц үгийг шинэчилж байна...",
 
             emailSuccess:
-                "Шинэ имэйл хаяг руу баталгаажуулах холбоос илгээгдлээ. Баталгаажуулсны дараа таны имэйл хаяг солигдоно.",
+                "Таны шинэ имэйл хаяг руу баталгаажуулах холбоос илгээгдлээ. Холбоос дээр дарж баталгаажуулсны дараа таны имэйл хаяг шинэчлэгдэнэ.",
 
-            incorrectPassword:
-                "Одоогийн нууц үг буруу байна.",
-
-            mismatch:
-                "Шинэ нууц үгүүд таарахгүй байна.",
-
-            weakPassword:
-                "Нууц үг хамгийн багадаа 8 тэмдэгттэй, нэг том үсэг болон нэг тоо эсвэл тусгай тэмдэгт агуулсан байх ёстой.",
+            passwordSuccess:
+                "Таны нууц үг амжилттай шинэчлэгдлээ.",
 
             emailMismatch:
                 "Имэйл хаягууд таарахгүй байна.",
@@ -235,24 +162,30 @@ export const accountCopy = {
             invalidEmail:
                 "Зөв имэйл хаяг оруулна уу.",
 
-            genericError:
-                "Бүртгэлийг шинэчлэх боломжгүй байна. Дахин оролдоно уу."
+            passwordMismatch:
+                "Шинэ нууц үгнүүд таарахгүй байна.",
 
+            weakPassword:
+                "Нууц үг хамгийн багадаа 8 тэмдэгттэй, нэг том үсэг болон нэг тоо эсвэл тусгай тэмдэгт агуулсан байх ёстой.",
+
+            incorrectPassword:
+                "Таны одоогийн нууц үг буруу байна.",
+
+            genericError:
+                "Алдаа гарлаа. Дахин оролдоно уу.",
+
+            cancel: "Цуцлах",
+
+            show: "Харах",
+            hide: "Нуух"
         },
 
         history: {
-
-            title:
-                "Түүх",
-
+            title: "Түүх",
             emptyTitle:
                 "Одоогоор үйл ажиллагаа алга",
-
             emptyBody:
-                "Таны хандив, бүртгэл болон бусад үйл ажиллагаа энд харагдана."
-
+                "Таны сүүлийн бүртгэлийн үйл ажиллагаа энд харагдана."
         }
-
     }
-
 } as const;

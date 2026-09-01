@@ -1,6 +1,9 @@
 import { useState } from "react";
+import axios from "axios";
 
-import { changeEmail } from "../api/accountApi";
+import {
+    changeEmail
+} from "../api/accountApi";
 
 import type {
     ChangeEmailFormData
@@ -10,14 +13,6 @@ interface UseChangeEmailOptions {
     emailMismatchMessage: string;
     invalidEmailMessage: string;
     genericErrorMessage: string;
-}
-
-function isValidEmail(
-    email: string
-): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email
-    );
 }
 
 export function useChangeEmail({
@@ -35,9 +30,9 @@ export function useChangeEmail({
     const [success, setSuccess] =
         useState(false);
 
-    const submit = async (
+    async function submit(
         form: ChangeEmailFormData
-    ): Promise<boolean> => {
+    ): Promise<boolean> {
 
         setError(null);
         setSuccess(false);
@@ -53,6 +48,18 @@ export function useChangeEmail({
                 .toLowerCase();
 
         if (
+            !newEmail ||
+            !confirmEmail
+        ) {
+
+            setError(
+                invalidEmailMessage
+            );
+
+            return false;
+        }
+
+        if (
             newEmail !==
             confirmEmail
         ) {
@@ -64,8 +71,11 @@ export function useChangeEmail({
             return false;
         }
 
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (
-            !isValidEmail(
+            !emailPattern.test(
                 newEmail
             )
         ) {
@@ -81,28 +91,49 @@ export function useChangeEmail({
 
         try {
 
-            await changeEmail({
-                newEmail
-            });
+            const requested =
+                await changeEmail({
+                    newEmail
+                });
+
+            if (!requested) {
+
+                setError(
+                    genericErrorMessage
+                );
+
+                return false;
+            }
 
             setSuccess(true);
 
             return true;
 
-        } catch {
+        } catch (err) {
 
-            setError(
-                genericErrorMessage
-            );
+            if (
+                axios.isAxiosError(err)
+            ) {
+
+                setError(
+                    genericErrorMessage
+                );
+
+            } else {
+
+                setError(
+                    genericErrorMessage
+                );
+
+            }
 
             return false;
 
         } finally {
 
             setLoading(false);
-
         }
-    };
+    }
 
     return {
         submit,

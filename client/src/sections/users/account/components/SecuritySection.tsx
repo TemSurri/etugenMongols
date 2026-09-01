@@ -1,47 +1,42 @@
 import { useState } from "react";
 
-import {
-    ChangePasswordForm
-} from "./ChangePasswordForm";
-
-import {
-    ChangeEmailForm
-} from "./ChangeEmailForm";
+import { ChangePasswordForm } from "./ChangePasswordForm";
+import { ChangeEmailForm } from "./ChangeEmailForm";
 
 interface SecurityCopy {
     title: string;
 
     email: string;
-    changeEmail: string;
 
-    password: string;
-    passwordValue: string;
+    changeEmail: string;
     changePassword: string;
+
+    newEmail: string;
+    confirmEmail: string;
 
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
 
-    newEmail: string;
-    confirmEmail: string;
-
-    save: string;
-    cancel: string;
-
-    changing: string;
-    success: string;
-
     changingEmail: string;
-    emailSuccess: string;
+    changingPassword: string;
 
-    incorrectPassword: string;
-    mismatch: string;
-    weakPassword: string;
+    emailSuccess: string;
+    passwordSuccess: string;
 
     emailMismatch: string;
     invalidEmail: string;
 
+    passwordMismatch: string;
+    weakPassword: string;
+    incorrectPassword: string;
+
     genericError: string;
+
+    show: string;
+    hide: string;
+
+    cancel: string;
 }
 
 interface SecuritySectionProps {
@@ -55,13 +50,13 @@ export function SecuritySection({
 }: SecuritySectionProps) {
 
     const [
-        changingPassword,
-        setChangingPassword
+        editingEmail,
+        setEditingEmail
     ] = useState(false);
 
     const [
-        changingEmail,
-        setChangingEmail
+        editingPassword,
+        setEditingPassword
     ] = useState(false);
 
     return (
@@ -73,13 +68,11 @@ export function SecuritySection({
 
             <div className="mt-6 divide-y divide-[#27301d]/10">
 
-                {/* Email */}
-                <div className="py-5 first:pt-0">
+                <div className="py-4">
 
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                         <div>
-
                             <p className="text-sm font-medium text-[#667056]">
                                 {copy.email}
                             </p>
@@ -87,17 +80,28 @@ export function SecuritySection({
                             <p className="mt-1 text-sm font-medium text-[#27301d]">
                                 {email}
                             </p>
-
                         </div>
 
-                        {!changingEmail && (
+                        {!editingEmail && (
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setChangingPassword(false);
-                                    setChangingEmail(true);
+                                    setEditingEmail(true);
+                                    setEditingPassword(false);
                                 }}
-                                className="rounded-lg border border-[#27301d]/20 px-4 py-2 text-sm font-medium text-[#27301d] transition hover:bg-[#27301d] hover:text-white"
+                                className="
+                                    rounded-lg
+                                    border
+                                    border-[#27301d]/20
+                                    px-4
+                                    py-2
+                                    text-sm
+                                    font-medium
+                                    text-[#27301d]
+                                    transition
+                                    hover:bg-[#27301d]
+                                    hover:text-white
+                                "
                             >
                                 {copy.changeEmail}
                             </button>
@@ -105,42 +109,49 @@ export function SecuritySection({
 
                     </div>
 
-                    {changingEmail && (
-                        <ChangeEmailForm
-                            copy={copy}
-                            onCancel={() =>
-                                setChangingEmail(false)
-                            }
-                        />
+                    {editingEmail && (
+                        <div className="mt-5">
+
+                            <ChangeEmailForm
+                                copy={copy}
+                                onCancel={() =>
+                                    setEditingEmail(false)
+                                }
+                            />
+
+                        </div>
                     )}
 
                 </div>
 
-                {/* Password */}
-                <div className="py-5">
+                <div className="py-4">
 
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center justify-between gap-4">
 
-                        <div>
+                        <p className="text-sm font-medium text-[#667056]">
+                            {copy.changePassword}
+                        </p>
 
-                            <p className="text-sm font-medium text-[#667056]">
-                                {copy.password}
-                            </p>
-
-                            <p className="mt-1 tracking-widest text-[#27301d]">
-                                {copy.passwordValue}
-                            </p>
-
-                        </div>
-
-                        {!changingPassword && (
+                        {!editingPassword && (
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setChangingEmail(false);
-                                    setChangingPassword(true);
+                                    setEditingPassword(true);
+                                    setEditingEmail(false);
                                 }}
-                                className="rounded-lg border border-[#27301d]/20 px-4 py-2 text-sm font-medium text-[#27301d] transition hover:bg-[#27301d] hover:text-white"
+                                className="
+                                    rounded-lg
+                                    border
+                                    border-[#27301d]/20
+                                    px-4
+                                    py-2
+                                    text-sm
+                                    font-medium
+                                    text-[#27301d]
+                                    transition
+                                    hover:bg-[#27301d]
+                                    hover:text-white
+                                "
                             >
                                 {copy.changePassword}
                             </button>
@@ -148,13 +159,17 @@ export function SecuritySection({
 
                     </div>
 
-                    {changingPassword && (
-                        <ChangePasswordForm
-                            copy={copy}
-                            onCancel={() =>
-                                setChangingPassword(false)
-                            }
-                        />
+                    {editingPassword && (
+                        <div className="mt-5">
+
+                            <ChangePasswordForm
+                                copy={copy}
+                                onCancel={() =>
+                                    setEditingPassword(false)
+                                }
+                            />
+
+                        </div>
                     )}
 
                 </div>

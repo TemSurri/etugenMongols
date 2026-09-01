@@ -1,4 +1,6 @@
-import { api } from "../../../../api/client";
+import {
+    api
+} from "../../../../api/client";
 
 import type {
     ChangeEmailRequest,
@@ -9,8 +11,9 @@ import type {
 export async function changeName(
     request: ChangeNameRequest
 ): Promise<void> {
-    await api.patch(
-        "/users/change_name",
+
+    await api.post(
+        "/auth/user/update-name",
         request
     );
 }
@@ -18,17 +21,45 @@ export async function changeName(
 export async function changePassword(
     request: ChangePasswordRequest
 ): Promise<void> {
-    await api.patch(
-        "/users/change_password",
+
+    await api.post(
+        "/auth/user/update-password",
         request
     );
 }
 
 export async function changeEmail(
     request: ChangeEmailRequest
-): Promise<void> {
-    await api.patch(
-        "/users/change_email",
-        request
-    );
+): Promise<boolean> {
+
+    const response =
+        await api.post<boolean>(
+            "/auth/user/update-email",
+            request
+        );
+
+    return response.data;
+}
+
+import type {
+    UserHistoryPage
+} from "../types/accountTypes";
+
+export async function getUserHistory(
+    page: number,
+    size: number
+): Promise<UserHistoryPage> {
+
+    const response =
+        await api.get<UserHistoryPage>(
+            "/auth/user/history",
+            {
+                params: {
+                    page,
+                    size
+                }
+            }
+        );
+
+    return response.data;
 }

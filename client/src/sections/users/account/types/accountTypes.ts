@@ -38,3 +38,27 @@ export interface ChangeEmailFormData {
     newEmail: string;
     confirmEmail: string;
 }
+
+export interface UserHistoryItem {
+    type: string;
+    title: string;
+    description: string;
+    status: string;
+    createdAt: string;
+}
+
+export interface UserHistoryPage {
+    content: UserHistoryItem[];
+
+    totalElements: number;
+    totalPages: number;
+
+    size: number;
+    number: number;
+
+    first: boolean;
+    last: boolean;
+
+    numberOfElements: number;
+    empty: boolean;
+}

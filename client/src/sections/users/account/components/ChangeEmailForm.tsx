@@ -3,17 +3,13 @@ import {
     type FormEvent
 } from "react";
 
-import {
-    useChangeEmail
-} from "../hooks/useChangeEmail";
+import { useChangeEmail } from "../hooks/useChangeEmail";
 
 interface SecurityCopy {
     newEmail: string;
     confirmEmail: string;
 
-    save: string;
-    cancel: string;
-
+    changeEmail: string;
     changingEmail: string;
 
     emailSuccess: string;
@@ -21,6 +17,8 @@ interface SecurityCopy {
     emailMismatch: string;
     invalidEmail: string;
     genericError: string;
+
+    cancel: string;
 }
 
 interface ChangeEmailFormProps {
@@ -33,11 +31,15 @@ export function ChangeEmailForm({
     onCancel
 }: ChangeEmailFormProps) {
 
-    const [newEmail, setNewEmail] =
-        useState("");
+    const [
+        newEmail,
+        setNewEmail
+    ] = useState("");
 
-    const [confirmEmail, setConfirmEmail] =
-        useState("");
+    const [
+        confirmEmail,
+        setConfirmEmail
+    ] = useState("");
 
     const {
         submit,
@@ -55,39 +57,42 @@ export function ChangeEmailForm({
             copy.genericError
     });
 
-    const handleSubmit = async (
+    async function handleSubmit(
         event: FormEvent<HTMLFormElement>
-    ) => {
+    ) {
 
         event.preventDefault();
 
-        const sent = await submit({
-            newEmail,
-            confirmEmail
-        });
+        const requested =
+            await submit({
+                newEmail,
+                confirmEmail
+            });
 
-        if (sent) {
+        if (requested) {
             setNewEmail("");
             setConfirmEmail("");
         }
-    };
+    }
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="mt-6 space-y-4"
+            className="space-y-4"
         >
 
-            <EmailInput
+            <EmailField
                 label={copy.newEmail}
                 value={newEmail}
                 onChange={setNewEmail}
+                disabled={loading}
             />
 
-            <EmailInput
+            <EmailField
                 label={copy.confirmEmail}
                 value={confirmEmail}
                 onChange={setConfirmEmail}
+                disabled={loading}
             />
 
             {error && (
@@ -97,36 +102,57 @@ export function ChangeEmailForm({
             )}
 
             {success && (
-                <p className="text-sm leading-6 text-green-700">
+                <p className="text-sm font-medium text-green-700">
                     {copy.emailSuccess}
                 </p>
             )}
 
-            <div className="flex justify-end gap-3 pt-2">
-
-                <button
-                    type="button"
-                    disabled={loading}
-                    onClick={onCancel}
-                    className="rounded-lg border border-[#27301d]/20 px-4 py-2 text-sm font-medium text-[#27301d] transition hover:bg-[#27301d]/5 disabled:opacity-50"
-                >
-                    {copy.cancel}
-                </button>
+            <div className="flex gap-3 pt-2">
 
                 <button
                     type="submit"
-                    disabled={
-                        loading ||
-                        !newEmail ||
-                        !confirmEmail
-                    }
-                    className="rounded-lg bg-[#27301d] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#9a7b26] disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={loading}
+                    className="
+                        rounded-lg
+                        bg-[#27301d]
+                        px-4
+                        py-2
+                        text-sm
+                        font-medium
+                        text-white
+                        transition
+                        hover:bg-[#9a7b26]
+                        disabled:cursor-not-allowed
+                        disabled:opacity-50
+                    "
                 >
                     {
                         loading
                             ? copy.changingEmail
-                            : copy.save
+                            : copy.changeEmail
                     }
+                </button>
+
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    disabled={loading}
+                    className="
+                        rounded-lg
+                        border
+                        border-[#27301d]/20
+                        px-4
+                        py-2
+                        text-sm
+                        font-medium
+                        text-[#27301d]
+                        transition
+                        hover:bg-[#27301d]/5
+                        disabled:cursor-not-allowed
+                        disabled:opacity-50
+                    "
+                >
+                    {copy.cancel}
                 </button>
 
             </div>
@@ -135,17 +161,23 @@ export function ChangeEmailForm({
     );
 }
 
-interface EmailInputProps {
+interface EmailFieldProps {
     label: string;
     value: string;
-    onChange: (value: string) => void;
+
+    onChange: (
+        value: string
+    ) => void;
+
+    disabled: boolean;
 }
 
-function EmailInput({
+function EmailField({
     label,
     value,
-    onChange
-}: EmailInputProps) {
+    onChange,
+    disabled
+}: EmailFieldProps) {
 
     return (
         <label className="block">
@@ -157,13 +189,29 @@ function EmailInput({
             <input
                 type="email"
                 value={value}
-                autoComplete="email"
                 onChange={(event) =>
                     onChange(
                         event.target.value
                     )
                 }
-                className="w-full rounded-lg border border-[#27301d]/20 px-3 py-2 outline-none transition focus:border-[#27301d]/50 focus:ring-2 focus:ring-[#27301d]/10"
+                autoComplete="email"
+                disabled={disabled}
+                required
+                className="
+                    w-full
+                    rounded-lg
+                    border
+                    border-[#27301d]/20
+                    px-3
+                    py-2
+                    outline-none
+                    transition
+                    focus:border-[#27301d]/50
+                    focus:ring-2
+                    focus:ring-[#27301d]/10
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                "
             />
 
         </label>
