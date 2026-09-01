@@ -34,6 +34,9 @@ import RegistrationsPage from "./pages/user/RegistrationsPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
+import {
+  EventsProvider
+} from "./context/EventsContext";
 
 import {
     AuthProvider
@@ -44,6 +47,7 @@ function App() {
   return (
     <LanguageProvider>
     <AuthProvider>
+    <EventsProvider>
       <ScrollToTop />
 
       <Routes>
@@ -100,8 +104,13 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      </AuthProvider>
+    </EventsProvider>
+    </AuthProvider>
+     
     </LanguageProvider>
+
+
+
   );
 }
 
