@@ -6,15 +6,13 @@ import {
     type Variants
 } from "framer-motion";
 
-import { ProfileSection } from "./components/ProfileSection";
-import { SecuritySection } from "./components/SecuritySection";
-import { HistorySection } from "./components/HistorySection";
+import { RegistrationsSection } from "./components/RegistrationsSection";
 
-import { accountCopy } from "./copy/accountCopy";
+import { registrationsCopy } from "./copy/registrationsCopy";
 
 import { useAuth } from "../../../context/useAuth";
 
-const ACCOUNT_BACKGROUND_IMAGES = [
+const REGISTRATIONS_BACKGROUND_IMAGES = [
     "/home/slideshow/1.webp",
     "/home/slideshow/2.webp",
     "/home/slideshow/3.webp",
@@ -60,17 +58,18 @@ const itemVariants: Variants = {
     }
 };
 
-interface AccountMainProps {
+interface RegistrationsMainProps {
     lang: "en" | "mn";
 }
 
-export default function AccountMain({
+export default function RegistrationsMain({
     lang
-}: AccountMainProps) {
+}: RegistrationsMainProps) {
 
     const { user, loading } = useAuth();
 
-    const copy = accountCopy[lang];
+    const copy =
+        registrationsCopy[lang];
 
     const [backgroundImage] =
         useState(() => {
@@ -78,10 +77,10 @@ export default function AccountMain({
             const randomIndex =
                 Math.floor(
                     Math.random() *
-                    ACCOUNT_BACKGROUND_IMAGES.length
+                    REGISTRATIONS_BACKGROUND_IMAGES.length
                 );
 
-            return ACCOUNT_BACKGROUND_IMAGES[
+            return REGISTRATIONS_BACKGROUND_IMAGES[
                 randomIndex
             ];
         });
@@ -163,22 +162,8 @@ export default function AccountMain({
                 <div className="mt-2 space-y-6">
 
                     <motion.div variants={itemVariants}>
-                        <ProfileSection
-                            user={user}
-                            copy={copy.profile}
-                        />
-                    </motion.div>
-
-                    <motion.div variants={itemVariants}>
-                        <SecuritySection
-                            email={user.email}
-                            copy={copy.security}
-                        />
-                    </motion.div>
-
-                    <motion.div variants={itemVariants}>
-                        <HistorySection
-                            copy={copy.history}
+                        <RegistrationsSection
+                            copy={copy.section}
                         />
                     </motion.div>
 
