@@ -40,11 +40,26 @@ export interface ChangeEmailFormData {
 }
 
 export interface UserHistoryItem {
+
     type: string;
+
     title: string;
+
     description: string;
-    status: string;
+
+    status: string | null;
+
     createdAt: string;
+
+    resource: string | null;
+
+    operation: string | null;
+
+    field: string | null;
+
+    oldValue: string | null;
+
+    newValue: string | null;
 }
 
 export interface UserHistoryPage {

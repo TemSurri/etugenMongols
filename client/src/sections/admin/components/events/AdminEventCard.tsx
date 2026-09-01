@@ -4,6 +4,8 @@ import {
   useState
 } from "react";
 
+import axios from "axios";
+
 import type {
   ApiEvent,
   EventUpdateType
@@ -24,6 +26,53 @@ type Props = {
 };
 
 
+function getErrorMessage(
+  error: unknown
+): string {
+
+  if (
+    axios.isAxiosError(error)
+  ) {
+
+    const status =
+      error.response?.status;
+
+
+    if (status === 400) {
+      return "The event update was invalid.";
+    }
+
+
+    if (status === 401) {
+      return "Your session has expired. Please log in again.";
+    }
+
+
+    if (status === 403) {
+      return "You do not have permission to update this event.";
+    }
+
+
+    if (status === 404) {
+      return "This event no longer exists.";
+    }
+
+
+    if (status === 409) {
+      return "This update conflicts with existing event data.";
+    }
+
+
+    if (status && status >= 500) {
+      return "The server could not update the event.";
+    }
+  }
+
+
+  return "Could not update the event.";
+}
+
+
 export default function AdminEventCard({
   event,
   onEdit,
@@ -35,6 +84,15 @@ export default function AdminEventCard({
     setChangingPublished
   ] =
     useState(false);
+
+
+  const [
+    error,
+    setError
+  ] =
+    useState<string | null>(
+      null
+    );
 
 
   const date =
@@ -54,10 +112,21 @@ export default function AdminEventCard({
 
   async function togglePublished() {
 
+    if (
+      changingPublished
+    ) {
+      return;
+    }
+
+
     try {
 
       setChangingPublished(
         true
+      );
+
+      setError(
+        null
       );
 
 
@@ -66,6 +135,20 @@ export default function AdminEventCard({
         "PUBLISHED",
         String(
           !event.published
+        )
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Failed to update published status:",
+        error
+      );
+
+
+      setError(
+        getErrorMessage(
+          error
         )
       );
 
@@ -165,6 +248,19 @@ export default function AdminEventCard({
           </p>
 
         </div>
+
+
+        {error && (
+
+          <div className="mt-4 border border-[#a76558]/30 bg-[#fff4f1] px-4 py-3">
+
+            <p className="text-sm text-[#8a4d42]">
+              {error}
+            </p>
+
+          </div>
+
+        )}
 
 
         <div className="mt-5 flex flex-wrap gap-2">

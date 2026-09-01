@@ -5,6 +5,8 @@ import {
   type FormEvent
 } from "react";
 
+import axios from "axios";
+
 import type {
   ApiEvent,
   EventCreateRequest
@@ -20,6 +22,48 @@ type Props = {
 
   onCancel: () => void;
 };
+
+
+function getCreateErrorMessage(
+  error: unknown
+): string {
+
+  if (
+    axios.isAxiosError(error)
+  ) {
+
+    const status =
+      error.response?.status;
+
+
+    if (status === 400) {
+      return "Some of the event information is invalid. Please check the form.";
+    }
+
+
+    if (status === 401) {
+      return "Your session has expired. Please log in again.";
+    }
+
+
+    if (status === 403) {
+      return "You do not have permission to create events.";
+    }
+
+
+    if (status === 409) {
+      return "An event with this slug may already exist.";
+    }
+
+
+    if (status && status >= 500) {
+      return "The server could not create the event.";
+    }
+  }
+
+
+  return "Could not create the event. Please try again.";
+}
 
 
 export default function CreateEventForm({
@@ -38,7 +82,9 @@ export default function CreateEventForm({
     error,
     setError
   ] =
-    useState(false);
+    useState<string | null>(
+      null
+    );
 
 
   const [
@@ -56,9 +102,32 @@ export default function CreateEventForm({
     event.preventDefault();
 
 
+    if (
+      saving
+    ) {
+      return;
+    }
+
+
     const form =
       new FormData(
         event.currentTarget
+      );
+
+
+    const startsAt =
+      String(
+        form.get(
+          "startsAt"
+        ) ?? ""
+      );
+
+
+    const endsAt =
+      String(
+        form.get(
+          "endsAt"
+        ) ?? ""
       );
 
 
@@ -68,6 +137,55 @@ export default function CreateEventForm({
           "registrationCost"
         ) ?? ""
       );
+
+
+    if (
+      !startsAt
+    ) {
+
+      setError(
+        "Start date and time are required."
+      );
+
+      return;
+    }
+
+
+    if (
+      endsAt &&
+      new Date(endsAt).getTime() <=
+      new Date(startsAt).getTime()
+    ) {
+
+      setError(
+        "The event end time must be after the start time."
+      );
+
+      return;
+    }
+
+
+    if (
+      registerable &&
+      (
+        registrationDollars.trim() === "" ||
+        Number.isNaN(
+          Number(
+            registrationDollars
+          )
+        ) ||
+        Number(
+          registrationDollars
+        ) < 0
+      )
+    ) {
+
+      setError(
+        "Enter a valid registration cost."
+      );
+
+      return;
+    }
 
 
     const request:
@@ -104,21 +222,13 @@ export default function CreateEventForm({
 
         startsAt:
           new Date(
-            String(
-              form.get(
-                "startsAt"
-              )
-            )
+            startsAt
           ).toISOString(),
 
         endsAt:
-          form.get("endsAt")
+          endsAt
             ? new Date(
-                String(
-                  form.get(
-                    "endsAt"
-                  )
-                )
+                endsAt
               ).toISOString()
             : null,
 
@@ -173,14 +283,19 @@ export default function CreateEventForm({
             form.get(
               "contactPhone"
             )
-          ),
+          )
       };
 
 
     try {
 
-      setSaving(true);
-      setError(false);
+      setSaving(
+        true
+      );
+
+      setError(
+        null
+      );
 
 
       await onCreate(
@@ -190,13 +305,25 @@ export default function CreateEventForm({
 
       onCancel();
 
-    } catch {
+    } catch (error) {
 
-      setError(true);
+      console.error(
+        "Failed to create event:",
+        error
+      );
+
+
+      setError(
+        getCreateErrorMessage(
+          error
+        )
+      );
 
     } finally {
 
-      setSaving(false);
+      setSaving(
+        false
+      );
     }
   }
 
@@ -222,6 +349,22 @@ export default function CreateEventForm({
         </p>
 
       </div>
+
+
+      {error && (
+
+        <div
+          role="alert"
+          className="mb-6 border border-[#a76558]/30 bg-[#fff4f1] px-4 py-3"
+        >
+
+          <p className="text-sm font-medium text-[#8a4d42]">
+            {error}
+          </p>
+
+        </div>
+
+      )}
 
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -373,21 +516,12 @@ export default function CreateEventForm({
       </div>
 
 
-      {error && (
-
-        <p className="mt-5 text-sm text-[#8a4d42]">
-          Could not create the event.
-        </p>
-
-      )}
-
-
       <div className="mt-7 flex flex-wrap gap-3">
 
         <button
           type="submit"
           disabled={saving}
-          className="bg-[#303824] px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#fffaf0] transition hover:bg-[#414c31] disabled:opacity-50"
+          className="bg-[#303824] px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#fffaf0] transition hover:bg-[#414c31] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saving
             ? "Creating..."
@@ -397,8 +531,9 @@ export default function CreateEventForm({
 
         <button
           type="button"
+          disabled={saving}
           onClick={onCancel}
-          className="border border-[#b8aa84] px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6f591f]"
+          className="border border-[#b8aa84] px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6f591f] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </button>
@@ -412,12 +547,13 @@ export default function CreateEventForm({
 
 function nullableString(
   value: FormDataEntryValue | null
-) {
+): string | null {
 
   const string =
     String(
       value ?? ""
     ).trim();
+
 
   return string.length > 0
     ? string
@@ -459,12 +595,8 @@ function Field({
       <input
         name={name}
         type={type}
-        placeholder={
-          placeholder
-        }
-        required={
-          required
-        }
+        placeholder={placeholder}
+        required={required}
         step={step}
         min={min}
         className="w-full border border-[#cfc19f] bg-white px-4 py-3 text-sm text-[#303824] outline-none transition placeholder:text-[#7c826f]/50 focus:border-[#8d7020]"
@@ -494,9 +626,7 @@ function TextArea({
 
       <textarea
         name={name}
-        required={
-          required
-        }
+        required={required}
         rows={5}
         className="w-full resize-y border border-[#cfc19f] bg-white px-4 py-3 text-sm leading-6 text-[#303824] outline-none transition focus:border-[#8d7020]"
       />
