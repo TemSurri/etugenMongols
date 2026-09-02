@@ -1,4 +1,3 @@
-
 import {
   memo,
   useEffect,
@@ -172,7 +171,9 @@ function DonateCheckoutSection({
 
                       <img
                         src="/logo.webp"
+
                         alt="Etugen Mongols"
+
                         className="
                           mx-auto
                           h-16
@@ -275,8 +276,6 @@ function DonateCheckoutSection({
                 >
 
                   {/*
-                   * Important:
-                   *
                    * This is deliberately top-aligned.
                    *
                    * When Stripe expands its fields,
@@ -298,6 +297,7 @@ function DonateCheckoutSection({
                       stripe={
                         stripePromise
                       }
+
                       options={{
                         clientSecret:
                           checkout
@@ -332,6 +332,12 @@ function DonateCheckoutSection({
                     >
 
                       <DonationPayment
+                        action={
+                          checkout
+                            .activePayment
+                            .action
+                        }
+
                         amount={
                           checkout
                             .activePayment
@@ -356,10 +362,26 @@ function DonateCheckoutSection({
                           /*
                            * Browser-side UX only.
                            *
-                           * Your Stripe webhook remains
-                           * the source of truth for
-                           * backend payment fulfillment.
+                           * Stripe webhook + payment worker
+                           * remain the source of truth for
+                           * backend fulfillment.
                            */
+
+                          if (
+                            checkout
+                              .activePayment
+                              ?.action ===
+                            "EVENT_REGISTRATION"
+                          ) {
+
+                            window.location.assign(
+                              "/events"
+                            );
+
+                            return;
+                          }
+
+
                           window.location.assign(
                             "/"
                           );
@@ -426,6 +448,7 @@ function DonateCheckoutSection({
               onSubmit={
                 checkout.handleSubmit
               }
+
               className="
                 mx-auto
                 w-full
@@ -574,4 +597,3 @@ function DonateCheckoutSection({
 export default memo(
   DonateCheckoutSection
 );
-

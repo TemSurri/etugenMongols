@@ -95,11 +95,25 @@ export const DONATION_COPY: Record<
     createAccount:
       "Create account",
 
+
+    /*
+     * Existing payment
+     */
+
     existingPaymentTitle:
       "You already have a payment in progress",
 
     existingPaymentDescription:
-      "There is already a donation payment associated with your current session. You can continue that payment or cancel it and start again.",
+      "There is already a payment associated with your current session.",
+
+    existingDonationDescription:
+      "You currently have a donation payment in progress. You can continue that donation or cancel it and start again.",
+
+    existingEventDescription:
+      "You currently have an event registration payment in progress. Finish or cancel that registration before starting a new donation.",
+
+    existingPaymentType:
+      "Type",
 
     existingPaymentAmount:
       "Amount",
@@ -107,53 +121,104 @@ export const DONATION_COPY: Record<
     existingPaymentEmail:
       "Email",
 
+    existingPaymentRegistrant:
+      "Registrant",
+
+    existingPaymentAttendees:
+      "Attendees",
+
+    donation:
+      "Donation",
+
+    eventRegistration:
+      "Event registration",
+
     continueExisting:
       "Continue payment",
 
     cancelExisting:
       "Cancel and start again",
 
-      paymentTitle:
-  "Complete your donation",
+    cancellingPayment:
+      "Cancelling payment…",
 
-paymentDescription:
-  "Enter your payment information below to securely complete your donation.",
 
-paymentTotal:
-  "Total",
+    /*
+     * Stripe payment
+     */
 
-paymentCancel:
-  "Cancel payment",
+    paymentTitle:
+      "Complete your donation",
 
-paymentProcessing:
-  "Processing payment...",
+    paymentDescription:
+      "Enter your payment information below to securely complete your donation.",
 
-paymentSuccessTitle:
-  "Thank you for your donation",
+    eventPaymentTitle:
+      "Complete event registration",
 
-paymentSuccessDescription:
-  "Your donation has been received successfully. Thank you for supporting Etugen Mongols.",
+    eventPaymentDescription:
+      "Complete your existing event registration payment.",
 
-paymentSuccessEmail:
-  "A confirmation email will be sent to you shortly.",
+    paymentTotal:
+      "Total",
 
-paymentDone:
-  "Done",
+    paymentCancel:
+      "Cancel payment",
 
-paymentProcessingTitle:
-  "Your payment is processing",
+    paymentProcessing:
+      "Processing payment...",
 
-paymentProcessingDescription:
-  "Your payment has been submitted and is still being processed. We'll send you an email once it has been confirmed.",
 
-paymentCancelError:
-  "We could not cancel the payment. Please try again.",
+    /*
+     * Successful payment
+     */
 
-paymentInvalidTitle:
-  "Payment session unavailable",
+    paymentSuccessTitle:
+      "Thank you for your donation",
 
-paymentInvalidDescription:
-  "This payment session is no longer valid and cannot be safely continued. Please return to the donation page and start a new payment.",
+    paymentSuccessDescription:
+      "Your payment was successful and your donation has been accepted.",
+
+    paymentSuccessEmail:
+      "You will receive a confirmation email shortly.",
+
+    eventSuccessTitle:
+      "Registration payment successful",
+
+    eventSuccessDescription:
+      "Your payment was successful and your event registration has been accepted.",
+
+    queuedDescription:
+      "Your payment is now queued for processing.",
+
+    safeToLeave:
+      "You may safely leave this page. Processing will continue in the background.",
+
+    paymentDone:
+      "Back to home",
+
+    backToEvents:
+      "Back to events",
+
+
+    /*
+     * Processing / errors
+     */
+
+    paymentProcessingTitle:
+      "Your payment is processing",
+
+    paymentProcessingDescription:
+      "Your payment has been submitted and is still being processed. We'll send you an email once it has been confirmed.",
+
+    paymentCancelError:
+      "We could not cancel the payment. Please try again.",
+
+    paymentInvalidTitle:
+      "Payment session unavailable",
+
+    paymentInvalidDescription:
+      "This payment session is no longer valid and cannot be safely continued. Please return and start a new payment.",
   },
 
 
@@ -243,11 +308,25 @@ paymentInvalidDescription:
     createAccount:
       "Бүртгүүлэх",
 
+
+    /*
+     * Existing payment
+     */
+
     existingPaymentTitle:
       "Танд үргэлжилж буй төлбөр байна",
 
     existingPaymentDescription:
-      "Таны одоогийн сесстэй холбоотой хандивын төлбөр аль хэдийн байна. Та уг төлбөрийг үргэлжлүүлэх эсвэл цуцлаад шинээр эхлэх боломжтой.",
+      "Таны одоогийн сесстэй холбоотой төлбөр байна.",
+
+    existingDonationDescription:
+      "Танд үргэлжилж буй хандивын төлбөр байна. Та уг төлбөрийг үргэлжлүүлэх эсвэл цуцлаад дахин эхлэх боломжтой.",
+
+    existingEventDescription:
+      "Танд үргэлжилж буй арга хэмжээний бүртгэлийн төлбөр байна. Шинэ хандив эхлүүлэхээс өмнө уг төлбөрийг дуусгах эсвэл цуцална уу.",
+
+    existingPaymentType:
+      "Төрөл",
 
     existingPaymentAmount:
       "Дүн",
@@ -255,53 +334,103 @@ paymentInvalidDescription:
     existingPaymentEmail:
       "Имэйл",
 
+    existingPaymentRegistrant:
+      "Бүртгүүлэгч",
+
+    existingPaymentAttendees:
+      "Оролцогчид",
+
+    donation:
+      "Хандив",
+
+    eventRegistration:
+      "Арга хэмжээний бүртгэл",
+
     continueExisting:
       "Төлбөрийг үргэлжлүүлэх",
 
     cancelExisting:
       "Цуцлаад дахин эхлэх",
 
-      paymentTitle:
-  "Хандиваа дуусгах",
+    cancellingPayment:
+      "Төлбөр цуцалж байна…",
 
-paymentDescription:
-  "Хандиваа аюулгүй дуусгахын тулд төлбөрийн мэдээллээ доор оруулна уу.",
 
-paymentTotal:
-  "Нийт",
+    /*
+     * Stripe payment
+     */
 
-paymentCancel:
-  "Төлбөр цуцлах",
+    paymentTitle:
+      "Хандиваа дуусгах",
 
-paymentProcessing:
-  "Төлбөр боловсруулж байна...",
+    paymentDescription:
+      "Хандиваа аюулгүй дуусгахын тулд төлбөрийн мэдээллээ доор оруулна уу.",
 
-paymentSuccessTitle:
-  "Хандив өгсөнд баярлалаа",
+    eventPaymentTitle:
+      "Арга хэмжээний бүртгэлээ дуусгах",
 
-paymentSuccessDescription:
-  "Таны хандив амжилттай хүлээн авлаа. Etugen Mongols-ыг дэмжсэн танд баярлалаа.",
+    eventPaymentDescription:
+      "Үргэлжилж буй арга хэмжээний бүртгэлийн төлбөрөө дуусгана уу.",
 
-paymentSuccessEmail:
-  "Баталгаажуулах имэйл удахгүй танд илгээгдэх болно.",
+    paymentTotal:
+      "Нийт",
 
-paymentDone:
-  "Дуусгах",
+    paymentCancel:
+      "Төлбөр цуцлах",
 
-paymentProcessingTitle:
-  "Таны төлбөр боловсруулагдаж байна",
+    paymentProcessing:
+      "Төлбөр боловсруулж байна...",
 
-paymentProcessingDescription:
-  "Таны төлбөр илгээгдсэн бөгөөд одоогоор боловсруулагдаж байна. Баталгаажмагц бид танд имэйл илгээнэ.",
 
-paymentCancelError:
-  "Төлбөрийг цуцалж чадсангүй. Дахин оролдоно уу.",
+    /*
+     * Successful payment
+     */
 
-  paymentInvalidTitle:
-  "Төлбөрийн сесс ашиглах боломжгүй",
+    paymentSuccessTitle:
+      "Хандив өгсөнд баярлалаа",
 
-paymentInvalidDescription:
-  "Энэ төлбөрийн сесс цааш үргэлжлүүлэх боломжгүй болсон байна. Хандивын хуудас руу буцаж, шинэ төлбөр эхлүүлнэ үү.",
+    paymentSuccessDescription:
+      "Таны төлбөр амжилттай болж, хандив хүлээн авлаа.",
+
+    paymentSuccessEmail:
+      "Баталгаажуулах имэйл удахгүй танд илгээгдэх болно.",
+
+    eventSuccessTitle:
+      "Бүртгэлийн төлбөр амжилттай",
+
+    eventSuccessDescription:
+      "Таны төлбөр амжилттай болж, арга хэмжээний бүртгэл хүлээн авлаа.",
+
+    queuedDescription:
+      "Таны төлбөр одоо боловсруулалтын дараалалд орлоо.",
+
+    safeToLeave:
+      "Та энэ хуудсыг аюулгүй хааж болно. Боловсруулалт цаана үргэлжилнэ.",
+
+    paymentDone:
+      "Нүүр хуудас руу",
+
+    backToEvents:
+      "Арга хэмжээнүүд рүү",
+
+
+    /*
+     * Processing / errors
+     */
+
+    paymentProcessingTitle:
+      "Таны төлбөр боловсруулагдаж байна",
+
+    paymentProcessingDescription:
+      "Таны төлбөр илгээгдсэн бөгөөд одоогоор боловсруулагдаж байна. Баталгаажмагц бид танд имэйл илгээнэ.",
+
+    paymentCancelError:
+      "Төлбөрийг цуцалж чадсангүй. Дахин оролдоно уу.",
+
+    paymentInvalidTitle:
+      "Төлбөрийн сесс ашиглах боломжгүй",
+
+    paymentInvalidDescription:
+      "Энэ төлбөрийн сесс цааш үргэлжлүүлэх боломжгүй болсон байна. Буцаж шинэ төлбөр эхлүүлнэ үү.",
   },
-  
 };

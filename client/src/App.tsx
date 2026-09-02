@@ -25,6 +25,8 @@ import ForgotPasswordPage
 import ResetPasswordPage
   from "./pages/auth/reset_password";
 
+import EventRegistrationPage
+  from "./pages/EventRegistrationPage";
 
 import DonateMoneyPage from "./pages/payments/DonateMoneyPage";
 import AdminPage from "./pages/AdminPage";
@@ -103,6 +105,13 @@ function App() {
         <Route
           path="/account/registrations"
           element={<RegistrationsPage />}
+        />
+
+        <Route
+          path="/events/:slug/register"
+          element={
+            <EventRegistrationPage />
+          }
         />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />

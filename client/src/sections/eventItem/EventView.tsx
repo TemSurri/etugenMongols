@@ -9,6 +9,12 @@ import {
   Link
 } from "react-router-dom";
 
+import {
+  cubicBezier,
+  motion,
+  type Variants
+} from "framer-motion";
+
 import type {
   ApiEvent,
   Lang
@@ -25,7 +31,6 @@ type EventViewCopy = {
   back: string;
 
   about: string;
-  details: string;
 
   date: string;
   time: string;
@@ -34,11 +39,9 @@ type EventViewCopy = {
   maps: string;
 
   registration: string;
+  register: string;
   free: string;
   unavailable: string;
-
-  email: string;
-  phone: string;
 };
 
 
@@ -48,7 +51,6 @@ const COPY = {
     back: "Back to Events",
 
     about: "About",
-    details: "Details",
 
     date: "Date",
     time: "Time",
@@ -57,12 +59,11 @@ const COPY = {
     maps: "Open in Google Maps",
 
     registration: "Registration",
+    register: "Register",
     free: "Free",
+
     unavailable:
       "This event is not currently available for registration.",
-
-    email: "Email",
-    phone: "Phone",
   },
 
   mn: {
@@ -70,7 +71,6 @@ const COPY = {
       "Арга хэмжээнүүд рүү буцах",
 
     about: "Тухай",
-    details: "Мэдээлэл",
 
     date: "Огноо",
     time: "Цаг",
@@ -80,18 +80,77 @@ const COPY = {
       "Google Maps дээр нээх",
 
     registration: "Бүртгэл",
+    register: "Бүртгүүлэх",
     free: "Үнэгүй",
+
     unavailable:
       "Энэ арга хэмжээнд одоогоор бүртгүүлэх боломжгүй байна.",
-
-    email: "Имэйл",
-    phone: "Утас",
   },
 
 } as const satisfies Record<
   Lang,
   EventViewCopy
 >;
+
+
+const easeOut =
+  cubicBezier(
+    0.22,
+    1,
+    0.36,
+    1
+  );
+
+
+const containerMotion: Variants = {
+
+  hidden: {},
+
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+
+const itemMotion: Variants = {
+
+  hidden: {
+    opacity: 0,
+    y: 16,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.55,
+      ease: easeOut,
+    },
+  },
+};
+
+
+const softItemMotion: Variants = {
+
+  hidden: {
+    opacity: 0,
+    y: 10,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.45,
+      ease: easeOut,
+    },
+  },
+};
 
 
 function getGoogleMapsUrl(
@@ -101,6 +160,7 @@ function getGoogleMapsUrl(
   if (!location) {
     return null;
   }
+
 
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
@@ -189,13 +249,7 @@ function EventView({
       : event.descriptionEn;
 
 
-  const imageAlt =
-    lang === "mn"
-      ? event.coverImageAltMn
-      : event.coverImageAltEn;
-
-
-  const imageSrc =
+  const backgroundImage =
     event.coverImage ??
     "/landingpage.webp";
 
@@ -235,218 +289,474 @@ function EventView({
 
 
   return (
-    <main className="min-h-screen bg-[#f6efdf] pt-20 text-[#27301d]">
+    <main
+      className="
+        min-h-screen
+        bg-white
+        text-[#27301d]
+      "
+    >
 
-      <div className="mx-auto max-w-5xl px-5 py-6 sm:px-6 lg:px-8">
+      <section
+        className="
+          relative
+          min-h-[620px]
+          overflow-hidden
+          bg-[#182010]
+        "
+      >
 
-        <Link
-          to="/events"
-          className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8d7020] transition-colors hover:text-[#27301d]"
+        <motion.img
+          src={backgroundImage}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          draggable={false}
+
+          initial={{
+            opacity: 0,
+            scale: 1.025,
+          }}
+
+          animate={{
+            opacity: 1,
+            scale: 1,
+          }}
+
+          transition={{
+            duration: 0.9,
+            ease: easeOut,
+          }}
+
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            select-none
+            object-cover
+            object-center
+            saturate-[1.03]
+            contrast-[1.03]
+          "
+        />
+
+
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+
+          animate={{
+            opacity: 1,
+          }}
+
+          transition={{
+            duration: 0.7,
+            ease: easeOut,
+          }}
+
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-[#11180c]/68
+          "
+        />
+
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-linear-to-b
+            from-black/20
+            via-black/5
+            to-black/45
+          "
+        />
+
+
+        <motion.div
+          variants={
+            containerMotion
+          }
+
+          initial="hidden"
+
+          animate="show"
+
+          className="
+            relative
+            z-10
+            mx-auto
+            max-w-5xl
+            px-5
+            pb-20
+            pt-36
+            sm:px-6
+            md:pt-40
+            lg:px-8
+          "
         >
-          ← {copy.back}
-        </Link>
+
+          <motion.div
+            variants={
+              itemMotion
+            }
+          >
+
+            <Link
+              to="/events"
+              className="
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.2em]
+                text-white/70
+                transition-colors
+                hover:text-white
+              "
+            >
+              ← {copy.back}
+            </Link>
+
+          </motion.div>
 
 
-        <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.95fr] lg:items-start">
+          <div
+            className="
+              mt-10
+              max-w-3xl
+            "
+          >
 
-          <div>
-
-            <img
-              src={imageSrc}
-              alt={
-                imageAlt ??
-                title
+            <motion.h1
+              variants={
+                itemMotion
               }
-              width={1280}
-              height={720}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              className="w-full border border-[#d8caa5]/70 bg-white object-contain"
-            />
 
-          </div>
-
-
-          <div className="pt-1">
-
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+              className="
+                text-4xl
+                font-semibold
+                leading-tight
+                tracking-tight
+                text-white
+                sm:text-5xl
+                lg:text-6xl
+              "
+            >
               {title}
-            </h1>
+            </motion.h1>
 
 
-            <div className="mt-4 space-y-3 border-l-2 border-[#d8caa5] pl-4">
+            <motion.div
+              variants={
+                itemMotion
+              }
 
-              <Info
-                label={copy.date}
-                value={date}
-              />
+              className="
+                mt-8
+                max-w-2xl
+                border-l-2
+                border-white/30
+                pl-5
+                sm:pl-6
+              "
+            >
+
+              <motion.div
+                variants={
+                  containerMotion
+                }
+
+                className="
+                  grid
+                  gap-x-10
+                  gap-y-5
+                  sm:grid-cols-2
+                "
+              >
+
+                <motion.div
+                  variants={
+                    softItemMotion
+                  }
+                >
+
+                  <Info
+                    label={copy.date}
+                    value={date}
+                  />
+
+                </motion.div>
 
 
-              <Info
-                label={copy.time}
-                value={time}
-              />
+                <motion.div
+                  variants={
+                    softItemMotion
+                  }
+                >
+
+                  <Info
+                    label={copy.time}
+                    value={time}
+                  />
+
+                </motion.div>
+
+              </motion.div>
 
 
               {event.location && (
 
-                <Info
-                  label={copy.location}
-                  value={
-                    <>
-                      {event.location}
-
-                      {googleMapsUrl && (
-                        <>
-                          <br />
-
-                          <a
-                            href={googleMapsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-1 inline-block text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
-                          >
-                            {copy.maps} →
-                          </a>
-                        </>
-                      )}
-                    </>
+                <motion.div
+                  variants={
+                    softItemMotion
                   }
-                />
+
+                  className="
+                    mt-5
+                  "
+                >
+
+                  <Info
+                    label={copy.location}
+                    value={
+                      <>
+                        {event.location}
+
+
+                        {googleMapsUrl && (
+                          <>
+                            <br />
+
+                            <a
+                              href={googleMapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="
+                                mt-1
+                                inline-block
+                                text-[#e0c56f]
+                                underline
+                                underline-offset-4
+                                transition-colors
+                                hover:text-white
+                              "
+                            >
+                              {copy.maps} →
+                            </a>
+                          </>
+                        )}
+
+                      </>
+                    }
+                  />
+
+                </motion.div>
 
               )}
 
-            </div>
+
+              {event.registerable &&
+              registrationText ? (
+
+                <motion.div
+                  variants={
+                    softItemMotion
+                  }
+
+                  className="
+                    mt-7
+                    flex
+                    items-end
+                    justify-between
+                    gap-6
+                    border-t
+                    border-white/15
+                    pt-5
+                  "
+                >
+
+                  <div>
+
+                    <p
+                      className="
+                        text-[10px]
+                        font-semibold
+                        uppercase
+                        tracking-[0.16em]
+                        text-[#d8bd63]
+                      "
+                    >
+                      {copy.registration}
+                    </p>
 
 
-            {event.registerable &&
-            registrationText ? (
+                    <p
+                      className="
+                        mt-1
+                        text-xl
+                        font-semibold
+                        text-white
+                      "
+                    >
+                      {registrationText}
+                    </p>
 
-              <div className="mt-5">
+                  </div>
 
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9a7b26]">
-                  {copy.registration}
-                </p>
 
-                <p className="mt-1 text-sm leading-6 text-[#4e593c]">
-                  {registrationText}
-                </p>
+                  <motion.div
+                    whileHover={{
+                      y: -2,
+                    }}
 
-              </div>
+                    whileTap={{
+                      scale: 0.98,
+                    }}
 
-            ) : (
+                    transition={{
+                      duration: 0.16,
+                    }}
+                  >
 
-              <p className="mt-5 text-sm leading-6 text-[#4e593c]/80">
-                {copy.unavailable}
-              </p>
+                    <Link
+                      to={
+                        `/events/${event.slug}/register`
+                      }
 
-            )}
+                      className="
+                        inline-flex
+                        shrink-0
+                        items-center
+                        justify-center
+                        bg-[#f7f7f4]
+                        px-7
+                        py-3.5
+                        text-sm
+                        font-medium
+                        text-[#27301d]
+                        transition-colors
+                        duration-150
+                        hover:bg-white
+                      "
+                    >
+                      {copy.register}
+                    </Link>
+
+                  </motion.div>
+
+                </motion.div>
+
+              ) : (
+
+                <motion.div
+                  variants={
+                    softItemMotion
+                  }
+
+                  className="
+                    mt-7
+                    border-t
+                    border-white/15
+                    pt-5
+                  "
+                >
+
+                  <p
+                    className="
+                      text-sm
+                      leading-6
+                      text-white/70
+                    "
+                  >
+                    {copy.unavailable}
+                  </p>
+
+                </motion.div>
+
+              )}
+
+            </motion.div>
 
           </div>
 
-        </section>
+        </motion.div>
 
-      </div>
+      </section>
 
 
-      <section className="mt-10 bg-white">
+      <motion.section
+        initial={{
+          opacity: 0,
+          y: 18,
+        }}
 
-        <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 lg:px-8">
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
 
-          <div className="max-w-3xl">
+        viewport={{
+          once: true,
+          amount: 0.2,
+        }}
+
+        transition={{
+          duration: 0.55,
+          ease: easeOut,
+        }}
+
+        className="
+          bg-white
+        "
+      >
+
+        <div
+          className="
+            mx-auto
+            max-w-5xl
+            px-5
+            py-14
+            sm:px-6
+            lg:px-8
+            lg:py-16
+          "
+        >
+
+          <div
+            className="
+              max-w-3xl
+            "
+          >
 
             <SectionTitle>
               {copy.about}
             </SectionTitle>
 
-            <p className="mt-4 whitespace-pre-line text-[14px] leading-7 text-black/72">
+
+            <p
+              className="
+                mt-4
+                whitespace-pre-line
+                text-[14px]
+                leading-7
+                text-black/72
+              "
+            >
               {description}
             </p>
 
           </div>
 
-
-          {(
-            event.contactEmail ||
-            event.contactPhone ||
-            googleMapsUrl
-          ) && (
-
-            <div className="mt-10">
-
-              <SectionTitle>
-                {copy.details}
-              </SectionTitle>
-
-
-              <div className="mt-3 space-y-3 text-sm leading-7 text-black/72">
-
-                {event.contactEmail && (
-
-                  <div>
-
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#9a7b26]">
-                      {copy.email}
-                    </p>
-
-                    <a
-                      href={`mailto:${event.contactEmail}`}
-                      className="text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
-                    >
-                      {event.contactEmail}
-                    </a>
-
-                  </div>
-
-                )}
-
-
-                {event.contactPhone && (
-
-                  <div>
-
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#9a7b26]">
-                      {copy.phone}
-                    </p>
-
-                    <a
-                      href={`tel:${event.contactPhone.replace(
-                        /\s+/g,
-                        ""
-                      )}`}
-                      className="text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
-                    >
-                      {event.contactPhone}
-                    </a>
-
-                  </div>
-
-                )}
-
-
-                {googleMapsUrl && (
-
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block text-[#8d7020] underline underline-offset-4 hover:text-[#27301d]"
-                  >
-                    {copy.maps} →
-                  </a>
-
-                )}
-
-              </div>
-
-            </div>
-
-          )}
-
         </div>
 
-      </section>
+      </motion.section>
 
     </main>
   );
@@ -460,7 +770,15 @@ function SectionTitle({
 }) {
 
   return (
-    <h2 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+    <h2
+      className="
+        text-[10px]
+        font-semibold
+        uppercase
+        tracking-[0.22em]
+        text-[#9a7b26]
+      "
+    >
       {children}
     </h2>
   );
@@ -478,11 +796,28 @@ function Info({
   return (
     <div>
 
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9a7b26]">
+      <p
+        className="
+          text-[10px]
+          font-semibold
+          uppercase
+          tracking-[0.16em]
+          text-[#d8bd63]
+        "
+      >
         {label}
       </p>
 
-      <div className="mt-0.5 text-sm leading-6 text-[#4e593c]">
+
+      <div
+        className="
+          mt-1
+          text-[15px]
+          font-medium
+          leading-6
+          text-white
+        "
+      >
         {value}
       </div>
 

@@ -11,16 +11,23 @@ import {
 
 import type {
   DonationCopy,
+  PaymentAction,
 } from "./donateTypes";
 
 
 type DonationPaymentProps = {
 
-  amount: number;
+  action:
+    PaymentAction;
 
-  currency: string;
+  amount:
+    number;
 
-  copy: DonationCopy;
+  currency:
+    string;
+
+  copy:
+    DonationCopy;
 
   onCancel:
     () => Promise<void>;
@@ -38,6 +45,7 @@ type PaymentState =
 
 
 function DonationPayment({
+  action,
   amount,
   currency,
   copy,
@@ -55,53 +63,84 @@ function DonationPayment({
   const [
     state,
     setState,
-  ] = useState<PaymentState>(
-    "payment"
-  );
+  ] =
+    useState<PaymentState>(
+      "payment"
+    );
 
 
   const [
     submitting,
     setSubmitting,
-  ] = useState(false);
+  ] =
+    useState(false);
 
 
   const [
     cancelling,
     setCancelling,
-  ] = useState(false);
+  ] =
+    useState(false);
 
 
   const [
     error,
     setError,
-  ] = useState<
-    string | null
-  >(null);
+  ] =
+    useState<
+      string | null
+    >(null);
 
 
   const formattedAmount =
-    (amount / 100)
-      .toLocaleString(
-        "en-CA",
-        {
-          style:
-            "currency",
+    (
+      amount /
+      100
+    ).toLocaleString(
+      "en-CA",
+      {
+        style:
+          "currency",
 
-          currency:
-            currency.toUpperCase(),
-        }
-      );
+        currency:
+          currency.toUpperCase(),
+      }
+    );
+
+
+  const isDonation =
+    action ===
+    "DONATION";
+
+
+  const title =
+    isDonation
+      ? copy.paymentTitle
+      : copy.eventPaymentTitle;
+
+
+  const description =
+    isDonation
+      ? copy.paymentDescription
+      : copy.eventPaymentDescription;
+
+
+  const successTitle =
+    isDonation
+      ? copy.paymentSuccessTitle
+      : copy.eventSuccessTitle;
+
+
+  const successDescription =
+    isDonation
+      ? copy.paymentSuccessDescription
+      : copy.eventSuccessDescription;
 
 
   const busy =
     submitting ||
     cancelling;
 
-
-  /* -------------------------------------------- */
-  /* Cancel payment                               */
-  /* -------------------------------------------- */
 
   const handleCancel =
     async () => {
@@ -113,23 +152,22 @@ function DonationPayment({
 
       try {
 
-        setCancelling(true);
+        setCancelling(
+          true
+        );
 
-        setError(null);
+        setError(
+          null
+        );
 
 
-        /*
-         * Actual cancellation belongs to
-         * the backend.
-         */
         await onCancel();
 
-
-      } catch (error) {
+      } catch (requestError) {
 
         console.error(
-          "Donation cancellation failed:",
-          error
+          "Payment cancellation failed:",
+          requestError
         );
 
 
@@ -138,14 +176,12 @@ function DonationPayment({
         );
 
 
-        setCancelling(false);
+        setCancelling(
+          false
+        );
       }
     };
 
-
-  /* -------------------------------------------- */
-  /* Confirm Stripe payment                       */
-  /* -------------------------------------------- */
 
   const handleSubmit =
     async (
@@ -165,9 +201,13 @@ function DonationPayment({
       }
 
 
-      setSubmitting(true);
+      setSubmitting(
+        true
+      );
 
-      setError(null);
+      setError(
+        null
+      );
 
 
       try {
@@ -186,10 +226,6 @@ function DonationPayment({
                 `${window.location.origin}/payments/donate/result`,
             },
 
-            /*
-             * Normal card payments stay
-             * inside the modal.
-             */
             redirect:
               "if_required",
           });
@@ -197,16 +233,9 @@ function DonationPayment({
 
         if (stripeError) {
 
-          /*
-           * A Stripe "unexpected state" response means this
-           * PaymentIntent is no longer safe to continue from
-           * this browser session.
-           *
-           * Ordinary card/validation errors remain retryable.
-           */
           if (
             stripeError.code ===
-              "payment_intent_unexpected_state"
+            "payment_intent_unexpected_state"
           ) {
 
             setState(
@@ -226,13 +255,6 @@ function DonationPayment({
         }
 
 
-        /*
-         * Stripe is the browser-side source of truth for the
-         * result of this confirmation attempt.
-         *
-         * The webhook remains authoritative for backend
-         * payment state and fulfillment.
-         */
         switch (
           paymentIntent?.status
         ) {
@@ -274,12 +296,6 @@ function DonationPayment({
             return;
 
 
-          /*
-           * This application does not intentionally use
-           * manual capture or other unusual post-confirmation
-           * states. Fail closed rather than trying to recover
-           * an inconsistent client-side payment session.
-           */
           case "requires_capture":
           case "canceled":
           case undefined:
@@ -300,12 +316,11 @@ function DonationPayment({
             return;
         }
 
-
-      } catch (error) {
+      } catch (requestError) {
 
         console.error(
           "Stripe confirmation failed:",
-          error
+          requestError
         );
 
 
@@ -313,17 +328,14 @@ function DonationPayment({
           "Payment could not be completed. Please try again."
         );
 
-
       } finally {
 
-        setSubmitting(false);
+        setSubmitting(
+          false
+        );
       }
     };
 
-
-  /* -------------------------------------------- */
-  /* Invalid payment session                      */
-  /* -------------------------------------------- */
 
   if (
     state === "invalid"
@@ -332,7 +344,9 @@ function DonationPayment({
     return (
       <section
         role="alertdialog"
+
         aria-modal="true"
+
         className="
           w-full
           max-w-[620px]
@@ -353,7 +367,9 @@ function DonationPayment({
 
           <img
             src="/logo.webp"
+
             alt="Etugen Mongols"
+
             className="
               mx-auto
               h-16
@@ -371,7 +387,7 @@ function DonationPayment({
               tracking-tight
             "
           >
-            Payment session unavailable
+            {copy.paymentInvalidTitle}
           </h2>
 
 
@@ -385,16 +401,17 @@ function DonationPayment({
               text-[#69705c]
             "
           >
-            This payment session is no longer valid and cannot be safely continued.
-            Please return to the donation page and start a new payment.
+            {copy.paymentInvalidDescription}
           </p>
 
 
           <button
             type="button"
+
             onClick={
               onComplete
             }
+
             className="
               mt-8
               inline-flex
@@ -410,13 +427,13 @@ function DonationPayment({
               transition-colors
               duration-150
               hover:bg-[#242a1b]
-              focus:outline-none
-              focus-visible:ring-2
-              focus-visible:ring-[#303824]
-              focus-visible:ring-offset-2
             "
           >
-            Go back to home
+            {
+              isDonation
+                ? copy.paymentDone
+                : copy.backToEvents
+            }
           </button>
 
         </div>
@@ -426,10 +443,6 @@ function DonationPayment({
   }
 
 
-  /* -------------------------------------------- */
-  /* Success                                      */
-  /* -------------------------------------------- */
-
   if (
     state === "success"
   ) {
@@ -437,7 +450,9 @@ function DonationPayment({
     return (
       <section
         role="dialog"
+
         aria-modal="true"
+
         className="
           w-full
           max-w-[620px]
@@ -461,35 +476,8 @@ function DonationPayment({
             className="
               mx-auto
               flex
-              h-20
-              w-20
-              items-center
-              justify-center
-              rounded-full
-              bg-[#303824]/[0.05]
-            "
-          >
-
-            <img
-              src="/logo.webp"
-              alt="Etugen Mongols"
-              className="
-                h-14
-                w-14
-                object-contain
-              "
-            />
-
-          </div>
-
-
-          <div
-            className="
-              mx-auto
-              mt-7
-              flex
-              h-12
-              w-12
+              h-16
+              w-16
               items-center
               justify-center
               rounded-full
@@ -501,10 +489,12 @@ function DonationPayment({
 
             <svg
               viewBox="0 0 24 24"
+
               fill="none"
+
               className="
-                h-6
-                w-6
+                h-8
+                w-8
               "
             >
 
@@ -514,9 +504,13 @@ function DonationPayment({
                   L9.2 16.5
                   L19 7
                 "
+
                 stroke="currentColor"
+
                 strokeWidth="2"
+
                 strokeLinecap="round"
+
                 strokeLinejoin="round"
               />
 
@@ -525,16 +519,34 @@ function DonationPayment({
           </div>
 
 
-          <h2
+          <p
             className="
               mt-6
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-[0.2em]
+              text-[#9a7b26]
+            "
+          >
+            {
+              isDonation
+                ? copy.donation
+                : copy.eventRegistration
+            }
+          </p>
+
+
+          <h2
+            className="
+              mt-3
               text-2xl
               font-normal
               tracking-tight
               sm:text-3xl
             "
           >
-            {copy.paymentSuccessTitle}
+            {successTitle}
           </h2>
 
 
@@ -548,7 +560,21 @@ function DonationPayment({
               text-[#69705c]
             "
           >
-            {copy.paymentSuccessDescription}
+            {successDescription}
+          </p>
+
+
+          <p
+            className="
+              mx-auto
+              mt-2
+              max-w-md
+              text-sm
+              leading-7
+              text-[#69705c]
+            "
+          >
+            {copy.queuedDescription}
           </p>
 
 
@@ -609,11 +635,27 @@ function DonationPayment({
           </div>
 
 
+          <p
+            className="
+              mx-auto
+              mt-5
+              max-w-sm
+              text-xs
+              leading-5
+              text-[#7a806e]
+            "
+          >
+            {copy.safeToLeave}
+          </p>
+
+
           <button
             type="button"
+
             onClick={
               onComplete
             }
+
             className="
               mt-8
               inline-flex
@@ -629,13 +671,13 @@ function DonationPayment({
               transition-colors
               duration-150
               hover:bg-[#242a1b]
-              focus:outline-none
-              focus-visible:ring-2
-              focus-visible:ring-[#303824]
-              focus-visible:ring-offset-2
             "
           >
-            Go back to home
+            {
+              isDonation
+                ? copy.paymentDone
+                : copy.backToEvents
+            }
           </button>
 
         </div>
@@ -645,10 +687,6 @@ function DonationPayment({
   }
 
 
-  /* -------------------------------------------- */
-  /* Processing                                   */
-  /* -------------------------------------------- */
-
   if (
     state === "processing"
   ) {
@@ -656,7 +694,9 @@ function DonationPayment({
     return (
       <section
         role="dialog"
+
         aria-modal="true"
+
         className="
           w-full
           max-w-[620px]
@@ -677,12 +717,13 @@ function DonationPayment({
 
           <img
             src="/logo.webp"
+
             alt="Etugen Mongols"
+
             className="
               mx-auto
               h-16
               w-16
-              animate-pulse
               object-contain
             "
           />
@@ -742,7 +783,6 @@ function DonationPayment({
                 {copy.paymentTotal}
               </span>
 
-
               <span
                 className="
                   font-medium
@@ -758,9 +798,11 @@ function DonationPayment({
 
           <button
             type="button"
+
             onClick={
               onComplete
             }
+
             className="
               mt-8
               inline-flex
@@ -779,7 +821,11 @@ function DonationPayment({
               hover:bg-[#303824]/[0.03]
             "
           >
-            Go back to home
+            {
+              isDonation
+                ? copy.paymentDone
+                : copy.backToEvents
+            }
           </button>
 
         </div>
@@ -789,26 +835,31 @@ function DonationPayment({
   }
 
 
-  /* -------------------------------------------- */
-  /* Payment form                                 */
-  /* -------------------------------------------- */
-
   return (
     <section
       role="dialog"
+
       aria-modal="true"
+
       aria-labelledby="donation-payment-title"
-      className="
+
+      className={`
         relative
         w-full
         max-w-[620px]
         bg-white
         text-[#303824]
         shadow-2xl
-      "
-    >
+        transition-all
+        duration-300
 
-      {/* Header */}
+        ${
+          cancelling
+            ? "scale-[0.995] opacity-90"
+            : "scale-100 opacity-100"
+        }
+      `}
+    >
 
       <div
         className="
@@ -835,15 +886,34 @@ function DonationPayment({
             "
           >
 
+            <p
+              className="
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.2em]
+                text-[#9a7b26]
+              "
+            >
+              {
+                isDonation
+                  ? copy.donation
+                  : copy.eventRegistration
+              }
+            </p>
+
+
             <h2
               id="donation-payment-title"
+
               className="
+                mt-2
                 text-2xl
                 font-normal
                 tracking-tight
               "
             >
-              {copy.paymentTitle}
+              {title}
             </h2>
 
 
@@ -856,7 +926,7 @@ function DonationPayment({
                 text-[#69705c]
               "
             >
-              {copy.paymentDescription}
+              {description}
             </p>
 
           </div>
@@ -864,7 +934,9 @@ function DonationPayment({
 
           <img
             src="/logo.webp"
+
             alt="Etugen Mongols"
+
             className="
               h-11
               w-11
@@ -913,12 +985,11 @@ function DonationPayment({
       </div>
 
 
-      {/* Stripe */}
-
       <form
         onSubmit={
           handleSubmit
         }
+
         className="
           px-6
           py-7
@@ -930,26 +1001,30 @@ function DonationPayment({
         <PaymentElement />
 
 
-        {error && (
+        {
+          error &&
+          (
 
-          <div
-            role="alert"
-            className="
-              mt-6
-              border-l-2
-              border-[#d6ba72]
-              bg-[#303824]/[0.03]
-              px-4
-              py-3
-              text-sm
-              leading-6
-              text-[#59604d]
-            "
-          >
-            {error}
-          </div>
+            <div
+              role="alert"
 
-        )}
+              className="
+                mt-6
+                border-l-2
+                border-[#d6ba72]
+                bg-[#303824]/[0.03]
+                px-4
+                py-3
+                text-sm
+                leading-6
+                text-[#59604d]
+              "
+            >
+              {error}
+            </div>
+
+          )
+        }
 
 
         <div
@@ -964,17 +1039,21 @@ function DonationPayment({
 
           <button
             type="button"
+
             disabled={
               busy
             }
+
             onClick={
               handleCancel
             }
+
             className="
               inline-flex
               flex-1
               items-center
               justify-center
+              gap-2
               border
               border-[#303824]/20
               px-6
@@ -982,31 +1061,59 @@ function DonationPayment({
               text-sm
               font-medium
               text-[#303824]
-              transition-colors
-              duration-150
+              transition-all
+              duration-200
               hover:border-[#303824]/45
               hover:bg-[#303824]/[0.03]
               disabled:cursor-wait
-              disabled:opacity-50
+              disabled:opacity-70
             "
           >
-            {copy.paymentCancel}
+            {
+              cancelling
+                ? (
+                    <>
+
+                      <span
+                        aria-hidden="true"
+
+                        className="
+                          h-3.5
+                          w-3.5
+                          shrink-0
+                          animate-spin
+                          rounded-full
+                          border-2
+                          border-[#303824]/20
+                          border-t-[#303824]
+                        "
+                      />
+
+                      <span>
+                        {copy.cancellingPayment}
+                      </span>
+
+                    </>
+                  )
+                : copy.paymentCancel
+            }
           </button>
 
 
           <button
             type="submit"
+
             disabled={
               !stripe ||
               !elements ||
               busy
             }
+
             className="
               inline-flex
               flex-1
               items-center
               justify-center
-              gap-3
               bg-[#303824]
               px-6
               py-3.5
@@ -1020,97 +1127,16 @@ function DonationPayment({
               disabled:opacity-60
             "
           >
-
-            {submitting ? (
-
-              <>
-                <img
-                  src="/logo.webp"
-                  alt=""
-                  className="
-                    h-5
-                    w-5
-                    animate-pulse
-                    object-contain
-                  "
-                />
-
-                {copy.paymentProcessing}
-              </>
-
-            ) : (
-
-              <>
-                Pay {formattedAmount}
-              </>
-
-            )}
-
+            {
+              submitting
+                ? copy.paymentProcessing
+                : `Pay ${formattedAmount}`
+            }
           </button>
 
         </div>
 
       </form>
-
-
-      {/* Blocking overlay while Stripe/cancel runs */}
-
-      {busy && (
-
-        <div
-          className="
-            absolute
-            inset-0
-            z-20
-            flex
-            items-start
-            justify-center
-            bg-white/95
-            px-6
-            pt-24
-            backdrop-blur-[2px]
-          "
-        >
-
-          <div
-            className="
-              text-center
-            "
-          >
-
-            <img
-              src="/logo.webp"
-              alt="Etugen Mongols"
-              className="
-                mx-auto
-                h-16
-                w-16
-                animate-pulse
-                object-contain
-              "
-            />
-
-
-            <p
-              className="
-                mt-4
-                text-sm
-                font-medium
-                text-[#59604d]
-              "
-            >
-              {
-                cancelling
-                  ? copy.paymentCancel
-                  : copy.paymentProcessing
-              }
-            </p>
-
-          </div>
-
-        </div>
-
-      )}
 
     </section>
   );

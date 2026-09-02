@@ -20,9 +20,11 @@ import {
 } from "./donateApi";
 
 import type {
+  ActivePayment,
   DonationCheckoutRequest,
   DonationCopy,
   PaymentIntentResult,
+  ResumePaymentResponse,
 } from "./donateTypes";
 
 
@@ -57,10 +59,6 @@ export function useDonationCheckout(
       null
     );
 
-
-  /* ------------------------------------------------------------------ */
-  /* Form state                                                         */
-  /* ------------------------------------------------------------------ */
 
   const [
     amount,
@@ -120,15 +118,11 @@ export function useDonationCheckout(
   >(null);
 
 
-  /* ------------------------------------------------------------------ */
-  /* Payment state                                                      */
-  /* ------------------------------------------------------------------ */
-
   const [
     existingPayment,
     setExistingPayment,
   ] = useState<
-    PaymentIntentResult | null
+    ResumePaymentResponse | null
   >(null);
 
 
@@ -136,13 +130,9 @@ export function useDonationCheckout(
     activePayment,
     setActivePayment,
   ] = useState<
-    PaymentIntentResult | null
+    ActivePayment | null
   >(null);
 
-
-  /* ------------------------------------------------------------------ */
-  /* Auth autofill                                                      */
-  /* ------------------------------------------------------------------ */
 
   useEffect(() => {
 
@@ -165,10 +155,6 @@ export function useDonationCheckout(
 
   }, [user]);
 
-
-  /* ------------------------------------------------------------------ */
-  /* Amount                                                             */
-  /* ------------------------------------------------------------------ */
 
   const numericAmount =
     useMemo(() => {
@@ -231,7 +217,6 @@ export function useDonationCheckout(
         setError(
           null
         );
-
       },
       []
     );
@@ -254,17 +239,12 @@ export function useDonationCheckout(
         setError(
           null
         );
-
       },
       []
     );
 
 
-  /* ------------------------------------------------------------------ */
-  /* Stripe transition                                                  */
-  /* ------------------------------------------------------------------ */
-
-  const continueToStripe =
+  const continueDonationToStripe =
     useCallback(
       (
         payment:
@@ -283,174 +263,213 @@ export function useDonationCheckout(
         }
 
 
+        const active:
+          ActivePayment = {
+
+            jobId:
+              payment.jobId,
+
+            result:
+              payment.result,
+
+            clientSecret:
+              payment.clientSecret,
+
+            action:
+              "DONATION",
+
+            amount:
+              payment.amount,
+
+            currency:
+              payment.currency,
+
+            email:
+              payment.email,
+
+            actionPayload:
+              null,
+          };
+
+
         setExistingPayment(
           null
         );
 
-
         setActivePayment(
-          payment
+          active
         );
-
       },
       [
         copy.error,
       ]
     );
 
-  /* ------------------------------------------------------------------ */
-  /* Existing payment                                                   */
-  /* ------------------------------------------------------------------ */
 
-  const handleContinueExistingPayment =
-  useCallback(
-    async () => {
+  const continueResumedToStripe =
+    useCallback(
+      (
+        payment:
+          ResumePaymentResponse
+      ) => {
 
-      if (
-        !existingPayment ||
-        submitting
-      ) {
-        return;
-      }
+        if (
+          !payment.client_secret
+        ) {
 
-
-      try {
-
-        setSubmitting(true);
-
-        setError(null);
-
-
-        const clientSecret =
-          await continueDonationPayment();
-
-
-        // The backend reconciled the existing payment.
-        // It is no longer ACTIVE, so there is nothing to resume.
-        if (!clientSecret) {
-
-          setExistingPayment(
-            null
+          setError(
+            copy.error
           );
 
           return;
         }
 
 
-        // Resume using the server-validated Stripe client secret.
-        continueToStripe({
-          ...existingPayment,
-          clientSecret,
-        });
+        const active:
+          ActivePayment = {
 
+            jobId:
+              payment.jobId,
 
-      } catch (error) {
+            result:
+              "EXISTING_DUPLICATE",
 
-        console.error(
-          "Could not continue donation payment:",
-          error
-        );
+            clientSecret:
+              payment.client_secret,
 
+            action:
+              payment.action,
 
-        setError(
-          copy.error
-        );
+            amount:
+              payment.amount,
 
+            currency:
+              payment.currency,
 
-      } finally {
+            email:
+              payment.email,
 
-        setSubmitting(
-          false
-        );
-      }
-
-    },
-    [
-      copy.error,
-      continueToStripe,
-      existingPayment,
-      submitting,
-    ]
-  );
-
-
-const handleCancelExistingPayment =
-  useCallback(
-    async () => {
-
-      if (
-        !existingPayment ||
-        submitting
-      ) {
-        return;
-      }
-
-
-      try {
-
-        setSubmitting(true);
-
-        setError(null);
-
-
-        await cancelDonationPayment();
+            actionPayload:
+              payment.actionPayload,
+          };
 
 
         setExistingPayment(
           null
         );
 
-      } catch (error) {
-
-        console.error(
-          "Could not cancel donation payment:",
-          error
+        setActivePayment(
+          active
         );
+      },
+      [
+        copy.error,
+      ]
+    );
 
 
-        setError(
-          copy.error
+  const handleContinueExistingPayment =
+    useCallback(
+      () => {
+
+        if (
+          !existingPayment ||
+          submitting
+        ) {
+          return;
+        }
+
+
+        continueResumedToStripe(
+          existingPayment
         );
+      },
+      [
+        continueResumedToStripe,
+        existingPayment,
+        submitting,
+      ]
+    );
 
-      } finally {
 
-        setSubmitting(false);
-      }
+  const handleCancelExistingPayment =
+    useCallback(
+      async () => {
 
-    },
-    [
-      copy.error,
-      existingPayment,
-      submitting,
-    ]
-  );
+        if (
+          !existingPayment ||
+          submitting
+        ) {
+          return;
+        }
+
+
+        try {
+
+          setSubmitting(
+            true
+          );
+
+          setError(
+            null
+          );
+
+
+          await cancelDonationPayment();
+
+
+          setExistingPayment(
+            null
+          );
+
+        } catch (requestError) {
+
+          console.error(
+            "Could not cancel payment:",
+            requestError
+          );
+
+
+          setError(
+            copy.paymentCancelError
+          );
+
+        } finally {
+
+          setSubmitting(
+            false
+          );
+        }
+      },
+      [
+        copy.paymentCancelError,
+        existingPayment,
+        submitting,
+      ]
+    );
+
 
   const handleCancelActivePayment =
-  useCallback(
-    async () => {
+    useCallback(
+      async () => {
 
-      if (!activePayment) {
-        return;
-      }
-
-
-      await cancelDonationPayment();
+        if (!activePayment) {
+          return;
+        }
 
 
-      setActivePayment(
-        null
-      );
-
-    },
-    [
-      activePayment,
-    ]
-  );
+        await cancelDonationPayment();
 
 
-  /* ------------------------------------------------------------------ */
-  /* Submission                                                         */
-  /* ------------------------------------------------------------------ */
+        setActivePayment(
+          null
+        );
+      },
+      [
+        activePayment,
+      ]
+    );
+
 
   const handleSubmit =
     useCallback(
@@ -489,8 +508,6 @@ const handleCancelExistingPayment =
           message.trim();
 
 
-        /* Amount validation */
-
         if (
           !Number.isFinite(
             numericAmount
@@ -522,8 +539,6 @@ const handleCancelExistingPayment =
           return;
         }
 
-
-        /* Required information */
 
         if (
           !cleanEmail ||
@@ -565,10 +580,6 @@ const handleCancelExistingPayment =
         }
 
 
-        /*
-         * Prevent an expired authenticated session
-         * from silently becoming a guest.
-         */
         const wasLoggedIn =
           localStorage.getItem(
             "wasLoggedIn"
@@ -614,7 +625,7 @@ const handleCancelExistingPayment =
 
             case "CREATED":
 
-              continueToStripe(
+              continueDonationToStripe(
                 result
               );
 
@@ -623,20 +634,35 @@ const handleCancelExistingPayment =
 
             case "EXISTING_DUPLICATE":
 
-              continueToStripe(
+              continueDonationToStripe(
                 result
               );
 
               return;
 
 
-            case "CONFIRM_EXISTING":
+            case "CONFIRM_EXISTING": {
+
+              const resumedPayment =
+                await continueDonationPayment();
+
+
+              if (!resumedPayment) {
+
+                setExistingPayment(
+                  null
+                );
+
+                return;
+              }
+
 
               setExistingPayment(
-                result
+                resumedPayment
               );
 
               return;
+            }
 
 
             default:
@@ -646,11 +672,11 @@ const handleCancelExistingPayment =
               );
           }
 
-        } catch (error) {
+        } catch (requestError) {
 
           console.error(
             "Donation checkout failed:",
-            error
+            requestError
           );
 
 
@@ -664,12 +690,11 @@ const handleCancelExistingPayment =
             false
           );
         }
-
       },
       [
         anonymous,
         clearAuth,
-        continueToStripe,
+        continueDonationToStripe,
         copy.amountMinimum,
         copy.error,
         copy.required,
@@ -683,48 +708,44 @@ const handleCancelExistingPayment =
     );
 
 
-  /* ------------------------------------------------------------------ */
-  /* Public hook interface                                              */
-  /* ------------------------------------------------------------------ */
-
   return {
 
-  user,
-  authLoading,
-  isLoggedIn,
+    user,
+    authLoading,
+    isLoggedIn,
 
-  amount,
-  email,
-  firstName,
-  lastName,
-  anonymous,
-  message,
+    amount,
+    email,
+    firstName,
+    lastName,
+    anonymous,
+    message,
 
-  setEmail,
-  setFirstName,
-  setLastName,
-  setAnonymous,
-  setMessage,
+    setEmail,
+    setFirstName,
+    setLastName,
+    setAnonymous,
+    setMessage,
 
-  numericAmount,
-  formattedAmount,
+    numericAmount,
+    formattedAmount,
 
-  amountError,
-  error,
-  submitting,
+    amountError,
+    error,
+    submitting,
 
-  activePayment,
-  existingPayment,
+    activePayment,
+    existingPayment,
 
-  amountSectionRef,
+    amountSectionRef,
 
-  handleAmountChange,
-  handleQuickAmountSelect,
+    handleAmountChange,
+    handleQuickAmountSelect,
 
-  handleSubmit,
+    handleSubmit,
 
-  handleContinueExistingPayment,
-  handleCancelExistingPayment,
-  handleCancelActivePayment,
-};
+    handleContinueExistingPayment,
+    handleCancelExistingPayment,
+    handleCancelActivePayment,
+  };
 }

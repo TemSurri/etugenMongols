@@ -19,58 +19,70 @@ export type DonationCheckoutRequest = {
 };
 
 
-/*
- * These values directly match
- * PaymentIntentResultType on the backend.
- */
 export type PaymentIntentResultType =
   | "CREATED"
   | "EXISTING_DUPLICATE"
   | "CONFIRM_EXISTING";
 
 
-/*
- * Response returned by:
- *
- * POST /payment/checkout-donate
- *
- * CREATED:
- *      brand new payment was created
- *
- * EXISTING_DUPLICATE:
- *      same request was already made recently
- *      so frontend should continue using that payment
- *
- * CONFIRM_EXISTING:
- *      an older/different INIT payment already exists
- *      frontend should ask what the user wants to do
- */
+export type PaymentAction =
+  | "DONATION"
+  | "EVENT_REGISTRATION";
+
+
 export type PaymentIntentResult = {
 
   jobId: string;
 
   result: PaymentIntentResultType;
 
-  /*
-   * Present when frontend can proceed to Stripe.
-   *
-   * Null for CONFIRM_EXISTING because we don't
-   * want to continue the payment until the user
-   * has made a choice.
-   */
   clientSecret: string | null;
 
-  /*
-   * Amount is returned from backend in cents.
-   *
-   * Example:
-   * 5000 = $50.00 CAD
-   */
   amount: number;
 
   currency: string;
 
   email: string;
+};
+
+
+export type ResumePaymentResponse = {
+
+  jobId: string;
+
+  client_secret: string | null;
+
+  action: PaymentAction;
+
+  amount: number;
+
+  currency: string;
+
+  email: string;
+
+  actionPayload:
+    Record<string, unknown>;
+};
+
+
+export type ActivePayment = {
+
+  jobId: string;
+
+  result: PaymentIntentResultType;
+
+  clientSecret: string | null;
+
+  action: PaymentAction;
+
+  amount: number;
+
+  currency: string;
+
+  email: string;
+
+  actionPayload:
+    Record<string, unknown> | null;
 };
 
 
@@ -134,23 +146,47 @@ export type DonationCopy = {
 
 
   /*
-   * Existing payment UI
+   * Existing payment
    */
   existingPaymentTitle: string;
 
   existingPaymentDescription: string;
 
+  existingDonationDescription: string;
+
+  existingEventDescription: string;
+
+  existingPaymentType: string;
+
   existingPaymentAmount: string;
 
   existingPaymentEmail: string;
+
+  existingPaymentRegistrant: string;
+
+  existingPaymentAttendees: string;
+
+  donation: string;
+
+  eventRegistration: string;
 
   continueExisting: string;
 
   cancelExisting: string;
 
+  cancellingPayment: string;
+
+
+  /*
+   * Stripe payment
+   */
   paymentTitle: string;
 
   paymentDescription: string;
+
+  eventPaymentTitle: string;
+
+  eventPaymentDescription: string;
 
   paymentTotal: string;
 
@@ -158,14 +194,32 @@ export type DonationCopy = {
 
   paymentProcessing: string;
 
+
+  /*
+   * Success
+   */
   paymentSuccessTitle: string;
 
   paymentSuccessDescription: string;
 
   paymentSuccessEmail: string;
 
+  eventSuccessTitle: string;
+
+  eventSuccessDescription: string;
+
+  queuedDescription: string;
+
+  safeToLeave: string;
+
   paymentDone: string;
 
+  backToEvents: string;
+
+
+  /*
+   * Processing / errors
+   */
   paymentProcessingTitle: string;
 
   paymentProcessingDescription: string;
@@ -173,5 +227,6 @@ export type DonationCopy = {
   paymentCancelError: string;
 
   paymentInvalidTitle: string;
-paymentInvalidDescription: string;
+
+  paymentInvalidDescription: string;
 };
