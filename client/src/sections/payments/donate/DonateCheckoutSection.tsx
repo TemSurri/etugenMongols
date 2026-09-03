@@ -120,9 +120,7 @@ function DonateCheckoutSection({
       ? createPortal(
           <>
 
-            {/* ---------------------------------- */}
-            {/* Preparing payment                  */}
-            {/* ---------------------------------- */}
+            {/* Preparing payment */}
 
             {
               checkout.submitting &&
@@ -171,9 +169,7 @@ function DonateCheckoutSection({
 
                       <img
                         src="/logo.webp"
-
                         alt="Etugen Mongols"
-
                         className="
                           mx-auto
                           h-16
@@ -205,9 +201,7 @@ function DonateCheckoutSection({
             }
 
 
-            {/* ---------------------------------- */}
-            {/* Existing payment                   */}
-            {/* ---------------------------------- */}
+            {/* Existing payment */}
 
             {
               checkout.existingPayment &&
@@ -249,9 +243,7 @@ function DonateCheckoutSection({
             }
 
 
-            {/* ---------------------------------- */}
-            {/* Active Stripe payment              */}
-            {/* ---------------------------------- */}
+            {/* Active Stripe payment */}
 
             {
               checkout.activePayment
@@ -274,15 +266,6 @@ function DonateCheckoutSection({
                     sm:pt-28
                   "
                 >
-
-                  {/*
-                   * This is deliberately top-aligned.
-                   *
-                   * When Stripe expands its fields,
-                   * the payment card grows downward
-                   * instead of re-centering upward
-                   * underneath the site header.
-                   */}
 
                   <div
                     className="
@@ -359,14 +342,6 @@ function DonateCheckoutSection({
 
                         onComplete={() => {
 
-                          /*
-                           * Browser-side UX only.
-                           *
-                           * Stripe webhook + payment worker
-                           * remain the source of truth for
-                           * backend fulfillment.
-                           */
-
                           if (
                             checkout
                               .activePayment
@@ -424,9 +399,7 @@ function DonateCheckoutSection({
           "
         >
 
-          {/* ---------------------------------- */}
-          {/* Donation form                     */}
-          {/* ---------------------------------- */}
+          {/* Donation form */}
 
           <div
             className="
@@ -513,6 +486,10 @@ function DonateCheckoutSection({
                   checkout.email
                 }
 
+                confirmEmail={
+                  checkout.confirmEmail
+                }
+
                 firstName={
                   checkout.firstName
                 }
@@ -529,8 +506,16 @@ function DonateCheckoutSection({
                   checkout.message
                 }
 
+                isLoggedIn={
+                  checkout.isLoggedIn
+                }
+
                 onEmailChange={
                   checkout.setEmail
+                }
+
+                onConfirmEmailChange={
+                  checkout.setConfirmEmail
                 }
 
                 onFirstNameChange={
@@ -575,10 +560,6 @@ function DonateCheckoutSection({
 
           </div>
 
-
-          {/* ---------------------------------- */}
-          {/* Images                            */}
-          {/* ---------------------------------- */}
 
           <DonationImages />
 

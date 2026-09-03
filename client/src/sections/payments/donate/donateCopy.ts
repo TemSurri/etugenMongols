@@ -219,7 +219,17 @@ export const DONATION_COPY: Record<
 
     paymentInvalidDescription:
       "This payment session is no longer valid and cannot be safely continued. Please return and start a new payment.",
-  },
+  
+
+      confirmEmailLabel:
+        "Confirm email address",
+
+      confirmEmailPlaceholder:
+        "Enter your email address again",
+
+      emailsDoNotMatch:
+        "Email addresses do not match.",
+    },
 
 
   mn: {
@@ -432,5 +442,16 @@ export const DONATION_COPY: Record<
 
     paymentInvalidDescription:
       "Энэ төлбөрийн сесс цааш үргэлжлүүлэх боломжгүй болсон байна. Буцаж шинэ төлбөр эхлүүлнэ үү.",
-  },
+  
+    confirmEmailLabel:
+      "Имэйл хаягаа баталгаажуулах",
+
+    confirmEmailPlaceholder:
+      "Имэйл хаягаа дахин оруулна уу",
+
+    emailsDoNotMatch:
+      "Имэйл хаягууд таарахгүй байна.",
+      
+  
+    },
 };

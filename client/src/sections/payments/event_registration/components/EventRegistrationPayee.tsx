@@ -19,22 +19,21 @@ type EventRegistrationPayeeProps = {
 
     email: string;
 
+    confirmEmail: string;
 
-    setFirstName: (
-        value: string
-    ) => void;
+    setFirstName:
+        (value: string) => void;
 
-    setLastName: (
-        value: string
-    ) => void;
+    setLastName:
+        (value: string) => void;
 
-    setEmail: (
-        value: string
-    ) => void;
+    setEmail:
+        (value: string) => void;
 
+    setConfirmEmail:
+        (value: string) => void;
 
     loggedIn: boolean;
-
 
     copy: EventRegistrationCopy;
 };
@@ -44,55 +43,65 @@ function EventRegistrationPayee({
     firstName,
     lastName,
     email,
+    confirmEmail,
     setFirstName,
     setLastName,
     setEmail,
+    setConfirmEmail,
     loggedIn,
     copy
 }: EventRegistrationPayeeProps) {
 
+    const emailsMatch =
+        email
+            .trim()
+            .toLowerCase() ===
+        confirmEmail
+            .trim()
+            .toLowerCase();
+
+
+    const showEmailMismatch =
+        !loggedIn &&
+        confirmEmail.trim().length > 0 &&
+        !emailsMatch;
+
+
     return (
         <section>
 
-            <div
+            <h2
                 className="
-                    mb-5
+                    text-lg
+                    font-semibold
+                    text-[#27301d]
                 "
             >
-
-                <h2
-                    className="
-                        text-lg
-                        font-semibold
-                        text-[#27301d]
-                    "
-                >
-                    {
-                        copy.yourInformation
-                    }
-                </h2>
+                {
+                    copy.yourInformation
+                }
+            </h2>
 
 
-                <p
-                    className="
-                        mt-1
-                        text-sm
-                        leading-6
-                        text-[#59624a]
-                    "
-                >
-                    {
-                        copy.yourInformationDescription
-                    }
-                </p>
-
-            </div>
+            <p
+                className="
+                    mt-1
+                    text-sm
+                    leading-6
+                    text-[#59624a]
+                "
+            >
+                {
+                    copy.yourInformationDescription
+                }
+            </p>
 
 
             <div
                 className="
+                    mt-6
                     grid
-                    gap-4
+                    gap-5
                     sm:grid-cols-2
                 "
             >
@@ -128,6 +137,10 @@ function EventRegistrationPayee({
                                 )
                         }
 
+                        disabled={
+                            loggedIn
+                        }
+
                         autoComplete="given-name"
 
                         className="
@@ -145,6 +158,9 @@ function EventRegistrationPayee({
                             focus:border-[#7e895d]
                             focus:ring-2
                             focus:ring-[#7e895d]/15
+                            disabled:cursor-default
+                            disabled:bg-[#f1f1ed]
+                            disabled:text-[#59624a]
                         "
                     />
 
@@ -182,6 +198,10 @@ function EventRegistrationPayee({
                                 )
                         }
 
+                        disabled={
+                            loggedIn
+                        }
+
                         autoComplete="family-name"
 
                         className="
@@ -199,6 +219,9 @@ function EventRegistrationPayee({
                             focus:border-[#7e895d]
                             focus:ring-2
                             focus:ring-[#7e895d]/15
+                            disabled:cursor-default
+                            disabled:bg-[#f1f1ed]
+                            disabled:text-[#59624a]
                         "
                     />
 
@@ -207,74 +230,187 @@ function EventRegistrationPayee({
             </div>
 
 
-            <label
+            <div
                 className="
-                    mt-4
-                    block
+                    mt-5
+                    grid
+                    gap-5
+                    sm:grid-cols-2
                 "
             >
 
-                <span
-                    className="
-                        mb-1.5
-                        block
-                        text-xs
-                        font-medium
-                        text-[#4e593c]
-                    "
+                <label
+                    className={
+                        loggedIn
+                            ? "sm:col-span-2"
+                            : ""
+                    }
                 >
-                    {
-                        copy.email
-                    }
-                </span>
+
+                    <span
+                        className="
+                            mb-1.5
+                            block
+                            text-xs
+                            font-medium
+                            text-[#4e593c]
+                        "
+                    >
+                        {
+                            copy.email
+                        }
+                    </span>
 
 
-                <input
-                    type="email"
+                    <input
+                        type="email"
 
-                    value={
-                        email
-                    }
+                        value={
+                            email
+                        }
 
-                    onChange={
-                        event =>
-                            setEmail(
-                                event.target.value
-                            )
-                    }
+                        onChange={
+                            event =>
+                                setEmail(
+                                    event.target.value
+                                )
+                        }
 
-                    autoComplete="email"
+                        disabled={
+                            loggedIn
+                        }
 
-                    className="
-                        w-full
-                        border
-                        border-[#cfcfca]
-                        bg-white
-                        px-4
-                        py-3
-                        text-sm
-                        text-[#27301d]
-                        outline-none
-                        transition
-                        duration-150
-                        focus:border-[#7e895d]
-                        focus:ring-2
-                        focus:ring-[#7e895d]/15
-                    "
-                />
+                        autoComplete="email"
 
-            </label>
+                        className="
+                            w-full
+                            border
+                            border-[#cfcfca]
+                            bg-white
+                            px-4
+                            py-3
+                            text-sm
+                            text-[#27301d]
+                            outline-none
+                            transition
+                            duration-150
+                            focus:border-[#7e895d]
+                            focus:ring-2
+                            focus:ring-[#7e895d]/15
+                            disabled:cursor-default
+                            disabled:bg-[#f1f1ed]
+                            disabled:text-[#59624a]
+                        "
+                    />
+
+                </label>
+
+
+                {
+                    !loggedIn &&
+                    (
+
+                        <label>
+
+                            <span
+                                className="
+                                    mb-1.5
+                                    block
+                                    text-xs
+                                    font-medium
+                                    text-[#4e593c]
+                                "
+                            >
+                                {
+                                    copy.confirmEmail
+                                }
+                            </span>
+
+
+                            <input
+                                type="email"
+
+                                value={
+                                    confirmEmail
+                                }
+
+                                onChange={
+                                    event =>
+                                        setConfirmEmail(
+                                            event.target.value
+                                        )
+                                }
+
+                                autoComplete="off"
+
+                                className={`
+                                    w-full
+                                    border
+                                    bg-white
+                                    px-4
+                                    py-3
+                                    text-sm
+                                    text-[#27301d]
+                                    outline-none
+                                    transition
+                                    duration-150
+                                    focus:ring-2
+
+                                    ${
+                                        showEmailMismatch
+                                            ? `
+                                                border-red-700/50
+                                                focus:border-red-700/60
+                                                focus:ring-red-700/10
+                                            `
+                                            : `
+                                                border-[#cfcfca]
+                                                focus:border-[#7e895d]
+                                                focus:ring-[#7e895d]/15
+                                            `
+                                    }
+                                `}
+                            />
+
+
+                            {
+                                showEmailMismatch &&
+                                (
+
+                                    <span
+                                        className="
+                                            mt-1.5
+                                            block
+                                            text-xs
+                                            text-red-700
+                                        "
+                                    >
+                                        {
+                                            copy.emailsDoNotMatch
+                                        }
+                                    </span>
+
+                                )
+                            }
+
+                        </label>
+
+                    )
+                }
+
+            </div>
 
 
             {
-                !loggedIn && (
+                !loggedIn &&
+                (
 
                     <div
                         className="
                             mt-5
                             border-l-2
-                            border-[#b89a42]
-                            bg-[#f1eee4]
+                            border-[#b59843]/50
+                            bg-[#f3efe2]/65
                             px-4
                             py-3
                         "
@@ -282,37 +418,31 @@ function EventRegistrationPayee({
 
                         <p
                             className="
-                                text-sm
-                                leading-6
+                                text-xs
+                                leading-5
                                 text-[#59624a]
                             "
                         >
-
                             {
                                 copy.accountSuggestion
-                            }
-
-
-                            {" "}
-
+                            }{" "}
 
                             <Link
                                 to="/auth/signup"
 
                                 className="
                                     font-semibold
-                                    text-[#7c682d]
+                                    text-[#82691f]
                                     underline
-                                    underline-offset-4
+                                    underline-offset-2
                                     transition-colors
-                                    hover:text-[#4e593c]
+                                    hover:text-[#5d4915]
                                 "
                             >
                                 {
                                     copy.createAccount
                                 }
                             </Link>
-
                         </p>
 
                     </div>

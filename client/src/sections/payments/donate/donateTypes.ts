@@ -102,6 +102,12 @@ export type DonationCopy = {
 
   emailPlaceholder: string;
 
+  confirmEmailLabel: string;
+
+  confirmEmailPlaceholder: string;
+
+  emailsDoNotMatch: string;
+
   firstNameLabel: string;
 
   firstNamePlaceholder: string;

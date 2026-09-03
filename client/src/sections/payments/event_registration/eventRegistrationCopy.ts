@@ -24,6 +24,10 @@ export type EventRegistrationCopy = {
 
     email: string;
 
+    confirmEmail: string;
+
+    emailsDoNotMatch: string;
+
     accountSuggestion: string;
 
     createAccount: string;
@@ -138,6 +142,12 @@ export const EVENT_REGISTRATION_COPY: Record<
 
         email:
             "Email",
+
+        confirmEmail:
+            "Confirm email",
+
+        emailsDoNotMatch:
+            "Email addresses do not match.",
 
         accountSuggestion:
             "Want faster registrations in the future? Create an account and we'll be able to fill this information in for you.",
@@ -284,6 +294,12 @@ export const EVENT_REGISTRATION_COPY: Record<
 
         email:
             "Имэйл",
+
+        confirmEmail:
+            "Имэйлээ давтан оруулна уу",
+
+        emailsDoNotMatch:
+            "Имэйл хаягууд таарахгүй байна.",
 
         accountSuggestion:
             "Дараагийн бүртгэлээ илүү хурдан хийхийн тулд бүртгэл үүсгэж болно.",

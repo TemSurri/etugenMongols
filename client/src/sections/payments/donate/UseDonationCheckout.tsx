@@ -73,6 +73,12 @@ export function useDonationCheckout(
 
 
   const [
+    confirmEmail,
+    setConfirmEmail,
+  ] = useState("");
+
+
+  const [
     firstName,
     setFirstName,
   ] = useState("");
@@ -152,6 +158,12 @@ export function useDonationCheckout(
     setLastName(
       user.lastName
     );
+
+    /*
+     * Logged-in users do not need
+     * guest email confirmation.
+     */
+    setConfirmEmail("");
 
   }, [user]);
 
@@ -496,7 +508,14 @@ export function useDonationCheckout(
 
 
         const cleanEmail =
-          email.trim();
+          email
+            .trim()
+            .toLowerCase();
+
+        const cleanConfirmEmail =
+          confirmEmail
+            .trim()
+            .toLowerCase();
 
         const cleanFirstName =
           firstName.trim();
@@ -548,6 +567,29 @@ export function useDonationCheckout(
 
           setError(
             copy.required
+          );
+
+          return;
+        }
+
+
+        /*
+         * Guest-only email confirmation.
+         *
+         * Logged-in users already have their
+         * account email populated by AuthContext.
+         */
+        if (
+          !isLoggedIn &&
+          (
+            !cleanConfirmEmail ||
+            cleanEmail !==
+              cleanConfirmEmail
+          )
+        ) {
+
+          setError(
+            copy.emailsDoNotMatch
           );
 
           return;
@@ -694,12 +736,15 @@ export function useDonationCheckout(
       [
         anonymous,
         clearAuth,
+        confirmEmail,
         continueDonationToStripe,
         copy.amountMinimum,
+        copy.emailsDoNotMatch,
         copy.error,
         copy.required,
         email,
         firstName,
+        isLoggedIn,
         lastName,
         message,
         numericAmount,
@@ -716,12 +761,14 @@ export function useDonationCheckout(
 
     amount,
     email,
+    confirmEmail,
     firstName,
     lastName,
     anonymous,
     message,
 
     setEmail,
+    setConfirmEmail,
     setFirstName,
     setLastName,
     setAnonymous,

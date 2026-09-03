@@ -37,6 +37,10 @@ export function useEventRegistrationCheckout(
     } = useAuth();
 
 
+    const loggedIn =
+        user !== null;
+
+
     const [
         firstName,
         setFirstName
@@ -58,6 +62,14 @@ export function useEventRegistrationCheckout(
         setEmail
     ] = useState(
         user?.email ?? ""
+    );
+
+
+    const [
+        confirmEmail,
+        setConfirmEmail
+    ] = useState(
+        ""
     );
 
 
@@ -95,18 +107,6 @@ export function useEventRegistrationCheckout(
     >(null);
 
 
-    /*
-     * This now stores the authoritative
-     * payment returned by the resume endpoint.
-     *
-     * Therefore we know:
-     *
-     * - action
-     * - amount
-     * - email
-     * - action payload
-     * - client secret
-     */
     const [
         existingPayment,
         setExistingPayment
@@ -138,6 +138,11 @@ export function useEventRegistrationCheckout(
                 user.email ?? ""
             );
 
+
+            setConfirmEmail(
+                ""
+            );
+
         },
         [
             user
@@ -149,6 +154,7 @@ export function useEventRegistrationCheckout(
         (): RegistrationPerson => {
 
             return {
+
                 id:
                     crypto.randomUUID(),
 
@@ -157,6 +163,7 @@ export function useEventRegistrationCheckout(
 
                 lastName:
                     ""
+
             };
         };
 
@@ -288,11 +295,36 @@ export function useEventRegistrationCheckout(
         );
 
 
+    const normalizedEmail =
+        email
+            .trim()
+            .toLowerCase();
+
+
+    const normalizedConfirmEmail =
+        confirmEmail
+            .trim()
+            .toLowerCase();
+
+
     const emailValid =
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/
             .test(
-                email.trim()
+                normalizedEmail
             );
+
+
+    const emailsMatch =
+        normalizedEmail ===
+        normalizedConfirmEmail;
+
+
+    const guestEmailComplete =
+        loggedIn ||
+        (
+            normalizedConfirmEmail.length > 0 &&
+            emailsMatch
+        );
 
 
     const payerComplete =
@@ -304,7 +336,9 @@ export function useEventRegistrationCheckout(
             .trim()
             .length > 0 &&
 
-        emailValid;
+        emailValid &&
+
+        guestEmailComplete;
 
 
     const guestsComplete =
@@ -352,9 +386,8 @@ export function useEventRegistrationCheckout(
                         lastName.trim(),
 
                     email:
-                        email
-                            .trim()
-                            .toLowerCase()
+                        normalizedEmail
+
                 },
 
 
@@ -440,11 +473,6 @@ export function useEventRegistrationCheckout(
                 }
 
 
-                /*
-                 * The payment was returned directly
-                 * from the event checkout, so it is
-                 * definitely EVENT_REGISTRATION.
-                 */
                 if (
                     result.clientSecret
                 ) {
@@ -474,19 +502,13 @@ export function useEventRegistrationCheckout(
 
                         actionPayload:
                             null
+
                     });
 
                     return;
                 }
 
 
-                /*
-                 * Defensive fallback:
-                 *
-                 * If the backend says the event payment
-                 * exists but does not include its secret,
-                 * resolve it through the resume endpoint.
-                 */
                 const resumedPayment =
                     await resumeEventRegistrationPayment();
 
@@ -528,6 +550,7 @@ export function useEventRegistrationCheckout(
 
                     actionPayload:
                         resumedPayment.actionPayload
+
                 });
 
             } catch (
@@ -619,12 +642,6 @@ export function useEventRegistrationCheckout(
             }
 
 
-            /*
-             * No additional API request is needed.
-             *
-             * The resume endpoint was already called
-             * before displaying the confirmation modal.
-             */
             setActivePayment({
 
                 jobId:
@@ -650,6 +667,7 @@ export function useEventRegistrationCheckout(
 
                 actionPayload:
                     existingPayment.actionPayload
+
             });
 
 
@@ -730,20 +748,23 @@ export function useEventRegistrationCheckout(
 
     return {
 
-        loggedIn:
-            user !== null,
+        loggedIn,
 
 
         firstName,
         lastName,
         email,
+        confirmEmail,
+
 
         setFirstName,
         setLastName,
         setEmail,
+        setConfirmEmail,
 
 
         additionalPeople,
+
 
         addPerson,
         removePerson,

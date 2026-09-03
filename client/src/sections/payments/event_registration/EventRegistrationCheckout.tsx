@@ -297,8 +297,6 @@ function EventRegistrationCheckout({
                     "
                 >
 
-                    {/* Top controls */}
-
                     <div
                         className="
                             absolute
@@ -394,8 +392,6 @@ function EventRegistrationCheckout({
                     </div>
 
 
-                    {/* Checkout card */}
-
                     <div
                         className="
                             overflow-hidden
@@ -489,6 +485,10 @@ function EventRegistrationCheckout({
                                     checkout.email
                                 }
 
+                                confirmEmail={
+                                    checkout.confirmEmail
+                                }
+
                                 setFirstName={
                                     checkout.setFirstName
                                 }
@@ -499,6 +499,10 @@ function EventRegistrationCheckout({
 
                                 setEmail={
                                     checkout.setEmail
+                                }
+
+                                setConfirmEmail={
+                                    checkout.setConfirmEmail
                                 }
 
                                 loggedIn={

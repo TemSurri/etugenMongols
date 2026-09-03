@@ -8,12 +8,19 @@ type DonationDetailsProps = {
   copy: DonationCopy;
 
   email: string;
+  confirmEmail: string;
   firstName: string;
   lastName: string;
   anonymous: boolean;
   message: string;
 
+  isLoggedIn: boolean;
+
   onEmailChange: (
+    value: string
+  ) => void;
+
+  onConfirmEmailChange: (
     value: string
   ) => void;
 
@@ -37,16 +44,29 @@ type DonationDetailsProps = {
 function DonationDetails({
   copy,
   email,
+  confirmEmail,
   firstName,
   lastName,
   anonymous,
   message,
+  isLoggedIn,
   onEmailChange,
+  onConfirmEmailChange,
   onFirstNameChange,
   onLastNameChange,
   onAnonymousChange,
   onMessageChange,
 }: DonationDetailsProps) {
+
+  const emailsMatch =
+    email.trim().toLowerCase() ===
+    confirmEmail.trim().toLowerCase();
+
+  const showEmailMismatch =
+    !isLoggedIn &&
+    confirmEmail.trim().length > 0 &&
+    !emailsMatch;
+
   return (
     <section
       className="
@@ -111,6 +131,84 @@ function DonationDetails({
           "
         />
       </div>
+
+      {/* Confirm email - guests only */}
+
+      {!isLoggedIn && (
+        <div className="mt-5">
+          <label
+            htmlFor="donation-confirm-email"
+            className="
+              block
+              text-sm
+              font-medium
+            "
+          >
+            {copy.confirmEmailLabel}
+          </label>
+
+          <input
+            id="donation-confirm-email"
+            type="email"
+            autoComplete="off"
+            required
+            value={confirmEmail}
+            onChange={(event) =>
+              onConfirmEmailChange(
+                event.target.value
+              )
+            }
+            placeholder={
+              copy.confirmEmailPlaceholder
+            }
+            aria-invalid={
+              showEmailMismatch
+                ? "true"
+                : "false"
+            }
+            aria-describedby={
+              showEmailMismatch
+                ? "donation-confirm-email-error"
+                : undefined
+            }
+            className={`
+              mt-2
+              w-full
+              border
+              bg-white
+              px-4
+              py-3.5
+              text-sm
+              text-[#303824]
+              outline-none
+              transition-colors
+              duration-150
+              placeholder:text-[#8b907f]
+
+              ${
+                showEmailMismatch
+                  ? "border-red-700/60 focus:border-red-700/80"
+                  : "border-[#303824]/20 focus:border-[#303824]/55"
+              }
+            `}
+          />
+
+          {showEmailMismatch && (
+            <p
+              id="donation-confirm-email-error"
+              role="alert"
+              className="
+                mt-2
+                text-sm
+                font-medium
+                text-red-700
+              "
+            >
+              {copy.emailsDoNotMatch}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Name */}
 
