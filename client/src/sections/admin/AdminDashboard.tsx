@@ -39,8 +39,7 @@ import type {
 const ADMIN_BACKGROUNDS = [
     "/home/slideshow/1.webp",
     "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp"
+    "/home/slideshow/3.webp"
 ];
 
 
@@ -228,9 +227,15 @@ export default function AdminDashboard() {
                 >
 
                     <AdminSidebar
-                        section={section}
-                        onChange={setSection}
-                        lang={lang}
+                        section={
+                            section
+                        }
+                        onChange={
+                            setSection
+                        }
+                        lang={
+                            lang
+                        }
                     />
 
 
@@ -242,7 +247,9 @@ export default function AdminDashboard() {
                         >
 
                             <motion.div
-                                key={section}
+                                key={
+                                    section
+                                }
                                 initial={{
                                     opacity: 0
                                 }}
@@ -257,32 +264,48 @@ export default function AdminDashboard() {
                                 }}
                             >
 
-                                {section === "overview" && (
+                                {section ===
+                                    "overview" && (
 
                                     <AdminOverview
-                                        events={
-                                            adminEvents.events
-                                        }
-                                        publishedCount={
-                                            adminEvents.publishedCount
-                                        }
-                                        draftCount={
-                                            adminEvents.draftCount
-                                        }
-                                        activity={
-                                            adminActivity.activity
-                                        }
-                                        loading={
-                                            adminEvents.loading ||
-                                            adminActivity.loading
-                                        }
-                                        lang={lang}
-                                    />
+    events={
+        adminEvents.events
+    }
+
+    publishedCount={
+        adminEvents.publishedCount
+    }
+
+    draftCount={
+        adminEvents.draftCount
+    }
+
+    eventsLoading={
+        adminEvents.loading
+    }
+
+    activity={
+        adminActivity.activity
+    }
+
+    activityLoading={
+        adminActivity.loading
+    }
+
+    activityError={
+        adminActivity.error
+    }
+
+    lang={
+        lang
+    }
+/>
 
                                 )}
 
 
-                                {section === "events" && (
+                                {section ===
+                                    "events" && (
 
                                     <AdminEvents
                                         events={
@@ -300,7 +323,9 @@ export default function AdminDashboard() {
                                         updateEvent={
                                             adminEvents.updateEvent
                                         }
-                                        lang={lang}
+                                        lang={
+                                            lang
+                                        }
                                     />
 
                                 )}

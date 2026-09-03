@@ -1,7 +1,20 @@
+import {
+    useEffect,
+    useMemo,
+    useState
+} from "react";
+
 import type {
-    AdminActivityEvent,
+    UserHistoryItem
+} from "../../users/account/types/accountTypes";
+
+import type {
     ApiEvent
 } from "../types";
+
+
+const ACTIVITY_PAGE_SIZE =
+    5;
 
 
 type Props = {
@@ -15,10 +28,16 @@ type Props = {
     draftCount:
         number;
 
-    activity:
-        AdminActivityEvent[];
+    eventsLoading:
+        boolean;
 
-    loading:
+    activity:
+        UserHistoryItem[];
+
+    activityLoading:
+        boolean;
+
+    activityError:
         boolean;
 
     lang:
@@ -30,22 +49,86 @@ export default function AdminOverview({
     events,
     publishedCount,
     draftCount,
+    eventsLoading,
     activity,
-    loading,
+    activityLoading,
+    activityError,
     lang
 }: Props) {
 
-    const recentUpdates =
-        activity
-            .filter(
-                item =>
-                    item.type ===
-                    "ADMIN_UPDATE"
+    const [
+        activityPage,
+        setActivityPage
+    ] =
+        useState(0);
+
+
+    const totalActivityPages =
+        Math.max(
+            1,
+            Math.ceil(
+                activity.length /
+                ACTIVITY_PAGE_SIZE
             )
-            .slice(
-                0,
-                10
-            );
+        );
+
+
+    const visibleActivity =
+        useMemo(
+            () => {
+
+                const start =
+                    activityPage *
+                    ACTIVITY_PAGE_SIZE;
+
+
+                return activity.slice(
+                    start,
+                    start +
+                    ACTIVITY_PAGE_SIZE
+                );
+
+            },
+            [
+                activity,
+                activityPage
+            ]
+        );
+
+
+    useEffect(
+        () => {
+
+            if (
+                activityPage >=
+                totalActivityPages
+            ) {
+
+                setActivityPage(
+                    Math.max(
+                        0,
+                        totalActivityPages -
+                        1
+                    )
+                );
+
+            }
+
+        },
+        [
+            activityPage,
+            totalActivityPages
+        ]
+    );
+
+
+    const canGoPrevious =
+        activityPage > 0;
+
+
+    const canGoNext =
+        activityPage <
+        totalActivityPages - 1;
 
 
     return (
@@ -67,7 +150,7 @@ export default function AdminOverview({
                             : "Total Events"
                     }
                     value={
-                        loading
+                        eventsLoading
                             ? "—"
                             : events.length
                     }
@@ -81,7 +164,7 @@ export default function AdminOverview({
                             : "Published"
                     }
                     value={
-                        loading
+                        eventsLoading
                             ? "—"
                             : publishedCount
                     }
@@ -95,7 +178,7 @@ export default function AdminOverview({
                             : "Drafts"
                     }
                     value={
-                        loading
+                        eventsLoading
                             ? "—"
                             : draftCount
                     }
@@ -119,212 +202,286 @@ export default function AdminOverview({
                 "
             >
 
-                <p
+                <div
                     className="
-                        text-[10px]
-                        font-semibold
-                        uppercase
-                        tracking-[0.18em]
-                        text-[#9a7b26]
+                        flex
+                        flex-col
+                        gap-3
+
+                        sm:flex-row
+                        sm:items-end
+                        sm:justify-between
                     "
                 >
-                    {lang === "mn"
-                        ? "Үйл ажиллагаа"
-                        : "Activity"}
-                </p>
+
+                    <div>
+
+                        <p
+                            className="
+                                text-[10px]
+                                font-semibold
+                                uppercase
+                                tracking-[0.18em]
+                                text-[#9a7b26]
+                            "
+                        >
+                            {lang === "mn"
+                                ? "Үйл ажиллагаа"
+                                : "Activity"}
+                        </p>
 
 
-                <h2
-                    className="
-                        mt-1
-                        text-xl
-                        font-semibold
-                        tracking-tight
-                        text-[#27301d]
+                        <h2
+                            className="
+                                mt-1
+                                text-xl
+                                font-semibold
+                                tracking-tight
+                                text-[#27301d]
 
-                        sm:text-2xl
-                    "
-                >
-                    {lang === "mn"
-                        ? "Сүүлийн өөрчлөлтүүд"
-                        : "Recent Updates"}
-                </h2>
-
-
-                <p
-                    className="
-                        mt-2
-                        text-sm
-                        leading-6
-                        text-[#667056]
-                    "
-                >
-                    {lang === "mn"
-                        ? "Системд хийгдсэн сүүлийн админ өөрчлөлтүүд."
-                        : "The latest administrative changes made in the system."}
-                </p>
+                                sm:text-2xl
+                            "
+                        >
+                            {lang === "mn"
+                                ? "Сүүлийн өөрчлөлтүүд"
+                                : "Recent Updates"}
+                        </h2>
 
 
-                {loading ? (
-
-                    <p
-                        className="
-                            mt-6
-                            border-t
-                            border-[#27301d]/10
-                            pt-5
-                            text-sm
-                            text-[#667056]
-                        "
-                    >
-                        {lang === "mn"
-                            ? "Ачаалж байна..."
-                            : "Loading updates..."}
-                    </p>
-
-                ) : recentUpdates.length === 0 ? (
-
-                    <p
-                        className="
-                            mt-6
-                            border-t
-                            border-[#27301d]/10
-                            pt-5
-                            text-sm
-                            text-[#667056]
-                        "
-                    >
-                        {lang === "mn"
-                            ? "Одоогоор өөрчлөлт алга."
-                            : "No recent updates."}
-                    </p>
-
-                ) : (
-
-                    <div
-                        className="
-                            mt-5
-                            divide-y
-                            divide-[#27301d]/10
-                            border-y
-                            border-[#27301d]/10
-                        "
-                    >
-
-                        {recentUpdates.map(
-                            item => (
-
-                                <div
-                                    key={
-                                        item.id
-                                    }
-                                    className="
-                                        flex
-                                        flex-col
-                                        gap-3
-                                        px-2
-                                        py-4
-                                        transition-colors
-                                        duration-150
-                                        hover:bg-[#f6efdf]/45
-
-                                        sm:flex-row
-                                        sm:items-start
-                                        sm:justify-between
-                                        sm:px-3
-                                    "
-                                >
-
-                                    <div
-                                        className="
-                                            min-w-0
-                                            flex-1
-                                        "
-                                    >
-
-                                        <p
-                                            className="
-                                                text-sm
-                                                font-semibold
-                                                text-[#27301d]
-                                            "
-                                        >
-                                            {
-                                                getActivityTitle(
-                                                    item,
-                                                    lang
-                                                )
-                                            }
-                                        </p>
-
-
-                                        <p
-                                            className="
-                                                mt-1
-                                                text-sm
-                                                leading-6
-                                                text-[#667056]
-                                            "
-                                        >
-                                            {
-                                                getActivityDescription(
-                                                    item,
-                                                    lang
-                                                )
-                                            }
-                                        </p>
-
-                                    </div>
-
-
-                                    <div
-                                        className="
-                                            shrink-0
-
-                                            sm:text-right
-                                        "
-                                    >
-
-                                        <p
-                                            className="
-                                                text-sm
-                                                font-medium
-                                                text-[#27301d]
-                                            "
-                                        >
-                                            {
-                                                formatDate(
-                                                    item.createdAt,
-                                                    lang
-                                                )
-                                            }
-                                        </p>
-
-
-                                        <p
-                                            className="
-                                                mt-0.5
-                                                text-xs
-                                                text-[#7b8372]
-                                            "
-                                        >
-                                            {
-                                                formatTime(
-                                                    item.createdAt,
-                                                    lang
-                                                )
-                                            }
-                                        </p>
-
-                                    </div>
-
-                                </div>
-
-                            )
-                        )}
+                        <p
+                            className="
+                                mt-2
+                                text-sm
+                                leading-6
+                                text-[#667056]
+                            "
+                        >
+                            {lang === "mn"
+                                ? "Хамгийн сүүлийн арга хэмжээний админ өөрчлөлтүүд."
+                                : "The most recent administrative changes made to events."}
+                        </p>
 
                     </div>
 
+
+                    {!activityLoading &&
+                        !activityError &&
+                        activity.length > 0 && (
+
+                        <p
+                            className="
+                                shrink-0
+                                text-xs
+                                text-[#7b8372]
+                            "
+                        >
+                            {lang === "mn"
+                                ? `Сүүлийн ${activity.length} өөрчлөлт`
+                                : `Latest ${activity.length} updates`}
+                        </p>
+
+                    )}
+
+                </div>
+
+
+                {activityError ? (
+
+                    <StateMessage
+                        text={
+                            lang === "mn"
+                                ? "Сүүлийн өөрчлөлтүүдийг ачаалж чадсангүй."
+                                : "Could not load recent updates."
+                        }
+                        error
+                    />
+
+                ) : activityLoading ? (
+
+                    <StateMessage
+                        text={
+                            lang === "mn"
+                                ? "Ачаалж байна..."
+                                : "Loading updates..."
+                        }
+                    />
+
+                ) : activity.length === 0 ? (
+
+                    <StateMessage
+                        text={
+                            lang === "mn"
+                                ? "Одоогоор арга хэмжээний өөрчлөлт алга."
+                                : "No recent event activity."
+                        }
+                    />
+
+                ) : (
+
+                    <>
+                        <div
+                            className="
+                                mt-5
+                                divide-y
+                                divide-[#27301d]/10
+                                border-y
+                                border-[#27301d]/10
+                            "
+                        >
+
+                            {visibleActivity.map(
+                                (
+                                    item,
+                                    index
+                                ) => (
+
+                                    <HistoryRow
+                                        key={
+                                            `${item.createdAt}-${index}`
+                                        }
+                                        item={
+                                            item
+                                        }
+                                        lang={
+                                            lang
+                                        }
+                                    />
+
+                                )
+                            )}
+
+                        </div>
+
+
+                        {totalActivityPages > 1 && (
+
+                            <div
+                                className="
+                                    mt-4
+                                    flex
+                                    items-center
+                                    justify-between
+                                    gap-3
+                                "
+                            >
+
+                                <button
+                                    type="button"
+                                    disabled={
+                                        !canGoPrevious
+                                    }
+                                    onClick={
+                                        () =>
+                                            setActivityPage(
+                                                current =>
+                                                    current - 1
+                                            )
+                                    }
+                                    className="
+                                        rounded-lg
+                                        border
+                                        border-[#27301d]/10
+                                        bg-white
+                                        px-3.5
+                                        py-2
+                                        text-sm
+                                        font-medium
+                                        text-[#667056]
+                                        transition-colors
+                                        duration-150
+
+                                        hover:border-[#9a7b26]/30
+                                        hover:bg-[#f6efdf]/60
+                                        hover:text-[#27301d]
+
+                                        disabled:cursor-not-allowed
+                                        disabled:opacity-35
+                                        disabled:hover:border-[#27301d]/10
+                                        disabled:hover:bg-white
+                                        disabled:hover:text-[#667056]
+                                    "
+                                >
+                                    {lang === "mn"
+                                        ? "Өмнөх"
+                                        : "Previous"}
+                                </button>
+
+
+                                <div
+                                    className="
+                                        text-center
+                                        text-xs
+                                        text-[#7b8372]
+                                    "
+                                >
+
+                                    <p
+                                        className="
+                                            font-medium
+                                            text-[#667056]
+                                        "
+                                    >
+                                        {lang === "mn"
+                                            ? `${activityPage + 1} / ${totalActivityPages} хуудас`
+                                            : `Page ${activityPage + 1} of ${totalActivityPages}`}
+                                    </p>
+
+
+                                    <p className="mt-0.5">
+                                        {lang === "mn"
+                                            ? "Зөвхөн хамгийн сүүлийн үйл ажиллагаа"
+                                            : "Most recent activity only"}
+                                    </p>
+
+                                </div>
+
+
+                                <button
+                                    type="button"
+                                    disabled={
+                                        !canGoNext
+                                    }
+                                    onClick={
+                                        () =>
+                                            setActivityPage(
+                                                current =>
+                                                    current + 1
+                                            )
+                                    }
+                                    className="
+                                        rounded-lg
+                                        border
+                                        border-[#27301d]/10
+                                        bg-white
+                                        px-3.5
+                                        py-2
+                                        text-sm
+                                        font-medium
+                                        text-[#667056]
+                                        transition-colors
+                                        duration-150
+
+                                        hover:border-[#9a7b26]/30
+                                        hover:bg-[#f6efdf]/60
+                                        hover:text-[#27301d]
+
+                                        disabled:cursor-not-allowed
+                                        disabled:opacity-35
+                                        disabled:hover:border-[#27301d]/10
+                                        disabled:hover:bg-white
+                                        disabled:hover:text-[#667056]
+                                    "
+                                >
+                                    {lang === "mn"
+                                        ? "Дараах"
+                                        : "Next"}
+                                </button>
+
+                            </div>
+
+                        )}
+
+                    </>
                 )}
 
             </section>
@@ -386,168 +543,399 @@ function StatCard({
 }
 
 
-function getActivityTitle(
-    activity:
-        AdminActivityEvent,
-    lang:
-        "en" | "mn"
-) {
+function StateMessage({
+    text,
+    error = false
+}: {
+    text:
+        string;
 
-    if (
-        activity.payload.resource ===
-        "EVENT"
-    ) {
+    error?:
+        boolean;
+}) {
 
-        return lang === "mn"
-            ? "Арга хэмжээ шинэчлэгдсэн"
-            : "Event updated";
-    }
+    return (
+        <p
+            className={`
+                mt-6
+                border-t
+                border-[#27301d]/10
+                pt-5
+                text-sm
 
-
-    return lang === "mn"
-        ? "Админ өөрчлөлт"
-        : "Administrative update";
+                ${
+                    error
+                        ? "text-[#8b4a42]"
+                        : "text-[#667056]"
+                }
+            `}
+        >
+            {text}
+        </p>
+    );
 }
 
 
-function getActivityDescription(
-    activity:
-        AdminActivityEvent,
+function HistoryRow({
+    item,
+    lang
+}: {
+    item:
+        UserHistoryItem;
+
     lang:
-        "en" | "mn"
-) {
+        "en" | "mn";
+}) {
 
-    const field =
-        activity.payload.field;
-
-
-    if (
-        typeof field === "string"
-    ) {
-
-        return formatField(
-            field,
-            lang
-        );
-    }
+    const isCreate =
+        item.operation ===
+        "CREATE";
 
 
-    const message =
-        activity.payload.message;
+    return (
+        <div
+            className="
+                flex
+                flex-col
+                gap-3
+                px-2
+                py-4
+                transition-colors
+                duration-150
+                hover:bg-[#f6efdf]/45
+
+                sm:flex-row
+                sm:items-start
+                sm:justify-between
+                sm:px-3
+            "
+        >
+
+            <div
+                className="
+                    min-w-0
+                    flex-1
+                "
+            >
+
+                <div
+                    className="
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-2
+                    "
+                >
+
+                    <p
+                        className="
+                            text-sm
+                            font-semibold
+                            text-[#27301d]
+                        "
+                    >
+                        {item.title}
+                    </p>
 
 
-    if (
-        typeof message === "string"
-    ) {
-        return message;
-    }
+                    <OperationBadge
+                        operation={
+                            item.operation
+                        }
+                    />
+
+                </div>
 
 
-    return lang === "mn"
-        ? "Системийн мэдээлэл шинэчлэгдсэн."
-        : "System information was updated.";
+                <p
+                    className="
+                        mt-1
+                        text-sm
+                        leading-6
+                        text-[#667056]
+                    "
+                >
+                    {item.description}
+                </p>
+
+
+                {!isCreate && (
+
+                    <UpdateDetails
+                        item={
+                            item
+                        }
+                        lang={
+                            lang
+                        }
+                    />
+
+                )}
+
+            </div>
+
+
+            <div
+                className="
+                    shrink-0
+
+                    sm:min-w-[125px]
+                    sm:text-right
+                "
+            >
+
+                <p
+                    className="
+                        text-sm
+                        font-medium
+                        text-[#27301d]
+                    "
+                >
+                    {
+                        formatDate(
+                            item.createdAt,
+                            lang
+                        )
+                    }
+                </p>
+
+
+                <p
+                    className="
+                        mt-0.5
+                        text-xs
+                        text-[#7b8372]
+                    "
+                >
+                    {
+                        formatTime(
+                            item.createdAt,
+                            lang
+                        )
+                    }
+                </p>
+
+            </div>
+
+        </div>
+    );
 }
 
 
-function formatField(
-    field:
-        string,
-    lang:
-        "en" | "mn"
-) {
+function OperationBadge({
+    operation
+}: {
+    operation:
+        string | null;
+}) {
 
-    const values:
-        Record<
-            string,
+    if (
+        operation === null
+    ) {
+
+        return null;
+
+    }
+
+
+    return (
+        <span
+            className="
+                rounded-md
+                bg-[#f0eadc]
+                px-2
+                py-0.5
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.08em]
+                text-[#7b682d]
+            "
+        >
             {
-                en: string;
-                mn: string;
+                formatEnum(
+                    operation
+                )
             }
-        > = {
-
-        TITLE_EN: {
-            en: "English title changed",
-            mn: "Англи гарчиг өөрчлөгдсөн"
-        },
-
-        TITLE_MN: {
-            en: "Mongolian title changed",
-            mn: "Монгол гарчиг өөрчлөгдсөн"
-        },
-
-        DESCRIPTION_EN: {
-            en: "English description changed",
-            mn: "Англи тайлбар өөрчлөгдсөн"
-        },
-
-        DESCRIPTION_MN: {
-            en: "Mongolian description changed",
-            mn: "Монгол тайлбар өөрчлөгдсөн"
-        },
-
-        STARTS_AT: {
-            en: "Start time changed",
-            mn: "Эхлэх цаг өөрчлөгдсөн"
-        },
-
-        ENDS_AT: {
-            en: "End time changed",
-            mn: "Дуусах цаг өөрчлөгдсөн"
-        },
-
-        LOCATION: {
-            en: "Location changed",
-            mn: "Байршил өөрчлөгдсөн"
-        },
-
-        PUBLISHED: {
-            en: "Publication status changed",
-            mn: "Нийтлэх төлөв өөрчлөгдсөн"
-        },
-
-        REGISTERABLE: {
-            en: "Registration availability changed",
-            mn: "Бүртгэлийн төлөв өөрчлөгдсөн"
-        },
-
-        REGISTRATION_COST: {
-            en: "Registration cost changed",
-            mn: "Бүртгэлийн үнэ өөрчлөгдсөн"
-        },
-
-        COVER_IMAGE: {
-            en: "Cover image changed",
-            mn: "Нүүр зураг өөрчлөгдсөн"
-        },
-
-        COVER_IMAGE_ALT_EN: {
-            en: "English image description changed",
-            mn: "Зургийн англи тайлбар өөрчлөгдсөн"
-        },
-
-        COVER_IMAGE_ALT_MN: {
-            en: "Mongolian image description changed",
-            mn: "Зургийн монгол тайлбар өөрчлөгдсөн"
-        },
-
-        CONTACT_EMAIL: {
-            en: "Contact email changed",
-            mn: "Холбоо барих имэйл өөрчлөгдсөн"
-        },
-
-        CONTACT_PHONE: {
-            en: "Contact phone changed",
-            mn: "Холбоо барих утас өөрчлөгдсөн"
-        }
-    };
+        </span>
+    );
+}
 
 
-    return values[field]?.[lang] ??
-        (
-            lang === "mn"
-                ? "Арга хэмжээ шинэчлэгдсэн"
-                : "Event updated"
-        );
+function UpdateDetails({
+    item,
+    lang
+}: {
+    item:
+        UserHistoryItem;
+
+    lang:
+        "en" | "mn";
+}) {
+
+    if (
+        item.field === null &&
+        item.oldValue === null &&
+        item.newValue === null
+    ) {
+
+        return null;
+
+    }
+
+
+    return (
+        <div
+            className="
+                mt-3
+                flex
+                flex-wrap
+                gap-x-5
+                gap-y-2
+                text-xs
+                text-[#7b8372]
+            "
+        >
+
+            {item.field !== null && (
+
+                <Detail
+                    label={
+                        lang === "mn"
+                            ? "Талбар"
+                            : "Field"
+                    }
+                    value={
+                        formatEnum(
+                            item.field
+                        )
+                    }
+                />
+
+            )}
+
+
+            {item.oldValue !== null && (
+
+                <Detail
+                    label={
+                        lang === "mn"
+                            ? "Өмнөх"
+                            : "Previous"
+                    }
+                    value={
+                        formatHistoryValue(
+                            item.oldValue
+                        )
+                    }
+                />
+
+            )}
+
+
+            {item.newValue !== null && (
+
+                <Detail
+                    label={
+                        lang === "mn"
+                            ? "Шинэ"
+                            : "New"
+                    }
+                    value={
+                        formatHistoryValue(
+                            item.newValue
+                        )
+                    }
+                />
+
+            )}
+
+        </div>
+    );
+}
+
+
+function Detail({
+    label,
+    value
+}: {
+    label:
+        string;
+
+    value:
+        string;
+}) {
+
+    return (
+        <span
+            className="
+                min-w-0
+                break-words
+            "
+        >
+
+            <span
+                className="
+                    font-medium
+                    text-[#667056]
+                "
+            >
+                {label}:
+            </span>
+
+            {" "}
+
+            <span>
+                {value}
+            </span>
+
+        </span>
+    );
+}
+
+
+function formatEnum(
+    value:
+        string
+) {
+
+    return value
+        .toLowerCase()
+        .split("_")
+        .map(
+            part =>
+                part.charAt(0)
+                    .toUpperCase() +
+                part.slice(1)
+        )
+        .join(" ");
+}
+
+
+function formatHistoryValue(
+    value:
+        string
+) {
+
+    if (
+        value === "true"
+    ) {
+
+        return "Yes";
+
+    }
+
+
+    if (
+        value === "false"
+    ) {
+
+        return "No";
+
+    }
+
+
+    return value;
 }
 
 
@@ -563,9 +951,14 @@ function formatDate(
             ? "mn-MN"
             : "en-CA",
         {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
+            year:
+                "numeric",
+
+            month:
+                "short",
+
+            day:
+                "numeric"
         }
     ).format(
         new Date(
@@ -587,8 +980,11 @@ function formatTime(
             ? "mn-MN"
             : "en-CA",
         {
-            hour: "numeric",
-            minute: "2-digit"
+            hour:
+                "numeric",
+
+            minute:
+                "2-digit"
         }
     ).format(
         new Date(

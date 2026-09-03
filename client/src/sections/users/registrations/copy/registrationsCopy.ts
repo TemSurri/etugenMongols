@@ -1,3 +1,5 @@
+// src/sections/users/registrations/copy/registrationsCopy.ts
+
 export const registrationsCopy = {
 
     en: {
@@ -5,23 +7,50 @@ export const registrationsCopy = {
             "Programs & Registrations",
 
         subtitle:
-            "View the programs and opportunities you are registered for.",
+            "View the events and programs connected to your account.",
 
         section: {
             title:
                 "Your Registrations",
 
             description:
-                "Programs and upcoming opportunities connected to your account will appear here.",
+                "View the events you have registered for and the attendees connected to your account.",
 
-            futureLabel:
-                "Coming soon",
+            loading:
+                "Loading your registrations...",
 
-            comingSoonTitle:
-                "Programs are currently being prepared",
+            error:
+                "We couldn't load your registrations right now.",
 
-            comingSoonBody:
-                "This is where programs and events you register for will appear in the future. We are still working on bringing these opportunities to the community."
+            retry:
+                "Try again",
+
+            emptyTitle:
+                "No registrations yet",
+
+            emptyBody:
+                "Events and programs you register for will appear here.",
+
+            attendees:
+                "Attendees",
+
+            registration:
+                "registration",
+
+            registrations:
+                "registrations",
+
+            registered:
+                "Registered",
+
+            cancelled:
+                "Cancelled",
+
+            eventDate:
+                "Event date",
+
+            location:
+                "Location"
         }
     },
 
@@ -30,23 +59,50 @@ export const registrationsCopy = {
             "Хөтөлбөр ба бүртгэл",
 
         subtitle:
-            "Таны бүртгүүлсэн хөтөлбөр болон боломжуудыг эндээс хараарай.",
+            "Таны бүртгэлтэй холбоотой арга хэмжээ болон хөтөлбөрүүдийг хараарай.",
 
         section: {
             title:
                 "Таны бүртгэлүүд",
 
             description:
-                "Таны бүртгэлтэй холбоотой хөтөлбөр болон удахгүй болох боломжууд энд харагдана.",
+                "Таны бүртгүүлсэн арга хэмжээ болон таны бүртгэлтэй холбоотой оролцогчдыг хараарай.",
 
-            futureLabel:
-                "Удахгүй",
+            loading:
+                "Таны бүртгэлүүдийг ачаалж байна...",
 
-            comingSoonTitle:
-                "Хөтөлбөрүүдийг одоогоор бэлтгэж байна",
+            error:
+                "Бүртгэлүүдийг одоогоор ачаалж чадсангүй.",
 
-            comingSoonBody:
-                "Цаашид таны бүртгүүлсэн хөтөлбөр болон арга хэмжээнүүд энд харагдах болно. Бид эдгээр боломжуудыг олон нийтэд хүргэхээр ажиллаж байна."
+            retry:
+                "Дахин оролдох",
+
+            emptyTitle:
+                "Одоогоор бүртгэл алга",
+
+            emptyBody:
+                "Таны бүртгүүлсэн арга хэмжээ болон хөтөлбөрүүд энд харагдана.",
+
+            attendees:
+                "Оролцогчид",
+
+            registration:
+                "бүртгэл",
+
+            registrations:
+                "бүртгэл",
+
+            registered:
+                "Бүртгэлтэй",
+
+            cancelled:
+                "Цуцлагдсан",
+
+            eventDate:
+                "Арга хэмжээний огноо",
+
+            location:
+                "Байршил"
         }
     }
 

@@ -1,16 +1,23 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+
 import {
     motion,
     cubicBezier,
     type Variants
 } from "framer-motion";
 
-import { RegistrationsSection } from "./components/RegistrationsSection";
+import {
+    RegistrationsSection
+} from "./components/RegistrationsSection";
 
-import { registrationsCopy } from "./copy/registrationsCopy";
+import {
+    registrationsCopy
+} from "./copy/registrationsCopy";
 
-import { useAuth } from "../../../context/useAuth";
+import {
+    useAuth
+} from "../../../context/useAuth";
 
 const REGISTRATIONS_BACKGROUND_IMAGES = [
     "/home/slideshow/1.webp",
@@ -19,12 +26,13 @@ const REGISTRATIONS_BACKGROUND_IMAGES = [
     "/home/slideshow/4.webp"
 ];
 
-const easeOut = cubicBezier(
-    0.22,
-    1,
-    0.36,
-    1
-);
+const easeOut =
+    cubicBezier(
+        0.22,
+        1,
+        0.36,
+        1
+    );
 
 const containerVariants: Variants = {
     hidden: {
@@ -59,36 +67,61 @@ const itemVariants: Variants = {
 };
 
 interface RegistrationsMainProps {
-    lang: "en" | "mn";
+    lang:
+        "en" |
+        "mn";
 }
 
 export default function RegistrationsMain({
     lang
 }: RegistrationsMainProps) {
 
-    const { user, loading } = useAuth();
+    const {
+        user,
+        loading
+    } =
+        useAuth();
 
     const copy =
         registrationsCopy[lang];
 
-    const [backgroundImage] =
-        useState(() => {
+    const [
+        backgroundImage
+    ] =
+        useState(
+            () => {
 
-            const randomIndex =
-                Math.floor(
-                    Math.random() *
-                    REGISTRATIONS_BACKGROUND_IMAGES.length
-                );
+                const randomIndex =
+                    Math.floor(
+                        Math.random() *
+                        REGISTRATIONS_BACKGROUND_IMAGES.length
+                    );
 
-            return REGISTRATIONS_BACKGROUND_IMAGES[
-                randomIndex
-            ];
-        });
+                return REGISTRATIONS_BACKGROUND_IMAGES[
+                    randomIndex
+                ];
+            }
+        );
 
     if (loading) {
+
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#27301d]">
-                <p className="text-sm font-medium text-white/70">
+            <div
+                className="
+                    flex
+                    min-h-screen
+                    items-center
+                    justify-center
+                    bg-[#27301d]
+                "
+            >
+                <p
+                    className="
+                        text-sm
+                        font-medium
+                        text-white/70
+                    "
+                >
                     Loading...
                 </p>
             </div>
@@ -96,6 +129,7 @@ export default function RegistrationsMain({
     }
 
     if (!user) {
+
         return (
             <Navigate
                 to="/auth/login"
@@ -120,14 +154,26 @@ export default function RegistrationsMain({
             }}
         >
 
-            {/* Dark background overlay */}
-            <div className="absolute inset-0 bg-[#18200f]/75" />
+            <div
+                className="
+                    absolute
+                    inset-0
+                    bg-[#18200f]/75
+                "
+            />
 
-            {/* Slight black overlay */}
-            <div className="absolute inset-0 bg-black/15" />
+            <div
+                className="
+                    absolute
+                    inset-0
+                    bg-black/15
+                "
+            />
 
             <motion.div
-                variants={containerVariants}
+                variants={
+                    containerVariants
+                }
                 initial="hidden"
                 animate="show"
                 className="
@@ -145,25 +191,55 @@ export default function RegistrationsMain({
             >
 
                 <motion.div
-                    className="mt-8 space-y-1"
-                    variants={itemVariants}
+                    className="
+                        mt-8
+                        space-y-1
+                    "
+                    variants={
+                        itemVariants
+                    }
                 >
 
-                    <h1 className="text-3xl font-semibold text-white sm:text-4xl">
+                    <h1
+                        className="
+                            text-3xl
+                            font-semibold
+                            text-white
+                            sm:text-4xl
+                        "
+                    >
                         {copy.title}
                     </h1>
 
-                    <p className="max-w-2xl text-lg leading-7 text-white/70">
+                    <p
+                        className="
+                            max-w-2xl
+                            text-lg
+                            leading-7
+                            text-white/70
+                        "
+                    >
                         {copy.subtitle}
                     </p>
 
                 </motion.div>
 
-                <div className="mt-2 space-y-6">
+                <div
+                    className="
+                        mt-2
+                        space-y-6
+                    "
+                >
 
-                    <motion.div variants={itemVariants}>
+                    <motion.div
+                        variants={
+                            itemVariants
+                        }
+                    >
                         <RegistrationsSection
-                            copy={copy.section}
+                            copy={
+                                copy.section
+                            }
                         />
                     </motion.div>
 

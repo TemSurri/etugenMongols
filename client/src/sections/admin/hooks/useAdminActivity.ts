@@ -1,100 +1,159 @@
 import {
-  useCallback,
-  useEffect,
-  useState
+    useCallback,
+    useEffect,
+    useState
 } from "react";
 
+import axios from "axios";
+
 import {
-  api
-} from "../../../api/client";
+    getUserHistory
+} from "../../users/account/api/accountApi";
 
 import type {
-  AdminActivityEvent
-} from "../types";
+    UserHistoryItem
+} from "../../users/account/types/accountTypes";
+
+
+const HISTORY_FETCH_SIZE =
+    20;
 
 
 export function useAdminActivity() {
 
-  const [
-    activity,
-    setActivity
-  ] =
-    useState<
-      AdminActivityEvent[]
-    >([]);
+    const [
+        activity,
+        setActivity
+    ] =
+        useState<UserHistoryItem[]>(
+            []
+        );
 
 
-  const [
-    loading,
-    setLoading
-  ] =
-    useState(true);
+    const [
+        loading,
+        setLoading
+    ] =
+        useState(true);
 
 
-  const [
-    error,
-    setError
-  ] =
-    useState(false);
+    const [
+        error,
+        setError
+    ] =
+        useState(false);
 
 
-  const loadActivity =
-    useCallback(
-      async () => {
+    const loadActivity =
+        useCallback(
+            async () => {
 
-        try {
+                setLoading(
+                    true
+                );
 
-          setLoading(true);
-          setError(false);
-
-
-          const response =
-            await api.get<
-              AdminActivityEvent[]
-            >(
-              "/activity/admin"
-            );
+                setError(
+                    false
+                );
 
 
-          setActivity(
-            response.data
-          );
+                try {
 
-        } catch (error) {
+                    const history =
+                        await getUserHistory(
+                            0,
+                            HISTORY_FETCH_SIZE
+                        );
 
-          console.error(
-            "Failed to load admin activity:",
-            error
-          );
 
-          setError(true);
+                    const eventActivity =
+                        history.content.filter(
+                            item =>
+                                item.type ===
+                                    "ACTIVITY" &&
 
-        } finally {
+                                item.resource ===
+                                    "EVENT" &&
 
-          setLoading(false);
+                                (
+                                    item.operation ===
+                                        "CREATE" ||
 
-        }
+                                    item.operation ===
+                                        "UPDATE"
+                                )
+                        );
 
-      },
-      []
+
+                    setActivity(
+                        eventActivity
+                    );
+
+                } catch (err) {
+
+                    if (
+                        axios.isAxiosError(
+                            err
+                        )
+                    ) {
+
+                        console.error(
+                            "Failed to load admin event activity:",
+                            err.response?.status
+                        );
+
+                    } else {
+
+                        console.error(
+                            "Failed to load admin event activity:",
+                            err
+                        );
+
+                    }
+
+
+                    setActivity(
+                        []
+                    );
+
+                    setError(
+                        true
+                    );
+
+                } finally {
+
+                    setLoading(
+                        false
+                    );
+
+                }
+
+            },
+            []
+        );
+
+
+    useEffect(
+        () => {
+
+            void loadActivity();
+
+        },
+        [
+            loadActivity
+        ]
     );
 
 
-  useEffect(() => {
+    return {
 
-    void loadActivity();
+        activity,
 
-  }, [loadActivity]);
+        loading,
 
+        error,
 
-  return {
-
-    activity,
-
-    loading,
-    error,
-
-    reload:
-      loadActivity
-  };
+        reload:
+            loadActivity
+    };
 }
