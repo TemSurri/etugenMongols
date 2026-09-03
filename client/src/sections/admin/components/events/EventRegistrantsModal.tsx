@@ -262,18 +262,23 @@ export default function EventRegistrantsModal({
                         duration: 0.16
                     }}
                     className="
-                        fixed
-                        inset-0
-                        z-[100]
-                        flex
-                        items-center
-                        justify-center
-                        overflow-y-auto
-                        bg-[#172011]/65
-                        p-4
+    fixed
+    inset-0
+    z-[100]
+    flex
+    items-start
+    justify-center
+    overflow-y-auto
+    bg-[#172011]/65
 
-                        sm:p-6
-                    "
+    px-4
+    pt-38
+    pb-8
+
+    sm:px-6
+    sm:pt-38
+    sm:pb-10
+"
                     onMouseDown={
                         mouseEvent => {
 
@@ -305,7 +310,7 @@ export default function EventRegistrantsModal({
                         }}
                         className="
                             flex
-                            max-h-[88vh]
+                            max-h-[78vh]
                             w-full
                             max-w-5xl
                             flex-col
