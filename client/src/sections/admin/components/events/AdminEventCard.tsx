@@ -1,300 +1,660 @@
 "use client";
 
 import {
-  useState
+    useState
 } from "react";
 
-import axios from "axios";
+import axios
+    from "axios";
+
+import EventRegistrantsModal
+    from "./EventRegistrantsModal";
 
 import type {
-  ApiEvent,
-  EventUpdateType
+    ApiEvent,
+    EventUpdateType
 } from "../../types";
 
 
 type Props = {
-  event: ApiEvent;
 
-  onEdit: () => void;
+    event:
+        ApiEvent;
 
-  updateEvent:
-    (
-      eventId: string,
-      type: EventUpdateType,
-      value: string | null
-    ) => Promise<ApiEvent>;
+    onEdit:
+        () => void;
+
+    updateEvent:
+        (
+            eventId:
+                string,
+            type:
+                EventUpdateType,
+            value:
+                string | null
+        ) => Promise<ApiEvent>;
+
+    lang:
+        "en" | "mn";
 };
 
 
-function getErrorMessage(
-  error: unknown
-): string {
+export default function AdminEventCard({
+    event,
+    onEdit,
+    updateEvent,
+    lang
+}: Props) {
 
-  if (
-    axios.isAxiosError(error)
-  ) {
+    const [
+        registrantsOpen,
+        setRegistrantsOpen
+    ] =
+        useState(false);
 
-    const status =
-      error.response?.status;
+
+    const [
+        changingPublished,
+        setChangingPublished
+    ] =
+        useState(false);
 
 
-    if (status === 400) {
-      return "The event update was invalid.";
+    const [
+        error,
+        setError
+    ] =
+        useState<string | null>(
+            null
+        );
+
+
+    async function togglePublished() {
+
+        if (
+            changingPublished
+        ) {
+            return;
+        }
+
+
+        try {
+
+            setChangingPublished(
+                true
+            );
+
+            setError(
+                null
+            );
+
+
+            await updateEvent(
+                event.id,
+                "PUBLISHED",
+                String(
+                    !event.published
+                )
+            );
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            setError(
+                getErrorMessage(
+                    error,
+                    lang
+                )
+            );
+
+        } finally {
+
+            setChangingPublished(
+                false
+            );
+
+        }
     }
 
 
-    if (status === 401) {
-      return "Your session has expired. Please log in again.";
-    }
+    return (
+        <>
+
+            <article
+                className="
+                    group
+                    overflow-hidden
+                    rounded-2xl
+                    border
+                    border-white/10
+                    bg-[#fffdf8]/95
+                    shadow-lg
+                    shadow-black/10
+                "
+            >
+
+                <div
+                    className="
+                        grid
+
+                        lg:grid-cols-[280px_minmax(0,1fr)]
+                    "
+                >
+
+                    <div
+                        className="
+                            relative
+                            min-h-[195px]
+                            overflow-hidden
+                            bg-[#27301d]
+
+                            lg:min-h-[230px]
+                        "
+                    >
+
+                        {event.coverImage ? (
+
+                            <img
+                                src={
+                                    event.coverImage
+                                }
+                                alt={
+                                    lang === "mn"
+                                        ? event.coverImageAltMn ??
+                                          event.titleMn
+                                        : event.coverImageAltEn ??
+                                          event.titleEn
+                                }
+                                className="
+                                    absolute
+                                    inset-0
+                                    h-full
+                                    w-full
+                                    object-cover
+                                    transition-transform
+                                    duration-500
+                                    ease-out
+                                    group-hover:scale-[1.025]
+                                "
+                            />
+
+                        ) : (
+
+                            <div
+                                className="
+                                    flex
+                                    h-full
+                                    min-h-[195px]
+                                    items-center
+                                    justify-center
+                                    text-sm
+                                    text-white/50
+                                "
+                            >
+                                {lang === "mn"
+                                    ? "Зураг алга"
+                                    : "No cover image"}
+                            </div>
+
+                        )}
 
 
-    if (status === 403) {
-      return "You do not have permission to update this event.";
-    }
+                        <div
+                            className="
+                                absolute
+                                inset-0
+                                bg-gradient-to-t
+                                from-black/30
+                                via-transparent
+                                to-transparent
+                            "
+                        />
 
 
-    if (status === 404) {
-      return "This event no longer exists.";
-    }
+                        <span
+                            className={`
+                                absolute
+                                left-4
+                                top-4
+                                rounded-lg
+                                px-2.5
+                                py-1.5
+                                text-xs
+                                font-medium
+                                shadow-sm
+
+                                ${
+                                    event.published
+                                        ? "bg-[#27301d]/90 text-white"
+                                        : "bg-white/90 text-[#59634c]"
+                                }
+                            `}
+                        >
+                            {event.published
+                                ? lang === "mn"
+                                    ? "Нийтлэгдсэн"
+                                    : "Published"
+                                : lang === "mn"
+                                    ? "Ноорог"
+                                    : "Draft"}
+                        </span>
+
+                    </div>
 
 
-    if (status === 409) {
-      return "This update conflicts with existing event data.";
-    }
+                    <div
+                        className="
+                            flex
+                            min-w-0
+                            flex-col
+                            justify-between
+                            p-6
+                        "
+                    >
+
+                        <div>
+
+                            <div
+                                className="
+                                    flex
+                                    flex-col
+                                    gap-4
+
+                                    xl:flex-row
+                                    xl:items-start
+                                    xl:justify-between
+                                "
+                            >
+
+                                <div
+                                    className="
+                                        min-w-0
+                                        flex-1
+                                    "
+                                >
+
+                                    <h3
+                                        className="
+                                            text-xl
+                                            font-semibold
+                                            tracking-tight
+                                            text-[#27301d]
+                                        "
+                                    >
+                                        {lang === "mn"
+                                            ? event.titleMn
+                                            : event.titleEn}
+                                    </h3>
 
 
-    if (status && status >= 500) {
-      return "The server could not update the event.";
-    }
-  }
+                                    <p
+                                        className="
+                                            mt-1
+                                            text-sm
+                                            text-[#667056]
+                                        "
+                                    >
+                                        {lang === "mn"
+                                            ? event.titleEn
+                                            : event.titleMn}
+                                    </p>
+
+                                </div>
 
 
-  return "Could not update the event.";
+                                <div
+                                    className="
+                                        flex
+                                        shrink-0
+                                        flex-wrap
+                                        gap-2
+                                    "
+                                >
+
+                                    <button
+                                        type="button"
+                                        onClick={
+                                            onEdit
+                                        }
+                                        className="
+                                            rounded-lg
+                                            border
+                                            border-[#27301d]/15
+                                            bg-transparent
+                                            px-4
+                                            py-2
+                                            text-sm
+                                            font-medium
+                                            text-[#27301d]
+                                            transition-colors
+                                            duration-150
+                                            hover:border-[#9a7b26]/45
+                                            hover:bg-[#f2ecdf]
+                                        "
+                                    >
+                                        {lang === "mn"
+                                            ? "Засах"
+                                            : "Edit"}
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        disabled={
+                                            changingPublished
+                                        }
+                                        onClick={
+                                            togglePublished
+                                        }
+                                        className="
+                                            rounded-lg
+                                            bg-[#27301d]
+                                            px-4
+                                            py-2
+                                            text-sm
+                                            font-medium
+                                            text-white
+                                            transition-colors
+                                            duration-150
+                                            hover:bg-[#3b472d]
+                                            disabled:cursor-not-allowed
+                                            disabled:opacity-50
+                                        "
+                                    >
+                                        {
+                                            changingPublished
+                                                ? lang === "mn"
+                                                    ? "Хадгалж байна..."
+                                                    : "Saving..."
+                                                : event.published
+                                                    ? lang === "mn"
+                                                        ? "Нуух"
+                                                        : "Unpublish"
+                                                    : lang === "mn"
+                                                        ? "Нийтлэх"
+                                                        : "Publish"
+                                        }
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                className="
+                                    mt-6
+                                    grid
+                                    gap-4
+
+                                    sm:grid-cols-3
+                                "
+                            >
+
+                                <Detail
+                                    label={
+                                        lang === "mn"
+                                            ? "Огноо"
+                                            : "Date"
+                                    }
+                                    value={
+                                        formatDate(
+                                            event.startsAt,
+                                            lang
+                                        )
+                                    }
+                                />
+
+
+                                <Detail
+                                    label={
+                                        lang === "mn"
+                                            ? "Байршил"
+                                            : "Location"
+                                    }
+                                    value={
+                                        event.location
+                                    }
+                                />
+
+
+                                <Detail
+                                    label={
+                                        lang === "mn"
+                                            ? "Бүртгэл"
+                                            : "Registration"
+                                    }
+                                    value={
+                                        getRegistrationText(
+                                            event,
+                                            lang
+                                        )
+                                    }
+                                />
+
+                            </div>
+
+                        </div>
+
+
+                        {error && (
+
+                            <p
+                                className="
+                                    mt-4
+                                    text-sm
+                                    text-[#8b4a42]
+                                "
+                            >
+                                {error}
+                            </p>
+
+                        )}
+
+
+                        {event.registerable && (
+
+                            <div
+                                className="
+                                    mt-5
+                                    border-t
+                                    border-[#27301d]/10
+                                    pt-4
+                                "
+                            >
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setRegistrantsOpen(
+                                            true
+                                        )
+                                    }
+                                    className="
+                                        rounded-md
+                                        px-1
+                                        py-1
+                                        text-sm
+                                        font-semibold
+                                        text-[#9a7b26]
+                                        transition-colors
+                                        duration-150
+                                        hover:text-[#27301d]
+                                    "
+                                >
+                                    {lang === "mn"
+                                        ? "Бүртгүүлсэн хүмүүсийг харах →"
+                                        : "View registrants →"}
+                                </button>
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <EventRegistrantsModal
+                event={
+                    event
+                }
+                open={
+                    registrantsOpen
+                }
+                onClose={() =>
+                    setRegistrantsOpen(
+                        false
+                    )
+                }
+                lang={
+                    lang
+                }
+            />
+
+        </>
+    );
 }
 
 
-export default function AdminEventCard({
-  event,
-  onEdit,
-  updateEvent
-}: Props) {
+function Detail({
+    label,
+    value
+}: {
+    label:
+        string;
 
-  const [
-    changingPublished,
-    setChangingPublished
-  ] =
-    useState(false);
+    value:
+        string;
+}) {
+
+    return (
+        <div className="min-w-0">
+
+            <p
+                className="
+                    text-[10px]
+                    font-semibold
+                    uppercase
+                    tracking-[0.1em]
+                    text-[#9a7b26]
+                "
+            >
+                {label}
+            </p>
 
 
-  const [
-    error,
-    setError
-  ] =
-    useState<string | null>(
-      null
+            <p
+                className="
+                    mt-1
+                    break-words
+                    text-sm
+                    leading-6
+                    text-[#667056]
+                "
+            >
+                {value}
+            </p>
+
+        </div>
     );
+}
 
 
-  const date =
-    new Intl.DateTimeFormat(
-      "en-CA",
-      {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }
-    ).format(
-      new Date(
-        event.startsAt
-      )
-    );
-
-
-  async function togglePublished() {
+function getRegistrationText(
+    event:
+        ApiEvent,
+    lang:
+        "en" | "mn"
+) {
 
     if (
-      changingPublished
+        !event.registerable
     ) {
-      return;
+        return lang === "mn"
+            ? "Хаалттай"
+            : "Disabled";
     }
 
 
-    try {
-
-      setChangingPublished(
-        true
-      );
-
-      setError(
-        null
-      );
-
-
-      await updateEvent(
-        event.id,
-        "PUBLISHED",
-        String(
-          !event.published
-        )
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Failed to update published status:",
-        error
-      );
-
-
-      setError(
-        getErrorMessage(
-          error
-        )
-      );
-
-    } finally {
-
-      setChangingPublished(
-        false
-      );
+    if (
+        event.registrationCost === 0
+    ) {
+        return lang === "mn"
+            ? "Үнэгүй"
+            : "Free";
     }
-  }
 
 
-  return (
-    <article className="overflow-hidden border border-[#d7caa8] bg-[#fffaf0]">
+    if (
+        event.registrationCost !== null
+    ) {
 
-      <div className="relative aspect-[16/7] bg-[#303824]">
-
-        {event.coverImage ? (
-
-          <img
-            src={
-              event.coverImage
-            }
-            alt={
-              event.coverImageAltEn ??
-              event.titleEn
-            }
-            className="h-full w-full object-cover"
-          />
-
-        ) : (
-
-          <div className="flex h-full items-center justify-center">
-
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#fffaf0]/60">
-              No Cover Image
-            </p>
-
-          </div>
-
-        )}
+        return `$${(
+            event.registrationCost /
+            100
+        ).toFixed(2)} CAD`;
+    }
 
 
-        <div className="absolute right-3 top-3">
-
-          <span
-            className={`inline-block px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] ${
-              event.published
-                ? "bg-[#303824] text-[#fffaf0]"
-                : "bg-[#fffaf0] text-[#8d7020]"
-            }`}
-          >
-            {event.published
-              ? "Published"
-              : "Draft"}
-          </span>
-
-        </div>
-
-      </div>
+    return lang === "mn"
+        ? "Нээлттэй"
+        : "Open";
+}
 
 
-      <div className="p-5 sm:p-6">
+function formatDate(
+    value:
+        string,
+    lang:
+        "en" | "mn"
+) {
 
-        <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#92752b]">
-          {date}
-        </p>
-
-
-        <h3 className="mt-2 text-xl font-normal tracking-tight">
-          {event.titleEn}
-        </h3>
-
-
-        <p className="mt-1 text-sm text-[#59604d]">
-          {event.titleMn}
-        </p>
-
-
-        <div className="mt-4 space-y-1 text-[12px] leading-6 text-[#59604d]">
-
-          <p>
-            {event.location}
-          </p>
-
-          <p>
-            {event.registerable
-              ? event.registrationCost === 0
-                ? "Free registration"
-                : event.registrationCost !== null
-                  ? `$${(
-                      event.registrationCost /
-                      100
-                    ).toFixed(2)} registration`
-                  : "Registration enabled"
-              : "Registration disabled"}
-          </p>
-
-        </div>
+    return new Intl.DateTimeFormat(
+        lang === "mn"
+            ? "mn-MN"
+            : "en-CA",
+        {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        }
+    ).format(
+        new Date(
+            value
+        )
+    );
+}
 
 
-        {error && (
+function getErrorMessage(
+    error:
+        unknown,
+    lang:
+        "en" | "mn"
+) {
 
-          <div className="mt-4 border border-[#a76558]/30 bg-[#fff4f1] px-4 py-3">
+    if (
+        axios.isAxiosError(
+            error
+        ) &&
+        error.response?.status === 403
+    ) {
 
-            <p className="text-sm text-[#8a4d42]">
-              {error}
-            </p>
-
-          </div>
-
-        )}
-
-
-        <div className="mt-5 flex flex-wrap gap-2">
-
-          <button
-            type="button"
-            onClick={onEdit}
-            className="border border-[#b8aa84] px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-[#6f591f] transition hover:border-[#6f591f]"
-          >
-            Edit
-          </button>
+        return lang === "mn"
+            ? "Танд энэ өөрчлөлтийг хийх эрх байхгүй."
+            : "You do not have permission to make this change.";
+    }
 
 
-          <button
-            type="button"
-            disabled={
-              changingPublished
-            }
-            onClick={
-              togglePublished
-            }
-            className="bg-[#303824] px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-[#fffaf0] transition hover:bg-[#414c31] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {changingPublished
-              ? "Saving..."
-              : event.published
-                ? "Unpublish"
-                : "Publish"}
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
-  );
+    return lang === "mn"
+        ? "Арга хэмжээг шинэчилж чадсангүй."
+        : "Could not update the event.";
 }

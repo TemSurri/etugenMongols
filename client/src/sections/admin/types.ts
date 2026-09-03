@@ -4,7 +4,9 @@ export type AdminSection =
 
 
 export type ApiEvent = {
+
   id: string;
+
   slug: string;
 
   titleEn: string;
@@ -35,6 +37,7 @@ export type ApiEvent = {
 
 
 export type EventUpdateType =
+
   | "TITLE_EN"
   | "TITLE_MN"
   | "DESCRIPTION_EN"
@@ -53,6 +56,7 @@ export type EventUpdateType =
 
 
 export type EventCreateRequest = {
+
   slug: string;
 
   titleEn: string;
@@ -75,4 +79,46 @@ export type EventCreateRequest = {
 
   contactEmail: string | null;
   contactPhone: string | null;
+};
+
+
+export type AdminRegistration = {
+
+  id: string;
+
+  eventId: string;
+
+  userId: number | null;
+
+  firstName: string;
+  lastName: string;
+
+  email: string;
+
+  status:
+    | "REGISTERED"
+    | "CANCELLED";
+
+  createdAt: string;
+};
+
+
+export type AdminActivityEvent = {
+
+  id: string;
+
+  type:
+    | "ADMIN_UPDATE"
+    | "EMAIL_CHANGE";
+
+  subjectUserId: number;
+
+  actorUserId: number | null;
+
+  payload: Record<
+    string,
+    unknown
+  >;
+
+  createdAt: string;
 };

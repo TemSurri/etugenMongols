@@ -59,13 +59,19 @@ export function useAdminEvents() {
             response.data
           );
 
-        } catch {
+        } catch (error) {
+
+          console.error(
+            "Failed to load admin events:",
+            error
+          );
 
           setError(true);
 
         } finally {
 
           setLoading(false);
+
         }
 
       },
@@ -83,7 +89,8 @@ export function useAdminEvents() {
   const createEvent =
     useCallback(
       async (
-        request: EventCreateRequest
+        request:
+          EventCreateRequest
       ) => {
 
         const response =
@@ -161,6 +168,7 @@ export function useAdminEvents() {
 
 
   return {
+
     events,
 
     loading,
