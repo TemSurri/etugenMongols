@@ -144,15 +144,22 @@ export function AuthProvider({
     }
 
 
-        // Runs when the frontend first loads / refreshes.
-        useEffect(() => {
-            const initialize = async () => {
+    // Runs when the frontend first loads / refreshes.
+    useEffect(() => {
+
+        const initialize = async () => {
 
             try {
 
-                await api.get(
-                    "/csrf"
-                );
+                const response =
+                    await api.get(
+                        "/csrf"
+                    );
+
+
+                api.defaults.headers.common[
+                    "X-XSRF-TOKEN"
+                ] = response.data.token;
 
             } catch (error) {
 
@@ -229,12 +236,13 @@ export function AuthProvider({
         );
     }
 
+
     function clearAuth() {
 
-    setUser(null);
+        setUser(null);
 
-    localStorage.removeItem(
-        "wasLoggedIn"
-    );
-}
+        localStorage.removeItem(
+            "wasLoggedIn"
+        );
+    }
 }
