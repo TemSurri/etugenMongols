@@ -20,6 +20,12 @@ export const DONATION_COPY: Record<
     amountPlaceholder:
       "Enter amount",
 
+    amountDescription:
+      "Choose a preset amount or enter your own amount. Amounts may have a maximum of 2 decimal places.",
+
+    amountDecimalPlaces:
+      "Please enter an amount with no more than 2 digits after the decimal, for example $25.50.",
+
     amountMinimum:
       "The minimum donation amount is $1.00 CAD.",
 
@@ -95,11 +101,6 @@ export const DONATION_COPY: Record<
     createAccount:
       "Create account",
 
-
-    /*
-     * Existing payment
-     */
-
     existingPaymentTitle:
       "You already have a payment in progress",
 
@@ -142,11 +143,6 @@ export const DONATION_COPY: Record<
     cancellingPayment:
       "Cancelling payment…",
 
-
-    /*
-     * Stripe payment
-     */
-
     paymentTitle:
       "Complete your donation",
 
@@ -167,11 +163,6 @@ export const DONATION_COPY: Record<
 
     paymentProcessing:
       "Processing payment...",
-
-
-    /*
-     * Successful payment
-     */
 
     paymentSuccessTitle:
       "Thank you for your donation",
@@ -200,11 +191,6 @@ export const DONATION_COPY: Record<
     backToEvents:
       "Back to events",
 
-
-    /*
-     * Processing / errors
-     */
-
     paymentProcessingTitle:
       "Your payment is processing",
 
@@ -219,17 +205,16 @@ export const DONATION_COPY: Record<
 
     paymentInvalidDescription:
       "This payment session is no longer valid and cannot be safely continued. Please return and start a new payment.",
-  
 
-      confirmEmailLabel:
-        "Confirm email address",
+    confirmEmailLabel:
+      "Confirm email address",
 
-      confirmEmailPlaceholder:
-        "Enter your email address again",
+    confirmEmailPlaceholder:
+      "Enter your email address again",
 
-      emailsDoNotMatch:
-        "Email addresses do not match.",
-    },
+    emailsDoNotMatch:
+      "Email addresses do not match.",
+  },
 
 
   mn: {
@@ -242,6 +227,12 @@ export const DONATION_COPY: Record<
 
     amountPlaceholder:
       "Дүн оруулна уу",
+
+    amountDescription:
+      "Доорх дүнгээс сонгох эсвэл хүссэн дүнгээ өөрөө оруулна уу. Аравтын бутархайн дараа хамгийн ихдээ 2 орон оруулж болно.",
+
+    amountDecimalPlaces:
+      "Дүнг аравтын бутархайн дараа хамгийн ихдээ 2 оронтой оруулна уу. Жишээ нь: $25.50.",
 
     amountMinimum:
       "Хандивын доод хэмжээ $1.00 CAD байна.",
@@ -318,11 +309,6 @@ export const DONATION_COPY: Record<
     createAccount:
       "Бүртгүүлэх",
 
-
-    /*
-     * Existing payment
-     */
-
     existingPaymentTitle:
       "Танд үргэлжилж буй төлбөр байна",
 
@@ -365,11 +351,6 @@ export const DONATION_COPY: Record<
     cancellingPayment:
       "Төлбөр цуцалж байна…",
 
-
-    /*
-     * Stripe payment
-     */
-
     paymentTitle:
       "Хандиваа дуусгах",
 
@@ -390,11 +371,6 @@ export const DONATION_COPY: Record<
 
     paymentProcessing:
       "Төлбөр боловсруулж байна...",
-
-
-    /*
-     * Successful payment
-     */
 
     paymentSuccessTitle:
       "Хандив өгсөнд баярлалаа",
@@ -423,11 +399,6 @@ export const DONATION_COPY: Record<
     backToEvents:
       "Арга хэмжээнүүд рүү",
 
-
-    /*
-     * Processing / errors
-     */
-
     paymentProcessingTitle:
       "Таны төлбөр боловсруулагдаж байна",
 
@@ -442,7 +413,7 @@ export const DONATION_COPY: Record<
 
     paymentInvalidDescription:
       "Энэ төлбөрийн сесс цааш үргэлжлүүлэх боломжгүй болсон байна. Буцаж шинэ төлбөр эхлүүлнэ үү.",
-  
+
     confirmEmailLabel:
       "Имэйл хаягаа баталгаажуулах",
 
@@ -451,7 +422,5 @@ export const DONATION_COPY: Record<
 
     emailsDoNotMatch:
       "Имэйл хаягууд таарахгүй байна.",
-      
-  
-    },
+  },
 };

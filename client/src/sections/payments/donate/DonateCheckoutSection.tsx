@@ -80,10 +80,6 @@ function DonateCheckoutSection({
     );
 
 
-  /*
-   * Lock the underlying page while any
-   * payment-related modal is open.
-   */
   useEffect(() => {
 
     if (!modalOpen) {
@@ -108,19 +104,10 @@ function DonateCheckoutSection({
   }, [modalOpen]);
 
 
-  /*
-   * Render payment UI directly under <body>.
-   *
-   * This avoids stacking-context problems from
-   * headers, transforms, positioned containers,
-   * z-indexes, etc.
-   */
   const paymentPortal =
     typeof document !== "undefined"
       ? createPortal(
           <>
-
-            {/* Preparing payment */}
 
             {
               checkout.submitting &&
@@ -201,8 +188,6 @@ function DonateCheckoutSection({
             }
 
 
-            {/* Existing payment */}
-
             {
               checkout.existingPayment &&
               (
@@ -242,8 +227,6 @@ function DonateCheckoutSection({
               )
             }
 
-
-            {/* Active Stripe payment */}
 
             {
               checkout.activePayment
@@ -399,8 +382,6 @@ function DonateCheckoutSection({
           "
         >
 
-          {/* Donation form */}
-
           <div
             className="
               min-w-0
@@ -421,6 +402,8 @@ function DonateCheckoutSection({
               onSubmit={
                 checkout.handleSubmit
               }
+
+              noValidate
 
               className="
                 mx-auto

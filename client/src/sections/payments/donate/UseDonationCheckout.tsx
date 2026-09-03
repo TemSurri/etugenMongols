@@ -159,10 +159,7 @@ export function useDonationCheckout(
       user.lastName
     );
 
-    /*
-     * Logged-in users do not need
-     * guest email confirmation.
-     */
+
     setConfirmEmail("");
 
   }, [user]);
@@ -250,6 +247,92 @@ export function useDonationCheckout(
 
         setError(
           null
+        );
+      },
+      []
+    );
+
+
+  const scrollToField =
+    useCallback(
+      (
+        id: string
+      ) => {
+
+        requestAnimationFrame(
+          () => {
+
+            const element =
+              document.getElementById(
+                id
+              );
+
+
+            element
+              ?.scrollIntoView({
+                behavior:
+                  "smooth",
+
+                block:
+                  "center",
+              });
+
+
+            window.setTimeout(
+              () => {
+
+                if (
+                  element instanceof
+                  HTMLElement
+                ) {
+
+                  element.focus({
+                    preventScroll:
+                      true,
+                  });
+                }
+
+              },
+              350
+            );
+          }
+        );
+      },
+      []
+    );
+
+
+  const scrollToAmount =
+    useCallback(
+      () => {
+
+        requestAnimationFrame(
+          () => {
+
+            amountSectionRef
+              .current
+              ?.scrollIntoView({
+                behavior:
+                  "smooth",
+
+                block:
+                  "center",
+              });
+
+
+            window.setTimeout(
+              () => {
+
+                document
+                  .getElementById(
+                    "donation-amount"
+                  )
+                  ?.focus();
+
+              },
+              350
+            );
+          }
         );
       },
       []
@@ -507,6 +590,10 @@ export function useDonationCheckout(
         );
 
 
+        const cleanAmount =
+          amount.trim();
+
+
         const cleanEmail =
           email
             .trim()
@@ -527,6 +614,25 @@ export function useDonationCheckout(
           message.trim();
 
 
+        const amountFormatValid =
+          /^\d+(?:\.\d{1,2})?$/
+            .test(
+              cleanAmount
+            );
+
+
+        if (!amountFormatValid) {
+
+          setAmountError(
+            copy.amountDecimalPlaces
+          );
+
+          scrollToAmount();
+
+          return;
+        }
+
+
         if (
           !Number.isFinite(
             numericAmount
@@ -538,47 +644,54 @@ export function useDonationCheckout(
             copy.amountMinimum
           );
 
-
-          requestAnimationFrame(
-            () => {
-
-              amountSectionRef
-                .current
-                ?.scrollIntoView({
-                  behavior:
-                    "smooth",
-
-                  block:
-                    "center",
-                });
-            }
-          );
-
+          scrollToAmount();
 
           return;
         }
 
 
-        if (
-          !cleanEmail ||
-          !cleanFirstName ||
-          !cleanLastName
-        ) {
+        if (!cleanEmail) {
 
           setError(
             copy.required
           );
 
+          scrollToField(
+            "donation-email"
+          );
+
           return;
         }
 
 
-        /*
-         * Guest-only email confirmation.
-         *
-         * Logged-in users already have their
-         * account email populated by AuthContext.
-         */
+        if (!cleanFirstName) {
+
+          setError(
+            copy.required
+          );
+
+          scrollToField(
+            "donation-first-name"
+          );
+
+          return;
+        }
+
+
+        if (!cleanLastName) {
+
+          setError(
+            copy.required
+          );
+
+          scrollToField(
+            "donation-last-name"
+          );
+
+          return;
+        }
+
+
         if (
           !isLoggedIn &&
           (
@@ -590,6 +703,10 @@ export function useDonationCheckout(
 
           setError(
             copy.emailsDoNotMatch
+          );
+
+          scrollToField(
+            "donation-confirm-email"
           );
 
           return;
@@ -734,10 +851,12 @@ export function useDonationCheckout(
         }
       },
       [
+        amount,
         anonymous,
         clearAuth,
         confirmEmail,
         continueDonationToStripe,
+        copy.amountDecimalPlaces,
         copy.amountMinimum,
         copy.emailsDoNotMatch,
         copy.error,
@@ -748,6 +867,8 @@ export function useDonationCheckout(
         lastName,
         message,
         numericAmount,
+        scrollToAmount,
+        scrollToField,
         submitting,
       ]
     );

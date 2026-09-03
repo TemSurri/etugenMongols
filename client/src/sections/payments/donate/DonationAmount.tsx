@@ -64,9 +64,20 @@ function DonationAmount({
         {copy.amountLabel}
       </label>
 
+      <p
+        className="
+          mt-1.5
+          text-xs
+          leading-5
+          text-[#59604d]
+        "
+      >
+        {copy.amountDescription}
+      </p>
+
       <div
         className={`
-          mt-2
+          mt-3
           flex
           overflow-hidden
           border
@@ -97,9 +108,8 @@ function DonationAmount({
 
         <input
           id="donation-amount"
-          type="number"
+          type="text"
           inputMode="decimal"
-          step="0.01"
           value={amount}
           onChange={(event) =>
             onAmountChange(

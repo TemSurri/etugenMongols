@@ -150,6 +150,9 @@ export type DonationCopy = {
 
   createAccount: string;
 
+  amountDescription: string;
+amountDecimalPlaces: string;
+
 
   /*
    * Existing payment

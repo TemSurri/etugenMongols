@@ -36,7 +36,13 @@ export default function ResetPasswordForm({
     const [password, setPassword] =
         useState("");
 
+    const [confirmPassword, setConfirmPassword] =
+        useState("");
+
     const [showPassword, setShowPassword] =
+        useState(false);
+
+    const [showConfirmPassword, setShowConfirmPassword] =
         useState(false);
 
     const [error, setError] =
@@ -116,6 +122,18 @@ export default function ResetPasswordForm({
 
             setError(
                 passwordError
+            );
+
+            return;
+        }
+
+
+        if (password !== confirmPassword) {
+
+            setError(
+                mn
+                    ? "Нууц үгүүд таарахгүй байна."
+                    : "Passwords do not match."
             );
 
             return;
@@ -561,6 +579,138 @@ export default function ResetPasswordForm({
                         "
                     >
                         {showPassword
+                            ? (
+                                mn
+                                    ? "Нуух"
+                                    : "Hide"
+                            )
+                            : (
+                                mn
+                                    ? "Харах"
+                                    : "Show"
+                            )}
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            {/* Confirm Password */}
+            <div className="mt-4">
+
+                <label
+                    htmlFor="confirm-new-password"
+                    className="
+                        text-[9px]
+                        font-bold
+                        uppercase
+                        tracking-[0.2em]
+                        text-[#27301d]
+                    "
+                >
+                    {mn
+                        ? "Шинэ нууц үгээ баталгаажуулах"
+                        : "Confirm new password"}
+                </label>
+
+
+                <div className="relative mt-2">
+
+                    <input
+                        id="confirm-new-password"
+                        name="confirmPassword"
+
+                        type={
+                            showConfirmPassword
+                                ? "text"
+                                : "password"
+                        }
+
+                        value={confirmPassword}
+
+                        onChange={(event) => {
+
+                            setConfirmPassword(
+                                event.target.value
+                            );
+
+                            if (error) {
+                                setError("");
+                            }
+                        }}
+
+                        placeholder={
+                            mn
+                                ? "Шинэ нууц үгээ дахин оруулна уу"
+                                : "Enter your new password again"
+                        }
+
+                        autoComplete="new-password"
+
+                        required
+                        disabled={loading}
+
+                        className="
+                            h-11
+                            w-full
+
+                            border
+                            border-[#27301d]/25
+
+                            bg-white
+
+                            px-3.5
+                            pr-16
+
+                            text-sm
+                            text-[#27301d]
+
+                            outline-none
+                            transition-colors
+
+                            placeholder:text-[#667056]/45
+
+                            focus:border-[#9a7b26]
+
+                            disabled:cursor-not-allowed
+                            disabled:opacity-60
+                        "
+                    />
+
+
+                    <button
+                        type="button"
+
+                        onClick={() =>
+                            setShowConfirmPassword(
+                                (visible) => !visible
+                            )
+                        }
+
+                        disabled={loading}
+
+                        className="
+                            absolute
+                            right-3
+                            top-1/2
+                            -translate-y-1/2
+
+                            text-[9px]
+                            font-bold
+                            uppercase
+                            tracking-[0.12em]
+                            text-[#667056]
+
+                            transition-colors
+
+                            hover:text-[#9a7b26]
+
+                            disabled:cursor-not-allowed
+                            disabled:opacity-50
+                        "
+                    >
+                        {showConfirmPassword
                             ? (
                                 mn
                                     ? "Нуух"

@@ -144,10 +144,30 @@ export function AuthProvider({
     }
 
 
-    // Runs when the frontend first loads / refreshes.
-    useEffect(() => {
+        // Runs when the frontend first loads / refreshes.
+        useEffect(() => {
+            const initialize = async () => {
 
-        refreshAuth();
+            try {
+
+                await api.get(
+                    "/csrf"
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Failed to initialize CSRF token",
+                    error
+                );
+            }
+
+
+            await refreshAuth();
+        };
+
+
+        initialize();
 
     }, []);
 
