@@ -52,6 +52,16 @@ type Props = {
                 string | null
         ) => Promise<ApiEvent>;
 
+    updateRegistration:
+        (
+            eventId:
+                string,
+            registerable:
+                boolean,
+            registrationCost:
+                number | null
+        ) => Promise<ApiEvent>;
+
     lang:
         "en" | "mn";
 };
@@ -63,6 +73,7 @@ export default function AdminEvents({
     error,
     createEvent,
     updateEvent,
+    updateRegistration,
     lang
 }: Props) {
 
@@ -352,6 +363,9 @@ export default function AdminEvents({
                     }
                     updateEvent={
                         updateEvent
+                    }
+                    updateRegistration={
+                        updateRegistration
                     }
                     onClose={() =>
                         setEditing(

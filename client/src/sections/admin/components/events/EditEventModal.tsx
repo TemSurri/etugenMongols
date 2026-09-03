@@ -35,6 +35,16 @@ type Props = {
                 string | null
         ) => Promise<ApiEvent>;
 
+    updateRegistration:
+        (
+            eventId:
+                string,
+            registerable:
+                boolean,
+            registrationCost:
+                number | null
+        ) => Promise<ApiEvent>;
+
     onClose:
         () => void;
 
@@ -46,6 +56,7 @@ type Props = {
 export default function EditEventModal({
     event,
     updateEvent,
+    updateRegistration,
     onClose,
     lang
 }: Props) {
@@ -421,32 +432,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
-                changes,
-                "REGISTERABLE",
-                String(
-                    event.registerable
-                ),
-                String(
-                    registerable
-                )
-            );
-
-
-            addChange(
-                changes,
-                "REGISTRATION_COST",
-                event.registrationCost === null
-                    ? null
-                    : String(
-                        event.registrationCost
-                    ),
-                newRegistrationCost === null
-                    ? null
-                    : String(
-                        newRegistrationCost
-                    )
-            );
+            
 
 
             addChange(
@@ -500,20 +486,40 @@ export default function EditEventModal({
 
 
             for (
-                const change
-                of changes
-            ) {
+    const change
+    of changes
+) {
 
-                await updateEvent(
-                    event.id,
-                    change.type,
-                    change.value
-                );
+    await updateEvent(
+        event.id,
+        change.type,
+        change.value
+    );
 
-            }
+}
 
 
-            onClose();
+const registrationChanged =
+    event.registerable !==
+        registerable ||
+    event.registrationCost !==
+        newRegistrationCost;
+
+
+if (
+    registrationChanged
+) {
+
+    await updateRegistration(
+        event.id,
+        registerable,
+        newRegistrationCost
+    );
+
+}
+
+
+onClose();
 
         } catch (error) {
 

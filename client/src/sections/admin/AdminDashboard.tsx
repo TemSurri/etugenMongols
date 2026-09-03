@@ -268,38 +268,38 @@ export default function AdminDashboard() {
                                     "overview" && (
 
                                     <AdminOverview
-    events={
-        adminEvents.events
-    }
+                                        events={
+                                            adminEvents.events
+                                        }
 
-    publishedCount={
-        adminEvents.publishedCount
-    }
+                                        publishedCount={
+                                            adminEvents.publishedCount
+                                        }
 
-    draftCount={
-        adminEvents.draftCount
-    }
+                                        draftCount={
+                                            adminEvents.draftCount
+                                        }
 
-    eventsLoading={
-        adminEvents.loading
-    }
+                                        eventsLoading={
+                                            adminEvents.loading
+                                        }
 
-    activity={
-        adminActivity.activity
-    }
+                                        activity={
+                                            adminActivity.activity
+                                        }
 
-    activityLoading={
-        adminActivity.loading
-    }
+                                        activityLoading={
+                                            adminActivity.loading
+                                        }
 
-    activityError={
-        adminActivity.error
-    }
+                                        activityError={
+                                            adminActivity.error
+                                        }
 
-    lang={
-        lang
-    }
-/>
+                                        lang={
+                                            lang
+                                        }
+                                    />
 
                                 )}
 
@@ -322,6 +322,9 @@ export default function AdminDashboard() {
                                         }
                                         updateEvent={
                                             adminEvents.updateEvent
+                                        }
+                                        updateRegistration={
+                                            adminEvents.updateRegistration
                                         }
                                         lang={
                                             lang

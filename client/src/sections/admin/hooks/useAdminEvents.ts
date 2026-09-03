@@ -151,6 +151,42 @@ export function useAdminEvents() {
     );
 
 
+  const updateRegistration =
+    useCallback(
+      async (
+        eventId: string,
+        registerable: boolean,
+        registrationCost: number | null
+      ) => {
+
+        const response =
+          await api.patch<ApiEvent>(
+            `/events/${eventId}/registration`,
+            {
+              registerable,
+              registrationCost
+            }
+          );
+
+
+        setEvents(
+          current =>
+            current.map(
+              event =>
+                event.id === eventId
+                  ? response.data
+                  : event
+            )
+        );
+
+
+        return response.data;
+
+      },
+      []
+    );
+
+
   const publishedCount =
     useMemo(
       () =>
@@ -179,6 +215,7 @@ export function useAdminEvents() {
 
     createEvent,
     updateEvent,
+    updateRegistration,
 
     reload:
       loadEvents
