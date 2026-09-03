@@ -5,11 +5,14 @@ import VerificationSection
 function VerificationPage() {
 
     return (
+
         <VerificationSection
 
             endpoint="/verify-token"
 
             successRedirect="/auth/login"
+
+            errorRedirect="/auth/login"
 
             redirectDelay={1800}
 
@@ -35,6 +38,14 @@ function VerificationPage() {
                 errorDescription:
                     "This verification link is invalid, expired, or has already been used.",
 
+
+                redirectingText:
+                    "Redirecting to login...",
+
+
+                errorButtonText:
+                    "Go to login",
+
             }}
 
             mongolian={{
@@ -59,9 +70,18 @@ function VerificationPage() {
                 errorDescription:
                     "Энэ баталгаажуулах холбоос хүчингүй, хугацаа дууссан эсвэл өмнө нь ашиглагдсан байна.",
 
+
+                redirectingText:
+                    "Нэвтрэх хэсэг рүү шилжүүлж байна...",
+
+
+                errorButtonText:
+                    "Нэвтрэх",
+
             }}
 
         />
+
     );
 
 }

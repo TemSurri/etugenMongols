@@ -7,6 +7,7 @@ import {
 import type {
   DonationCheckoutRequest,
   PaymentIntentResult,
+  ResumePaymentResponse,
 } from "./donateTypes";
 
 
@@ -24,20 +25,11 @@ export async function checkoutDonation(
 }
 
 
-/*
- * Continue an existing INIT donation payment.
- *
- * Expected backend behavior:
- * - verify ownership/session
- * - verify payment is still continuable
- * - retrieve/reuse Stripe PaymentIntent
- * - return client secret
- */
 export async function continueDonationPayment():
-  Promise<string | null> {
+  Promise<ResumePaymentResponse | null> {
 
   const response =
-    await api.post<string>(
+    await api.post<ResumePaymentResponse>(
       "/payment/resume-donation",
       undefined,
       {
@@ -49,8 +41,6 @@ export async function continueDonationPayment():
     );
 
 
-  // Backend reconciled the payment and determined
-  // that there is nothing left to resume.
   if (
     response.status === 204 ||
     response.status === 205
@@ -64,14 +54,6 @@ export async function continueDonationPayment():
 }
 
 
-/*
- * Cancel an existing donation payment.
- *
- * Expected backend behavior:
- * - find job ownership from session
- * - cancel PaymentIntent when appropriate
- * - mark PaymentJob cancelled
- */
 export async function cancelDonationPayment():
   Promise<void> {
 

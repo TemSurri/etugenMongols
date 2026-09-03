@@ -26,6 +26,11 @@ export const EVENTS_COPY = {
     involvedBody: "Volunteers help with rehearsals, preparation, setup, activities, welcoming guests, and event-day work. Donations help cover venues, food, supplies, cultural materials, and other event costs.",
     volunteerButton: "Volunteer With Us",
     donateButton: "Support Our Events",
+    loadingEvents: "Loading upcoming events…",
+eventsError: "We couldn’t load upcoming events right now. Please try again later.",
+
+freeRegistration: "Free registration",
+registrationFrom: "Registration",
   },
   mn: {
     eyebrow: "Арга хэмжээ",
@@ -52,5 +57,10 @@ export const EVENTS_COPY = {
     involvedBody: "Сайн дурынхан давтлага, бэлтгэл, тохижилт, үйл ажиллагаа, зочдыг угтах болон арга хэмжээний өдрийн ажилд тусалдаг. Хандив нь байр, хоол хүнс, хэрэгсэл, соёлын материал болон бусад зардлыг дэмждэг.",
     volunteerButton: "Сайн дурын ажилтан болох",
     donateButton: "Арга хэмжээг дэмжих",
+    loadingEvents: "Удахгүй болох арга хэмжээнүүдийг ачаалж байна…",
+eventsError: "Арга хэмжээнүүдийг одоогоор ачаалж чадсангүй. Та дараа дахин оролдоно уу.",
+
+freeRegistration: "Үнэгүй бүртгэл",
+registrationFrom: "Бүртгэл",
   },
 } as const satisfies Record<Lang, EventsCopy>;

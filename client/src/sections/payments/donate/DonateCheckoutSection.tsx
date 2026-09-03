@@ -1,4 +1,3 @@
-
 import {
   memo,
   useEffect,
@@ -121,9 +120,7 @@ function DonateCheckoutSection({
       ? createPortal(
           <>
 
-            {/* ---------------------------------- */}
-            {/* Preparing payment                  */}
-            {/* ---------------------------------- */}
+            {/* Preparing payment */}
 
             {
               checkout.submitting &&
@@ -204,9 +201,7 @@ function DonateCheckoutSection({
             }
 
 
-            {/* ---------------------------------- */}
-            {/* Existing payment                   */}
-            {/* ---------------------------------- */}
+            {/* Existing payment */}
 
             {
               checkout.existingPayment &&
@@ -248,9 +243,7 @@ function DonateCheckoutSection({
             }
 
 
-            {/* ---------------------------------- */}
-            {/* Active Stripe payment              */}
-            {/* ---------------------------------- */}
+            {/* Active Stripe payment */}
 
             {
               checkout.activePayment
@@ -274,17 +267,6 @@ function DonateCheckoutSection({
                   "
                 >
 
-                  {/*
-                   * Important:
-                   *
-                   * This is deliberately top-aligned.
-                   *
-                   * When Stripe expands its fields,
-                   * the payment card grows downward
-                   * instead of re-centering upward
-                   * underneath the site header.
-                   */}
-
                   <div
                     className="
                       flex
@@ -298,6 +280,7 @@ function DonateCheckoutSection({
                       stripe={
                         stripePromise
                       }
+
                       options={{
                         clientSecret:
                           checkout
@@ -332,6 +315,12 @@ function DonateCheckoutSection({
                     >
 
                       <DonationPayment
+                        action={
+                          checkout
+                            .activePayment
+                            .action
+                        }
+
                         amount={
                           checkout
                             .activePayment
@@ -353,13 +342,21 @@ function DonateCheckoutSection({
 
                         onComplete={() => {
 
-                          /*
-                           * Browser-side UX only.
-                           *
-                           * Your Stripe webhook remains
-                           * the source of truth for
-                           * backend payment fulfillment.
-                           */
+                          if (
+                            checkout
+                              .activePayment
+                              ?.action ===
+                            "EVENT_REGISTRATION"
+                          ) {
+
+                            window.location.assign(
+                              "/events"
+                            );
+
+                            return;
+                          }
+
+
                           window.location.assign(
                             "/"
                           );
@@ -402,9 +399,7 @@ function DonateCheckoutSection({
           "
         >
 
-          {/* ---------------------------------- */}
-          {/* Donation form                     */}
-          {/* ---------------------------------- */}
+          {/* Donation form */}
 
           <div
             className="
@@ -426,6 +421,7 @@ function DonateCheckoutSection({
               onSubmit={
                 checkout.handleSubmit
               }
+
               className="
                 mx-auto
                 w-full
@@ -490,6 +486,10 @@ function DonateCheckoutSection({
                   checkout.email
                 }
 
+                confirmEmail={
+                  checkout.confirmEmail
+                }
+
                 firstName={
                   checkout.firstName
                 }
@@ -506,8 +506,16 @@ function DonateCheckoutSection({
                   checkout.message
                 }
 
+                isLoggedIn={
+                  checkout.isLoggedIn
+                }
+
                 onEmailChange={
                   checkout.setEmail
+                }
+
+                onConfirmEmailChange={
+                  checkout.setConfirmEmail
                 }
 
                 onFirstNameChange={
@@ -553,10 +561,6 @@ function DonateCheckoutSection({
           </div>
 
 
-          {/* ---------------------------------- */}
-          {/* Images                            */}
-          {/* ---------------------------------- */}
-
           <DonationImages />
 
         </div>
@@ -574,4 +578,3 @@ function DonateCheckoutSection({
 export default memo(
   DonateCheckoutSection
 );
-

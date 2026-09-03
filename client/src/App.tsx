@@ -25,23 +25,33 @@ import ForgotPasswordPage
 import ResetPasswordPage
   from "./pages/auth/reset_password";
 
+import EventRegistrationPage
+  from "./pages/EventRegistrationPage";
 
 import DonateMoneyPage from "./pages/payments/DonateMoneyPage";
+import AdminPage from "./pages/AdminPage";
 
+import AccountPage from "./pages/user/AccountPage";
+import RegistrationsPage from "./pages/user/RegistrationsPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./sections/ScrollToTop";
 import { LanguageProvider } from "./context/LanguageContext";
+import {
+  EventsProvider
+} from "./context/EventsContext";
 
 import {
     AuthProvider
 } from "./context/AuthContext";
+import EmailChangeVerificationPage from "./pages/auth/email_change_verification";
 
 
 function App() {
   return (
     <LanguageProvider>
     <AuthProvider>
+    <EventsProvider>
       <ScrollToTop />
 
       <Routes>
@@ -53,7 +63,7 @@ function App() {
         <Route path="/gallery/:id" element={<GalleryPage />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
-
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route path="/auth/login" element={<LoginPage />}/>
         <Route path="/auth/signup" element={<SignupPage />}/>
@@ -75,10 +85,33 @@ function App() {
             path="/auth/reset-password"
             element={<ResetPasswordPage />}
         />
+        <Route
+            path="/auth/change-email"
+            element={
+                <EmailChangeVerificationPage />
+            }
+        />
 
         <Route
           path="/payments/donate-money"
           element={<DonateMoneyPage/>}
+        />
+
+        <Route
+          path="/account"
+          element={<AccountPage />}
+        />
+
+        <Route
+          path="/account/registrations"
+          element={<RegistrationsPage />}
+        />
+
+        <Route
+          path="/events/:slug/register"
+          element={
+            <EventRegistrationPage />
+          }
         />
         
         <Route path="/get-involved/volunteer" element={<VolunteerPage />} />
@@ -88,8 +121,13 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      </AuthProvider>
+    </EventsProvider>
+    </AuthProvider>
+     
     </LanguageProvider>
+
+
+
   );
 }
 

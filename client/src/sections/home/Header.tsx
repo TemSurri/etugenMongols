@@ -24,6 +24,11 @@ type NavItem = {
   children?: NavChild[];
 };
 
+type UserMenuItem = {
+  label: string;
+  to: string;
+};
+
 
 const NAV_ITEMS: NavItem[] = [
   {
@@ -139,6 +144,31 @@ function Header({
     loading,
     logout,
   } = useAuth();
+
+
+  const isAdmin =
+    user?.role === "ADMIN";
+
+
+  const userMenuItems: UserMenuItem[] = [
+    {
+      label: "My Account",
+      to: "/account",
+    },
+    {
+      label: "My Registrations",
+      to: "/account/registrations",
+    },
+
+    ...(isAdmin
+      ? [
+          {
+            label: "Admin",
+            to: "/admin",
+          },
+        ]
+      : []),
+  ];
 
 
   const closeMenu = () => {
@@ -473,50 +503,34 @@ function Header({
                     <div className="absolute -top-4 left-0 h-4 w-full" />
 
 
-                    <Link
-                      to="/account"
-                      className="
-                        block
-                        px-4
-                        py-3
+                    {userMenuItems.map(
+                      (item) => (
 
-                        text-sm
-                        font-semibold
-                        text-[#27301d]/80
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          className="
+                            block
+                            px-4
+                            py-3
 
-                        no-underline
+                            text-sm
+                            font-semibold
+                            text-[#27301d]/80
 
-                        transition-colors
+                            no-underline
 
-                        hover:bg-[#fffaf0]
-                        hover:text-[#27301d]
-                      "
-                    >
-                      My Account
-                    </Link>
+                            transition-colors
 
+                            hover:bg-[#fffaf0]
+                            hover:text-[#27301d]
+                          "
+                        >
+                          {item.label}
+                        </Link>
 
-                    <Link
-                      to="/account/registrations"
-                      className="
-                        block
-                        px-4
-                        py-3
-
-                        text-sm
-                        font-semibold
-                        text-[#27301d]/80
-
-                        no-underline
-
-                        transition-colors
-
-                        hover:bg-[#fffaf0]
-                        hover:text-[#27301d]
-                      "
-                    >
-                      My Registrations
-                    </Link>
+                      ),
+                    )}
 
 
                     <div
@@ -824,22 +838,20 @@ function Header({
                     </div>
 
 
-                    <Link
-                      to="/account"
-                      onClick={closeMenu}
-                      className="block px-1 py-3 text-base font-semibold text-[#27301d]/82 no-underline transition-colors hover:text-[#27301d]"
-                    >
-                      My Account
-                    </Link>
+                    {userMenuItems.map(
+                      (item) => (
 
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          onClick={closeMenu}
+                          className="block px-1 py-3 text-base font-semibold text-[#27301d]/82 no-underline transition-colors hover:text-[#27301d]"
+                        >
+                          {item.label}
+                        </Link>
 
-                    <Link
-                      to="/account/registrations"
-                      onClick={closeMenu}
-                      className="block px-1 py-3 text-base font-semibold text-[#27301d]/82 no-underline transition-colors hover:text-[#27301d]"
-                    >
-                      My Registrations
-                    </Link>
+                      ),
+                    )}
 
 
                     <div className="mt-2 border-t border-[#efe7d4] pt-3">
