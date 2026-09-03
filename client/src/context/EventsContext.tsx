@@ -73,8 +73,14 @@ export function EventsProvider({
         setError(false);
 
 
+        /*
+         * Use unknown here intentionally.
+         *
+         * We do not trust an external API
+         * response until we verify its shape.
+         */
         const response =
-          await api.get<ApiEvent[]>(
+          await api.get<unknown>(
             "/events"
           );
 
@@ -84,23 +90,59 @@ export function EventsProvider({
         }
 
 
+        /*
+         * A 200 response does not necessarily
+         * mean we received events.
+         *
+         * For example, if the API URL is
+         * misconfigured, the frontend host
+         * may return index.html with 200.
+         */
+        if (
+          !Array.isArray(
+            response.data
+          )
+        ) {
+
+          console.error(
+            "Invalid events response. Expected an array.",
+            response.data
+          );
+
+
+          setEvents([]);
+          setError(true);
+
+          return;
+        }
+
+
         setEvents(
-          response.data
+          response.data as ApiEvent[]
         );
 
-      } catch {
+
+      } catch (requestError) {
 
         if (!active) {
           return;
         }
 
 
+        console.error(
+          "Failed to load events:",
+          requestError
+        );
+
+
         setEvents([]);
         setError(true);
+
 
       } finally {
 
         if (active) {
+
           setLoading(false);
         }
       }
@@ -111,6 +153,7 @@ export function EventsProvider({
 
 
     return () => {
+
       active = false;
     };
 
