@@ -206,6 +206,33 @@ function VerificationSection({
 
             try {
 
+                /*
+                 * =====================================================
+                 * INITIALIZE CSRF
+                 * =====================================================
+                 *
+                 * The verification page can mount before AuthProvider
+                 * has finished fetching the CSRF token.
+                 *
+                 * Fetch it here so the verification POST is guaranteed
+                 * to include X-XSRF-TOKEN.
+                 */
+                const csrfResponse =
+                    await api.get(
+                        "/csrf"
+                    );
+
+
+                api.defaults.headers.common[
+                    "X-XSRF-TOKEN"
+                ] = csrfResponse.data.token;
+
+
+                /*
+                 * =====================================================
+                 * VERIFY TOKEN
+                 * =====================================================
+                 */
                 await api.post(
                     endpoint,
                     {
