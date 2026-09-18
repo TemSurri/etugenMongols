@@ -11,6 +11,7 @@ import { memo,useState } from "react";
 import { Link,useLocation } from "react-router-dom";
 
 import { useAuth } from "../../context/useAuth.ts";
+import { siteMedia } from "../../media/siteMedia";
 
 
 type Lang = "en" | "mn";
@@ -121,7 +122,7 @@ function Header({
         >
 
           <img
-            src="/logo.webp"
+            src={siteMedia.logo}
             alt="Etugen Mongols logo"
             className="h-14 w-14 object-contain sm:h-16 sm:w-16 md:h-20 md:w-20"
             loading="eager"

@@ -2,6 +2,7 @@
 
 import { verifyToken as submitVerificationToken } from "../api/authApi";
 import AuthBackground from "../components/AuthBackground";
+import { authMedia } from "../media";
 
 
 import {
@@ -24,16 +25,6 @@ type Variants,
 } from "framer-motion";
 
 import { api } from "../../../api/client";
-
-
-const VERIFICATION_BACKGROUNDS = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp",
-    "/impact/culture/4.webp",
-    "/impact/archery/3.webp",
-] as const;
 
 
 export type Language =
@@ -159,10 +150,10 @@ function VerificationSection({
             const index =
                 Math.floor(
                     Math.random() *
-                    VERIFICATION_BACKGROUNDS.length
+                    authMedia.backgrounds.length
                 );
 
-            return VERIFICATION_BACKGROUNDS[
+            return authMedia.backgrounds[
                 index
             ];
 

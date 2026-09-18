@@ -1,4 +1,5 @@
 import { formatPaymentAmount } from "../../formatPaymentAmount";
+import { paymentMedia } from "../../media";
 import {
 PaymentElement,
 useElements,
@@ -449,7 +450,7 @@ function DonationPayment({
 
 
           <img
-            src="/logo.webp"
+            src={paymentMedia.logo}
 
             alt="Etugen Mongols"
 

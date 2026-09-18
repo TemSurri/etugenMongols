@@ -4,8 +4,7 @@ import { cubicBezier,motion,type Variants } from "framer-motion";
 import { memo,useState } from "react";
 import { Link } from "react-router-dom";
 
-import canadaFlag from "../../assets/canada-flag.webp";
-import mongoliaFlag from "../../assets/mongolia-flag.webp";
+import { homeMedia } from "./media";
 
 type Lang = "en" | "mn";
 
@@ -18,16 +17,7 @@ type ActionLink = {
   to: string;
 };
 
-const HERO_IMAGE = "/images/site/home/whoweare.webp";
-
 const FEATURED_VIDEO_ID = "SW_iujvUAzQ";
-
-const HERO_SLIDES = [
-  "/images/site/home/slideshow/1.webp",
-  "/images/site/home/slideshow/2.webp",
-  "/images/site/home/slideshow/3.webp",
-  "/images/site/home/slideshow/4.webp",
-] as const;
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
@@ -140,7 +130,7 @@ function Hero({ lang }: HeroProps) {
         >
           <div className="flex justify-center gap-3">
             <img
-              src={mongoliaFlag}
+              src={homeMedia.flags.mongolia}
               alt="Mongolia flag"
               width={72}
               height={36}
@@ -149,7 +139,7 @@ function Hero({ lang }: HeroProps) {
             />
 
             <img
-              src={canadaFlag}
+              src={homeMedia.flags.canada}
               alt="Canada flag"
               width={72}
               height={36}
@@ -255,17 +245,17 @@ function HeroSlowScroll({
    * When the strip reaches -50%, the second set is positioned exactly
    * where the first set began, making the animation restart invisible.
    */
-  const scrollingImages = [...HERO_SLIDES, ...HERO_SLIDES];
+  const scrollingImages = [...homeMedia.slideshow, ...homeMedia.slideshow];
 
   const goToPrevious = () => {
     setActiveIndex((current) =>
-      current === 0 ? HERO_SLIDES.length - 1 : current - 1,
+      current === 0 ? homeMedia.slideshow.length - 1 : current - 1,
     );
   };
 
   const goToNext = () => {
     setActiveIndex((current) =>
-      current === HERO_SLIDES.length - 1 ? 0 : current + 1,
+      current === homeMedia.slideshow.length - 1 ? 0 : current + 1,
     );
   };
 
@@ -377,7 +367,7 @@ function HeroSlowScroll({
         }}
       >
         <img
-          src={HERO_SLIDES[activeIndex]}
+          src={homeMedia.slideshow[activeIndex]}
           alt=""
           width={1280}
           height={850}
@@ -407,7 +397,7 @@ function HeroSlowScroll({
         </button>
 
         <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2">
-          {HERO_SLIDES.map((_, index) => (
+          {homeMedia.slideshow.map((_, index) => (
             <button
               key={index}
               type="button"
@@ -487,7 +477,7 @@ function SingleImage({
       className={`flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem] ${className}`}
     >
       <img
-        src={HERO_IMAGE}
+        src={homeMedia.feature}
         alt=""
         width={1000}
         height={650}
@@ -539,7 +529,7 @@ function FeaturedVideo({
               decoding="async"
               className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
               onError={(event) => {
-                event.currentTarget.src = HERO_IMAGE;
+                event.currentTarget.src = homeMedia.feature;
               }}
             />
 

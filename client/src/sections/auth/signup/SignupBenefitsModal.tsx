@@ -1,5 +1,6 @@
 import { AnimatePresence,cubicBezier,motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { authMedia } from "../media";
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 export default function SignupBenefitsModal({showWhyAccount, setShowWhyAccount, language}: { showWhyAccount: boolean; setShowWhyAccount: (value: boolean) => void; language: "en" | "mn" }) { return (<AnimatePresence>
 
@@ -285,7 +286,7 @@ export default function SignupBenefitsModal({showWhyAccount, setShowWhyAccount, 
         >
 
             <img
-                src="/logo.webp"
+                src={authMedia.logo}
                 alt="Etugen Mongols logo"
                 loading="lazy"
                 decoding="async"

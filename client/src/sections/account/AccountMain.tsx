@@ -11,15 +11,9 @@ import { ProfileSection } from "./components/ProfileSection";
 import { SecuritySection } from "./components/SecuritySection";
 
 import { accountCopy } from "./copy/accountCopy";
+import { accountBackgrounds } from "./media";
 
 import { useAuth } from "../../context/useAuth";
-
-const ACCOUNT_BACKGROUND_IMAGES = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp"
-];
 
 const easeOut = cubicBezier(
     0.22,
@@ -78,10 +72,10 @@ export default function AccountMain({
             const randomIndex =
                 Math.floor(
                     Math.random() *
-                    ACCOUNT_BACKGROUND_IMAGES.length
+                    accountBackgrounds.length
                 );
 
-            return ACCOUNT_BACKGROUND_IMAGES[
+            return accountBackgrounds[
                 randomIndex
             ];
         });

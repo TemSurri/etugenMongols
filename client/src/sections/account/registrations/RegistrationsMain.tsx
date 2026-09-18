@@ -18,13 +18,7 @@ registrationsCopy
 import {
 useAuth
 } from "../../../context/useAuth";
-
-const REGISTRATIONS_BACKGROUND_IMAGES = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp"
-];
+import { accountBackgrounds } from "../media";
 
 const easeOut =
     cubicBezier(
@@ -94,10 +88,10 @@ export default function RegistrationsMain({
                 const randomIndex =
                     Math.floor(
                         Math.random() *
-                        REGISTRATIONS_BACKGROUND_IMAGES.length
+                        accountBackgrounds.length
                     );
 
-                return REGISTRATIONS_BACKGROUND_IMAGES[
+                return accountBackgrounds[
                     randomIndex
                 ];
             }

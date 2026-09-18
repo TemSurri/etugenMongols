@@ -3,6 +3,7 @@
 import { memo, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { cubicBezier, motion, type Variants } from "framer-motion";
+import { aboutMedia } from "./media";
 
 type Lang = "en" | "mn";
 
@@ -117,7 +118,7 @@ const BOARD_MEMBERS: TeamMember[] = [
       en: "Provides leadership and helps guide the long-term direction, priorities, and community work of Etugen Mongols.",
       mn: "Этүгэн Монголчуудын урт хугацааны чиглэл, зорилт болон олон нийтийн ажлыг удирдан чиглүүлдэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -131,7 +132,7 @@ const BOARD_MEMBERS: TeamMember[] = [
       en: "Supports planning, coordination, partnerships, and the continued growth of Etugen Mongols.",
       mn: "Төлөвлөлт, зохицуулалт, хамтын ажиллагаа болон байгууллагын хөгжлийг дэмждэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -145,7 +146,7 @@ const BOARD_MEMBERS: TeamMember[] = [
       en: "Helps organize programs, events, volunteer involvement, and community initiatives.",
       mn: "Хөтөлбөр, арга хэмжээ, сайн дурынхны оролцоо болон олон нийтийн ажлыг зохион байгуулахад тусалдаг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -159,7 +160,7 @@ const BOARD_MEMBERS: TeamMember[] = [
       en: "Supports communication, administration, preparation, and the work behind each event.",
       mn: "Харилцаа, захиргаа, бэлтгэл болон арга хэмжээний арын ажлыг дэмждэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -173,7 +174,7 @@ const BOARD_MEMBERS: TeamMember[] = [
       en: "Contributes community knowledge, leadership, and consistent support throughout the year.",
       mn: "Хамт олны мэдлэг, манлайлал болон тогтвортой дэмжлэг үзүүлдэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
 ];
@@ -190,7 +191,7 @@ const CREATIVE_TEAM: TeamMember[] = [
       en: "Shapes the visual direction and creative presentation of events, campaigns, and community initiatives.",
       mn: "Арга хэмжээ, кампанит ажил болон олон нийтийн санаачилгын бүтээлч дүр төрхийг чиглүүлдэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -204,7 +205,7 @@ const CREATIVE_TEAM: TeamMember[] = [
       en: "Captures meaningful moments and helps share the people, culture, and stories behind our community.",
       mn: "Чухал мөчүүдийг баримтжуулж, хамт олны хүмүүс, соёл болон түүхийг хуваалцдаг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -218,7 +219,7 @@ const CREATIVE_TEAM: TeamMember[] = [
       en: "Creates visual materials and supports clear, consistent communication across our programs.",
       mn: "Дүрслэлийн материал бүтээж, хөтөлбөрүүдийн нэгдсэн харилцааг дэмждэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -232,7 +233,7 @@ const CREATIVE_TEAM: TeamMember[] = [
       en: "Supports performances and cultural experiences that preserve traditions and connect generations.",
       mn: "Уламжлалыг хадгалж, үе үеийг холбодог тоглолт болон соёлын үйл ажиллагааг дэмждэг.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
 ];
@@ -249,7 +250,7 @@ const MAJOR_CONTRIBUTORS: TeamMember[] = [
       en: "Has provided meaningful leadership, knowledge, and long-term support to our organization.",
       mn: "Байгууллагад үнэтэй манлайлал, мэдлэг болон урт хугацааны дэмжлэг үзүүлсэн.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -263,7 +264,7 @@ const MAJOR_CONTRIBUTORS: TeamMember[] = [
       en: "Has helped preserve and celebrate Mongolian culture through performance and community participation.",
       mn: "Тоглолт болон олон нийтийн оролцоогоор Монгол соёлыг хадгалж, түгээн дэлгэрүүлэхэд тусалсан.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -277,7 +278,7 @@ const MAJOR_CONTRIBUTORS: TeamMember[] = [
       en: "Has contributed substantial time and care to volunteer coordination and event preparation.",
       mn: "Сайн дурынхны зохицуулалт болон арга хэмжээний бэлтгэлд ихээхэн цаг, сэтгэлээ зориулсан.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
   {
@@ -291,7 +292,7 @@ const MAJOR_CONTRIBUTORS: TeamMember[] = [
       en: "Has consistently supported the people, programs, events, and cultural work of Etugen Mongols.",
       mn: "Этүгэн Монголчуудын хүмүүс, хөтөлбөр, арга хэмжээ болон соёлын ажлыг тогтмол дэмжсэн.",
     },
-    image: "/landingpage.webp",
+    image: aboutMedia.teamPlaceholder,
     imagePosition: "center",
   },
 ];
@@ -299,7 +300,7 @@ const MAJOR_CONTRIBUTORS: TeamMember[] = [
 const COMMUNITY_IMAGES: CommunityImage[] = [
   {
     id: "community-1",
-    src: "/landingpage.webp",
+    src: aboutMedia.teamPlaceholder,
     alt: {
       en: "Etugen Mongols community gathering",
       mn: "Этүгэн Монголчуудын хамтын цугларалт",
@@ -308,7 +309,7 @@ const COMMUNITY_IMAGES: CommunityImage[] = [
   },
   {
     id: "community-2",
-    src: "/landingpage.webp",
+    src: aboutMedia.teamPlaceholder,
     alt: {
       en: "Families attending a community event",
       mn: "Олон нийтийн арга хэмжээнд оролцож буй гэр бүлүүд",
@@ -317,7 +318,7 @@ const COMMUNITY_IMAGES: CommunityImage[] = [
   },
   {
     id: "community-3",
-    src: "/landingpage.webp",
+    src: aboutMedia.teamPlaceholder,
     alt: {
       en: "Etugen Mongols community group photo",
       mn: "Этүгэн Монголчуудын хамтын зураг",

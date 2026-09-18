@@ -6,6 +6,7 @@ import {
   motion,
   type Variants,
 } from "framer-motion";
+import { programsMedia } from "./media";
 
 type Lang = "en" | "mn";
 
@@ -122,21 +123,6 @@ const COPY = {
 } as const satisfies Record<Lang, ProgramsCopy>;
 
 /* =========================================================
-   IMAGES
-========================================================= */
-
-const IMAGES = {
-  feature: "/landingpage.webp",
-
-  belt: [
-    "/impact/culture/1.webp",
-    "/impact/culture/2.webp",
-    "/impact/culture/3.webp",
-    "/impact/culture/4.webp",
-  ],
-} as const;
-
-/* =========================================================
    MOTION
 ========================================================= */
 
@@ -234,7 +220,7 @@ function ProgramsMain({
           "
         >
           <img
-            src={IMAGES.feature}
+            src={programsMedia.feature}
             alt=""
             aria-hidden="true"
             width={1400}
@@ -499,7 +485,7 @@ function ProgramsMain({
           md:grid-cols-4
         "
       >
-        {IMAGES.belt.map(
+        {programsMedia.belt.map(
           (src) => (
             <div
               key={src}

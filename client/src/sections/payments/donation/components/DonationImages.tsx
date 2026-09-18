@@ -1,9 +1,5 @@
 import { memo } from "react";
-
-const DONATE_IMAGES = [
-  "/impact/culture/4.webp",
-  "/impact/archery/3.webp",
-] as const;
+import { paymentMedia } from "../../media";
 
 function DonationImages() {
   return (
@@ -24,7 +20,7 @@ function DonationImages() {
           bg-[#fffaf0]/10
         "
       >
-        {DONATE_IMAGES.map(
+        {paymentMedia.donationImages.map(
           (image, index) => (
             <div
               key={image}

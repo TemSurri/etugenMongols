@@ -1,4 +1,5 @@
 import type { DonationCopy } from "../types/donationTypes";
+import { paymentMedia } from "../../media";
 export function DonationInvalidPanel({copy, isDonation, onComplete}: {copy: DonationCopy; isDonation: boolean; onComplete: () => void}) { return (
       <section
         role="alertdialog"
@@ -24,7 +25,7 @@ export function DonationInvalidPanel({copy, isDonation, onComplete}: {copy: Dona
         >
 
           <img
-            src="/logo.webp"
+            src={paymentMedia.logo}
 
             alt="Etugen Mongols"
 
@@ -362,7 +363,7 @@ export function DonationProcessingPanel({copy, isDonation, onComplete, formatted
         >
 
           <img
-            src="/logo.webp"
+            src={paymentMedia.logo}
 
             alt="Etugen Mongols"
 

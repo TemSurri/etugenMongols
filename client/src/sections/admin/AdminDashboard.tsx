@@ -34,13 +34,7 @@ import {
 import type {
     AdminSection
 } from "./types";
-
-
-const ADMIN_BACKGROUNDS = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp"
-];
+import { adminBackgrounds } from "./media";
 
 
 export default function AdminDashboard() {
@@ -63,10 +57,10 @@ export default function AdminDashboard() {
     const background =
         useMemo(
             () =>
-                ADMIN_BACKGROUNDS[
+                adminBackgrounds[
                     Math.floor(
                         Math.random() *
-                        ADMIN_BACKGROUNDS.length
+                        adminBackgrounds.length
                     )
                 ],
             []

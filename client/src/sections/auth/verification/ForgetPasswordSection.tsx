@@ -1,6 +1,7 @@
 "use client";
 
 import AuthPageShell from "../components/AuthPageShell";
+import { authMedia } from "../media";
 
 
 import { memo,useState } from "react";
@@ -9,16 +10,6 @@ import { memo,useState } from "react";
 
 
 import ForgotPasswordForm from "./ForgetPasswordForm";
-
-
-const PASSWORD_RESET_BACKGROUNDS = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp",
-    "/impact/culture/4.webp",
-    "/impact/archery/3.webp",
-] as const;
 
 
 
@@ -39,10 +30,10 @@ function ForgotPasswordSection() {
             const index =
                 Math.floor(
                     Math.random() *
-                    PASSWORD_RESET_BACKGROUNDS.length
+                    authMedia.backgrounds.length
                 );
 
-            return PASSWORD_RESET_BACKGROUNDS[index];
+            return authMedia.backgrounds[index];
         });
 
 

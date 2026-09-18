@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { cubicBezier, motion, type Variants } from "framer-motion";
+import { aboutMedia } from "./media";
 
 type Lang = "en" | "mn";
 
@@ -10,15 +11,7 @@ type OurImpactMainProps = {
   lang: Lang;
 };
 
-type ImpactImageKey =
-  | "landing"
-  | "archery"
-  | "wrestling"
-  | "stories"
-  | "dance"
-  | "stampedeNaadam"
-  | "performanceCover"
-  | "youthCulture";
+type ImpactImageKey = keyof typeof aboutMedia.impact;
 
 
 type CollageLayout =
@@ -62,60 +55,6 @@ type Copy = {
   cultureIntro: string;
   cultureActivities: readonly CultureActivity[];
   items: readonly [ImpactItem, ImpactItem, ImpactItem];
-};
-
-const IMAGE_PATHS: Record<ImpactImageKey, readonly string[]> = {
-  landing: [
-    "/images/site/impact/landingpage.webp",
-    "/images/site/impact/landing-2.webp",
-    "/images/site/impact/landing-3.webp",
-    "/images/site/impact/landing-4.webp",
-  ],
-
-  archery: [
-    "/images/site/impact/archery/1.webp",
-    "/images/site/impact/archery/2.webp",
-    "/images/site/impact/archery/3.webp",
-    "/images/site/impact/archery/4.webp",
-  ],
-
-  wrestling: [
-    "/images/site/impact/wrestling/1.webp",
-    "/images/site/impact/wrestling/2.webp",
-    "/images/site/impact/wrestling/3.webp",
-    "/images/site/impact/wrestling/4.webp",
-  ],
-
-  stories: [
-    "/images/site/impact/culture/1.webp",
-    "/images/site/impact/culture/2.webp",
-    "/images/site/impact/culture/3.webp",
-    "/images/site/impact/culture/4.webp"
-  ],
-
-  dance: [
-    "/images/site/impact/dance/1.webp",
-    "/images/site/impact/dance/2.webp",
-    "/images/site/impact/dance/3.webp",
-   
-  ],
-
-  stampedeNaadam: [
-    "/images/site/impact/stampede-naadam.webp",
-    "/images/site/impact/stampede-naadam-2.webp",
-    "/images/site/impact/stampede-naadam-3.webp",
-    "/images/site/impact/stampede-naadam-4.webp",
-  ],
-
-  performanceCover: [
-  "/images/site/impact/perf.JPG",
-],
-  youthCulture: [
-    "/images/site/impact/youth/1.webp",
-    "/images/site/impact/youth/2.webp",
-    "/images/site/impact/youth/3.webp",
-    "/images/site/impact/youth/4.webp",
-  ],
 };
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
@@ -401,7 +340,7 @@ const FeaturedImpact = memo(function FeaturedImpact({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock images={IMAGE_PATHS[item.imageKey]} alt={item.title} tall layout="featured-left"/>
+        <ImageBlock images={aboutMedia.impact[item.imageKey]} alt={item.title} tall layout="featured-left"/>
       </motion.article>
     </section>
   );
@@ -436,7 +375,7 @@ const PerformanceBand = memo(function PerformanceBand({
           className="group relative block h-[24rem] overflow-hidden bg-[#27301d] lg:h-[34rem]"
         >
           <img
-            src={IMAGE_PATHS[item.imageKey][0]}
+            src={aboutMedia.impact[item.imageKey][0]}
             alt={item.title}
             loading="lazy"
             decoding="async"
@@ -558,7 +497,7 @@ const CultureActivityRow = memo(function CultureActivityRow({
         </div>
 
         <ImageBlock
-          images={IMAGE_PATHS[activity.imageKey]}
+          images={aboutMedia.impact[activity.imageKey]}
           alt={activity.title}
           tall={large}
           reverse={reverse}
@@ -613,7 +552,7 @@ const YouthBlock = memo(function YouthBlock({
     className="overflow-hidden bg-[#27301d] p-2 h-[26rem] lg:h-[36rem]"
 >
     <img
-        src={IMAGE_PATHS[item.imageKey][0]}
+        src={aboutMedia.impact[item.imageKey][0]}
         alt={item.title}
         loading="lazy"
         decoding="async"

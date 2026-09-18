@@ -3,6 +3,7 @@
 import { cubicBezier,motion,type Variants } from "framer-motion";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import { aboutMedia } from "./media";
 
 type Lang = "en" | "mn";
 
@@ -10,12 +11,7 @@ type OurStoryMainProps = {
   lang: Lang;
 };
 
-type StoryImageKey =
-  | "community"
-  | "culture"
-  | "founding"
-  | "children"
-  | "landing";
+type StoryImageKey = keyof typeof aboutMedia.story;
 
 type StoryItem = {
   body: string;
@@ -38,14 +34,6 @@ type StoryRowProps = {
   reverse?: boolean;
   tone?: "cream" | "green";
   imageLarge?: boolean;
-};
-
-const IMAGE_PATHS: Record<StoryImageKey, string> = {
-  community: "/about/story-community.webp",
-  culture: "/about/story-culture.webp",
-  founding: "/about/founding-group.webp",
-  children: "/about/story-children.webp",
-  landing: "/landingpage.webp",
 };
 
 const STORY_ROW_CONFIG = [
@@ -184,7 +172,7 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
           <StoryRow
             key={item.imageKey}
             body={item.body}
-            image={IMAGE_PATHS[item.imageKey]}
+            image={aboutMedia.story[item.imageKey]}
             reverse={config.reverse}
             tone={config.tone}
             imageLarge={config.imageLarge}
@@ -214,7 +202,7 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
             className="relative h-[22rem] overflow-hidden sm:h-[28rem] lg:h-full"
           >
             <img
-              src={IMAGE_PATHS[finalStoryRow.imageKey]}
+              src={aboutMedia.story[finalStoryRow.imageKey]}
               alt=""
               width={1200}
               height={800}

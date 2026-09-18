@@ -1,6 +1,7 @@
 "use client";
 
 import AuthPageShell from "../components/AuthPageShell";
+import { authMedia } from "../media";
 
 
 import { memo,useState } from "react";
@@ -9,16 +10,6 @@ import { memo,useState } from "react";
 
 
 import LoginForm from "./LoginForm";
-
-
-const LOGIN_BACKGROUNDS = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp",
-    "/impact/culture/4.webp",
-    "/impact/archery/3.webp",
-] as const;
 
 
 export type Language =
@@ -44,10 +35,10 @@ function LoginSection() {
             const index =
                 Math.floor(
                     Math.random() *
-                    LOGIN_BACKGROUNDS.length
+                    authMedia.backgrounds.length
                 );
 
-            return LOGIN_BACKGROUNDS[index];
+            return authMedia.backgrounds[index];
         });
 
 

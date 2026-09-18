@@ -1,6 +1,7 @@
 "use client";
 
 import AuthPageShell from "../components/AuthPageShell";
+import { authMedia } from "../media";
 
 
 import { memo,useState } from "react";
@@ -9,16 +10,6 @@ import { memo,useState } from "react";
 
 
 import VerifyAccountForm from "./VerifyAccountForm";
-
-
-const VERIFY_BACKGROUNDS = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp",
-    "/impact/culture/4.webp",
-    "/impact/archery/3.webp",
-] as const;
 
 
 export type Language =
@@ -44,10 +35,10 @@ function VerifyAccountSection() {
             const index =
                 Math.floor(
                     Math.random() *
-                    VERIFY_BACKGROUNDS.length
+                    authMedia.backgrounds.length
                 );
 
-            return VERIFY_BACKGROUNDS[index];
+            return authMedia.backgrounds[index];
         });
 
 

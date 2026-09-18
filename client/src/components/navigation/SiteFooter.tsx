@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaYoutube } from "react-icons/fa";
+import { siteMedia } from "../../media/siteMedia";
 
 const SOCIAL_LINKS = [
   {
@@ -38,7 +39,7 @@ function Footer() {
             className="flex w-fit items-center gap-4 no-underline transition-opacity hover:opacity-90 focus-visible:rounded-sm"
           >
             <img
-              src="/logo.webp"
+              src={siteMedia.logo}
               alt="Etugen Mongols logo"
               loading="lazy"
               decoding="async"

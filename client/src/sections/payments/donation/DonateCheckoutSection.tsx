@@ -40,6 +40,7 @@ import DonationImages from "./components/DonationImages";
 import DonationExistingPayment from "./components/DonationExistingPayment";
 
 import DonationPayment from "./components/DonationPayment";
+import { paymentMedia } from "../media";
 
 
 type DonateCheckoutSectionProps = {
@@ -179,7 +180,7 @@ function DonateCheckoutSection({
                     >
 
                       <img
-                        src="/logo.webp"
+                        src={paymentMedia.logo}
                         alt="Etugen Mongols"
                         className="
                           mx-auto

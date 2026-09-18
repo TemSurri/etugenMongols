@@ -15,6 +15,7 @@ useLanguage
 } from "../../../../context/LanguageContext";
 
 import EventRegistrationCheckout from "../components/EventRegistrationCheckout";
+import { paymentMedia } from "../../media";
 
 
 export default function EventRegistrationPage() {
@@ -63,7 +64,7 @@ export default function EventRegistrationPage() {
         <div className="text-center">
 
           <img
-            src="/logo.webp"
+            src={paymentMedia.logo}
             alt="Etugen Mongols"
             className="
               mx-auto

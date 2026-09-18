@@ -19,6 +19,7 @@ import type {
   ApiEvent,
   Lang
 } from "../types";
+import { EVENT_IMAGES } from "../constants";
 
 
 type EventViewProps = {
@@ -251,7 +252,7 @@ function EventView({
 
   const backgroundImage =
     event.coverImage ??
-    "/landingpage.webp";
+    EVENT_IMAGES.fallback;
 
 
   const date =

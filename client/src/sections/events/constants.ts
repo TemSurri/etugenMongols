@@ -1,6 +1,8 @@
+import { siteMedia } from "../../media/siteMedia";
+
 export const EVENT_IMAGES = {
-  fallback: "/landingpage.webp",
-  community: "/impact/culture/1.webp",
+  fallback: siteMedia.landing,
+  community: siteMedia.communityCulture[0],
 } as const;
 
 export const SLIDESHOW_INTERVAL_MS = 5_000;

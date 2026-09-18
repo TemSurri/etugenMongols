@@ -51,6 +51,7 @@ import EventRegistrationPayment from "./EventRegistrationPayment";
 import {
 stripePromise
 } from "../../stripe";
+import { paymentMedia } from "../../media";
 
 
 type EventRegistrationCheckoutProps = {
@@ -61,23 +62,6 @@ type EventRegistrationCheckoutProps = {
     lang:
         Lang;
 };
-
-
-const REGISTRATION_BACKGROUNDS = [
-
-    "/home/slideshow/1.webp",
-
-    "/home/slideshow/2.webp",
-
-    "/home/slideshow/3.webp",
-
-    "/home/slideshow/4.webp",
-
-    "/impact/culture/4.webp",
-
-    "/impact/archery/3.webp"
-
-] as const;
 
 
 const easeOut =
@@ -132,11 +116,11 @@ function EventRegistrationCheckout({
             const index =
                 Math.floor(
                     Math.random() *
-                    REGISTRATION_BACKGROUNDS.length
+                    paymentMedia.backgrounds.length
                 );
 
 
-            return REGISTRATION_BACKGROUNDS[
+            return paymentMedia.backgrounds[
                 index
             ];
         }

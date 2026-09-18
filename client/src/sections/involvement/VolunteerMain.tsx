@@ -7,6 +7,7 @@ import {
   motion,
   type Variants,
 } from "framer-motion";
+import { involvementMedia } from "./media";
 
 /* -------------------------------------------------------------------------- */
 /*                                   Types                                    */
@@ -26,15 +27,6 @@ type VolunteerListing = {
   date: Record<Lang, string>;
   href: string;
 };
-
-/* -------------------------------------------------------------------------- */
-/*                                  Images                                    */
-/* -------------------------------------------------------------------------- */
-
-const VOLUNTEER_IMAGES = {
-  topLeft: "/involv/volunteer/1.webp",
-  bottomRight: "/involv/volunteer/2.webp",
-} as const;
 
 /* -------------------------------------------------------------------------- */
 /*                                   Theme                                    */
@@ -441,7 +433,7 @@ function Volunteer({ lang }: VolunteerProps) {
           "
         >
           <img
-            src={VOLUNTEER_IMAGES.topLeft}
+            src={involvementMedia.volunteer.topLeft}
             alt=""
             loading="eager"
             decoding="async"
@@ -785,7 +777,7 @@ function Volunteer({ lang }: VolunteerProps) {
           "
         >
           <img
-            src={VOLUNTEER_IMAGES.bottomRight}
+            src={involvementMedia.volunteer.bottomRight}
             alt=""
             loading="lazy"
             decoding="async"

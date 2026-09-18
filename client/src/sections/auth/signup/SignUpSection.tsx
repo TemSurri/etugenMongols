@@ -14,21 +14,8 @@ type Variants
 } from "framer-motion";
 
 import { useAuth } from "../../../context/useAuth";
+import { authMedia } from "../media";
 import SignupForm from "./SignUpForm";
-
-
-const SIGNUP_BACKGROUNDS = [
-    "/home/slideshow/1.webp",
-    "/home/slideshow/2.webp",
-    "/home/slideshow/3.webp",
-    "/home/slideshow/4.webp",
-
-    "/impact/wrestling/1.webp",
-    "/impact/culture/1.webp",
-    "/impact/dance/1.webp",
-    "/impact/perf.JPG",
-    "/impact/youth/1.webp",
-] as const;
 
 
 export type Language =
@@ -88,10 +75,10 @@ function SignupSection() {
             const index =
                 Math.floor(
                     Math.random() *
-                    SIGNUP_BACKGROUNDS.length
+                    authMedia.backgrounds.length
                 );
 
-            return SIGNUP_BACKGROUNDS[index];
+            return authMedia.backgrounds[index];
         });
 
 
@@ -315,7 +302,7 @@ function SignupSection() {
                                     "
                                 >
                                     <img
-                                        src="/logo.webp"
+                                        src={authMedia.logo}
                                         alt="Etugen Mongols logo"
                                         loading="eager"
                                         decoding="async"

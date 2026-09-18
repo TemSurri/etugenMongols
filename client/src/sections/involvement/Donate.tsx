@@ -7,6 +7,7 @@ import {
   motion,
   type Variants,
 } from "framer-motion";
+import { involvementMedia } from "./media";
 
 type Lang = "en" | "mn";
 
@@ -19,11 +20,6 @@ type DonateProps = {
 /* -------------------------------------------------------------------------- */
 
 const DONATION_EMAIL = "info@etugen-mongols.ca";
-
-const DONATE_IMAGES = {
-  topRight: "/involv/donate/1.webp",
-  bottomLeft: "/involv/donate/2.webp",
-} as const;
 
 const COLORS = {
   green: "#303824",
@@ -255,7 +251,7 @@ function Donate({ lang }: DonateProps) {
           "
         >
           <img
-            src={DONATE_IMAGES.topRight}
+            src={involvementMedia.donate.topRight}
             alt=""
             loading="eager"
             decoding="async"
@@ -288,7 +284,7 @@ function Donate({ lang }: DonateProps) {
           "
         >
           <img
-            src={DONATE_IMAGES.bottomLeft}
+            src={involvementMedia.donate.bottomLeft}
             alt=""
             loading="lazy"
             decoding="async"
