@@ -1,41 +1,9 @@
 export type Lang = "en" | "mn";
 
+export type { ApiEvent } from "../../contracts/eventContracts";
+
 export type EventsMainProps = {
   lang: Lang;
-};
-
-
-/*
- * Exact shape returned from Spring Boot GET /events.
- */
-export type ApiEvent = {
-  id: string;
-  slug: string;
-
-  titleEn: string;
-  titleMn: string;
-
-  descriptionEn: string;
-  descriptionMn: string;
-
-  startsAt: string;
-  endsAt: string | null;
-
-  location: string;
-
-  published: boolean;
-
-  registerable: boolean;
-  registrationCost: number | null;
-
-  coverImage: string | null;
-  coverImageAltEn: string | null;
-  coverImageAltMn: string | null;
-
-  contactEmail: string | null;
-  contactPhone: string | null;
-
-  createdAt: string;
 };
 
 

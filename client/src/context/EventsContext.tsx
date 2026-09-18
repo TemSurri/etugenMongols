@@ -1,19 +1,20 @@
 "use client";
 
+import { getPublicEvents } from "../sections/events/api/eventsApi";
+
+
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode
+createContext,
+useContext,
+useEffect,
+useState,
+type ReactNode
 } from "react";
 
-import {
-  api
-} from "../api/client";
+
 
 import type {
-  ApiEvent
+ApiEvent
 } from "../sections/events/types";
 
 
@@ -80,9 +81,7 @@ export function EventsProvider({
          * response until we verify its shape.
          */
         const response =
-          await api.get<unknown>(
-            "/events"
-          );
+          await getPublicEvents();
 
 
         if (!active) {

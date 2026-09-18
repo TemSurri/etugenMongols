@@ -1,12 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
+import { getGalleryCover } from "../model/galleryMedia";
+import { useCallback,useMemo,useState } from "react";
 
-import { events } from "../../../static_events";
 import { GALLERY_COPY } from "../copy";
-import { getYearFromDate, normalizeSearchValue } from "../helpers";
-import type { GalleryCardItem, Lang, ViewMode } from "../types";
+import { galleryEvents } from "../data/galleryCatalog";
+import { getYearFromDate,normalizeSearchValue } from "../helpers";
+import type { GalleryCardItem,Lang,ViewMode } from "../types";
 
-function getEventImage(event: (typeof events)[number]): string {
-  return event.coverImage.lowRes || event.coverImage.highRes;
+function getEventImage(event: (typeof galleryEvents)[number]): string {
+  return getGalleryCover(event.coverImage);
 }
 
 export function useGallery(lang: Lang | undefined) {
@@ -18,7 +19,7 @@ export function useGallery(lang: Lang | undefined) {
 
   const galleryItems = useMemo<GalleryCardItem[]>(
     () =>
-      events
+      galleryEvents
         .filter((event) => event.status === "past" && Boolean(event.gallery))
         .map((event) => {
           const year = getYearFromDate(event.date);

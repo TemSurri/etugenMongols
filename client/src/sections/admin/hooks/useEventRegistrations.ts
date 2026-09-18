@@ -1,14 +1,13 @@
 import {
-    useCallback,
-    useState
+useCallback,
+useState
 } from "react";
+import { getAdminRegistrations } from "../api/adminApi";
 
-import {
-    api
-} from "../../../api/client";
+
 
 import type {
-    AdminRegistration
+AdminRegistration
 } from "../types";
 
 
@@ -56,11 +55,7 @@ export function useEventRegistrations() {
 
 
                     const response =
-                        await api.get<
-                            AdminRegistration[]
-                        >(
-                            `/event-registrations/admin/events/${eventId}`
-                        );
+                        await getAdminRegistrations(eventId);
 
 
                     setRegistrations(

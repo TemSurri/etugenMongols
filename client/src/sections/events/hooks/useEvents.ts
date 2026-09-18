@@ -3,8 +3,8 @@ import {
 } from "react";
 
 import {
-  events
-} from "../../../static_events";
+  galleryEvents
+} from "../../gallery/data/galleryCatalog";
 
 import {
   EVENT_IMAGES
@@ -43,7 +43,7 @@ export function useEvents(
       () => {
 
         const images =
-          events
+          galleryEvents
             .filter(
               event =>
                 event.status === "past"

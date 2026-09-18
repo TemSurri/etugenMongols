@@ -1,3 +1,2 @@
-export { default } from "./EventsMain";
-export { default as EventsMain } from "./EventsMain";
-export type { EventsMainProps, Lang } from "./types";
+export { default as EventsMain,default } from "./EventsMain";
+export type { EventsMainProps,Lang } from "./types";

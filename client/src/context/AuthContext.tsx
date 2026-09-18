@@ -1,25 +1,18 @@
 import {
-    createContext,
-    useEffect,
-    useState,
-    type ReactNode
+createContext,
+useEffect,
+useState,
+type ReactNode
 } from "react";
+import type { AuthUser } from "../contracts/authContracts";
+import { getCurrentUser,logoutSession } from "../sections/auth/api/authApi";
 
-import { api } from "../api/client";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { api } from "../api/client";
 
 
-type AuthUser = {
-    id: number;
-    email: string;
-    firstName: string;
-    lastName: string;
-    role: string;
-    verified: boolean;
-    verifiedAt: string | null;
-    createdAt: string;
-};
+
 
 
 type AuthContextType = {
@@ -62,7 +55,7 @@ export function AuthProvider({
         try {
 
             const response =
-                await api.get("/auth/me");
+                await getCurrentUser();
 
 
             if (!isAuthUser(response.data)) {
@@ -125,9 +118,7 @@ export function AuthProvider({
 
         try {
 
-            await api.post(
-                "/auth/logout"
-            );
+            await logoutSession();
 
         } finally {
 

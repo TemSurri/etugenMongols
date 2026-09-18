@@ -1,22 +1,26 @@
 "use client";
 
+import { verifyToken as submitVerificationToken } from "../api/authApi";
+import AuthBackground from "../components/AuthBackground";
+
+
 import {
-    memo,
-    useEffect,
-    useRef,
-    useState,
+memo,
+useEffect,
+useRef,
+useState,
 } from "react";
 
 import {
-    Link,
-    useNavigate,
-    useSearchParams,
+Link,
+useNavigate,
+useSearchParams,
 } from "react-router-dom";
 
 import {
-    cubicBezier,
-    motion,
-    type Variants,
+cubicBezier,
+motion,
+type Variants,
 } from "framer-motion";
 
 import { api } from "../../../api/client";
@@ -233,12 +237,7 @@ function VerificationSection({
                  * VERIFY TOKEN
                  * =====================================================
                  */
-                await api.post(
-                    endpoint,
-                    {
-                        token,
-                    }
-                );
+                await submitVerificationToken(endpoint, token);
 
 
                 setStatus(
@@ -355,26 +354,7 @@ function VerificationSection({
         >
 
             {/* Background */}
-            <img
-                src={background}
-                alt=""
-                aria-hidden="true"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                draggable={false}
-                className="
-                    absolute
-                    inset-0
-                    h-full
-                    w-full
-                    select-none
-                    object-cover
-                    object-center
-                    saturate-[1.03]
-                    contrast-[1.02]
-                "
-            />
+            <AuthBackground background={background} />
 
 
             {/* Dark overlay */}

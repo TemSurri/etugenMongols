@@ -66,55 +66,55 @@ type Copy = {
 
 const IMAGE_PATHS: Record<ImpactImageKey, readonly string[]> = {
   landing: [
-    "/landingpage.webp",
-    "/impact/landing-2.webp",
-    "/impact/landing-3.webp",
-    "/impact/landing-4.webp",
+    "/images/site/impact/landingpage.webp",
+    "/images/site/impact/landing-2.webp",
+    "/images/site/impact/landing-3.webp",
+    "/images/site/impact/landing-4.webp",
   ],
 
   archery: [
-    "/impact/archery/1.webp",
-    "/impact/archery/2.webp",
-    "/impact/archery/3.webp",
-    "/impact/archery/4.webp",
+    "/images/site/impact/archery/1.webp",
+    "/images/site/impact/archery/2.webp",
+    "/images/site/impact/archery/3.webp",
+    "/images/site/impact/archery/4.webp",
   ],
 
   wrestling: [
-    "/impact/wrestling/1.webp",
-    "/impact/wrestling/2.webp",
-    "/impact/wrestling/3.webp",
-    "/impact/wrestling/4.webp",
+    "/images/site/impact/wrestling/1.webp",
+    "/images/site/impact/wrestling/2.webp",
+    "/images/site/impact/wrestling/3.webp",
+    "/images/site/impact/wrestling/4.webp",
   ],
 
   stories: [
-    "/impact/culture/1.webp",
-    "/impact/culture/2.webp",
-    "/impact/culture/3.webp",
-    "/impact/culture/4.webp"
+    "/images/site/impact/culture/1.webp",
+    "/images/site/impact/culture/2.webp",
+    "/images/site/impact/culture/3.webp",
+    "/images/site/impact/culture/4.webp"
   ],
 
   dance: [
-    "/impact/dance/1.webp",
-    "/impact/dance/2.webp",
-    "/impact/dance/3.webp",
+    "/images/site/impact/dance/1.webp",
+    "/images/site/impact/dance/2.webp",
+    "/images/site/impact/dance/3.webp",
    
   ],
 
   stampedeNaadam: [
-    "/impact/stampede-naadam.webp",
-    "/impact/stampede-naadam-2.webp",
-    "/impact/stampede-naadam-3.webp",
-    "/impact/stampede-naadam-4.webp",
+    "/images/site/impact/stampede-naadam.webp",
+    "/images/site/impact/stampede-naadam-2.webp",
+    "/images/site/impact/stampede-naadam-3.webp",
+    "/images/site/impact/stampede-naadam-4.webp",
   ],
 
   performanceCover: [
-  "/impact/perf.JPG",
+  "/images/site/impact/perf.JPG",
 ],
   youthCulture: [
-    "/impact/youth/1.webp",
-    "/impact/youth/2.webp",
-    "/impact/youth/3.webp",
-    "/impact/youth/4.webp",
+    "/images/site/impact/youth/1.webp",
+    "/images/site/impact/youth/2.webp",
+    "/images/site/impact/youth/3.webp",
+    "/images/site/impact/youth/4.webp",
   ],
 };
 

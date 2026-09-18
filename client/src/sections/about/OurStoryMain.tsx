@@ -1,8 +1,8 @@
 "use client";
 
+import { cubicBezier,motion,type Variants } from "framer-motion";
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { motion, cubicBezier, type Variants } from "framer-motion";
 
 type Lang = "en" | "mn";
 

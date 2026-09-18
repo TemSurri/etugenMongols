@@ -1,23 +1,31 @@
 "use client";
 
+import { inputClasses } from "../../model/eventEditorUtils";
+import { Field,FormSection,Input,TextArea } from "./EventEditorFields";
+
+
 import {
-    useEffect,
-    useState,
-    type ReactNode
+useEffect,
+useState
 } from "react";
 
 import {
-    AnimatePresence,
-    motion
+AnimatePresence,
+motion
 } from "framer-motion";
 
-import axios
-    from "axios";
-
 import type {
-    ApiEvent,
-    EventUpdateType
+ApiEvent,
+EventUpdateType
 } from "../../types";
+
+import {
+addEventChange,
+emptyToNull,
+getEventUpdateErrorMessage,
+normalizeInstant,
+toDateTimeLocal
+} from "../../model/eventEditorUtils";
 
 
 type Props = {
@@ -364,7 +372,7 @@ export default function EditEventModal({
                 }[] = [];
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "TITLE_EN",
                 event.titleEn,
@@ -372,7 +380,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "TITLE_MN",
                 event.titleMn,
@@ -380,7 +388,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "DESCRIPTION_EN",
                 event.descriptionEn,
@@ -388,7 +396,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "DESCRIPTION_MN",
                 event.descriptionMn,
@@ -396,7 +404,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "LOCATION",
                 event.location,
@@ -404,7 +412,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "STARTS_AT",
                 normalizeInstant(
@@ -416,7 +424,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "ENDS_AT",
                 event.endsAt
@@ -435,7 +443,7 @@ export default function EditEventModal({
             
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "COVER_IMAGE",
                 event.coverImage,
@@ -445,7 +453,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "COVER_IMAGE_ALT_EN",
                 event.coverImageAltEn,
@@ -455,7 +463,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "COVER_IMAGE_ALT_MN",
                 event.coverImageAltMn,
@@ -465,7 +473,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "CONTACT_EMAIL",
                 event.contactEmail,
@@ -475,7 +483,7 @@ export default function EditEventModal({
             );
 
 
-            addChange(
+            addEventChange(
                 changes,
                 "CONTACT_PHONE",
                 event.contactPhone,
@@ -530,7 +538,7 @@ onClose();
 
 
             setError(
-                getErrorMessage(
+                getEventUpdateErrorMessage(
                     error,
                     lang
                 )
@@ -1283,324 +1291,18 @@ onClose();
 }
 
 
-const inputClasses =
-    `
-        w-full
-        rounded-lg
-        border
-        border-[#27301d]/15
-        bg-white
-        px-3.5
-        py-2.5
-        text-sm
-        text-[#27301d]
-        outline-none
-        transition-colors
-        duration-150
 
-        hover:border-[#9a7b26]/40
 
-        focus:border-[#9a7b26]/65
-        focus:ring-2
-        focus:ring-[#9a7b26]/10
-    `;
 
 
-function FormSection({
-    title,
-    children
-}: {
-    title:
-        string;
 
-    children:
-        ReactNode;
-}) {
 
-    return (
-        <section>
 
-            <h3
-                className="
-                    mb-4
-                    border-b
-                    border-[#27301d]/10
-                    pb-2
-                    text-sm
-                    font-semibold
-                    text-[#27301d]
-                "
-            >
-                {title}
-            </h3>
 
 
-            {children}
 
-        </section>
-    );
-}
 
 
-function Field({
-    label,
-    required = false,
-    children
-}: {
-    label:
-        string;
 
-    required?:
-        boolean;
 
-    children:
-        ReactNode;
-}) {
 
-    return (
-        <label className="block">
-
-            <span
-                className="
-                    mb-1.5
-                    block
-                    text-xs
-                    font-medium
-                    text-[#667056]
-                "
-            >
-                {label}
-
-                {required && (
-                    <span className="text-[#8b4a42]">
-                        {" "}*
-                    </span>
-                )}
-            </span>
-
-
-            {children}
-
-        </label>
-    );
-}
-
-
-function Input({
-    value,
-    onChange,
-    type = "text"
-}: {
-    value:
-        string;
-
-    onChange:
-        (
-            value:
-                string
-        ) => void;
-
-    type?:
-        string;
-}) {
-
-    return (
-        <input
-            type={type}
-            value={value}
-            onChange={
-                inputEvent =>
-                    onChange(
-                        inputEvent.target.value
-                    )
-            }
-            className={
-                inputClasses
-            }
-        />
-    );
-}
-
-
-function TextArea({
-    value,
-    onChange
-}: {
-    value:
-        string;
-
-    onChange:
-        (
-            value:
-                string
-        ) => void;
-}) {
-
-    return (
-        <textarea
-            value={value}
-            onChange={
-                inputEvent =>
-                    onChange(
-                        inputEvent.target.value
-                    )
-            }
-            rows={4}
-            className={`
-                ${inputClasses}
-                resize-y
-            `}
-        />
-    );
-}
-
-
-function addChange(
-    changes:
-        {
-            type:
-                EventUpdateType;
-
-            value:
-                string | null;
-        }[],
-    type:
-        EventUpdateType,
-    oldValue:
-        string | number | null,
-    newValue:
-        string | null
-) {
-
-    const normalizedOld =
-        oldValue === null
-            ? null
-            : String(
-                oldValue
-            );
-
-
-    if (
-        normalizedOld !== newValue
-    ) {
-
-        changes.push({
-            type,
-            value:
-                newValue
-        });
-
-    }
-}
-
-
-function emptyToNull(
-    value:
-        string
-) {
-
-    const trimmed =
-        value.trim();
-
-
-    return trimmed.length > 0
-        ? trimmed
-        : null;
-}
-
-
-function normalizeInstant(
-    value:
-        string
-) {
-
-    return new Date(
-        value
-    ).toISOString();
-}
-
-
-function toDateTimeLocal(
-    value:
-        string
-) {
-
-    const date =
-        new Date(
-            value
-        );
-
-
-    const local =
-        new Date(
-            date.getTime() -
-            date.getTimezoneOffset() *
-            60_000
-        );
-
-
-    return local
-        .toISOString()
-        .slice(
-            0,
-            16
-        );
-}
-
-
-function getErrorMessage(
-    error:
-        unknown,
-    lang:
-        "en" | "mn"
-) {
-
-    if (
-        axios.isAxiosError(
-            error
-        )
-    ) {
-
-        switch (
-            error.response?.status
-        ) {
-
-            case 400:
-
-                return lang === "mn"
-                    ? "Зарим мэдээлэл буруу байна."
-                    : "Some of the event information is invalid.";
-
-            case 401:
-
-                return lang === "mn"
-                    ? "Таны нэвтрэх хугацаа дууссан байна."
-                    : "Your session has expired.";
-
-            case 403:
-
-                return lang === "mn"
-                    ? "Энэ арга хэмжээг засах эрхгүй байна."
-                    : "You do not have permission to edit this event.";
-
-            case 404:
-
-                return lang === "mn"
-                    ? "Арга хэмжээ олдсонгүй."
-                    : "This event no longer exists.";
-
-            case 409:
-
-                return lang === "mn"
-                    ? "Өөрчлөлт одоогийн мэдээлэлтэй зөрчилдөж байна."
-                    : "The update conflicts with existing event information.";
-
-        }
-
-    }
-
-
-    return lang === "mn"
-        ? "Өөрчлөлтийг хадгалж чадсангүй."
-        : "Could not save the event.";
-}

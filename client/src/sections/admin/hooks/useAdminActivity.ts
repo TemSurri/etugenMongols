@@ -1,18 +1,18 @@
 import {
-    useCallback,
-    useEffect,
-    useState
+useCallback,
+useEffect,
+useState
 } from "react";
 
 import axios from "axios";
 
 import {
-    getUserHistory
-} from "../../users/account/api/accountApi";
+getUserHistory
+} from "../../account/api/accountApi";
 
 import type {
-    UserHistoryItem
-} from "../../users/account/types/accountTypes";
+UserHistoryItem
+} from "../../account/types/accountTypes";
 
 
 const HISTORY_FETCH_SIZE =

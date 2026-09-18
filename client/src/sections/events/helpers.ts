@@ -1,8 +1,9 @@
-import { events } from "../../static_events";
+import { getGalleryCover } from "../gallery/model/galleryMedia";
+import { galleryEvents } from "../gallery/data/galleryCatalog";
 import { EVENT_IMAGES } from "./constants";
 
-export function getEventImage(event: (typeof events)[number]): string {
-  return event.coverImage.lowRes || event.coverImage.highRes || EVENT_IMAGES.fallback;
+export function getEventImage(event: (typeof galleryEvents)[number]): string {
+  return getGalleryCover(event.coverImage) || EVENT_IMAGES.fallback;
 }
 
 export function getEventGridClass(count: number): string {

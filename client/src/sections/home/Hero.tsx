@@ -1,8 +1,8 @@
 "use client";
 
-import { memo, useState } from "react";
+import { cubicBezier,motion,type Variants } from "framer-motion";
+import { memo,useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, cubicBezier, type Variants } from "framer-motion";
 
 import canadaFlag from "../../assets/canada-flag.webp";
 import mongoliaFlag from "../../assets/mongolia-flag.webp";
@@ -18,15 +18,15 @@ type ActionLink = {
   to: string;
 };
 
-const HERO_IMAGE = "/home/whoweare.webp";
+const HERO_IMAGE = "/images/site/home/whoweare.webp";
 
 const FEATURED_VIDEO_ID = "SW_iujvUAzQ";
 
 const HERO_SLIDES = [
-  "/home/slideshow/1.webp",
-  "/home/slideshow/2.webp",
-  "/home/slideshow/3.webp",
-  "/home/slideshow/4.webp",
+  "/images/site/home/slideshow/1.webp",
+  "/images/site/home/slideshow/2.webp",
+  "/images/site/home/slideshow/3.webp",
+  "/images/site/home/slideshow/4.webp",
 ] as const;
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);

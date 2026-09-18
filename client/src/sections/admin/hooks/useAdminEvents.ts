@@ -1,18 +1,17 @@
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
+useCallback,
+useEffect,
+useMemo,
+useState
 } from "react";
+import { createAdminEvent,getAdminEvents,updateAdminEvent,updateAdminRegistration } from "../api/adminApi";
 
-import {
-  api
-} from "../../../api/client";
+
 
 import type {
-  ApiEvent,
-  EventCreateRequest,
-  EventUpdateType
+ApiEvent,
+EventCreateRequest,
+EventUpdateType
 } from "../types";
 
 
@@ -50,9 +49,7 @@ export function useAdminEvents() {
 
 
           const response =
-            await api.get<ApiEvent[]>(
-              "/events/admin"
-            );
+            await getAdminEvents();
 
 
           setEvents(
@@ -94,10 +91,7 @@ export function useAdminEvents() {
       ) => {
 
         const response =
-          await api.post<ApiEvent>(
-            "/events",
-            request
-          );
+          await createAdminEvent(request);
 
 
         setEvents(
@@ -124,13 +118,7 @@ export function useAdminEvents() {
       ) => {
 
         const response =
-          await api.patch<ApiEvent>(
-            `/events/${eventId}`,
-            {
-              type,
-              value
-            }
-          );
+          await updateAdminEvent(eventId, type, value);
 
 
         setEvents(
@@ -160,13 +148,7 @@ export function useAdminEvents() {
       ) => {
 
         const response =
-          await api.patch<ApiEvent>(
-            `/events/${eventId}/registration`,
-            {
-              registerable,
-              registrationCost
-            }
-          );
+          await updateAdminRegistration(eventId, registerable, registrationCost);
 
 
         setEvents(
