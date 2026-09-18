@@ -19,11 +19,11 @@ function GalleryShowcase({ lang = "mn" }: GalleryShowcaseProps) {
   return (
     <section className="relative min-h-screen bg-[#27301d] pt-20 text-[#fffaf0]">
       <PageBackground />
-      <motion.div variants={entranceVariants} initial="hidden" animate="show" className="relative z-10 mx-auto max-w-7xl px-5 pb-24 pt-18 sm:px-6 md:px-10 lg:px-12">
+      <motion.div variants={entranceVariants} initial="hidden" animate="show" className="relative z-10 mx-auto max-w-7xl px-5 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-18 md:px-10 lg:px-12">
         <GalleryHeader copy={copy} />
         {!hasItems ? <EmptyGallery copy={copy} /> : <>
           <div className="hidden md:block"><GalleryViewBar copy={copy} viewMode={viewMode} showGrid={showGrid} showTimeline={showTimeline} /></div>
-          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-10">
+          <div className="mt-7 grid gap-7 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-10">
             <div className="order-1 lg:order-2 lg:sticky lg:top-28 lg:self-start">
               <GalleryLegend copy={copy} query={query} setQuery={setQuery} items={filteredItems} />
             </div>

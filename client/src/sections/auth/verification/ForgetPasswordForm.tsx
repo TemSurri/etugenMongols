@@ -59,7 +59,7 @@ export default function ForgotPasswordForm({
                 <label
                     htmlFor="password-reset-email"
                     className="
-                        text-[9px]
+                        text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]

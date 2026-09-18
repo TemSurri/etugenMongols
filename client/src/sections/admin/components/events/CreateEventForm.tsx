@@ -336,7 +336,7 @@ export default function CreateEventForm({
 
       <div className="mb-7">
 
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#92752b]">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#92752b]">
           New Event
         </p>
 
@@ -521,7 +521,7 @@ export default function CreateEventForm({
         <button
           type="submit"
           disabled={saving}
-          className="bg-[#303824] px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#fffaf0] transition hover:bg-[#414c31] disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-[#303824] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#fffaf0] transition hover:bg-[#414c31] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saving
             ? "Creating..."
@@ -533,7 +533,7 @@ export default function CreateEventForm({
           type="button"
           disabled={saving}
           onClick={onCancel}
-          className="border border-[#b8aa84] px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6f591f] disabled:cursor-not-allowed disabled:opacity-50"
+          className="border border-[#b8aa84] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6f591f] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </button>
@@ -588,7 +588,7 @@ function Field({
   return (
     <label className="block">
 
-      <span className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.16em] text-[#92752b]">
+      <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#92752b]">
         {label}
       </span>
 
@@ -620,7 +620,7 @@ function TextArea({
   return (
     <label className="block">
 
-      <span className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.16em] text-[#92752b]">
+      <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#92752b]">
         {label}
       </span>
 

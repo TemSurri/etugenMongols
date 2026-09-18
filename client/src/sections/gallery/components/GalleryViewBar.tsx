@@ -11,7 +11,7 @@ type Props = {
 
 export const GalleryViewBar = memo(function GalleryViewBar({ copy, viewMode, showGrid, showTimeline }: Props) {
   return (
-    <div className="flex items-center justify-between border-y border-[#fffaf0]/20 bg-[#fffaf0]/10 px-5 py-4 backdrop-blur-md">
+    <div className="flex items-center justify-between gap-5 border-y border-[#fffaf0]/18 bg-[#fffaf0]/8 px-4 py-3.5 backdrop-blur-md sm:px-5 sm:py-4">
       <h2 className="text-2xl font-semibold tracking-tight text-[#fffaf0] md:text-3xl">
         {copy.pastEventsTitle}
       </h2>
@@ -35,7 +35,7 @@ function ViewButton({ active, onClick, controls, children }: { active: boolean; 
       aria-pressed={active}
       aria-controls={controls}
       className={[
-        "flex items-center justify-center gap-2 px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.17em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fffaf0]/60",
+        "flex min-h-10 items-center justify-center gap-2 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.17em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fffaf0]/60 lg:px-5",
         active ? "bg-[#fffaf0] text-[#27301d] shadow-sm" : "text-[#f3ead2]/75 hover:bg-[#fffaf0]/10 hover:text-[#fffaf0]",
       ].join(" ")}
     >

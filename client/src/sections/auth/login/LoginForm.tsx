@@ -62,7 +62,7 @@ export default function LoginForm({
                 <label
                     htmlFor="email"
                     className="
-                        text-[9px]
+                        text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]
@@ -139,7 +139,7 @@ export default function LoginForm({
                     <label
                         htmlFor="password"
                         className="
-                            text-[9px]
+                            text-[10px]
                             font-bold
                             uppercase
                             tracking-[0.2em]
@@ -260,7 +260,9 @@ export default function LoginForm({
                             top-1/2
                             -translate-y-1/2
 
-                            text-[9px]
+                            min-h-9
+                            min-w-11
+                            text-[10px]
                             font-bold
                             uppercase
                             tracking-[0.12em]

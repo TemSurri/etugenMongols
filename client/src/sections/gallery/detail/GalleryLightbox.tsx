@@ -43,15 +43,24 @@ export default function GalleryLightbox({
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 px-4"
           onClick={onClose}
         >
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close gallery"
+            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/35 text-2xl leading-none text-white transition hover:border-white/40 hover:bg-white/15 sm:right-6 sm:top-6"
+          >
+            ×
+          </button>
+
           <div
-            className="grid w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3"
+            className="grid w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-1.5 sm:gap-3"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={onPrev}
               aria-label="Previous image"
-              className="rounded-full bg-white/10 px-3 py-2 text-4xl leading-none text-white transition hover:bg-white/20"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-3xl leading-none text-white transition hover:bg-white/20 sm:h-12 sm:w-12 sm:text-4xl"
             >
               ‹
             </button>
@@ -69,7 +78,7 @@ export default function GalleryLightbox({
               type="button"
               onClick={onNext}
               aria-label="Next image"
-              className="rounded-full bg-white/10 px-3 py-2 text-4xl leading-none text-white transition hover:bg-white/20"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-3xl leading-none text-white transition hover:bg-white/20 sm:h-12 sm:w-12 sm:text-4xl"
             >
               ›
             </button>

@@ -67,6 +67,7 @@ export default function DesktopAccountControls({user, isLoggedIn, loading, logou
                         duration-200
 
                         group-hover:rotate-180
+                        group-focus-within:rotate-180
                       "
                       viewBox="0 0 20 20"
                       fill="currentColor"
@@ -102,7 +103,7 @@ export default function DesktopAccountControls({user, isLoggedIn, loading, logou
 
                       opacity-0
 
-                      shadow-[0_22px_55px_rgba(39,48,29,0.13)]
+                      shadow-[0_20px_48px_rgba(39,48,29,0.12)]
 
                       transition-all
                       duration-150
@@ -110,6 +111,9 @@ export default function DesktopAccountControls({user, isLoggedIn, loading, logou
                       group-hover:visible
                       group-hover:mt-4
                       group-hover:opacity-100
+                      group-focus-within:visible
+                      group-focus-within:mt-4
+                      group-focus-within:opacity-100
                     "
                   >
 

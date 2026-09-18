@@ -30,12 +30,12 @@ function Footer() {
 
   return (
     <footer className="border-t border-[#efe7d4] bg-white text-[#27301d]">
-      <div className="mx-auto max-w-7xl px-6 py-10 md:px-10 lg:px-12">
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 md:px-10 lg:px-12 lg:py-12">
         <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
           <Link
             to="/"
             aria-label="Go to homepage"
-            className="flex w-fit items-center gap-4 no-underline transition-opacity hover:opacity-90"
+            className="flex w-fit items-center gap-4 no-underline transition-opacity hover:opacity-90 focus-visible:rounded-sm"
           >
             <img
               src="/logo.webp"
@@ -64,7 +64,7 @@ function Footer() {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className="text-xs font-bold uppercase tracking-[0.18em] text-[#27301d]/70 no-underline transition-colors hover:text-[#9a7b26]"
+                  className="text-xs font-bold uppercase tracking-[0.18em] text-[#27301d]/70 no-underline transition-colors hover:text-[#9a7b26] focus-visible:rounded-sm"
                 >
                   {item.label}
                 </Link>

@@ -131,7 +131,7 @@ function Contact({ lang = "mn" }: ContactProps) {
         animate="show"
         className="
           mx-auto w-full max-w-[1120px]
-          px-6 pb-16 pt-32
+          px-5 pb-16 pt-32
           sm:px-8
           md:pt-36
           lg:px-10 lg:pb-20
@@ -140,7 +140,7 @@ function Contact({ lang = "mn" }: ContactProps) {
         {/* Page Header */}
         <motion.header
           variants={fadeUpVariants}
-          className="mb-10 max-w-2xl md:mb-12"
+          className="mb-9 max-w-2xl md:mb-11"
         >
           <h1 className="text-3xl font-normal tracking-tight sm:text-4xl md:text-[2.8rem]">
             {copy.title}
@@ -152,7 +152,7 @@ function Contact({ lang = "mn" }: ContactProps) {
         </motion.header>
 
         {/* Main Layout */}
-        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+        <div className="grid gap-11 md:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 xl:gap-18">
           {/* ---------------------------------------------------------------- */}
           {/* Contact Form                                                     */}
           {/* ---------------------------------------------------------------- */}
@@ -234,7 +234,7 @@ function Contact({ lang = "mn" }: ContactProps) {
             variants={fadeUpVariants}
             className="
               border-t border-[#27301d]/15 pt-8
-              lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0
+              lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0 xl:pl-12
             "
           >
             {/* Email */}

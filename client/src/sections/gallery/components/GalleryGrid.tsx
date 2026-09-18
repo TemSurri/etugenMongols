@@ -15,7 +15,7 @@ export const GalleryGrid = memo(function GalleryGrid({ items, copy }: { items: G
       className={getLayoutClass(items.length)}
     >
       {items.map((item, index) => (
-        <div key={item.id} className={isLargeSet ? "mb-12 break-inside-avoid" : ""}>
+        <div key={item.id} className={isLargeSet ? "mb-10 break-inside-avoid sm:mb-12" : ""}>
           <GalleryCard item={item} viewAlbum={copy.viewAlbum} index={index} isLargeSet={isLargeSet} />
         </div>
       ))}
@@ -28,7 +28,7 @@ const GalleryCard = memo(function GalleryCard({ item, viewAlbum, index, isLargeS
   return (
     <Link to={item.link} aria-label={`${viewAlbum}: ${item.title}`} className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e1d2a6]">
       <article>
-        <div className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_18px_55px_rgba(0,0,0,0.28)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_68px_rgba(0,0,0,0.34)]`}>
+        <div className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_16px_46px_rgba(0,0,0,0.24)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_60px_rgba(0,0,0,0.3)]`}>
           <img
             src={item.imageSrc}
             alt={item.imageAlt}

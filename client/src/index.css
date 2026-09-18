@@ -2,11 +2,35 @@
 
 html {
   scroll-behavior: smooth;
-
+  scrollbar-gutter: stable;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
 body {
+  min-width: 320px;
   background-color: #0A0A0A;
   color: white;
+}
+
+::selection {
+  background: rgba(154, 123, 38, 0.28);
+  color: #27301d;
+}
+
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid #b8953b;
+  outline-offset: 3px;
+}
+
+:where(input, textarea, select):focus-visible {
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px rgba(184, 149, 59, 0.16);
+}
+
+:where(button, input, textarea, select):disabled {
+  cursor: not-allowed;
 }
 
 @keyframes slideUp {
@@ -27,6 +51,8 @@ body {
   animation: slideUp 0.8s ease-out forwards;
 }
 
-html {
-    scrollbar-gutter: stable;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

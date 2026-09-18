@@ -48,7 +48,7 @@ export default function GalleryInfoCard({
   const copy = COPY[lang];
 
   return (
-    <div className="border border-[#d8caa5]/70 bg-[#fffaf0]/95 p-5 shadow-[0_14px_38px_rgba(88,72,38,0.10)]">
+    <div className="border border-[#d8caa5]/70 bg-[#fffaf0]/95 p-4 shadow-[0_12px_32px_rgba(88,72,38,0.09)] sm:p-5">
       <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
         {copy.section}
       </p>

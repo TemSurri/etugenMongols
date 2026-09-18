@@ -68,7 +68,7 @@ export default function VerifyAccountForm({
                 <label
                     htmlFor="verification-email"
                     className="
-                        text-[9px]
+                        text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]

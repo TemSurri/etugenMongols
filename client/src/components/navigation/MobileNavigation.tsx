@@ -6,7 +6,7 @@ export default function MobileNavigation({ user, isLoggedIn, loading, logout, us
 
         <div
           id="mobile-navigation"
-          className="border-t border-[#efe7d4] bg-white px-4 py-4 shadow-[0_18px_45px_rgba(39,48,29,0.08)] xl:hidden"
+          className="max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain border-t border-[#efe7d4] bg-white px-4 py-4 shadow-[0_18px_45px_rgba(39,48,29,0.08)] sm:max-h-[calc(100dvh-6rem)] xl:hidden"
         >
 
           <nav
