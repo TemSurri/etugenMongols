@@ -1,10 +1,8 @@
-"use client";
-
 import Footer from "../../../components/navigation/SiteFooter";
 import Header from "../../../components/navigation/SiteHeader";
 import MeetTeamMain from "../MeetTeamMain";
 
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 
 export default function MeetTeamPage() {
   const { lang, setLang } = useLanguage();

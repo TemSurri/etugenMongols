@@ -1,15 +1,11 @@
-"use client";
-
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 
 import Header from "../../../components/navigation/SiteHeader";
 import Hero from "../Hero";
 
 import Footer from "../../../components/navigation/SiteFooter";
 
-
 export default function Home() {
-
   const { lang, setLang } = useLanguage();
 
   return (
@@ -20,7 +16,7 @@ export default function Home() {
         <Hero lang={lang} />
       </main>
 
-      <Footer/>
+      <Footer />
     </>
   );
 }

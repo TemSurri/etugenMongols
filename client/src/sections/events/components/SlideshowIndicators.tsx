@@ -12,7 +12,11 @@ function SlideshowIndicators({ images, activeIndex, onSelect, copy }: Props) {
   if (images.length <= 1) return null;
 
   return (
-    <div className="mt-7 flex flex-wrap items-center gap-2" role="group" aria-label={copy.slideshowLabel}>
+    <div
+      className="mt-7 flex flex-wrap items-center gap-2"
+      role="group"
+      aria-label={copy.slideshowLabel}
+    >
       {images.map((image, index) => {
         const active = index === activeIndex;
         return (

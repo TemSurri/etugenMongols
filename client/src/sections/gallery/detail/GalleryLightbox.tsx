@@ -1,8 +1,8 @@
-import { AnimatePresence, motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import type { Lang } from "../../../context/language";
 import type { EventImage } from "../model/galleryCatalogTypes";
-
-type Lang = "en" | "mn";
+import { useDialogFocus } from "../../../components/useDialogFocus";
 
 type GalleryLightboxProps = {
   isOpen: boolean;
@@ -29,13 +29,18 @@ export default function GalleryLightbox({
   onPrev,
   onNext,
 }: GalleryLightboxProps) {
-  const activeImage =
-    activeIndex !== null ? images[activeIndex] : undefined;
+  const activeImage = activeIndex !== null ? images[activeIndex] : undefined;
+  const dialogRef = useDialogFocus(isOpen && Boolean(activeImage));
 
   return (
     <AnimatePresence>
       {isOpen && activeImage && (
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={lang === "mn" ? "Цомог" : "Gallery"}
+          tabIndex={-1}
           variants={overlayFade}
           initial="hidden"
           animate="show"

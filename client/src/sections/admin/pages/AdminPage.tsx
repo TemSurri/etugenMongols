@@ -1,57 +1,25 @@
-"use client";
+import { Navigate } from "react-router-dom";
 
-import {
-Navigate
-} from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth";
 
-import {
-useAuth
-} from "../../../context/useAuth";
-
-import {
-useLanguage
-} from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 
 import Header from "../../../components/navigation/SiteHeader";
 
 import AdminDashboard from "../AdminDashboard";
 
-
 export default function AdminPage() {
+  const { user } = useAuth();
 
-  const {
-    user
-  } =
-    useAuth();
+  const { lang, setLang } = useLanguage();
 
-
-  const {
-    lang,
-    setLang
-  } =
-    useLanguage();
-
-
-  if (
-    !user ||
-    user.role !== "ADMIN"
-  ) {
-
-    return (
-      <Navigate
-        to="/"
-        replace
-      />
-    );
+  if (!user || user.role !== "ADMIN") {
+    return <Navigate to="/" replace />;
   }
-
 
   return (
     <>
-      <Header
-        lang={lang}
-        setLang={setLang}
-      />
+      <Header lang={lang} setLang={setLang} />
 
       <AdminDashboard />
     </>

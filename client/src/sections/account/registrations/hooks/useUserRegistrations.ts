@@ -1,106 +1,52 @@
 // src/sections/users/registrations/hooks/useUserRegistrations.ts
 
-import {
-useCallback,
-useEffect,
-useState
-} from "react";
+import { useCallback,useEffect,useState } from "react";
 
 import axios from "axios";
 
-import {
-getUserRegistrations
-} from "../api/registrationsApi";
+import { getUserRegistrations } from "../api/registrationsApi";
 
-import type {
-UserEventRegistration
-} from "../types/registrationTypes";
+import type { UserEventRegistration } from "../types/registrationTypes";
 
 export function useUserRegistrations() {
+  const [registrations, setRegistrations] = useState<UserEventRegistration[]>(
+    [],
+  );
 
-    const [
-        registrations,
-        setRegistrations
-    ] =
-        useState<
-            UserEventRegistration[]
-        >([]);
+  const [loading, setLoading] = useState(true);
 
-    const [
-        loading,
-        setLoading
-    ] =
-        useState(true);
+  const [error, setError] = useState(false);
 
-    const [
-        error,
-        setError
-    ] =
-        useState(false);
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(false);
 
-    const load =
-        useCallback(
-            async () => {
+    try {
+      const result = await getUserRegistrations();
 
-                setLoading(true);
-                setError(false);
+      setRegistrations(result);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error("Failed to load registrations:", err.response?.status);
+      } else {
+        console.error("Failed to load registrations:", err);
+      }
 
-                try {
+      setRegistrations([]);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-                    const result =
-                        await getUserRegistrations();
+  useEffect(() => {
+    void load();
+  }, [load]);
 
-                    setRegistrations(
-                        result
-                    );
-
-                } catch (err) {
-
-                    if (
-                        axios.isAxiosError(err)
-                    ) {
-
-                        console.error(
-                            "Failed to load registrations:",
-                            err.response?.status
-                        );
-
-                    } else {
-
-                        console.error(
-                            "Failed to load registrations:",
-                            err
-                        );
-
-                    }
-
-                    setRegistrations([]);
-                    setError(true);
-
-                } finally {
-
-                    setLoading(false);
-
-                }
-            },
-            []
-        );
-
-    useEffect(
-        () => {
-
-            void load();
-
-        },
-        [
-            load
-        ]
-    );
-
-    return {
-        registrations,
-        loading,
-        error,
-        reload: load
-    };
+  return {
+    registrations,
+    loading,
+    error,
+    reload: load,
+  };
 }

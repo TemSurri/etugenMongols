@@ -1,110 +1,64 @@
-"use client";
+import { resetPasswordSectionCopy } from "../content/ResetPasswordSectionCopy";
 
 import AuthPageShell from "../components/AuthPageShell";
 import { authMedia } from "../media";
 
+import { memo, useState } from "react";
 
-
-
-import {
-memo,
-useState
-} from "react";
-
-import {
-Link,
-useSearchParams
-} from "react-router-dom";
-
+import { Link, useSearchParams } from "react-router-dom";
 
 import ResetPasswordForm from "./ResetPasswordForm";
 
+function isValidUUID(value: string | null) {
+  if (!value) {
+    return false;
+  }
 
-
-
-
-
-
-
-function isValidUUID(
-    value: string | null
-) {
-
-    if (!value) {
-        return false;
-    }
-
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-        .test(value);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  );
 }
 
-
 function ResetPasswordSection() {
+  const [searchParams] = useSearchParams();
 
-    const [searchParams] =
-        useSearchParams();
+  const token = searchParams.get("token");
 
-    const token =
-        searchParams.get("token");
+  const [language, setLanguage] = useState<"en" | "mn">("en");
 
+  const [background] = useState(() => {
+    const index = Math.floor(Math.random() * authMedia.backgrounds.length);
 
-    const [language, setLanguage] =
-        useState<"en" | "mn">("en");
+    return authMedia.backgrounds[index];
+  });
 
+  const validTokenFormat = isValidUUID(token);
 
-    const [background] =
-        useState(() => {
-
-            const index =
-                Math.floor(
-                    Math.random() *
-                    authMedia.backgrounds.length
-                );
-
-            return authMedia.backgrounds[index];
-        });
-
-
-    const validTokenFormat =
-        isValidUUID(token);
-
-
-    return (
-        <AuthPageShell language={language} setLanguage={setLanguage} background={background} backTo="/auth/login" backLabel={language === "en"
-                                ? "Back to login"
-                                : "Нэвтрэх хэсэг рүү"} title={validTokenFormat
-                                    ? (
-                                        language === "en"
-                                            ? "Create a new password"
-                                            : "Шинэ нууц үг үүсгэх"
-                                    )
-                                    : (
-                                        language === "en"
-                                            ? "Invalid reset link"
-                                            : "Хүчингүй холбоос"
-                                    )} description={validTokenFormat
-                                    ? (
-                                        language === "en"
-                                            ? "Choose a new password for your account."
-                                            : "Бүртгэлдээ шинэ нууц үг сонгоно уу."
-                                    )
-                                    : (
-                                        language === "en"
-                                            ? "This password reset link is invalid. Request a new password reset email."
-                                            : "Энэ нууц үг шинэчлэх холбоос хүчингүй байна."
-                                    )}>
-{validTokenFormat && token ? (
-
-                                <ResetPasswordForm
-                                    language={language}
-                                    token={token}
-                                />
-
-                            ) : (
-
-                                <Link
-                                    to="/auth/forgot-password"
-                                    className="
+  return (
+    <AuthPageShell
+      language={language}
+      setLanguage={setLanguage}
+      background={background}
+      backTo="/auth/login"
+      backLabel={resetPasswordSectionCopy[language].backToLogin}
+      title={
+        validTokenFormat
+          ? resetPasswordSectionCopy[language].createANewPassword
+          : resetPasswordSectionCopy[language].invalidResetLink
+      }
+      description={
+        validTokenFormat
+          ? resetPasswordSectionCopy[language].chooseANewPasswordForYourAccount
+          : resetPasswordSectionCopy[language]
+              .thisPasswordResetLinkIsInvalidRequest
+      }
+    >
+      {validTokenFormat && token ? (
+        <ResetPasswordForm language={language} token={token} />
+      ) : (
+        <Link
+          to="/auth/forgot-password"
+          className="
                                         flex
                                         min-h-11
                                         w-full
@@ -127,16 +81,12 @@ function ResetPasswordSection() {
 
                                         hover:bg-[#9a7b26]
                                     "
-                                >
-                                    {language === "en"
-                                        ? "Request new reset link"
-                                        : "Шинэ холбоос авах"}
-                                </Link>
-
-                            )}
-</AuthPageShell>
-    );
+        >
+          {resetPasswordSectionCopy[language].requestNewResetLink}
+        </Link>
+      )}
+    </AuthPageShell>
+  );
 }
-
 
 export default memo(ResetPasswordSection);

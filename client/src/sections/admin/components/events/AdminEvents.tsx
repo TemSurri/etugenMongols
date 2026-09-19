@@ -1,103 +1,62 @@
-"use client";
+import { adminEventsCopy } from "../../content/AdminEventsCopy";
 
-import {
-    useState
-} from "react";
+import { useState } from "react";
 
-import {
-    AnimatePresence,
-    motion
-} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-import AdminEventCard
-    from "./AdminEventCard";
+import AdminEventCard from "./AdminEventCard";
 
-import CreateEventForm
-    from "./CreateEventForm";
+import CreateEventForm from "./CreateEventForm";
 
-import EditEventModal
-    from "./EditEventModal";
+import EditEventModal from "./EditEventModal";
 
 import type {
-    ApiEvent,
-    EventCreateRequest,
-    EventUpdateType
+  ApiEvent,
+  EventCreateRequest,
+  EventUpdateType,
 } from "../../types";
 
-
 type Props = {
+  events: ApiEvent[];
 
-    events:
-        ApiEvent[];
+  loading: boolean;
 
-    loading:
-        boolean;
+  error: boolean;
 
-    error:
-        boolean;
+  createEvent: (request: EventCreateRequest) => Promise<ApiEvent>;
 
-    createEvent:
-        (
-            request:
-                EventCreateRequest
-        ) => Promise<ApiEvent>;
+  updateEvent: (
+    eventId: string,
+    type: EventUpdateType,
+    value: string | null,
+  ) => Promise<ApiEvent>;
 
-    updateEvent:
-        (
-            eventId:
-                string,
-            type:
-                EventUpdateType,
-            value:
-                string | null
-        ) => Promise<ApiEvent>;
+  updateRegistration: (
+    eventId: string,
+    registerable: boolean,
+    registrationCost: number | null,
+  ) => Promise<ApiEvent>;
 
-    updateRegistration:
-        (
-            eventId:
-                string,
-            registerable:
-                boolean,
-            registrationCost:
-                number | null
-        ) => Promise<ApiEvent>;
-
-    lang:
-        "en" | "mn";
+  lang: "en" | "mn";
 };
 
-
 export default function AdminEvents({
-    events,
-    loading,
-    error,
-    createEvent,
-    updateEvent,
-    updateRegistration,
-    lang
+  events,
+  loading,
+  error,
+  createEvent,
+  updateEvent,
+  updateRegistration,
+  lang,
 }: Props) {
+  const [creating, setCreating] = useState(false);
 
-    const [
-        creating,
-        setCreating
-    ] =
-        useState(false);
+  const [editing, setEditing] = useState<ApiEvent | null>(null);
 
-
-    const [
-        editing,
-        setEditing
-    ] =
-        useState<ApiEvent | null>(
-            null
-        );
-
-
-    return (
-        <div>
-
-            <section
-                className="
+  return (
+    <div>
+      <section
+        className="
                     rounded-2xl
                     border
                     border-white/10
@@ -108,10 +67,9 @@ export default function AdminEvents({
 
                     sm:p-7
                 "
-            >
-
-                <div
-                    className="
+      >
+        <div
+          className="
                         flex
                         flex-col
                         gap-4
@@ -120,68 +78,50 @@ export default function AdminEvents({
                         sm:items-end
                         sm:justify-between
                     "
-                >
-
-                    <div>
-
-                        <p
-                            className="
+        >
+          <div>
+            <p
+              className="
                                 text-[10px]
                                 font-semibold
                                 uppercase
                                 tracking-[0.18em]
                                 text-[#9a7b26]
                             "
-                        >
-                            {lang === "mn"
-                                ? "Удирдлага"
-                                : "Management"}
-                        </p>
+            >
+              {adminEventsCopy[lang].management}
+            </p>
 
-
-                        <h2
-                            className="
+            <h2
+              className="
                                 mt-1
                                 text-2xl
                                 font-semibold
                                 tracking-tight
                                 text-[#27301d]
                             "
-                        >
-                            {lang === "mn"
-                                ? "Арга хэмжээ"
-                                : "Events"}
-                        </h2>
+            >
+              {adminEventsCopy[lang].events}
+            </h2>
 
-
-                        <p
-                            className="
+            <p
+              className="
                                 mt-2
                                 max-w-xl
                                 text-sm
                                 leading-6
                                 text-[#667056]
                             "
-                        >
-                            {lang === "mn"
-                                ? "Арга хэмжээ үүсгэх, засах болон бүртгүүлсэн хүмүүсийг харах."
-                                : "Create and manage events and view registrations for each event."}
-                        </p>
+            >
+              {adminEventsCopy[lang].createAndManageEventsAndViewRegistrations}
+            </p>
+          </div>
 
-                    </div>
-
-
-                    <button
-                        type="button"
-                        disabled={
-                            creating
-                        }
-                        onClick={() =>
-                            setCreating(
-                                true
-                            )
-                        }
-                        className="
+          <button
+            type="button"
+            disabled={creating}
+            onClick={() => setCreating(true)}
+            className="
                             w-fit
                             rounded-lg
                             bg-[#27301d]
@@ -196,61 +136,40 @@ export default function AdminEvents({
                             disabled:cursor-not-allowed
                             disabled:opacity-50
                         "
-                    >
-                        {lang === "mn"
-                            ? "+ Арга хэмжээ үүсгэх"
-                            : "+ Create Event"}
-                    </button>
+          >
+            {adminEventsCopy[lang].createEvent}
+          </button>
+        </div>
+      </section>
 
-                </div>
+      <AnimatePresence initial={false}>
+        {creating && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            transition={{
+              duration: 0.16,
+            }}
+            className="mt-5"
+          >
+            <CreateEventForm
+              onCreate={createEvent}
+              onCancel={() => setCreating(false)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            </section>
-
-
-            <AnimatePresence
-                initial={false}
-            >
-
-                {creating && (
-
-                    <motion.div
-                        initial={{
-                            opacity: 0
-                        }}
-                        animate={{
-                            opacity: 1
-                        }}
-                        exit={{
-                            opacity: 0
-                        }}
-                        transition={{
-                            duration: 0.16
-                        }}
-                        className="mt-5"
-                    >
-
-                        <CreateEventForm
-                            onCreate={
-                                createEvent
-                            }
-                            onCancel={() =>
-                                setCreating(
-                                    false
-                                )
-                            }
-                        />
-
-                    </motion.div>
-
-                )}
-
-            </AnimatePresence>
-
-
-            {loading && (
-
-                <div
-                    className="
+      {loading && (
+        <div
+          className="
                         mt-5
                         rounded-xl
                         bg-[#fffdf8]/95
@@ -259,20 +178,14 @@ export default function AdminEvents({
                         text-[#667056]
                         shadow-lg
                     "
-                >
-                    {lang === "mn"
-                        ? "Арга хэмжээг ачаалж байна..."
-                        : "Loading events..."}
-                </div>
+        >
+          {adminEventsCopy[lang].loadingEvents}
+        </div>
+      )}
 
-            )}
-
-
-            {!loading &&
-                error && (
-
-                <div
-                    className="
+      {!loading && error && (
+        <div
+          className="
                         mt-5
                         rounded-xl
                         bg-[#fffdf8]/95
@@ -281,21 +194,14 @@ export default function AdminEvents({
                         text-[#8b4a42]
                         shadow-lg
                     "
-                >
-                    {lang === "mn"
-                        ? "Арга хэмжээг ачаалж чадсангүй."
-                        : "Could not load events."}
-                </div>
+        >
+          {adminEventsCopy[lang].couldNotLoadEvents}
+        </div>
+      )}
 
-            )}
-
-
-            {!loading &&
-                !error &&
-                events.length === 0 && (
-
-                <div
-                    className="
+      {!loading && !error && events.length === 0 && (
+        <div
+          className="
                         mt-5
                         rounded-xl
                         bg-[#fffdf8]/95
@@ -304,81 +210,39 @@ export default function AdminEvents({
                         text-[#667056]
                         shadow-lg
                     "
-                >
-                    {lang === "mn"
-                        ? "Одоогоор арга хэмжээ алга."
-                        : "No events yet."}
-                </div>
+        >
+          {adminEventsCopy[lang].noEventsYet}
+        </div>
+      )}
 
-            )}
-
-
-            {!loading &&
-                !error &&
-                events.length > 0 && (
-
-                <div
-                    className="
+      {!loading && !error && events.length > 0 && (
+        <div
+          className="
                         mt-5
                         space-y-4
                     "
-                >
-
-                    {events.map(
-                        event => (
-
-                            <AdminEventCard
-                                key={
-                                    event.id
-                                }
-                                event={
-                                    event
-                                }
-                                onEdit={() =>
-                                    setEditing(
-                                        event
-                                    )
-                                }
-                                updateEvent={
-                                    updateEvent
-                                }
-                                lang={
-                                    lang
-                                }
-                            />
-
-                        )
-                    )}
-
-                </div>
-
-            )}
-
-
-            {editing && (
-
-                <EditEventModal
-                    event={
-                        editing
-                    }
-                    updateEvent={
-                        updateEvent
-                    }
-                    updateRegistration={
-                        updateRegistration
-                    }
-                    onClose={() =>
-                        setEditing(
-                            null
-                        )
-                    }
-                    lang={
-                        lang
-                    }
-                />
-
-            )}
-
+        >
+          {events.map((event) => (
+            <AdminEventCard
+              key={event.id}
+              event={event}
+              onEdit={() => setEditing(event)}
+              updateEvent={updateEvent}
+              lang={lang}
+            />
+          ))}
         </div>
-    );
+      )}
+
+      {editing && (
+        <EditEventModal
+          event={editing}
+          updateEvent={updateEvent}
+          updateRegistration={updateRegistration}
+          onClose={() => setEditing(null)}
+          lang={lang}
+        />
+      )}
+    </div>
+  );
 }

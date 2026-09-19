@@ -15,9 +15,8 @@ export function useSlideshow(images: SlideshowImage[]) {
     return () => window.clearInterval(timer);
   }, [images.length]);
 
-  useEffect(() => {
-    if (activeIndex >= images.length) setActiveIndex(0);
-  }, [activeIndex, images.length]);
+  // Adjust before children render if the image collection shrinks.
+  if (activeIndex !== 0 && activeIndex >= images.length) setActiveIndex(0);
 
   const selectImage = useCallback((index: number) => {
     setActiveIndex(index);

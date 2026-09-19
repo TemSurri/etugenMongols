@@ -1,118 +1,77 @@
-"use client";
+import type { Lang } from "../../../context/language";
+import { signUpSectionCopy } from "../content/SignUpSectionCopy";
 
 import SignupBenefitsModal from "./SignupBenefitsModal";
-import { Background,TopControls } from "./SignupPageChrome";
+import { Background, TopControls } from "./SignupPageChrome";
 
-
-import { memo,useState } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 
-import {
-cubicBezier,
-motion,
-type Variants
-} from "framer-motion";
+import { cubicBezier, motion, type Variants } from "framer-motion";
 
-import { useAuth } from "../../../context/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { authMedia } from "../media";
 import SignupForm from "./SignUpForm";
 
+export type { Lang as Language } from "../../../context/language";
+type Language = Lang;
 
-export type Language =
-    | "en"
-    | "mn";
-
-
-const easeOut =
-    cubicBezier(0.22, 1, 0.36, 1);
-
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const entranceMotion: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+  },
 
-    hidden: {
-        opacity: 0,
-        y: 14,
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.5,
+      ease: easeOut,
     },
-
-    show: {
-        opacity: 1,
-        y: 0,
-
-        transition: {
-            duration: 0.5,
-            ease: easeOut,
-        },
-    },
+  },
 };
 
-
 function SignupSection() {
+  const { user, isLoggedIn, loading } = useAuth();
 
-    const {
-        user,
-        isLoggedIn,
-        loading,
-    } = useAuth();
+  const [language, setLanguage] = useState<Language>("en");
 
+  const [showWhyAccount, setShowWhyAccount] = useState(false);
 
-    const [language, setLanguage] =
-        useState<Language>("en");
+  const [accountCreated, setAccountCreated] = useState(false);
 
+  const [background] = useState(() => {
+    const index = Math.floor(Math.random() * authMedia.backgrounds.length);
 
-    const [
-        showWhyAccount,
-        setShowWhyAccount,
-    ] = useState(false);
+    return authMedia.backgrounds[index];
+  });
 
+  if (loading) {
+    return <main className="min-h-screen bg-[#27301d]" />;
+  }
 
-    const [accountCreated, setAccountCreated] =
-        useState(false);
-
-
-    const [background] =
-        useState(() => {
-
-            const index =
-                Math.floor(
-                    Math.random() *
-                    authMedia.backgrounds.length
-                );
-
-            return authMedia.backgrounds[index];
-        });
-
-
-    if (loading) {
-
-        return (
-            <main className="min-h-screen bg-[#27301d]" />
-        );
-    }
-
-
-    /*
-     * Already authenticated.
-     */
-    if (isLoggedIn) {
-
-        return (
-            <main
-                className="
+  /*
+   * Already authenticated.
+   */
+  if (isLoggedIn) {
+    return (
+      <main
+        className="
                     relative
                     min-h-screen
                     overflow-hidden
                     bg-[#27301d]
                     text-[#27301d]
                 "
-            >
+      >
+        <Background src={background} />
 
-                <Background
-                    src={background}
-                />
-
-
-                <section
-                    className="
+        <section
+          className="
                         relative
                         z-10
                         flex
@@ -124,27 +83,21 @@ function SignupSection() {
                         pt-24
                         md:px-10
                     "
-                >
-
-                    <motion.div
-                        variants={entranceMotion}
-                        initial="hidden"
-                        animate="show"
-                        className="
+        >
+          <motion.div
+            variants={entranceMotion}
+            initial="hidden"
+            animate="show"
+            className="
                             relative
                             w-full
                             max-w-[29rem]
                         "
-                    >
+          >
+            <TopControls language={language} setLanguage={setLanguage} />
 
-                        <TopControls
-                            language={language}
-                            setLanguage={setLanguage}
-                        />
-
-
-                        <div
-                            className="
+            <div
+              className="
                                 border
                                 border-white/20
                                 bg-white
@@ -157,32 +110,26 @@ function SignupSection() {
                                 shadow-2xl
                                 shadow-black/25
                             "
-                        >
-
-                            <h1
-                                className="
+            >
+              <h1
+                className="
                                     text-3xl
                                     font-semibold
                                     leading-tight
                                     text-[#27301d]
                                 "
-                            >
-                                {language === "en"
-                                    ? (
-                                        user?.firstName
-                                            ? `Hi, ${user.firstName}.`
-                                            : "You're already signed in."
-                                    )
-                                    : (
-                                        user?.firstName
-                                            ? `Сайн байна уу, ${user.firstName}.`
-                                            : "Та аль хэдийн нэвтэрсэн байна."
-                                    )}
-                            </h1>
+              >
+                {language === "en"
+                  ? user?.firstName
+                    ? `Hi, ${user.firstName}.`
+                    : "You're already signed in."
+                  : user?.firstName
+                    ? `Сайн байна уу, ${user.firstName}.`
+                    : "Та аль хэдийн нэвтэрсэн байна."}
+              </h1>
 
-
-                            <p
-                                className="
+              <p
+                className="
                                     mx-auto
                                     mt-4
                                     max-w-sm
@@ -190,41 +137,30 @@ function SignupSection() {
                                     leading-7
                                     text-[#667056]
                                 "
-                            >
-                                {language === "en"
-                                    ? "You can't create another account while you're currently signed in. Log out first if you need to create a different account."
-                                    : "Та нэвтэрсэн үедээ өөр бүртгэл үүсгэх боломжгүй. Өөр бүртгэл үүсгэх бол эхлээд системээс гарна уу."}
-                            </p>
+              >
+                {signUpSectionCopy[language].youCanTCreateAnotherAccountWhile}
+              </p>
+            </div>
+          </motion.div>
+        </section>
+      </main>
+    );
+  }
 
-                        </div>
-
-                    </motion.div>
-
-                </section>
-
-            </main>
-        );
-    }
-
-
-    return (
-        <main
-            className="
+  return (
+    <main
+      className="
                 relative
                 min-h-screen
                 overflow-hidden
                 bg-[#27301d]
                 text-[#27301d]
             "
-        >
+    >
+      <Background src={background} />
 
-            <Background
-                src={background}
-            />
-
-
-            <section
-                className="
+      <section
+        className="
                     relative
                     z-10
                     flex
@@ -240,27 +176,21 @@ function SignupSection() {
                     md:pb-12
                     md:pt-24
                 "
-            >
-
-                <motion.div
-                    variants={entranceMotion}
-                    initial="hidden"
-                    animate="show"
-                    className="
+      >
+        <motion.div
+          variants={entranceMotion}
+          initial="hidden"
+          animate="show"
+          className="
                         relative
                         w-full
                         max-w-[34rem]
                     "
-                >
+        >
+          <TopControls language={language} setLanguage={setLanguage} />
 
-                    <TopControls
-                        language={language}
-                        setLanguage={setLanguage}
-                    />
-
-
-                    <div
-                        className="
+          <div
+            className="
                             border
                             border-white/20
                             bg-[#f7f7f4]
@@ -268,12 +198,10 @@ function SignupSection() {
                             shadow-2xl
                             shadow-black/25
                         "
-                    >
-
-                        {accountCreated ? (
-
-                            <div
-                                className="
+          >
+            {accountCreated ? (
+              <div
+                className="
                                     flex
                                     flex-col
                                     items-center
@@ -287,11 +215,10 @@ function SignupSection() {
 
                                     md:px-9
                                 "
-                            >
-
-                                <Link
-                                    to="/"
-                                    className="
+              >
+                <Link
+                  to="/"
+                  className="
                                         inline-flex
                                         items-center
                                         justify-center
@@ -300,37 +227,33 @@ function SignupSection() {
 
                                         hover:opacity-80
                                     "
-                                >
-                                    <img
-                                        src={authMedia.logo}
-                                        alt="Etugen Mongols logo"
-                                        loading="eager"
-                                        decoding="async"
-                                        className="
+                >
+                  <img
+                    src={authMedia.logo}
+                    alt="Etugen Mongols logo"
+                    loading="eager"
+                    decoding="async"
+                    className="
                                             h-16
                                             w-16
                                             object-contain
                                         "
-                                    />
-                                </Link>
+                  />
+                </Link>
 
-
-                                <h1
-                                    className="
+                <h1
+                  className="
                                         mt-6
                                         text-2xl
                                         font-semibold
                                         text-[#27301d]
                                     "
-                                >
-                                    {language === "en"
-                                        ? "Check your email"
-                                        : "Имэйлээ шалгана уу"}
-                                </h1>
+                >
+                  {signUpSectionCopy[language].checkYourEmail}
+                </h1>
 
-
-                                <p
-                                    className="
+                <p
+                  className="
                                         mx-auto
                                         mt-3
                                         max-w-sm
@@ -338,27 +261,23 @@ function SignupSection() {
                                         leading-6
                                         text-[#667056]
                                     "
-                                >
-                                    {language === "en"
-                                        ? "We've sent you a verification link. Open it to verify your Etugen Mongols account."
-                                        : "Бид танд баталгаажуулах холбоос илгээлээ. Etugen Mongols бүртгэлээ баталгаажуулахын тулд холбоосыг нээнэ үү."}
-                                </p>
+                >
+                  {signUpSectionCopy[language].weVeSentYouAVerificationLink}
+                </p>
 
-
-                                <div className="mt-8">
-
-                                    <p
-                                        className="
+                <div className="mt-8">
+                  <p
+                    className="
                                             text-sm
                                             font-semibold
                                             text-[#27301d]
                                         "
-                                    >
-                                        Etugen Mongols
-                                    </p>
+                  >
+                    Etugen Mongols
+                  </p>
 
-                                    <p
-                                        className="
+                  <p
+                    className="
                                             mt-1
                                             text-[8px]
                                             font-bold
@@ -366,21 +285,16 @@ function SignupSection() {
                                             tracking-[0.2em]
                                             text-[#9a7b26]
                                         "
-                                    >
-                                        Not For Profit
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        ) : (
-
-                            <>
-
-                                {/* Compact top area */}
-                                <div
-                                    className="
+                  >
+                    Not For Profit
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Compact top area */}
+                <div
+                  className="
                                         border-b
                                         border-[#27301d]/10
                                         bg-white
@@ -392,27 +306,21 @@ function SignupSection() {
 
                                         md:px-9
                                     "
-                                >
-
-                                    <h1
-                                        className="
+                >
+                  <h1
+                    className="
                                             text-2xl
                                             font-semibold
                                             text-[#27301d]
                                         "
-                                    >
-                                        {language === "en"
-                                            ? "Create an account"
-                                            : "Бүртгэл үүсгэх"}
-                                    </h1>
+                  >
+                    {signUpSectionCopy[language].createAnAccount}
+                  </h1>
 
-
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowWhyAccount(true)
-                                        }
-                                        className="
+                  <button
+                    type="button"
+                    onClick={() => setShowWhyAccount(true)}
+                    className="
                                             mt-3
                                             inline-flex
                                             items-center
@@ -438,59 +346,38 @@ function SignupSection() {
                                             hover:bg-[#9a7b26]
                                             hover:text-white
                                         "
-                                    >
-                                        {language === "en"
-                                            ? "Why create an account?"
-                                            : "Яагаад бүртгэл үүсгэх вэ?"}
-                                    </button>
+                  >
+                    {signUpSectionCopy[language].whyCreateAnAccount}
+                  </button>
+                </div>
 
-                                </div>
-
-
-                                {/* Signup form */}
-                                <div
-                                    className="
+                {/* Signup form */}
+                <div
+                  className="
                                         px-7
                                         py-6
                                         md:px-9
                                     "
-                                >
+                >
+                  <SignupForm
+                    language={language}
+                    onAccountCreated={() => setAccountCreated(true)}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </motion.div>
+      </section>
 
-                                    <SignupForm
-                                        language={language}
-                                        onAccountCreated={() =>
-                                            setAccountCreated(true)
-                                        }
-                                    />
-
-                                </div>
-
-                            </>
-
-                        )}
-
-                    </div>
-
-                </motion.div>
-
-            </section>
-
-
-            {/* Why create an account modal */}
-            <SignupBenefitsModal showWhyAccount={showWhyAccount} setShowWhyAccount={setShowWhyAccount} language={language} />
-
-        </main>
-    );
+      {/* Why create an account modal */}
+      <SignupBenefitsModal
+        showWhyAccount={showWhyAccount}
+        setShowWhyAccount={setShowWhyAccount}
+        language={language}
+      />
+    </main>
+  );
 }
-
-
-
-
-
-
-
-
-
-
 
 export default memo(SignupSection);

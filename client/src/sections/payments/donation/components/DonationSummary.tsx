@@ -1,8 +1,6 @@
 import { memo } from "react";
 
-import type {
-DonationCopy,
-} from "../types/donationTypes";
+import type { DonationCopy } from "../types/donationTypes";
 
 type DonationSummaryProps = {
   copy: DonationCopy;
@@ -52,13 +50,9 @@ function DonationSummary({
             text-[#59604d]
           "
         >
-          <span>
-            {copy.donationSummary}
-          </span>
+          <span>{copy.donationSummary}</span>
 
-          <span>
-            {formattedAmount}
-          </span>
+          <span>{formattedAmount}</span>
         </div>
 
         <div
@@ -77,9 +71,7 @@ function DonationSummary({
               gap-6
             "
           >
-            <span className="font-medium">
-              {copy.total}
-            </span>
+            <span className="font-medium">{copy.total}</span>
 
             <span
               className="
@@ -115,10 +107,7 @@ function DonationSummary({
 
       <button
         type="submit"
-        disabled={
-          submitting ||
-          authLoading
-        }
+        disabled={submitting || authLoading}
         className="
           mt-8
           inline-flex
@@ -141,9 +130,7 @@ function DonationSummary({
           disabled:hover:translate-y-0
         "
       >
-        {submitting
-          ? copy.processing
-          : copy.checkout}
+        {submitting ? copy.processing : copy.checkout}
       </button>
 
       <p
@@ -160,6 +147,4 @@ function DonationSummary({
   );
 }
 
-export default memo(
-  DonationSummary
-);
+export default memo(DonationSummary);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { eventEditorUtilsCopy } from "../content/eventEditorUtilsCopy";
 
 import type { EventUpdateType } from "../types";
 
@@ -11,7 +12,7 @@ export function addEventChange(
   changes: EventChange[],
   type: EventUpdateType,
   oldValue: string | number | null,
-  newValue: string | null
+  newValue: string | null,
 ) {
   const normalizedOld = oldValue === null ? null : String(oldValue);
 
@@ -35,42 +36,27 @@ export function toDateTimeLocal(value: string) {
   return local.toISOString().slice(0, 16);
 }
 
-export function getEventUpdateErrorMessage(
-  error: unknown,
-  lang: "en" | "mn"
-) {
+export function getEventUpdateErrorMessage(error: unknown, lang: "en" | "mn") {
   if (axios.isAxiosError(error)) {
     switch (error.response?.status) {
       case 400:
-        return lang === "mn"
-          ? "Зарим мэдээлэл буруу байна."
-          : "Some of the event information is invalid.";
+        return eventEditorUtilsCopy[lang].someOfTheEventInformationIsInvalid;
       case 401:
-        return lang === "mn"
-          ? "Таны нэвтрэх хугацаа дууссан байна."
-          : "Your session has expired.";
+        return eventEditorUtilsCopy[lang].yourSessionHasExpired;
       case 403:
-        return lang === "mn"
-          ? "Энэ арга хэмжээг засах эрхгүй байна."
-          : "You do not have permission to edit this event.";
+        return eventEditorUtilsCopy[lang].youDoNotHavePermissionToEdit;
       case 404:
-        return lang === "mn"
-          ? "Арга хэмжээ олдсонгүй."
-          : "This event no longer exists.";
+        return eventEditorUtilsCopy[lang].thisEventNoLongerExists;
       case 409:
-        return lang === "mn"
-          ? "Өөрчлөлт одоогийн мэдээлэлтэй зөрчилдөж байна."
-          : "The update conflicts with existing event information.";
+        return eventEditorUtilsCopy[lang]
+          .theUpdateConflictsWithExistingEventInformation;
     }
   }
 
-  return lang === "mn"
-    ? "Өөрчлөлтийг хадгалж чадсангүй."
-    : "Could not save the event.";
+  return eventEditorUtilsCopy[lang].couldNotSaveTheEvent;
 }
 
-export const inputClasses =
-    `
+export const inputClasses = `
         w-full
         rounded-lg
         border

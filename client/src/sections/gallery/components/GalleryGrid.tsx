@@ -1,10 +1,16 @@
-import { memo } from "react";
 import { motion } from "framer-motion";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { getAlbumFrame, getLayoutClass } from "../helpers";
 import type { GalleryCardItem, GalleryCopy } from "../types";
 
-export const GalleryGrid = memo(function GalleryGrid({ items, copy }: { items: GalleryCardItem[]; copy: GalleryCopy }) {
+export const GalleryGrid = memo(function GalleryGrid({
+  items,
+  copy,
+}: {
+  items: GalleryCardItem[];
+  copy: GalleryCopy;
+}) {
   const isLargeSet = items.length > 5;
   return (
     <motion.div
@@ -15,20 +21,44 @@ export const GalleryGrid = memo(function GalleryGrid({ items, copy }: { items: G
       className={getLayoutClass(items.length)}
     >
       {items.map((item, index) => (
-        <div key={item.id} className={isLargeSet ? "mb-10 break-inside-avoid sm:mb-12" : ""}>
-          <GalleryCard item={item} viewAlbum={copy.viewAlbum} index={index} isLargeSet={isLargeSet} />
+        <div
+          key={item.id}
+          className={isLargeSet ? "mb-10 break-inside-avoid sm:mb-12" : ""}
+        >
+          <GalleryCard
+            item={item}
+            viewAlbum={copy.viewAlbum}
+            index={index}
+            isLargeSet={isLargeSet}
+          />
         </div>
       ))}
     </motion.div>
   );
 });
 
-const GalleryCard = memo(function GalleryCard({ item, viewAlbum, index, isLargeSet }: { item: GalleryCardItem; viewAlbum: string; index: number; isLargeSet: boolean }) {
+const GalleryCard = memo(function GalleryCard({
+  item,
+  viewAlbum,
+  index,
+  isLargeSet,
+}: {
+  item: GalleryCardItem;
+  viewAlbum: string;
+  index: number;
+  isLargeSet: boolean;
+}) {
   const frame = getAlbumFrame(index, isLargeSet);
   return (
-    <Link to={item.link} aria-label={`${viewAlbum}: ${item.title}`} className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e1d2a6]">
+    <Link
+      to={item.link}
+      aria-label={`${viewAlbum}: ${item.title}`}
+      className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e1d2a6]"
+    >
       <article>
-        <div className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_16px_46px_rgba(0,0,0,0.24)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_60px_rgba(0,0,0,0.3)]`}>
+        <div
+          className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_16px_46px_rgba(0,0,0,0.24)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_60px_rgba(0,0,0,0.3)]`}
+        >
           <img
             src={item.imageSrc}
             alt={item.imageAlt}
@@ -45,7 +75,9 @@ const GalleryCard = memo(function GalleryCard({ item, viewAlbum, index, isLargeS
           </span>
         </div>
         <div className="mt-4 px-1">
-          <h2 className="text-lg font-semibold leading-tight tracking-tight text-[#fffaf0]">{item.title}</h2>
+          <h2 className="text-lg font-semibold leading-tight tracking-tight text-[#fffaf0]">
+            {item.title}
+          </h2>
         </div>
       </article>
     </Link>

@@ -3,91 +3,65 @@ import { useState } from "react";
 
 import { changeName } from "../api/accountApi";
 
-import type {
-ChangeNameFormData
-} from "../types/accountTypes";
+import type { ChangeNameFormData } from "../types/accountTypes";
 
 interface UseChangeNameOptions {
-    invalidNameMessage: string;
-    genericErrorMessage: string;
+  invalidNameMessage: string;
+  genericErrorMessage: string;
 }
 
 export function useChangeName({
-    invalidNameMessage,
-    genericErrorMessage
+  invalidNameMessage,
+  genericErrorMessage,
 }: UseChangeNameOptions) {
+  const [loading, setLoading] = useState(false);
 
-    const [loading, setLoading] =
-        useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const [error, setError] =
-        useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-    const [success, setSuccess] =
-        useState(false);
+  const submit = async (form: ChangeNameFormData): Promise<boolean> => {
+    setError(null);
+    setSuccess(false);
 
-    const submit = async (
-        form: ChangeNameFormData
-    ): Promise<boolean> => {
+    const firstName = form.firstName.trim();
 
-        setError(null);
-        setSuccess(false);
+    const lastName = form.lastName.trim();
 
-        const firstName =
-            form.firstName.trim();
+    if (firstName.length === 0 || lastName.length === 0) {
+      setError(invalidNameMessage);
 
-        const lastName =
-            form.lastName.trim();
+      return false;
+    }
 
-        if (
-            firstName.length === 0 ||
-            lastName.length === 0
-        ) {
-            setError(
-                invalidNameMessage
-            );
+    setLoading(true);
 
-            return false;
-        }
+    try {
+      await changeName({
+        firstName,
+        lastName,
+      });
 
-        setLoading(true);
+      setSuccess(true);
 
-        try {
+      return true;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(genericErrorMessage);
+      } else {
+        setError(genericErrorMessage);
+      }
 
-            await changeName({
-                firstName,
-                lastName
-            });
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            setSuccess(true);
-
-            return true;
-
-        } catch (err) {
-
-            if (axios.isAxiosError(err)) {
-                setError(
-                    genericErrorMessage
-                );
-            } else {
-                setError(
-                    genericErrorMessage
-                );
-            }
-
-            return false;
-
-        } finally {
-
-            setLoading(false);
-
-        }
-    };
-
-    return {
-        submit,
-        loading,
-        error,
-        success
-    };
+  return {
+    submit,
+    loading,
+    error,
+    success,
+  };
 }

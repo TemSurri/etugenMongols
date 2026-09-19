@@ -1,51 +1,35 @@
+import {
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import { formatPaymentAmount } from "../../formatPaymentAmount";
 import { paymentMedia } from "../../media";
 import {
-PaymentElement,
-useElements,
-useStripe,
-} from "@stripe/react-stripe-js";
-import { DonationInvalidPanel,DonationProcessingPanel,DonationSuccessPanel } from "./DonationPaymentStatus";
+  DonationInvalidPanel,
+  DonationProcessingPanel,
+  DonationSuccessPanel,
+} from "./DonationPaymentStatus";
 
-import {
-useState,
-type FormEvent,
-} from "react";
+import { useState, type FormEvent } from "react";
 
-import type {
-DonationCopy,
-PaymentAction,
-} from "../types/donationTypes";
-
+import type { DonationCopy, PaymentAction } from "../types/donationTypes";
 
 type DonationPaymentProps = {
+  action: PaymentAction;
 
-  action:
-    PaymentAction;
+  amount: number;
 
-  amount:
-    number;
+  currency: string;
 
-  currency:
-    string;
+  copy: DonationCopy;
 
-  copy:
-    DonationCopy;
+  onCancel: () => Promise<void>;
 
-  onCancel:
-    () => Promise<void>;
-
-  onComplete:
-    () => void;
+  onComplete: () => void;
 };
 
-
-type PaymentState =
-  | "payment"
-  | "processing"
-  | "success"
-  | "invalid";
-
+type PaymentState = "payment" | "processing" | "success" | "invalid";
 
 function DonationPayment({
   action,
@@ -55,311 +39,180 @@ function DonationPayment({
   onCancel,
   onComplete,
 }: DonationPaymentProps) {
+  const stripe = useStripe();
 
-  const stripe =
-    useStripe();
+  const elements = useElements();
 
-  const elements =
-    useElements();
+  const [state, setState] = useState<PaymentState>("payment");
 
+  const [submitting, setSubmitting] = useState(false);
 
-  const [
-    state,
-    setState,
-  ] =
-    useState<PaymentState>(
-      "payment"
-    );
+  const [cancelling, setCancelling] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
 
-  const [
-    submitting,
-    setSubmitting,
-  ] =
-    useState(false);
+  const formattedAmount = formatPaymentAmount(amount, currency);
 
+  const isDonation = action === "DONATION";
 
-  const [
-    cancelling,
-    setCancelling,
-  ] =
-    useState(false);
+  const title = isDonation ? copy.paymentTitle : copy.eventPaymentTitle;
 
+  const description = isDonation
+    ? copy.paymentDescription
+    : copy.eventPaymentDescription;
 
-  const [
-    error,
-    setError,
-  ] =
-    useState<
-      string | null
-    >(null);
+  const successTitle = isDonation
+    ? copy.paymentSuccessTitle
+    : copy.eventSuccessTitle;
 
+  const successDescription = isDonation
+    ? copy.paymentSuccessDescription
+    : copy.eventSuccessDescription;
 
-  const formattedAmount =
-    formatPaymentAmount(amount, currency);
+  const busy = submitting || cancelling;
 
+  const handleCancel = async () => {
+    if (busy) {
+      return;
+    }
 
-  const isDonation =
-    action ===
-    "DONATION";
+    try {
+      setCancelling(true);
 
+      setError(null);
 
-  const title =
-    isDonation
-      ? copy.paymentTitle
-      : copy.eventPaymentTitle;
+      await onCancel();
+    } catch (requestError) {
+      console.error("Payment cancellation failed:", requestError);
 
+      setError(copy.paymentCancelError);
 
-  const description =
-    isDonation
-      ? copy.paymentDescription
-      : copy.eventPaymentDescription;
+      setCancelling(false);
+    }
+  };
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const successTitle =
-    isDonation
-      ? copy.paymentSuccessTitle
-      : copy.eventSuccessTitle;
+    if (!stripe || !elements || busy) {
+      return;
+    }
 
+    setSubmitting(true);
 
-  const successDescription =
-    isDonation
-      ? copy.paymentSuccessDescription
-      : copy.eventSuccessDescription;
+    setError(null);
 
+    try {
+      const { error: stripeError, paymentIntent } = await stripe.confirmPayment(
+        {
+          elements,
 
-  const busy =
-    submitting ||
-    cancelling;
+          confirmParams: {
+            return_url: `${window.location.origin}/payments/donate/result`,
+          },
 
-
-  const handleCancel =
-    async () => {
-
-      if (busy) {
-        return;
-      }
-
-
-      try {
-
-        setCancelling(
-          true
-        );
-
-        setError(
-          null
-        );
-
-
-        await onCancel();
-
-      } catch (requestError) {
-
-        console.error(
-          "Payment cancellation failed:",
-          requestError
-        );
-
-
-        setError(
-          copy.paymentCancelError
-        );
-
-
-        setCancelling(
-          false
-        );
-      }
-    };
-
-
-  const handleSubmit =
-    async (
-      event:
-        FormEvent<HTMLFormElement>
-    ) => {
-
-      event.preventDefault();
-
-
-      if (
-        !stripe ||
-        !elements ||
-        busy
-      ) {
-        return;
-      }
-
-
-      setSubmitting(
-        true
+          redirect: "if_required",
+        },
       );
 
-      setError(
-        null
-      );
-
-
-      try {
-
-        const {
-          error: stripeError,
-          paymentIntent,
-        } =
-          await stripe.confirmPayment({
-
-            elements,
-
-            confirmParams: {
-
-              return_url:
-                `${window.location.origin}/payments/donate/result`,
-            },
-
-            redirect:
-              "if_required",
-          });
-
-
-        if (stripeError) {
-
-          if (
-            stripeError.code ===
-            "payment_intent_unexpected_state"
-          ) {
-
-            setState(
-              "invalid"
-            );
-
-            return;
-          }
-
-
-          setError(
-            stripeError.message ??
-            "Payment could not be completed."
-          );
+      if (stripeError) {
+        if (stripeError.code === "payment_intent_unexpected_state") {
+          setState("invalid");
 
           return;
         }
 
+        setError(stripeError.message ?? "Payment could not be completed.");
 
-        switch (
-          paymentIntent?.status
-        ) {
-
-          case "succeeded":
-
-            setState(
-              "success"
-            );
-
-            return;
-
-
-          case "processing":
-
-            setState(
-              "processing"
-            );
-
-            return;
-
-
-          case "requires_payment_method":
-
-            setError(
-              "Your payment was not completed. Please check your payment method and try again."
-            );
-
-            return;
-
-
-          case "requires_action":
-          case "requires_confirmation":
-
-            setError(
-              "Your payment requires another confirmation step. Please try again."
-            );
-
-            return;
-
-
-          case "requires_capture":
-          case "canceled":
-          case undefined:
-
-            setState(
-              "invalid"
-            );
-
-            return;
-
-
-          default:
-
-            setState(
-              "invalid"
-            );
-
-            return;
-        }
-
-      } catch (requestError) {
-
-        console.error(
-          "Stripe confirmation failed:",
-          requestError
-        );
-
-
-        setError(
-          "Payment could not be completed. Please try again."
-        );
-
-      } finally {
-
-        setSubmitting(
-          false
-        );
+        return;
       }
-    };
 
+      switch (paymentIntent?.status) {
+        case "succeeded":
+          setState("success");
 
-  if (
-    state === "invalid"
-  ) {
+          return;
 
-    return <DonationInvalidPanel copy={copy} isDonation={isDonation} onComplete={onComplete} />;
+        case "processing":
+          setState("processing");
+
+          return;
+
+        case "requires_payment_method":
+          setError(
+            "Your payment was not completed. Please check your payment method and try again.",
+          );
+
+          return;
+
+        case "requires_action":
+        case "requires_confirmation":
+          setError(
+            "Your payment requires another confirmation step. Please try again.",
+          );
+
+          return;
+
+        case "requires_capture":
+        case "canceled":
+        case undefined:
+          setState("invalid");
+
+          return;
+
+        default:
+          setState("invalid");
+
+          return;
+      }
+    } catch (requestError) {
+      console.error("Stripe confirmation failed:", requestError);
+
+      setError("Payment could not be completed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (state === "invalid") {
+    return (
+      <DonationInvalidPanel
+        copy={copy}
+        isDonation={isDonation}
+        onComplete={onComplete}
+      />
+    );
   }
 
-
-  if (
-    state === "success"
-  ) {
-
-    return <DonationSuccessPanel copy={copy} isDonation={isDonation} onComplete={onComplete} formattedAmount={formattedAmount} successTitle={successTitle} successDescription={successDescription} />;
+  if (state === "success") {
+    return (
+      <DonationSuccessPanel
+        copy={copy}
+        isDonation={isDonation}
+        onComplete={onComplete}
+        formattedAmount={formattedAmount}
+        successTitle={successTitle}
+        successDescription={successDescription}
+      />
+    );
   }
 
-
-  if (
-    state === "processing"
-  ) {
-
-    return <DonationProcessingPanel copy={copy} isDonation={isDonation} onComplete={onComplete} formattedAmount={formattedAmount} />;
+  if (state === "processing") {
+    return (
+      <DonationProcessingPanel
+        copy={copy}
+        isDonation={isDonation}
+        onComplete={onComplete}
+        formattedAmount={formattedAmount}
+      />
+    );
   }
-
 
   return (
     <section
       role="dialog"
-
       aria-modal="true"
-
       aria-labelledby="donation-payment-title"
-
       className={`
         relative
         w-full
@@ -370,14 +223,9 @@ function DonationPayment({
         transition-all
         duration-300
 
-        ${
-          cancelling
-            ? "scale-[0.995] opacity-90"
-            : "scale-100 opacity-100"
-        }
+        ${cancelling ? "scale-[0.995] opacity-90" : "scale-100 opacity-100"}
       `}
     >
-
       <div
         className="
           border-b
@@ -387,7 +235,6 @@ function DonationPayment({
           sm:px-9
         "
       >
-
         <div
           className="
             flex
@@ -396,13 +243,11 @@ function DonationPayment({
             gap-6
           "
         >
-
           <div
             className="
               min-w-0
             "
           >
-
             <p
               className="
                 text-[10px]
@@ -412,17 +257,11 @@ function DonationPayment({
                 text-[#9a7b26]
               "
             >
-              {
-                isDonation
-                  ? copy.donation
-                  : copy.eventRegistration
-              }
+              {isDonation ? copy.donation : copy.eventRegistration}
             </p>
-
 
             <h2
               id="donation-payment-title"
-
               className="
                 mt-2
                 text-2xl
@@ -432,7 +271,6 @@ function DonationPayment({
             >
               {title}
             </h2>
-
 
             <p
               className="
@@ -445,15 +283,11 @@ function DonationPayment({
             >
               {description}
             </p>
-
           </div>
-
 
           <img
             src={paymentMedia.logo}
-
             alt="Etugen Mongols"
-
             className="
               h-11
               w-11
@@ -461,9 +295,7 @@ function DonationPayment({
               object-contain
             "
           />
-
         </div>
-
 
         <div
           className="
@@ -477,7 +309,6 @@ function DonationPayment({
             pt-4
           "
         >
-
           <span
             className="
               text-sm
@@ -487,7 +318,6 @@ function DonationPayment({
             {copy.paymentTotal}
           </span>
 
-
           <span
             className="
               text-lg
@@ -496,17 +326,11 @@ function DonationPayment({
           >
             {formattedAmount}
           </span>
-
         </div>
-
       </div>
 
-
       <form
-        onSubmit={
-          handleSubmit
-        }
-
+        onSubmit={handleSubmit}
         className="
           px-6
           py-7
@@ -514,18 +338,12 @@ function DonationPayment({
           sm:py-8
         "
       >
-
         <PaymentElement />
 
-
-        {
-          error &&
-          (
-
-            <div
-              role="alert"
-
-              className="
+        {error && (
+          <div
+            role="alert"
+            className="
                 mt-6
                 border-l-2
                 border-[#d6ba72]
@@ -536,13 +354,10 @@ function DonationPayment({
                 leading-6
                 text-[#59604d]
               "
-            >
-              {error}
-            </div>
-
-          )
-        }
-
+          >
+            {error}
+          </div>
+        )}
 
         <div
           className="
@@ -553,18 +368,10 @@ function DonationPayment({
             sm:flex-row
           "
         >
-
           <button
             type="button"
-
-            disabled={
-              busy
-            }
-
-            onClick={
-              handleCancel
-            }
-
+            disabled={busy}
+            onClick={handleCancel}
             className="
               inline-flex
               flex-1
@@ -586,15 +393,11 @@ function DonationPayment({
               disabled:opacity-70
             "
           >
-            {
-              cancelling
-                ? (
-                    <>
-
-                      <span
-                        aria-hidden="true"
-
-                        className="
+            {cancelling ? (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="
                           h-3.5
                           w-3.5
                           shrink-0
@@ -604,28 +407,18 @@ function DonationPayment({
                           border-[#303824]/20
                           border-t-[#303824]
                         "
-                      />
+                />
 
-                      <span>
-                        {copy.cancellingPayment}
-                      </span>
-
-                    </>
-                  )
-                : copy.paymentCancel
-            }
+                <span>{copy.cancellingPayment}</span>
+              </>
+            ) : (
+              copy.paymentCancel
+            )}
           </button>
-
 
           <button
             type="submit"
-
-            disabled={
-              !stripe ||
-              !elements ||
-              busy
-            }
-
+            disabled={!stripe || !elements || busy}
             className="
               inline-flex
               flex-1
@@ -644,20 +437,12 @@ function DonationPayment({
               disabled:opacity-60
             "
           >
-            {
-              submitting
-                ? copy.paymentProcessing
-                : `Pay ${formattedAmount}`
-            }
+            {submitting ? copy.paymentProcessing : `Pay ${formattedAmount}`}
           </button>
-
         </div>
-
       </form>
-
     </section>
   );
 }
-
 
 export default DonationPayment;

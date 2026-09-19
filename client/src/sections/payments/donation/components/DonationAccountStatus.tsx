@@ -2,9 +2,7 @@ import { memo } from "react";
 
 import { Link } from "react-router-dom";
 
-import type {
-DonationCopy,
-} from "../types/donationTypes";
+import type { DonationCopy } from "../types/donationTypes";
 
 type AccountUser = {
   email: string;
@@ -64,8 +62,7 @@ function DonationAccountStatus({
             text-[#303824]
           "
         >
-          {user.firstName}{" "}
-          {user.lastName}
+          {user.firstName} {user.lastName}
         </p>
 
         <p
@@ -170,6 +167,4 @@ function DonationAccountStatus({
   );
 }
 
-export default memo(
-  DonationAccountStatus
-);
+export default memo(DonationAccountStatus);

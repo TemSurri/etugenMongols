@@ -1,12 +1,11 @@
-"use client";
+import type { Lang } from "../../context/language";
+import { COPY } from "./content/HeroContent";
 
-import { cubicBezier,motion,type Variants } from "framer-motion";
-import { memo,useState } from "react";
+import { cubicBezier, motion, type Variants } from "framer-motion";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { homeMedia } from "./media";
-
-type Lang = "en" | "mn";
 
 type HeroProps = {
   lang: Lang;
@@ -36,66 +35,6 @@ const fadeIn: Variants = {
   },
 };
 
-const COPY = {
-  en: {
-    brand: "Etugen Mongols",
-
-    intro:
-      "A Calgary-based non-profit preserving Mongolian culture and bringing the community together through events, programs, and performances.",
-
-    learnMore: "Learn More",
-
-    whatKicker: "What We Do",
-
-    whatBody:
-      "We host cultural events, performances, gatherings, and community programs that help Mongolian traditions stay active in Calgary. From Naadam to family celebrations, our goal is to create spaces where people can participate, practice, perform, and pass culture forward.",
-
-    eventsButton: "View Events",
-    programsButton: "Programs",
-
-    whoKicker: "Who We Are",
-
-    whoBody:
-      "Etugen Mongols is built by families, volunteers, organizers, artists, performers, and community members who care about keeping Mongolian heritage visible, shared, and meaningful for the next generation.",
-
-    storyButton: "Our Story",
-    teamButton: "Meet the Team",
-    impactButton: "Our Impact",
-
-    pause: "Pause",
-    paused: "Paused",
-  },
-
-  mn: {
-    brand: "Этүгэн Монголчууд",
-
-    intro:
-      "Калгари дахь Монгол соёлыг хадгалж, арга хэмжээ, хөтөлбөр, тоглолтоор хамт олноо нэгтгэх ашгийн бус байгууллага.",
-
-    learnMore: "Дэлгэрэнгүй",
-
-    whatKicker: "Бид юу хийдэг вэ",
-
-    whatBody:
-      "Бид Монгол уламжлалаа Калгари хотод амьд байлгахын тулд соёлын арга хэмжээ, тоглолт, уулзалт, хөтөлбөрүүдийг зохион байгуулдаг. Наадам, гэр бүлийн баяр, хамтын үйл ажиллагаагаар дамжуулан хүмүүс оролцож, дадлага хийж, соёлоо хойч үедээ өвлүүлэх орон зайг бий болгодог.",
-
-    eventsButton: "Арга хэмжээнүүд",
-    programsButton: "Хөтөлбөрүүд",
-
-    whoKicker: "Бид хэн бэ",
-
-    whoBody:
-      "Этүгэн Монголчууд нь Монгол өв соёлоо хадгалж, бусадтай хуваалцаж, дараагийн үедээ утга учиртайгаар өвлүүлэхийг хүссэн гэр бүлүүд, сайн дурынхан, зохион байгуулагчид, уран бүтээлчид, хамт олноос бүрддэг.",
-
-    storyButton: "Бидний түүх",
-    teamButton: "Багтай танилцах",
-    impactButton: "Бидний нөлөө",
-
-    pause: "Зогсоох",
-    paused: "Зогссон",
-  },
-} as const;
-
 function Hero({ lang }: HeroProps) {
   const copy = COPY[lang];
 
@@ -117,10 +56,7 @@ function Hero({ lang }: HeroProps) {
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">
       <section className="flex min-h-screen flex-col bg-white pt-16 md:pt-20">
-        <HeroSlowScroll
-          pauseText={copy.pause}
-          pausedText={copy.paused}
-        />
+        <HeroSlowScroll pauseText={copy.pause} pausedText={copy.paused} />
 
         <motion.div
           variants={fadeIn}
@@ -333,8 +269,8 @@ function HeroSlowScroll({
               alt=""
               width={1280}
               height={850}
-              loading={(index === 0 || index === 1) ? "eager" : "lazy"}
-              fetchPriority={(index === 0 || index === 1) ? "high" : "auto"}
+              loading={index === 0 || index === 1 ? "eager" : "lazy"}
+              fetchPriority={index === 0 || index === 1 ? "high" : "auto"}
               decoding="async"
               draggable={false}
               className="etugen-hero-image h-full w-1/4 shrink-0 select-none object-cover object-center"
@@ -404,14 +340,10 @@ function HeroSlowScroll({
               onClick={() => setActiveIndex(index)}
               className={[
                 "h-2.5 w-2.5 rounded-full border border-white transition-colors",
-                activeIndex === index
-                  ? "bg-white"
-                  : "bg-white/30",
+                activeIndex === index ? "bg-white" : "bg-white/30",
               ].join(" ")}
               aria-label={`Go to image ${index + 1}`}
-              aria-current={
-                activeIndex === index ? "true" : undefined
-              }
+              aria-current={activeIndex === index ? "true" : undefined}
             />
           ))}
         </div>
@@ -467,11 +399,7 @@ function InfoPanel({
   );
 }
 
-function SingleImage({
-  className = "",
-}: {
-  className?: string;
-}) {
+function SingleImage({ className = "" }: { className?: string }) {
   return (
     <div
       className={`flex min-h-[20rem] items-center justify-center bg-white p-3 lg:min-h-[25rem] ${className}`}
@@ -489,15 +417,10 @@ function SingleImage({
   );
 }
 
-function FeaturedVideo({
-  className = "",
-}: {
-  className?: string;
-}) {
+function FeaturedVideo({ className = "" }: { className?: string }) {
   const [showVideo, setShowVideo] = useState(false);
 
-  const hasVideo =
-    FEATURED_VIDEO_ID.trim().length > 0;
+  const hasVideo = FEATURED_VIDEO_ID.trim().length > 0;
 
   return (
     <div

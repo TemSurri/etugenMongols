@@ -1,11 +1,16 @@
-import { useCallback,useEffect,useMemo,useState } from "react";
-import type { EventImage,GalleryEvent,GallerySection,PerformanceItem } from "../model/galleryCatalogTypes";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type {
+  EventImage,
+  GalleryEvent,
+  GallerySection,
+  PerformanceItem,
+} from "../model/galleryCatalogTypes";
 type SectionKey = "general" | "performances" | "behindTheScenes";
 export const IMAGES_PER_PAGE = 9;
 function getSectionImages(
   key: SectionKey,
   gallery: NonNullable<GalleryEvent["gallery"]>,
-  activePerformance?: PerformanceItem
+  activePerformance?: PerformanceItem,
 ): EventImage[] {
   if (key === "performances") {
     return activePerformance?.images ?? [];
@@ -17,10 +22,12 @@ function getSectionImages(
 
   return gallery.sections.general.images;
 }
-export function useGalleryDetail(gallery: NonNullable<GalleryEvent["gallery"]>) {
-const performances = gallery.sections.performances;
-const firstPerformance = performances?.items[0];
-const availableSections = useMemo<SectionKey[]>(() => {
+export function useGalleryDetail(
+  gallery: NonNullable<GalleryEvent["gallery"]>,
+) {
+  const performances = gallery.sections.performances;
+  const firstPerformance = performances?.items[0];
+  const availableSections = useMemo<SectionKey[]>(() => {
     const sections: SectionKey[] = ["general"];
 
     if (performances && performances.items.length > 0) {
@@ -33,20 +40,21 @@ const availableSections = useMemo<SectionKey[]>(() => {
 
     return sections;
   }, [gallery.sections.behindTheScenes, performances]);
-const [activeSectionKey, setActiveSectionKey] =
+  const [activeSectionKey, setActiveSectionKey] =
     useState<SectionKey>("general");
-const [activePerformanceId, setActivePerformanceId] = useState<string | null>(
-    firstPerformance?.id ?? null
+  const [activePerformanceId, setActivePerformanceId] = useState<string | null>(
+    firstPerformance?.id ?? null,
   );
-useEffect(() => {
-    if (!availableSections.includes(activeSectionKey)) {
-      setActiveSectionKey("general");
-    }
-  }, [activeSectionKey, availableSections]);
-useEffect(() => {
+  if (!availableSections.includes(activeSectionKey)) {
+    setActiveSectionKey("general");
+  }
+  const [previousFirstPerformance, setPreviousFirstPerformance] =
+    useState(firstPerformance);
+  if (previousFirstPerformance !== firstPerformance) {
+    setPreviousFirstPerformance(firstPerformance);
     setActivePerformanceId(firstPerformance?.id ?? null);
-  }, [firstPerformance]);
-const activePerformance = useMemo(() => {
+  }
+  const activePerformance = useMemo(() => {
     if (!performances) return undefined;
 
     return (
@@ -54,43 +62,51 @@ const activePerformance = useMemo(() => {
       firstPerformance
     );
   }, [activePerformanceId, firstPerformance, performances]);
-const activeStaticSection: GallerySection | undefined =
+  const activeStaticSection: GallerySection | undefined =
     activeSectionKey === "performances"
       ? undefined
       : activeSectionKey === "behindTheScenes"
         ? gallery.sections.behindTheScenes
         : gallery.sections.general;
-const images = useMemo(
+  const images = useMemo(
     () => getSectionImages(activeSectionKey, gallery, activePerformance),
-    [activeSectionKey, gallery, activePerformance]
+    [activeSectionKey, gallery, activePerformance],
   );
-const [activeIndex, setActiveIndex] = useState<number | null>(null);
-const [page, setPage] = useState(0);
-const pageCount = Math.ceil(images.length / IMAGES_PER_PAGE);
-const pagedImages = useMemo(
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
+  const pageCount = Math.ceil(images.length / IMAGES_PER_PAGE);
+  const pagedImages = useMemo(
     () =>
       images.slice(
         page * IMAGES_PER_PAGE,
-        page * IMAGES_PER_PAGE + IMAGES_PER_PAGE
+        page * IMAGES_PER_PAGE + IMAGES_PER_PAGE,
       ),
-    [images, page]
+    [images, page],
   );
-const next = useCallback(() => {
+  const next = useCallback(() => {
     if (images.length === 0) return;
     setActiveIndex((i) => (i === null ? 0 : (i + 1) % images.length));
   }, [images.length]);
-const prev = useCallback(() => {
+  const prev = useCallback(() => {
     if (images.length === 0) return;
     setActiveIndex((i) =>
-      i === null ? 0 : (i - 1 + images.length) % images.length
+      i === null ? 0 : (i - 1 + images.length) % images.length,
     );
   }, [images.length]);
-const closeLightbox = useCallback(() => setActiveIndex(null), []);
-useEffect(() => {
+  const closeLightbox = useCallback(() => setActiveIndex(null), []);
+  const [previousSelection, setPreviousSelection] = useState({
+    activeSectionKey,
+    activePerformanceId,
+  });
+  if (
+    previousSelection.activeSectionKey !== activeSectionKey ||
+    previousSelection.activePerformanceId !== activePerformanceId
+  ) {
+    setPreviousSelection({ activeSectionKey, activePerformanceId });
     setPage(0);
     setActiveIndex(null);
-  }, [activeSectionKey, activePerformanceId]);
-useEffect(() => {
+  }
+  useEffect(() => {
     if (activeIndex === null) return;
 
     const onKey = (event: KeyboardEvent) => {
@@ -102,5 +118,23 @@ useEffect(() => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [activeIndex, next, prev, closeLightbox]);
-return { availableSections, activeSectionKey, setActiveSectionKey, activePerformance, activeStaticSection, images, activeIndex, setActiveIndex, page, setPage, pageCount, pagedImages, next, prev, closeLightbox, performances, setActivePerformanceId };
+  return {
+    availableSections,
+    activeSectionKey,
+    setActiveSectionKey,
+    activePerformance,
+    activeStaticSection,
+    images,
+    activeIndex,
+    setActiveIndex,
+    page,
+    setPage,
+    pageCount,
+    pagedImages,
+    next,
+    prev,
+    closeLightbox,
+    performances,
+    setActivePerformanceId,
+  };
 }

@@ -1,33 +1,18 @@
-import type {
-    AdminSection
-} from "../types";
-
+import { adminSidebarCopy } from "../content/AdminSidebarCopy";
+import type { AdminSection } from "../types";
 
 type Props = {
+  section: AdminSection;
 
-    section:
-        AdminSection;
+  onChange: (section: AdminSection) => void;
 
-    onChange:
-        (
-            section:
-                AdminSection
-        ) => void;
-
-    lang:
-        "en" | "mn";
+  lang: "en" | "mn";
 };
 
-
-export default function AdminSidebar({
-    section,
-    onChange,
-    lang
-}: Props) {
-
-    return (
-        <aside
-            className="
+export default function AdminSidebar({ section, onChange, lang }: Props) {
+  return (
+    <aside
+      className="
                 h-fit
                 rounded-xl
                 border
@@ -40,84 +25,45 @@ export default function AdminSidebar({
                 lg:sticky
                 lg:top-28
             "
-        >
+    >
+      <nav className="space-y-1">
+        <NavButton
+          active={section === "overview"}
+          onClick={() => onChange("overview")}
+          title={adminSidebarCopy[lang].overview}
+          subtitle={adminSidebarCopy[lang].recentUpdates}
+        />
 
-            <nav className="space-y-1">
-
-                <NavButton
-                    active={
-                        section === "overview"
-                    }
-                    onClick={() =>
-                        onChange(
-                            "overview"
-                        )
-                    }
-                    title={
-                        lang === "mn"
-                            ? "Тойм"
-                            : "Overview"
-                    }
-                    subtitle={
-                        lang === "mn"
-                            ? "Сүүлийн өөрчлөлт"
-                            : "Recent updates"
-                    }
-                />
-
-
-                <NavButton
-                    active={
-                        section === "events"
-                    }
-                    onClick={() =>
-                        onChange(
-                            "events"
-                        )
-                    }
-                    title={
-                        lang === "mn"
-                            ? "Арга хэмжээ"
-                            : "Events"
-                    }
-                    subtitle={
-                        lang === "mn"
-                            ? "Үүсгэх ба удирдах"
-                            : "Create and manage"
-                    }
-                />
-
-            </nav>
-
-        </aside>
-    );
+        <NavButton
+          active={section === "events"}
+          onClick={() => onChange("events")}
+          title={adminSidebarCopy[lang].events}
+          subtitle={adminSidebarCopy[lang].createAndManage}
+        />
+      </nav>
+    </aside>
+  );
 }
 
-
 function NavButton({
-    active,
-    onClick,
-    title,
-    subtitle
+  active,
+  onClick,
+  title,
+  subtitle,
 }: {
-    active:
-        boolean;
+  active: boolean;
 
-    onClick:
-        () => void;
+  onClick: () => void;
 
-    title:
-        string;
+  title: string;
 
-    subtitle:
-        string;
+  subtitle: string;
 }) {
-
-    return (
-        <button
-            type="button"
-            onClick={onClick}
-            className={`
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`
                 w-full
                 rounded-lg
                 px-4
@@ -127,40 +73,33 @@ function NavButton({
                 duration-150
 
                 ${
-                    active
-                        ? "bg-[#27301d] text-white"
-                        : "text-[#27301d] hover:bg-[#f2ecdf]"
+                  active
+                    ? "bg-[#27301d] text-white"
+                    : "text-[#27301d] hover:bg-[#f2ecdf]"
                 }
             `}
-        >
-
-            <span
-                className="
+    >
+      <span
+        className="
                     block
                     text-sm
                     font-semibold
                 "
-            >
-                {title}
-            </span>
+      >
+        {title}
+      </span>
 
-
-            <span
-                className={`
+      <span
+        className={`
                     mt-0.5
                     block
                     text-xs
 
-                    ${
-                        active
-                            ? "text-white/55"
-                            : "text-[#7b8372]"
-                    }
+                    ${active ? "text-white/55" : "text-[#7b8372]"}
                 `}
-            >
-                {subtitle}
-            </span>
-
-        </button>
-    );
+      >
+        {subtitle}
+      </span>
+    </button>
+  );
 }

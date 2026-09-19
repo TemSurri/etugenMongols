@@ -1,140 +1,95 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import {
-cubicBezier,
-motion,
-type Variants
-} from "framer-motion";
+import { cubicBezier, motion, type Variants } from "framer-motion";
 
-import {
-RegistrationsSection
-} from "./components/RegistrationsSection";
+import { RegistrationsSection } from "./components/RegistrationsSection";
 
-import {
-registrationsCopy
-} from "./copy/registrationsCopy";
+import { registrationsCopy } from "./content/registrationsCopy";
 
-import {
-useAuth
-} from "../../../context/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth";
 import { accountBackgrounds } from "../media";
 
-const easeOut =
-    cubicBezier(
-        0.22,
-        1,
-        0.36,
-        1
-    );
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const containerVariants: Variants = {
-    hidden: {
-        opacity: 0
+  hidden: {
+    opacity: 0,
+  },
+
+  show: {
+    opacity: 1,
+
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.08,
     },
-
-    show: {
-        opacity: 1,
-
-        transition: {
-            staggerChildren: 0.12,
-            delayChildren: 0.08
-        }
-    }
+  },
 };
 
 const itemVariants: Variants = {
-    hidden: {
-        opacity: 0,
-        y: 18
+  hidden: {
+    opacity: 0,
+    y: 18,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.55,
+      ease: easeOut,
     },
-
-    show: {
-        opacity: 1,
-        y: 0,
-
-        transition: {
-            duration: 0.55,
-            ease: easeOut
-        }
-    }
+  },
 };
 
 interface RegistrationsMainProps {
-    lang:
-        "en" |
-        "mn";
+  lang: "en" | "mn";
 }
 
-export default function RegistrationsMain({
-    lang
-}: RegistrationsMainProps) {
+export default function RegistrationsMain({ lang }: RegistrationsMainProps) {
+  const { user, loading } = useAuth();
 
-    const {
-        user,
-        loading
-    } =
-        useAuth();
+  const copy = registrationsCopy[lang];
 
-    const copy =
-        registrationsCopy[lang];
+  const [backgroundImage] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * accountBackgrounds.length);
 
-    const [
-        backgroundImage
-    ] =
-        useState(
-            () => {
+    return accountBackgrounds[randomIndex];
+  });
 
-                const randomIndex =
-                    Math.floor(
-                        Math.random() *
-                        accountBackgrounds.length
-                    );
-
-                return accountBackgrounds[
-                    randomIndex
-                ];
-            }
-        );
-
-    if (loading) {
-
-        return (
-            <div
-                className="
+  if (loading) {
+    return (
+      <div
+        className="
                     flex
                     min-h-screen
                     items-center
                     justify-center
                     bg-[#27301d]
                 "
-            >
-                <p
-                    className="
+      >
+        <p
+          className="
                         text-sm
                         font-medium
                         text-white/70
                     "
-                >
-                    Loading...
-                </p>
-            </div>
-        );
-    }
+        >
+          Loading...
+        </p>
+      </div>
+    );
+  }
 
-    if (!user) {
+  if (!user) {
+    return <Navigate to="/auth/login" replace />;
+  }
 
-        return (
-            <Navigate
-                to="/auth/login"
-                replace
-            />
-        );
-    }
-
-    return (
-        <div
-            className="
+  return (
+    <div
+      className="
                 relative
                 min-h-screen
                 bg-cover
@@ -142,35 +97,31 @@ export default function RegistrationsMain({
                 bg-fixed
                 text-[#27301d]
             "
-            style={{
-                backgroundImage:
-                    `url("${backgroundImage}")`
-            }}
-        >
-
-            <div
-                className="
+      style={{
+        backgroundImage: `url("${backgroundImage}")`,
+      }}
+    >
+      <div
+        className="
                     absolute
                     inset-0
                     bg-[#18200f]/75
                 "
-            />
+      />
 
-            <div
-                className="
+      <div
+        className="
                     absolute
                     inset-0
                     bg-black/15
                 "
-            />
+      />
 
-            <motion.div
-                variants={
-                    containerVariants
-                }
-                initial="hidden"
-                animate="show"
-                className="
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="
                     relative
                     z-10
                     mx-auto
@@ -182,65 +133,48 @@ export default function RegistrationsMain({
                     sm:px-6
                     md:pt-32
                 "
-            >
-
-                <motion.div
-                    className="
+      >
+        <motion.div
+          className="
                         mt-8
                         space-y-1
                     "
-                    variants={
-                        itemVariants
-                    }
-                >
-
-                    <h1
-                        className="
+          variants={itemVariants}
+        >
+          <h1
+            className="
                             text-3xl
                             font-semibold
                             text-white
                             sm:text-4xl
                         "
-                    >
-                        {copy.title}
-                    </h1>
+          >
+            {copy.title}
+          </h1>
 
-                    <p
-                        className="
+          <p
+            className="
                             max-w-2xl
                             text-lg
                             leading-7
                             text-white/70
                         "
-                    >
-                        {copy.subtitle}
-                    </p>
+          >
+            {copy.subtitle}
+          </p>
+        </motion.div>
 
-                </motion.div>
-
-                <div
-                    className="
+        <div
+          className="
                         mt-2
                         space-y-6
                     "
-                >
-
-                    <motion.div
-                        variants={
-                            itemVariants
-                        }
-                    >
-                        <RegistrationsSection
-                            copy={
-                                copy.section
-                            }
-                        />
-                    </motion.div>
-
-                </div>
-
-            </motion.div>
-
+        >
+          <motion.div variants={itemVariants}>
+            <RegistrationsSection copy={copy.section} />
+          </motion.div>
         </div>
-    );
+      </motion.div>
+    </div>
+  );
 }

@@ -1,31 +1,14 @@
-export type { PaymentAction,PaymentIntentResult,PaymentIntentResultType,ResumePaymentResponse } from "../../contracts/paymentContracts";
+export type { Lang } from "../../../../context/language";
+export type {
+  PaymentAction,
+  PaymentIntentResult,
+  PaymentIntentResultType,
+  ResumePaymentResponse,
+} from "../../contracts/paymentContracts";
 export type { ActivePayment } from "../../paymentSession";
 export type { DonationCheckoutRequest } from "../contracts/donationContracts";
-export type Lang =
-  | "en"
-  | "mn";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export type DonationCopy = {
-
   donationTitle: string;
 
   amountLabel: string;
@@ -89,8 +72,7 @@ export type DonationCopy = {
   createAccount: string;
 
   amountDescription: string;
-amountDecimalPlaces: string;
-
+  amountDecimalPlaces: string;
 
   /*
    * Existing payment
@@ -123,7 +105,6 @@ amountDecimalPlaces: string;
 
   cancellingPayment: string;
 
-
   /*
    * Stripe payment
    */
@@ -140,7 +121,6 @@ amountDecimalPlaces: string;
   paymentCancel: string;
 
   paymentProcessing: string;
-
 
   /*
    * Success
@@ -162,7 +142,6 @@ amountDecimalPlaces: string;
   paymentDone: string;
 
   backToEvents: string;
-
 
   /*
    * Processing / errors

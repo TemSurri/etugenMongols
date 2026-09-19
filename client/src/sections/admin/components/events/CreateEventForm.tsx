@@ -1,341 +1,145 @@
-"use client";
-
-import {
-  useState,
-  type FormEvent
-} from "react";
+import { useState, type FormEvent } from "react";
 
 import axios from "axios";
 
-import type {
-  ApiEvent,
-  EventCreateRequest
-} from "../../types";
-
+import type { ApiEvent, EventCreateRequest } from "../../types";
 
 type Props = {
-  onCreate:
-    (
-      request:
-        EventCreateRequest
-    ) => Promise<ApiEvent>;
+  onCreate: (request: EventCreateRequest) => Promise<ApiEvent>;
 
   onCancel: () => void;
 };
 
-
-function getCreateErrorMessage(
-  error: unknown
-): string {
-
-  if (
-    axios.isAxiosError(error)
-  ) {
-
-    const status =
-      error.response?.status;
-
+function getCreateErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
 
     if (status === 400) {
       return "Some of the event information is invalid. Please check the form.";
     }
 
-
     if (status === 401) {
       return "Your session has expired. Please log in again.";
     }
-
 
     if (status === 403) {
       return "You do not have permission to create events.";
     }
 
-
     if (status === 409) {
       return "An event with this slug may already exist.";
     }
-
 
     if (status && status >= 500) {
       return "The server could not create the event.";
     }
   }
 
-
   return "Could not create the event. Please try again.";
 }
 
+export default function CreateEventForm({ onCreate, onCancel }: Props) {
+  const [saving, setSaving] = useState(false);
 
-export default function CreateEventForm({
-  onCreate,
-  onCancel
-}: Props) {
+  const [error, setError] = useState<string | null>(null);
 
-  const [
-    saving,
-    setSaving
-  ] =
-    useState(false);
+  const [registerable, setRegisterable] = useState(false);
 
-
-  const [
-    error,
-    setError
-  ] =
-    useState<string | null>(
-      null
-    );
-
-
-  const [
-    registerable,
-    setRegisterable
-  ] =
-    useState(false);
-
-
-  async function submit(
-    event:
-      FormEvent<HTMLFormElement>
-  ) {
-
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-
-    if (
-      saving
-    ) {
+    if (saving) {
       return;
     }
 
+    const form = new FormData(event.currentTarget);
 
-    const form =
-      new FormData(
-        event.currentTarget
-      );
+    const startsAt = String(form.get("startsAt") ?? "");
 
+    const endsAt = String(form.get("endsAt") ?? "");
 
-    const startsAt =
-      String(
-        form.get(
-          "startsAt"
-        ) ?? ""
-      );
+    const registrationDollars = String(form.get("registrationCost") ?? "");
 
-
-    const endsAt =
-      String(
-        form.get(
-          "endsAt"
-        ) ?? ""
-      );
-
-
-    const registrationDollars =
-      String(
-        form.get(
-          "registrationCost"
-        ) ?? ""
-      );
-
-
-    if (
-      !startsAt
-    ) {
-
-      setError(
-        "Start date and time are required."
-      );
+    if (!startsAt) {
+      setError("Start date and time are required.");
 
       return;
     }
 
-
-    if (
-      endsAt &&
-      new Date(endsAt).getTime() <=
-      new Date(startsAt).getTime()
-    ) {
-
-      setError(
-        "The event end time must be after the start time."
-      );
+    if (endsAt && new Date(endsAt).getTime() <= new Date(startsAt).getTime()) {
+      setError("The event end time must be after the start time.");
 
       return;
     }
-
 
     if (
       registerable &&
-      (
-        registrationDollars.trim() === "" ||
-        Number.isNaN(
-          Number(
-            registrationDollars
-          )
-        ) ||
-        Number(
-          registrationDollars
-        ) < 0
-      )
+      (registrationDollars.trim() === "" ||
+        Number.isNaN(Number(registrationDollars)) ||
+        Number(registrationDollars) < 0)
     ) {
-
-      setError(
-        "Enter a valid registration cost."
-      );
+      setError("Enter a valid registration cost.");
 
       return;
     }
 
+    const request: EventCreateRequest = {
+      slug: String(form.get("slug")).trim(),
 
-    const request:
-      EventCreateRequest = {
+      titleEn: String(form.get("titleEn")).trim(),
 
-        slug:
-          String(
-            form.get("slug")
-          ).trim(),
+      titleMn: String(form.get("titleMn")).trim(),
 
-        titleEn:
-          String(
-            form.get("titleEn")
-          ).trim(),
+      descriptionEn: String(form.get("descriptionEn")).trim(),
 
-        titleMn:
-          String(
-            form.get("titleMn")
-          ).trim(),
+      descriptionMn: String(form.get("descriptionMn")).trim(),
 
-        descriptionEn:
-          String(
-            form.get(
-              "descriptionEn"
-            )
-          ).trim(),
+      startsAt: new Date(startsAt).toISOString(),
 
-        descriptionMn:
-          String(
-            form.get(
-              "descriptionMn"
-            )
-          ).trim(),
+      endsAt: endsAt ? new Date(endsAt).toISOString() : null,
 
-        startsAt:
-          new Date(
-            startsAt
-          ).toISOString(),
+      location: String(form.get("location")).trim(),
 
-        endsAt:
-          endsAt
-            ? new Date(
-                endsAt
-              ).toISOString()
-            : null,
+      registerable,
 
-        location:
-          String(
-            form.get(
-              "location"
-            )
-          ).trim(),
+      registrationCost: registerable
+        ? Math.round(Number(registrationDollars) * 100)
+        : null,
 
-        registerable,
+      coverImage: nullableString(form.get("coverImage")),
 
-        registrationCost:
-          registerable
-            ? Math.round(
-                Number(
-                  registrationDollars
-                ) * 100
-              )
-            : null,
+      coverImageAltEn: nullableString(form.get("coverImageAltEn")),
 
-        coverImage:
-          nullableString(
-            form.get(
-              "coverImage"
-            )
-          ),
+      coverImageAltMn: nullableString(form.get("coverImageAltMn")),
 
-        coverImageAltEn:
-          nullableString(
-            form.get(
-              "coverImageAltEn"
-            )
-          ),
+      contactEmail: nullableString(form.get("contactEmail")),
 
-        coverImageAltMn:
-          nullableString(
-            form.get(
-              "coverImageAltMn"
-            )
-          ),
-
-        contactEmail:
-          nullableString(
-            form.get(
-              "contactEmail"
-            )
-          ),
-
-        contactPhone:
-          nullableString(
-            form.get(
-              "contactPhone"
-            )
-          )
-      };
-
+      contactPhone: nullableString(form.get("contactPhone")),
+    };
 
     try {
+      setSaving(true);
 
-      setSaving(
-        true
-      );
+      setError(null);
 
-      setError(
-        null
-      );
-
-
-      await onCreate(
-        request
-      );
-
+      await onCreate(request);
 
       onCancel();
-
     } catch (error) {
+      console.error("Failed to create event:", error);
 
-      console.error(
-        "Failed to create event:",
-        error
-      );
-
-
-      setError(
-        getCreateErrorMessage(
-          error
-        )
-      );
-
+      setError(getCreateErrorMessage(error));
     } finally {
-
-      setSaving(
-        false
-      );
+      setSaving(false);
     }
   }
-
 
   return (
     <form
       onSubmit={submit}
       className="border border-[#d7caa8] bg-[#fffaf0] p-6 sm:p-8"
     >
-
       <div className="mb-7">
-
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#92752b]">
           New Event
         </p>
@@ -347,35 +151,19 @@ export default function CreateEventForm({
         <p className="mt-2 text-sm text-[#59604d]">
           New events are created as drafts.
         </p>
-
       </div>
 
-
       {error && (
-
         <div
           role="alert"
           className="mb-6 border border-[#a76558]/30 bg-[#fff4f1] px-4 py-3"
         >
-
-          <p className="text-sm font-medium text-[#8a4d42]">
-            {error}
-          </p>
-
+          <p className="text-sm font-medium text-[#8a4d42]">{error}</p>
         </div>
-
       )}
 
-
       <div className="grid gap-5 md:grid-cols-2">
-
-        <Field
-          name="slug"
-          label="Slug"
-          placeholder="naadam-2026"
-          required
-        />
-
+        <Field name="slug" label="Slug" placeholder="naadam-2026" required />
 
         <Field
           name="location"
@@ -384,42 +172,21 @@ export default function CreateEventForm({
           required
         />
 
+        <Field name="titleEn" label="English Title" required />
 
-        <Field
-          name="titleEn"
-          label="English Title"
-          required
-        />
-
-
-        <Field
-          name="titleMn"
-          label="Mongolian Title"
-          required
-        />
-
+        <Field name="titleMn" label="Mongolian Title" required />
 
         <div className="md:col-span-2">
-
-          <TextArea
-            name="descriptionEn"
-            label="English Description"
-            required
-          />
-
+          <TextArea name="descriptionEn" label="English Description" required />
         </div>
 
-
         <div className="md:col-span-2">
-
           <TextArea
             name="descriptionMn"
             label="Mongolian Description"
             required
           />
-
         </div>
-
 
         <Field
           name="startsAt"
@@ -428,13 +195,7 @@ export default function CreateEventForm({
           required
         />
 
-
-        <Field
-          name="endsAt"
-          label="Ends At"
-          type="datetime-local"
-        />
-
+        <Field name="endsAt" label="Ends At" type="datetime-local" />
 
         <Field
           name="coverImage"
@@ -442,63 +203,29 @@ export default function CreateEventForm({
           placeholder="/upcoming_event_assets/event.webp"
         />
 
+        <Field name="coverImageAltEn" label="English Image Alt" />
 
-        <Field
-          name="coverImageAltEn"
-          label="English Image Alt"
-        />
+        <Field name="coverImageAltMn" label="Mongolian Image Alt" />
 
+        <Field name="contactEmail" label="Contact Email" type="email" />
 
-        <Field
-          name="coverImageAltMn"
-          label="Mongolian Image Alt"
-        />
-
-
-        <Field
-          name="contactEmail"
-          label="Contact Email"
-          type="email"
-        />
-
-
-        <Field
-          name="contactPhone"
-          label="Contact Phone"
-        />
-
+        <Field name="contactPhone" label="Contact Phone" />
       </div>
 
-
       <div className="mt-6 border-t border-[#ddd0af] pt-6">
-
         <label className="flex cursor-pointer items-center gap-3">
-
           <input
             type="checkbox"
-            checked={
-              registerable
-            }
-            onChange={
-              event =>
-                setRegisterable(
-                  event.target.checked
-                )
-            }
+            checked={registerable}
+            onChange={(event) => setRegisterable(event.target.checked)}
             className="h-4 w-4 accent-[#303824]"
           />
 
-          <span className="text-sm text-[#4e593c]">
-            Registration enabled
-          </span>
-
+          <span className="text-sm text-[#4e593c]">Registration enabled</span>
         </label>
 
-
         {registerable && (
-
           <div className="mt-4 max-w-xs">
-
             <Field
               name="registrationCost"
               label="Registration Cost (CAD)"
@@ -508,26 +235,18 @@ export default function CreateEventForm({
               min="0"
               required
             />
-
           </div>
-
         )}
-
       </div>
 
-
       <div className="mt-7 flex flex-wrap gap-3">
-
         <button
           type="submit"
           disabled={saving}
           className="bg-[#303824] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#fffaf0] transition hover:bg-[#414c31] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saving
-            ? "Creating..."
-            : "Create Event"}
+          {saving ? "Creating..." : "Create Event"}
         </button>
-
 
         <button
           type="button"
@@ -537,29 +256,16 @@ export default function CreateEventForm({
         >
           Cancel
         </button>
-
       </div>
-
     </form>
   );
 }
 
+function nullableString(value: FormDataEntryValue | null): string | null {
+  const string = String(value ?? "").trim();
 
-function nullableString(
-  value: FormDataEntryValue | null
-): string | null {
-
-  const string =
-    String(
-      value ?? ""
-    ).trim();
-
-
-  return string.length > 0
-    ? string
-    : null;
+  return string.length > 0 ? string : null;
 }
-
 
 type FieldProps = {
   name: string;
@@ -574,7 +280,6 @@ type FieldProps = {
   min?: string;
 };
 
-
 function Field({
   name,
   label,
@@ -582,12 +287,10 @@ function Field({
   placeholder,
   required,
   step,
-  min
+  min,
 }: FieldProps) {
-
   return (
     <label className="block">
-
       <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#92752b]">
         {label}
       </span>
@@ -601,25 +304,21 @@ function Field({
         min={min}
         className="w-full border border-[#cfc19f] bg-white px-4 py-3 text-sm text-[#303824] outline-none transition placeholder:text-[#7c826f]/50 focus:border-[#8d7020]"
       />
-
     </label>
   );
 }
 
-
 function TextArea({
   name,
   label,
-  required
+  required,
 }: {
   name: string;
   label: string;
   required?: boolean;
 }) {
-
   return (
     <label className="block">
-
       <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#92752b]">
         {label}
       </span>
@@ -630,7 +329,6 @@ function TextArea({
         rows={5}
         className="w-full resize-y border border-[#cfc19f] bg-white px-4 py-3 text-sm leading-6 text-[#303824] outline-none transition focus:border-[#8d7020]"
       />
-
     </label>
   );
 }

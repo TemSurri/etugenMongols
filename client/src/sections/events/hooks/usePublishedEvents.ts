@@ -1,191 +1,92 @@
-import {
-  useMemo
-} from "react";
+import { useMemo } from "react";
+import { usePublishedEventsCopy } from "../content/usePublishedEventsCopy";
 
-import {
-  useEventsContext
-} from "../../../context/EventsContext";
+import { useEventsContext } from "./useEventsContext";
 
-import {
-  EVENT_IMAGES
-} from "../constants";
+import { EVENT_IMAGES } from "../constants";
 
-import type {
-  ApiEvent,
-  Lang,
-  UpcomingEventItem
-} from "../types";
+import type { ApiEvent, Lang, UpcomingEventItem } from "../types";
 
-
-function formatDate(
-  value: string,
-  lang: Lang
-): string {
-
-  return new Intl.DateTimeFormat(
-    lang === "mn"
-      ? "mn-MN"
-      : "en-CA",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  ).format(
-    new Date(value)
-  );
+function formatDate(value: string, lang: Lang): string {
+  return new Intl.DateTimeFormat(usePublishedEventsCopy[lang].enCa, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(value));
 }
-
 
 function formatTime(
   startsAt: string,
   endsAt: string | null,
-  lang: Lang
+  lang: Lang,
 ): string {
+  const formatter = new Intl.DateTimeFormat(usePublishedEventsCopy[lang].enCa, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
 
-  const formatter =
-    new Intl.DateTimeFormat(
-      lang === "mn"
-        ? "mn-MN"
-        : "en-CA",
-      {
-        hour: "numeric",
-        minute: "2-digit",
-      }
-    );
-
-
-  const start =
-    formatter.format(
-      new Date(startsAt)
-    );
-
+  const start = formatter.format(new Date(startsAt));
 
   if (!endsAt) {
     return start;
   }
 
-
-  const end =
-    formatter.format(
-      new Date(endsAt)
-    );
-
+  const end = formatter.format(new Date(endsAt));
 
   return `${start} – ${end}`;
 }
 
-
-function mapEvent(
-  event: ApiEvent,
-  lang: Lang
-): UpcomingEventItem {
-
-  const title =
-    lang === "mn"
-      ? event.titleMn
-      : event.titleEn;
-
+function mapEvent(event: ApiEvent, lang: Lang): UpcomingEventItem {
+  const title = lang === "mn" ? event.titleMn : event.titleEn;
 
   const imageAlt =
-    lang === "mn"
-      ? event.coverImageAltMn
-      : event.coverImageAltEn;
-
+    lang === "mn" ? event.coverImageAltMn : event.coverImageAltEn;
 
   return {
     id: event.id,
 
-    slug:
-      event.slug,
+    slug: event.slug,
 
     title,
 
-    imageSrc:
-      event.coverImage ??
-      EVENT_IMAGES.fallback,
+    imageSrc: event.coverImage ?? EVENT_IMAGES.fallback,
 
-    imageAlt:
-      imageAlt ??
-      title,
+    imageAlt: imageAlt ?? title,
 
-    date:
-      formatDate(
-        event.startsAt,
-        lang
-      ),
+    date: formatDate(event.startsAt, lang),
 
-    time:
-      formatTime(
-        event.startsAt,
-        event.endsAt,
-        lang
-      ),
+    time: formatTime(event.startsAt, event.endsAt, lang),
 
-    location:
-      event.location,
+    location: event.location,
 
-    registerable:
-      event.registerable,
+    registerable: event.registerable,
 
-    registrationCost:
-      event.registrationCost,
+    registrationCost: event.registrationCost,
 
-    href:
-      `/events/${event.slug}`,
+    href: `/events/${event.slug}`,
   };
 }
 
+export function usePublishedEvents(lang: Lang) {
+  const { events, loading, error } = useEventsContext();
 
-export function usePublishedEvents(
-  lang: Lang
-) {
-
-  const {
-    events,
-    loading,
-    error
-  } =
-    useEventsContext();
-
-
-  const publishedEvents =
-    useMemo(
-      () =>
-        events
-          .filter(
-            event =>
-              event.published
-          )
-          .sort(
-            (a, b) =>
-              new Date(
-                a.startsAt
-              ).getTime() -
-              new Date(
-                b.startsAt
-              ).getTime()
-          )
-          .map(
-            event =>
-              mapEvent(
-                event,
-                lang
-              )
-          ),
-      [
-        events,
-        lang
-      ]
-    );
-
+  const publishedEvents = useMemo(
+    () =>
+      events
+        .filter((event) => event.published)
+        .sort(
+          (a, b) =>
+            new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime(),
+        )
+        .map((event) => mapEvent(event, lang)),
+    [events, lang],
+  );
 
   return {
-    events:
-      publishedEvents,
+    events: publishedEvents,
 
     loading,
 
-    error
+    error,
   };
 }

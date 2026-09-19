@@ -1,102 +1,69 @@
-"use client";
+import { forgetPasswordFormMessages } from "../content/ForgetPasswordFormMessages";
 
 import { useForgotPasswordForm } from "../hooks/useForgotPasswordForm";
 
-
-
-
-
-
-
-
-
 type ForgotPasswordFormProps = {
-    language: "en" | "mn";
+  language: "en" | "mn";
 };
 
-
 export default function ForgotPasswordForm({
-    language,
+  language,
 }: ForgotPasswordFormProps) {
+  const {
+    handleSubmit,
+    mn,
+    email,
+    setEmail,
+    error,
+    setError,
+    loading,
+    success,
+    cooldown,
+  } = useForgotPasswordForm(language);
 
-    const { handleSubmit, mn, email, setEmail, error, setError, loading, success, cooldown } = useForgotPasswordForm(language);
+  /*
+   * =====================================================
+   * PASSWORD RESET EMAIL COOLDOWN
+   * =====================================================
+   *
+   * After a successful request, wait 60 seconds
+   * before allowing another password reset email.
+   */
 
-    
-
-    
-
-    
-
-    
-
-
-    
-
-
-    /*
-     * =====================================================
-     * PASSWORD RESET EMAIL COOLDOWN
-     * =====================================================
-     *
-     * After a successful request, wait 60 seconds
-     * before allowing another password reset email.
-     */
-    
-
-
-    
-
-
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col"
-        >
-
-            {/* Email */}
-            <div>
-
-                <label
-                    htmlFor="password-reset-email"
-                    className="
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      {/* Email */}
+      <div>
+        <label
+          htmlFor="password-reset-email"
+          className="
                         text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]
                         text-[#27301d]
                     "
-                >
-                    {mn
-                        ? "Имэйл"
-                        : "Email"}
-                </label>
+        >
+          {forgetPasswordFormMessages[mn ? "mn" : "en"].email}
+        </label>
 
+        <input
+          id="password-reset-email"
+          name="email"
+          type="email"
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value);
 
-                <input
-                    id="password-reset-email"
-                    name="email"
-                    type="email"
-
-                    value={email}
-
-                    onChange={(event) => {
-
-                        setEmail(
-                            event.target.value
-                        );
-
-                        if (error) {
-                            setError("");
-                        }
-                    }}
-
-                    placeholder="you@example.com"
-                    autoComplete="email"
-
-                    required
-                    disabled={loading}
-
-                    className="
+            if (error) {
+              setError("");
+            }
+          }}
+          placeholder="you@example.com"
+          autoComplete="email"
+          required
+          disabled={loading}
+          className="
                         mt-2
                         h-11
                         w-full
@@ -121,19 +88,15 @@ export default function ForgotPasswordForm({
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                     "
-                />
+        />
+      </div>
 
-            </div>
-
-
-            {/* Password reset request sent */}
-            {success && (
-
-                <div
-                    role="status"
-                    aria-live="polite"
-
-                    className="
+      {/* Password reset request sent */}
+      {success && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="
                         mt-4
 
                         border-l-2
@@ -144,61 +107,56 @@ export default function ForgotPasswordForm({
                         px-4
                         py-3
                     "
-                >
-
-                    <p
-                        className="
+        >
+          <p
+            className="
                             text-sm
                             font-semibold
                             text-[#27301d]
                         "
-                    >
-                        {mn
-                            ? "Нууц үг шинэчлэх хүсэлт илгээгдлээ"
-                            : "Password reset request sent"}
-                    </p>
+          >
+            {
+              forgetPasswordFormMessages[mn ? "mn" : "en"]
+                .passwordResetRequestSent
+            }
+          </p>
 
-
-                    <p
-                        className="
+          <p
+            className="
                             mt-1
                             text-sm
                             leading-6
                             text-[#667056]
                         "
-                    >
-                        {mn
-                            ? "Хэрэв энэ имэйл хаягтай бүртгэл байгаа бол нууц үг шинэчлэх холбоос илгээгдсэн."
-                            : "If an account exists for that email, a password reset link has been sent."}
-                    </p>
+          >
+            {
+              forgetPasswordFormMessages[mn ? "mn" : "en"]
+                .ifAnAccountExistsForThatEmail
+            }
+          </p>
 
-
-                    <p
-                        className="
+          <p
+            className="
                             mt-2
                             text-xs
                             leading-5
                             text-[#667056]/80
                         "
-                    >
-                        {mn
-                            ? "Ирсэн имэйл болон spam хавтсаа шалгана уу."
-                            : "Check your inbox and spam folder if you don't see the email shortly."}
-                    </p>
+          >
+            {
+              forgetPasswordFormMessages[mn ? "mn" : "en"]
+                .checkYourInboxAndSpamFolderIf
+            }
+          </p>
+        </div>
+      )}
 
-                </div>
-
-            )}
-
-
-            {/* Error */}
-            {error && (
-
-                <div
-                    role="alert"
-                    aria-live="polite"
-
-                    className="
+      {/* Error */}
+      {error && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="
                         mt-4
 
                         border-l-2
@@ -213,23 +171,16 @@ export default function ForgotPasswordForm({
                         leading-6
                         text-[#667056]
                     "
-                >
-                    {error}
-                </div>
+        >
+          {error}
+        </div>
+      )}
 
-            )}
-
-
-            {/* Send password reset link */}
-            <button
-                type="submit"
-
-                disabled={
-                    loading ||
-                    cooldown > 0
-                }
-
-                className="
+      {/* Send password reset link */}
+      <button
+        type="submit"
+        disabled={loading || cooldown > 0}
+        className="
                     mt-5
 
                     flex
@@ -257,35 +208,19 @@ export default function ForgotPasswordForm({
                     disabled:opacity-60
                     disabled:hover:bg-[#27301d]
                 "
-            >
-
-                {loading
-                    ? (
-                        mn
-                            ? "Илгээж байна..."
-                            : "Sending..."
-                    )
-                    : cooldown > 0
-                        ? (
-                            mn
-                                ? `${cooldown} секундийн дараа дахин илгээх`
-                                : `Resend in ${cooldown}s`
-                        )
-                        : success
-                            ? (
-                                mn
-                                    ? "Нууц үг шинэчлэх холбоосыг дахин илгээх"
-                                    : "Send another reset link"
-                            )
-                            : (
-                                mn
-                                    ? "Нууц үг шинэчлэх холбоос илгээх"
-                                    : "Send password reset link"
-                            )
-                }
-
-            </button>
-
-        </form>
-    );
+      >
+        {loading
+          ? forgetPasswordFormMessages[mn ? "mn" : "en"].sending
+          : cooldown > 0
+            ? mn
+              ? `${cooldown} секундийн дараа дахин илгээх`
+              : `Resend in ${cooldown}s`
+            : success
+              ? forgetPasswordFormMessages[mn ? "mn" : "en"]
+                  .sendAnotherResetLink
+              : forgetPasswordFormMessages[mn ? "mn" : "en"]
+                  .sendPasswordResetLink}
+      </button>
+    </form>
+  );
 }

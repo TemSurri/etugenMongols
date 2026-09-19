@@ -14,7 +14,6 @@ export type UserMenuItem = {
   to: string;
 };
 
-
 export const NAV_ITEMS: NavItem[] = [
   {
     label: "Who We Are",
@@ -45,58 +44,26 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Gallery", to: "/gallery" },
 ];
 
-
-export const isRouteActive = (
-  currentPath: string,
-  to: string,
-) => {
-
+export const isRouteActive = (currentPath: string, to: string) => {
   if (to.includes("#")) return currentPath === to;
 
   if (to === "/") return currentPath === "/";
 
-  return (
-    currentPath === to ||
-    currentPath.startsWith(`${to}/`)
-  );
+  return currentPath === to || currentPath.startsWith(`${to}/`);
 };
 
+export const isParentActive = (currentPath: string, item: NavItem) =>
+  Boolean(item.children?.some((child) => isRouteActive(currentPath, child.to)));
 
-export const isParentActive = (
-  currentPath: string,
-  item: NavItem,
-) =>
-  Boolean(
-    item.children?.some(
-      (child) =>
-        isRouteActive(
-          currentPath,
-          child.to,
-        ),
-    ),
-  );
-
-
-export const scrollToHashTarget = (
-  to: string,
-) => {
-
-  const hash =
-    to.split("#")[1];
+export const scrollToHashTarget = (to: string) => {
+  const hash = to.split("#")[1];
 
   if (!hash) return;
 
-
   requestAnimationFrame(() => {
-
-    document
-      .getElementById(hash)
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-
+    document.getElementById(hash)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   });
 };
-
-

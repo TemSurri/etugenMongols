@@ -1,8 +1,6 @@
 import { memo } from "react";
 
-import type {
-DonationCopy,
-} from "../types/donationTypes";
+import type { DonationCopy } from "../types/donationTypes";
 
 type DonationAmountProps = {
   copy: DonationCopy;
@@ -13,21 +11,12 @@ type DonationAmountProps = {
 
   error: string | null;
 
-  onAmountChange: (
-    value: string
-  ) => void;
+  onAmountChange: (value: string) => void;
 
-  onQuickAmountSelect: (
-    value: number
-  ) => void;
+  onQuickAmountSelect: (value: number) => void;
 };
 
-const QUICK_AMOUNTS = [
-  25,
-  50,
-  100,
-  250,
-] as const;
+const QUICK_AMOUNTS = [25, 50, 100, 250] as const;
 
 function DonationAmount({
   copy,
@@ -111,24 +100,10 @@ function DonationAmount({
           type="text"
           inputMode="decimal"
           value={amount}
-          onChange={(event) =>
-            onAmountChange(
-              event.target.value
-            )
-          }
-          placeholder={
-            copy.amountPlaceholder
-          }
-          aria-invalid={
-            error
-              ? "true"
-              : "false"
-          }
-          aria-describedby={
-            error
-              ? "donation-amount-error"
-              : undefined
-          }
+          onChange={(event) => onAmountChange(event.target.value)}
+          placeholder={copy.amountPlaceholder}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={error ? "donation-amount-error" : undefined}
           className="
             min-w-0
             flex-1
@@ -180,21 +155,15 @@ function DonationAmount({
           sm:grid-cols-4
         "
       >
-        {QUICK_AMOUNTS.map(
-          (value) => {
-            const selected =
-              numericAmount === value;
+        {QUICK_AMOUNTS.map((value) => {
+          const selected = numericAmount === value;
 
-            return (
-              <button
-                key={value}
-                type="button"
-                onClick={() =>
-                  onQuickAmountSelect(
-                    value
-                  )
-                }
-                className={`
+          return (
+            <button
+              key={value}
+              type="button"
+              onClick={() => onQuickAmountSelect(value)}
+              className={`
                   min-h-11
                   border
                   px-4
@@ -210,17 +179,14 @@ function DonationAmount({
                       : "border-[#303824]/20 bg-transparent text-[#303824] hover:border-[#303824]/45 hover:bg-[#303824]/[0.025]"
                   }
                 `}
-              >
-                ${value}
-              </button>
-            );
-          }
-        )}
+            >
+              ${value}
+            </button>
+          );
+        })}
       </div>
     </section>
   );
 }
 
-export default memo(
-  DonationAmount
-);
+export default memo(DonationAmount);

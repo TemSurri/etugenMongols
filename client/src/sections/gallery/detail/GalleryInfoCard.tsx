@@ -1,6 +1,7 @@
+import type { Lang } from "../../../context/language";
+import { COPY } from "../content/GalleryInfoCardContent";
 import type { EventVideo, PerformanceItem } from "../model/galleryCatalogTypes";
 
-type Lang = "en" | "mn";
 type SectionKey = "general" | "performances" | "behindTheScenes";
 
 type GalleryInfoCardProps = {
@@ -15,23 +16,6 @@ type GalleryInfoCardProps = {
   onSelectPerformance: (id: string) => void;
   thankYouVideo?: EventVideo;
 };
-
-const COPY = {
-  en: {
-    section: "Gallery Section",
-    montage: "Montage",
-    performances: "Performance List",
-    videos: "Performance Video",
-    appreciation: "Appreciation",
-  },
-  mn: {
-    section: "Цомгийн хэсэг",
-    montage: "Эвлүүлэг",
-    performances: "Тоглолтын жагсаалт",
-    videos: "Тоглолтын бичлэг",
-    appreciation: "Талархал",
-  },
-} as const;
 
 export default function GalleryInfoCard({
   lang,

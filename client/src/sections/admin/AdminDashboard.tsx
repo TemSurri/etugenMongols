@@ -1,83 +1,40 @@
-"use client";
+import { adminDashboardCopy } from "./content/AdminDashboardCopy";
 
-import {
-    useMemo,
-    useState
-} from "react";
+import { useState } from "react";
 
-import {
-    AnimatePresence,
-    motion
-} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-import {
-    useLanguage
-} from "../../context/LanguageContext";
+import { useLanguage } from "../../context/useLanguage";
 
-import AdminSidebar
-    from "./components/AdminSidebar";
+import AdminSidebar from "./components/AdminSidebar";
 
-import AdminOverview
-    from "./components/AdminOverview";
+import AdminOverview from "./components/AdminOverview";
 
-import AdminEvents
-    from "./components/events/AdminEvents";
+import AdminEvents from "./components/events/AdminEvents";
 
-import {
-    useAdminEvents
-} from "./hooks/useAdminEvents";
+import { useAdminEvents } from "./hooks/useAdminEvents";
 
-import {
-    useAdminActivity
-} from "./hooks/useAdminActivity";
+import { useAdminActivity } from "./hooks/useAdminActivity";
 
-import type {
-    AdminSection
-} from "./types";
 import { adminBackgrounds } from "./media";
-
+import type { AdminSection } from "./types";
 
 export default function AdminDashboard() {
+  const { lang } = useLanguage();
 
-    const {
-        lang
-    } =
-        useLanguage();
+  const [section, setSection] = useState<AdminSection>("overview");
 
+  const [background] = useState(
+    () => adminBackgrounds[Math.floor(Math.random() * adminBackgrounds.length)],
+  );
 
-    const [
-        section,
-        setSection
-    ] =
-        useState<AdminSection>(
-            "overview"
-        );
+  const adminEvents = useAdminEvents();
 
+  const adminActivity = useAdminActivity();
 
-    const background =
-        useMemo(
-            () =>
-                adminBackgrounds[
-                    Math.floor(
-                        Math.random() *
-                        adminBackgrounds.length
-                    )
-                ],
-            []
-        );
-
-
-    const adminEvents =
-        useAdminEvents();
-
-
-    const adminActivity =
-        useAdminActivity();
-
-
-    return (
-        <main
-            className="
+  return (
+    <main
+      className="
                 relative
                 min-h-screen
                 overflow-x-hidden
@@ -85,33 +42,29 @@ export default function AdminDashboard() {
                 pt-20
                 text-[#27301d]
             "
-        >
-
-            <div
-                className="
+    >
+      <div
+        className="
                     fixed
                     inset-0
                     bg-cover
                     bg-center
                 "
-                style={{
-                    backgroundImage:
-                        `url("${background}")`
-                }}
-            />
+        style={{
+          backgroundImage: `url("${background}")`,
+        }}
+      />
 
-
-            <div
-                className="
+      <div
+        className="
                     fixed
                     inset-0
                     bg-[#20281b]/72
                 "
-            />
+      />
 
-
-            <div
-                className="
+      <div
+        className="
                     fixed
                     inset-0
                     bg-gradient-to-b
@@ -119,20 +72,19 @@ export default function AdminDashboard() {
                     via-transparent
                     to-black/20
                 "
-            />
+      />
 
-
-            <motion.div
-                initial={{
-                    opacity: 0
-                }}
-                animate={{
-                    opacity: 1
-                }}
-                transition={{
-                    duration: 0.35
-                }}
-                className="
+      <motion.div
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{
+          duration: 0.35,
+        }}
+        className="
                     relative
                     z-10
                     mx-auto
@@ -145,10 +97,9 @@ export default function AdminDashboard() {
                     lg:px-10
                     lg:py-10
                 "
-            >
-
-                <header
-                    className="
+      >
+        <header
+          className="
                         mb-5
                         rounded-2xl
                         border
@@ -162,23 +113,21 @@ export default function AdminDashboard() {
                         sm:px-8
                         sm:py-7
                     "
-                >
-
-                    <p
-                        className="
+        >
+          <p
+            className="
                             text-[10px]
                             font-semibold
                             uppercase
                             tracking-[0.2em]
                             text-[#9a7b26]
                         "
-                    >
-                        Etugen Mongols
-                    </p>
+          >
+            Etugen Mongols
+          </p>
 
-
-                    <h1
-                        className="
+          <h1
+            className="
                             mt-2
                             text-3xl
                             font-semibold
@@ -187,156 +136,82 @@ export default function AdminDashboard() {
 
                             sm:text-4xl
                         "
-                    >
-                        {lang === "mn"
-                            ? "Админ самбар"
-                            : "Admin Dashboard"}
-                    </h1>
+          >
+            {adminDashboardCopy[lang].adminDashboard}
+          </h1>
 
-
-                    <p
-                        className="
+          <p
+            className="
                             mt-2
                             max-w-2xl
                             text-sm
                             leading-6
                             text-[#667056]
                         "
-                    >
-                        {lang === "mn"
-                            ? "Арга хэмжээ болон системийн сүүлийн өөрчлөлтүүдийг удирдана."
-                            : "Manage events and review recent administrative activity."}
-                    </p>
+          >
+            {
+              adminDashboardCopy[lang]
+                .manageEventsAndReviewRecentAdministrativeActivity
+            }
+          </p>
+        </header>
 
-                </header>
-
-
-                <div
-                    className="
+        <div
+          className="
                         grid
                         gap-5
 
                         lg:grid-cols-[210px_minmax(0,1fr)]
                     "
-                >
+        >
+          <AdminSidebar section={section} onChange={setSection} lang={lang} />
 
-                    <AdminSidebar
-                        section={
-                            section
-                        }
-                        onChange={
-                            setSection
-                        }
-                        lang={
-                            lang
-                        }
-                    />
+          <div className="min-w-0">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={section}
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                }}
+                transition={{
+                  duration: 0.16,
+                }}
+              >
+                {section === "overview" && (
+                  <AdminOverview
+                    events={adminEvents.events}
+                    publishedCount={adminEvents.publishedCount}
+                    draftCount={adminEvents.draftCount}
+                    eventsLoading={adminEvents.loading}
+                    activity={adminActivity.activity}
+                    activityLoading={adminActivity.loading}
+                    activityError={adminActivity.error}
+                    lang={lang}
+                  />
+                )}
 
-
-                    <div className="min-w-0">
-
-                        <AnimatePresence
-                            mode="wait"
-                            initial={false}
-                        >
-
-                            <motion.div
-                                key={
-                                    section
-                                }
-                                initial={{
-                                    opacity: 0
-                                }}
-                                animate={{
-                                    opacity: 1
-                                }}
-                                exit={{
-                                    opacity: 0
-                                }}
-                                transition={{
-                                    duration: 0.16
-                                }}
-                            >
-
-                                {section ===
-                                    "overview" && (
-
-                                    <AdminOverview
-                                        events={
-                                            adminEvents.events
-                                        }
-
-                                        publishedCount={
-                                            adminEvents.publishedCount
-                                        }
-
-                                        draftCount={
-                                            adminEvents.draftCount
-                                        }
-
-                                        eventsLoading={
-                                            adminEvents.loading
-                                        }
-
-                                        activity={
-                                            adminActivity.activity
-                                        }
-
-                                        activityLoading={
-                                            adminActivity.loading
-                                        }
-
-                                        activityError={
-                                            adminActivity.error
-                                        }
-
-                                        lang={
-                                            lang
-                                        }
-                                    />
-
-                                )}
-
-
-                                {section ===
-                                    "events" && (
-
-                                    <AdminEvents
-                                        events={
-                                            adminEvents.events
-                                        }
-                                        loading={
-                                            adminEvents.loading
-                                        }
-                                        error={
-                                            adminEvents.error
-                                        }
-                                        createEvent={
-                                            adminEvents.createEvent
-                                        }
-                                        updateEvent={
-                                            adminEvents.updateEvent
-                                        }
-                                        updateRegistration={
-                                            adminEvents.updateRegistration
-                                        }
-                                        lang={
-                                            lang
-                                        }
-                                    />
-
-                                )}
-
-                            </motion.div>
-
-                        </AnimatePresence>
-
-                    </div>
-
-                </div>
-
-            </motion.div>
-
-        </main>
-    );
+                {section === "events" && (
+                  <AdminEvents
+                    events={adminEvents.events}
+                    loading={adminEvents.loading}
+                    error={adminEvents.error}
+                    createEvent={adminEvents.createEvent}
+                    updateEvent={adminEvents.updateEvent}
+                    updateRegistration={adminEvents.updateRegistration}
+                    lang={lang}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </motion.div>
+    </main>
+  );
 }

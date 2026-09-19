@@ -1,6 +1,8 @@
-import type { PaymentAction,PaymentIntentResultType } from "./contracts/paymentContracts";
+import type {
+  PaymentAction,
+  PaymentIntentResultType,
+} from "./contracts/paymentContracts";
 export type ActivePayment = {
-
   jobId: string;
 
   result: PaymentIntentResultType;
@@ -15,6 +17,5 @@ export type ActivePayment = {
 
   email: string;
 
-  actionPayload:
-    Record<string, unknown> | null;
+  actionPayload: Record<string, unknown> | null;
 };

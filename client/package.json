@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "typecheck": "tsc -b --pretty false",
+    "test": "node --import ./scripts/register-typescript.mjs --test tests/*.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,12 +1,10 @@
-"use client";
-
-import { Link,useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Footer from "../../../components/navigation/SiteFooter";
 import Header from "../../../components/navigation/SiteHeader";
 import GalleryView from "../detail/GalleryView";
 
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 import { galleryEvents } from "../data/galleryCatalog";
 
 export default function GalleryDetailPage() {
@@ -14,7 +12,7 @@ export default function GalleryDetailPage() {
   const { lang, setLang } = useLanguage();
 
   const event = galleryEvents.find(
-    (event) => event.id === id && event.status === "past" && event.gallery
+    (event) => event.id === id && event.status === "past" && event.gallery,
   );
 
   if (!event) {
@@ -31,9 +29,7 @@ export default function GalleryDetailPage() {
               ← Back to Gallery
             </Link>
 
-            <h1 className="mt-6 text-3xl font-semibold">
-              Gallery not found
-            </h1>
+            <h1 className="mt-6 text-3xl font-semibold">Gallery not found</h1>
           </div>
         </main>
 

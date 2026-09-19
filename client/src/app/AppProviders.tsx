@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
-import { AuthProvider } from "../context/AuthContext";
-import { EventsProvider } from "../context/EventsContext";
 import { LanguageProvider } from "../context/LanguageContext";
+import { AuthProvider } from "../sections/auth/context/AuthProvider";
+import { EventsProvider } from "../sections/events/context/EventsProvider";
 
 type AppProvidersProps = {
   children: ReactNode;

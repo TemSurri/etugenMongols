@@ -1,118 +1,84 @@
-import {
-useState,
-type FormEvent
-} from "react";
+import { useState, type FormEvent } from "react";
 
 import { useChangeEmail } from "../hooks/useChangeEmail";
 
 interface SecurityCopy {
-    newEmail: string;
-    confirmEmail: string;
+  newEmail: string;
+  confirmEmail: string;
 
-    changeEmail: string;
-    changingEmail: string;
+  changeEmail: string;
+  changingEmail: string;
 
-    emailSuccess: string;
+  emailSuccess: string;
 
-    emailMismatch: string;
-    invalidEmail: string;
-    genericError: string;
+  emailMismatch: string;
+  invalidEmail: string;
+  genericError: string;
 
-    cancel: string;
+  cancel: string;
 }
 
 interface ChangeEmailFormProps {
-    copy: SecurityCopy;
-    onCancel: () => void;
+  copy: SecurityCopy;
+  onCancel: () => void;
 }
 
-export function ChangeEmailForm({
-    copy,
-    onCancel
-}: ChangeEmailFormProps) {
+export function ChangeEmailForm({ copy, onCancel }: ChangeEmailFormProps) {
+  const [newEmail, setNewEmail] = useState("");
 
-    const [
-        newEmail,
-        setNewEmail
-    ] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
 
-    const [
-        confirmEmail,
-        setConfirmEmail
-    ] = useState("");
+  const { submit, loading, error, success } = useChangeEmail({
+    emailMismatchMessage: copy.emailMismatch,
 
-    const {
-        submit,
-        loading,
-        error,
-        success
-    } = useChangeEmail({
-        emailMismatchMessage:
-            copy.emailMismatch,
+    invalidEmailMessage: copy.invalidEmail,
 
-        invalidEmailMessage:
-            copy.invalidEmail,
+    genericErrorMessage: copy.genericError,
+  });
 
-        genericErrorMessage:
-            copy.genericError
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const requested = await submit({
+      newEmail,
+      confirmEmail,
     });
 
-    async function handleSubmit(
-        event: FormEvent<HTMLFormElement>
-    ) {
-
-        event.preventDefault();
-
-        const requested =
-            await submit({
-                newEmail,
-                confirmEmail
-            });
-
-        if (requested) {
-            setNewEmail("");
-            setConfirmEmail("");
-        }
+    if (requested) {
+      setNewEmail("");
+      setConfirmEmail("");
     }
+  }
 
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="space-y-4"
-        >
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <EmailField
+        label={copy.newEmail}
+        value={newEmail}
+        onChange={setNewEmail}
+        disabled={loading}
+      />
 
-            <EmailField
-                label={copy.newEmail}
-                value={newEmail}
-                onChange={setNewEmail}
-                disabled={loading}
-            />
+      <EmailField
+        label={copy.confirmEmail}
+        value={confirmEmail}
+        onChange={setConfirmEmail}
+        disabled={loading}
+      />
 
-            <EmailField
-                label={copy.confirmEmail}
-                value={confirmEmail}
-                onChange={setConfirmEmail}
-                disabled={loading}
-            />
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
-            {error && (
-                <p className="text-sm text-red-600">
-                    {error}
-                </p>
-            )}
+      {success && (
+        <p className="text-sm font-medium text-green-700">
+          {copy.emailSuccess}
+        </p>
+      )}
 
-            {success && (
-                <p className="text-sm font-medium text-green-700">
-                    {copy.emailSuccess}
-                </p>
-            )}
-
-            <div className="flex gap-3 pt-2">
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="
+      <div className="flex gap-3 pt-2">
+        <button
+          type="submit"
+          disabled={loading}
+          className="
                         rounded-lg
                         bg-[#27301d]
                         px-4
@@ -125,19 +91,15 @@ export function ChangeEmailForm({
                         disabled:cursor-not-allowed
                         disabled:opacity-50
                     "
-                >
-                    {
-                        loading
-                            ? copy.changingEmail
-                            : copy.changeEmail
-                    }
-                </button>
+        >
+          {loading ? copy.changingEmail : copy.changeEmail}
+        </button>
 
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    disabled={loading}
-                    className="
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={loading}
+          className="
                         rounded-lg
                         border
                         border-[#27301d]/20
@@ -151,53 +113,38 @@ export function ChangeEmailForm({
                         disabled:cursor-not-allowed
                         disabled:opacity-50
                     "
-                >
-                    {copy.cancel}
-                </button>
-
-            </div>
-
-        </form>
-    );
+        >
+          {copy.cancel}
+        </button>
+      </div>
+    </form>
+  );
 }
 
 interface EmailFieldProps {
-    label: string;
-    value: string;
+  label: string;
+  value: string;
 
-    onChange: (
-        value: string
-    ) => void;
+  onChange: (value: string) => void;
 
-    disabled: boolean;
+  disabled: boolean;
 }
 
-function EmailField({
-    label,
-    value,
-    onChange,
-    disabled
-}: EmailFieldProps) {
+function EmailField({ label, value, onChange, disabled }: EmailFieldProps) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-sm font-medium text-[#27301d]">
+        {label}
+      </span>
 
-    return (
-        <label className="block">
-
-            <span className="mb-1 block text-sm font-medium text-[#27301d]">
-                {label}
-            </span>
-
-            <input
-                type="email"
-                value={value}
-                onChange={(event) =>
-                    onChange(
-                        event.target.value
-                    )
-                }
-                autoComplete="email"
-                disabled={disabled}
-                required
-                className="
+      <input
+        type="email"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        autoComplete="email"
+        disabled={disabled}
+        required
+        className="
                     w-full
                     rounded-lg
                     border
@@ -212,8 +159,7 @@ function EmailField({
                     disabled:cursor-not-allowed
                     disabled:opacity-50
                 "
-            />
-
-        </label>
-    );
+      />
+    </label>
+  );
 }

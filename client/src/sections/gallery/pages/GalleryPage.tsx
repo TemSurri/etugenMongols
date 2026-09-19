@@ -1,10 +1,7 @@
-"use client";
-
 import Footer from "../../../components/navigation/SiteFooter.tsx";
 import Header from "../../../components/navigation/SiteHeader.tsx";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 import GalleryShowcase from "../GalleryShowcase.tsx";
-
 
 export default function GalleryPage() {
   const { lang, setLang } = useLanguage();
@@ -15,6 +12,5 @@ export default function GalleryPage() {
       <GalleryShowcase lang={lang} />
       <Footer />
     </>
-
-);
+  );
 }

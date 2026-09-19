@@ -1,11 +1,11 @@
-export type Lang = "en" | "mn";
+import type { Lang } from "../../context/language";
+export type { Lang } from "../../context/language";
 
-export type { ApiEvent } from "../../contracts/eventContracts";
+export type { ApiEvent } from "./contracts/eventContracts";
 
 export type EventsMainProps = {
   lang: Lang;
 };
-
 
 /*
  * Shape actually consumed by the frontend card.
@@ -30,13 +30,11 @@ export type UpcomingEventItem = {
   href: string;
 };
 
-
 export type SlideshowImage = {
   id: string;
   src: string;
   alt: string;
 };
-
 
 export type EventsCopy = {
   eyebrow: string;

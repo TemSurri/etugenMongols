@@ -1,51 +1,34 @@
 import {
-api
-} from "../../../../api/client";
+  requireCheckoutPayment,
+  requireResumedPayment,
+} from "../../contracts/paymentGuards";
+import { api } from "../../../../api/client";
 
 import type {
-EventRegistrationCheckoutRequest,
-PaymentIntentResult,
-ResumePaymentResponse
+  EventRegistrationCheckoutRequest,
+  PaymentIntentResult,
+  ResumePaymentResponse,
 } from "../types/eventRegistrationTypes";
 
-
 export async function checkoutEventRegistration(
-    request:
-        EventRegistrationCheckoutRequest
+  request: EventRegistrationCheckoutRequest,
 ): Promise<PaymentIntentResult> {
+  const response = await api.post<PaymentIntentResult>(
+    "/payment/checkout-event",
+    request,
+  );
 
-    const response =
-        await api.post<
-            PaymentIntentResult
-        >(
-            "/payment/checkout-event",
-            request
-        );
-
-
-    return response.data;
+  return requireCheckoutPayment(response.data);
 }
 
-
-export async function cancelEventRegistrationPayment():
-Promise<void> {
-
-    await api.post(
-        "/payment/cancel-event-registration"
-    );
+export async function cancelEventRegistrationPayment(): Promise<void> {
+  await api.post("/payment/cancel-event-registration");
 }
 
+export async function resumeEventRegistrationPayment(): Promise<ResumePaymentResponse> {
+  const response = await api.post<ResumePaymentResponse>(
+    "/payment/resume-event-registration",
+  );
 
-export async function resumeEventRegistrationPayment():
-Promise<ResumePaymentResponse> {
-
-    const response =
-        await api.post<
-            ResumePaymentResponse
-        >(
-            "/payment/resume-event-registration"
-        );
-
-
-    return response.data;
+  return requireResumedPayment(response.data);
 }

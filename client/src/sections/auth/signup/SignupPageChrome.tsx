@@ -1,18 +1,16 @@
 import { Link } from "react-router-dom";
+import { signupPageChromeCopy } from "../content/SignupPageChromeCopy";
 import type { Language } from "./SignUpSection";
 export function TopControls({
-    language,
-    setLanguage,
+  language,
+  setLanguage,
 }: {
-    language: Language;
-    setLanguage: (
-        language: Language
-    ) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
 }) {
-
-    return (
-        <div
-            className="
+  return (
+    <div
+      className="
                 absolute
                 -top-9
                 left-0
@@ -22,11 +20,10 @@ export function TopControls({
                 items-center
                 justify-between
             "
-        >
-
-            <Link
-                to="/"
-                className="
+    >
+      <Link
+        to="/"
+        className="
                     text-[10px]
                     font-bold
                     uppercase
@@ -38,15 +35,12 @@ export function TopControls({
 
                     hover:text-white
                 "
-            >
-                {language === "en"
-                    ? "Back to home"
-                    : "Нүүр хуудас"}
-            </Link>
+      >
+        {signupPageChromeCopy[language].backToHome}
+      </Link>
 
-
-            <div
-                className="
+      <div
+        className="
                     flex
                     items-center
 
@@ -55,71 +49,50 @@ export function TopControls({
                     uppercase
                     tracking-[0.16em]
                 "
-            >
+      >
+        <button
+          type="button"
+          onClick={() => setLanguage("en")}
+          className={signupPageChromeCopy[language].textWhite}
+        >
+          EN
+        </button>
 
-                <button
-                    type="button"
-                    onClick={() =>
-                        setLanguage("en")
-                    }
-                    className={
-                        language === "en"
-                            ? "text-white"
-                            : "text-white/45 transition-colors hover:text-white"
-                    }
-                >
-                    EN
-                </button>
-
-
-                <span
-                    className="
+        <span
+          className="
                         mx-2
                         text-white/25
                     "
-                >
-                    |
-                </span>
+        >
+          |
+        </span>
 
-
-                <button
-                    type="button"
-                    onClick={() =>
-                        setLanguage("mn")
-                    }
-                    className={
-                        language === "mn"
-                            ? "text-white"
-                            : "text-white/45 transition-colors hover:text-white"
-                    }
-                >
-                    MN
-                </button>
-
-            </div>
-
-        </div>
-    );
+        <button
+          type="button"
+          onClick={() => setLanguage("mn")}
+          className={
+            signupPageChromeCopy[language].textWhite45TransitionColorsHoverText
+          }
+        >
+          MN
+        </button>
+      </div>
+    </div>
+  );
 }
 
-export function Background({
-    src,
-}: {
-    src: string;
-}) {
-
-    return (
-        <>
-
-            <img
-                src={src}
-                alt=""
-                aria-hidden="true"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                draggable={false}
-                className="
+export function Background({ src }: { src: string }) {
+  return (
+    <>
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
+        draggable={false}
+        className="
                     absolute
                     inset-0
                     h-full
@@ -130,21 +103,19 @@ export function Background({
                     saturate-[1.03]
                     contrast-[1.02]
                 "
-            />
+      />
 
-
-            <div
-                className="
+      <div
+        className="
                     pointer-events-none
                     absolute
                     inset-0
                     bg-[#182010]/58
                 "
-            />
+      />
 
-
-            <div
-                className="
+      <div
+        className="
                     pointer-events-none
                     absolute
                     inset-0
@@ -153,8 +124,7 @@ export function Background({
                     via-transparent
                     to-black/35
                 "
-            />
-
-        </>
-    );
+      />
+    </>
+  );
 }

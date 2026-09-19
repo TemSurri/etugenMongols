@@ -1,207 +1,161 @@
 import axios from "axios";
 import { useState } from "react";
-import {
-useNavigate
-} from "react-router-dom";
-import { useAuth } from "../../../context/useAuth";
+import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
+import { useLoginFormMessages } from "../content/useLoginFormMessages";
+import { useAuth } from "./useAuth";
 export function useLoginForm(language: "en" | "mn") {
-const navigate =
-        useNavigate();
+  const navigate = useNavigate();
 
-const {
-        refreshAuth
-    } = useAuth();
+  const { refreshAuth } = useAuth();
 
-const [email, setEmail] =
-        useState("");
+  const [email, setEmail] = useState("");
 
-const [password, setPassword] =
-        useState("");
+  const [password, setPassword] = useState("");
 
-const [showPassword, setShowPassword] =
-        useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-const [error, setError] =
-        useState("");
+  const [error, setError] = useState("");
 
-const [
-        needsVerification,
-        setNeedsVerification,
-    ] =
-        useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
 
-const [loading, setLoading] =
-        useState(false);
+  const [loading, setLoading] = useState(false);
 
-const mn =
-        language === "mn";
+  const mn = language === "mn";
 
-async function handleSubmit(
-        event: React.FormEvent<HTMLFormElement>
-    ) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-        event.preventDefault();
+    if (loading) {
+      return;
+    }
 
+    setLoading(true);
 
-        if (loading) {
-            return;
-        }
+    setError("");
 
+    setNeedsVerification(false);
 
-        setLoading(true);
+    /*
+     * =====================================================
+     * BACKEND LOGIN REQUEST
+     * =====================================================
+     *
+     * POST /auth/login
+     *
+     * {
+     *     email,
+     *     password
+     * }
+     */
+    try {
+      await login({
+        email: email,
+        password: password,
+      });
 
-        setError("");
+      /*
+       * Login succeeded.
+       *
+       * Browser now has the SESSION cookie.
+       * Refresh global auth state so the header
+       * immediately knows the user is logged in.
+       */
+      await refreshAuth();
 
-        setNeedsVerification(false);
+      navigate("/");
+    } catch (error) {
+      /*
+       * Unexpected non-Axios failure.
+       */
+      if (!axios.isAxiosError(error)) {
+        setError(
+          useLoginFormMessages[mn ? "mn" : "en"]
+            .somethingWentWrongPleaseTryAgain,
+        );
 
+        return;
+      }
+
+      /*
+       * No HTTP response.
+       */
+      if (!error.response) {
+        setError(
+          useLoginFormMessages[mn ? "mn" : "en"]
+            .unableToConnectToTheServerPlease,
+        );
+
+        return;
+      }
+
+      const status = error.response.status;
+
+      switch (status) {
+        case 400:
+          setError(
+            useLoginFormMessages[mn ? "mn" : "en"]
+              .pleaseCheckTheInformationYouEntered,
+          );
+
+          break;
+
+        case 401:
+          setError(
+            useLoginFormMessages[mn ? "mn" : "en"].invalidEmailOrPassword,
+          );
+
+          break;
 
         /*
-         * =====================================================
-         * BACKEND LOGIN REQUEST
-         * =====================================================
-         *
-         * POST /auth/login
-         *
-         * {
-         *     email,
-         *     password
-         * }
+         * Account exists but is not verified.
          */
-        try {
+        case 403:
+          setError(
+            useLoginFormMessages[mn ? "mn" : "en"]
+              .yourAccountHasNotBeenVerifiedYet,
+          );
 
-            await login({
-                    email: email,
-                    password: password,
-                });
+          setNeedsVerification(true);
 
+          break;
 
-            /*
-             * Login succeeded.
-             *
-             * Browser now has the SESSION cookie.
-             * Refresh global auth state so the header
-             * immediately knows the user is logged in.
-             */
-            await refreshAuth();
+        case 429:
+          setError(
+            useLoginFormMessages[mn ? "mn" : "en"]
+              .tooManyLoginAttemptsPleaseTryAgain,
+          );
 
+          break;
 
-            navigate("/");
-
-
-        } catch (error) {
-
-
-            /*
-             * Unexpected non-Axios failure.
-             */
-            if (!axios.isAxiosError(error)) {
-
-                setError(
-                    mn
-                        ? "Алдаа гарлаа. Дахин оролдоно уу."
-                        : "Something went wrong. Please try again."
-                );
-
-                return;
-            }
-
-
-            /*
-             * No HTTP response.
-             */
-            if (!error.response) {
-
-                setError(
-                    mn
-                        ? "Сервертэй холбогдож чадсангүй. Дараа дахин оролдоно уу."
-                        : "Unable to connect to the server. Please try again later."
-                );
-
-                return;
-            }
-
-
-            const status =
-                error.response.status;
-
-
-            switch (status) {
-
-                case 400:
-
-                    setError(
-                        mn
-                            ? "Оруулсан мэдээллээ шалгана уу."
-                            : "Please check the information you entered."
-                    );
-
-                    break;
-
-
-                case 401:
-
-                    setError(
-                        mn
-                            ? "Имэйл эсвэл нууц үг буруу байна."
-                            : "Invalid email or password."
-                    );
-
-                    break;
-
-
-                /*
-                 * Account exists but is not verified.
-                 */
-                case 403:
-
-                    setError(
-                        mn
-                            ? "Таны бүртгэл хараахан баталгаажаагүй байна."
-                            : "Your account has not been verified yet."
-                    );
-
-                    setNeedsVerification(true);
-
-                    break;
-
-
-                case 429:
-
-                    setError(
-                        mn
-                            ? "Хэт олон удаа нэвтрэх оролдлого хийлээ. Дараа дахин оролдоно уу."
-                            : "Too many login attempts. Please try again later."
-                    );
-
-                    break;
-
-
-                default:
-
-                    if (status >= 500) {
-
-                        setError(
-                            mn
-                                ? "Сервер түр хугацаанд ажиллахгүй байна. Дараа дахин оролдоно уу."
-                                : "The server is temporarily unavailable. Please try again later."
-                        );
-
-                    } else {
-
-                        setError(
-                            mn
-                                ? "Нэвтэрч чадсангүй. Дахин оролдоно уу."
-                                : "Unable to sign in. Please try again."
-                        );
-                    }
-            }
-
-
-        } finally {
-
-            setLoading(false);
-        }
+        default:
+          if (status >= 500) {
+            setError(
+              useLoginFormMessages[mn ? "mn" : "en"]
+                .theServerIsTemporarilyUnavailablePleaseTry,
+            );
+          } else {
+            setError(
+              useLoginFormMessages[mn ? "mn" : "en"]
+                .unableToSignInPleaseTryAgain,
+            );
+          }
+      }
+    } finally {
+      setLoading(false);
     }
-return { handleSubmit, mn, email, setEmail, loading, showPassword, password, setPassword, setShowPassword, error, needsVerification };
+  }
+  return {
+    handleSubmit,
+    mn,
+    email,
+    setEmail,
+    loading,
+    showPassword,
+    password,
+    setPassword,
+    setShowPassword,
+    error,
+    needsVerification,
+  };
 }

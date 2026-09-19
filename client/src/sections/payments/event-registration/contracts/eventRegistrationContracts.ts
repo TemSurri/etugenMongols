@@ -1,18 +1,18 @@
 export type EventRegistrationCheckoutRequest = {
-    eventId: string;
+  eventId: string;
 
-    attendeeCount: number;
+  attendeeCount: number;
 
-    price: number;
+  price: number;
 
-    payer: {
-        firstName: string;
-        lastName: string;
-        email: string;
-    };
+  payer: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 
-    additionalPeople: {
-        firstName: string;
-        lastName: string;
-    }[];
+  additionalPeople: {
+    firstName: string;
+    lastName: string;
+  }[];
 };

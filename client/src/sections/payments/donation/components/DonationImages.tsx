@@ -20,35 +20,26 @@ function DonationImages() {
           bg-[#fffaf0]/10
         "
       >
-        {paymentMedia.donationImages.map(
-          (image, index) => (
-            <div
-              key={image}
-              className="
+        {paymentMedia.donationImages.map((image, index) => (
+          <div
+            key={image}
+            className="
                 relative
                 aspect-[4/5]
                 w-full
                 overflow-hidden
                 bg-[#303824]
               "
-            >
-              <img
-                src={image}
-                alt=""
-                aria-hidden="true"
-                loading={
-                  index === 0
-                    ? "eager"
-                    : "lazy"
-                }
-                decoding="async"
-                fetchPriority={
-                  index === 0
-                    ? "high"
-                    : "auto"
-                }
-                draggable={false}
-                className="
+          >
+            <img
+              src={image}
+              alt=""
+              aria-hidden="true"
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={index === 0 ? "high" : "auto"}
+              draggable={false}
+              className="
                   absolute
                   inset-0
                   h-full
@@ -57,10 +48,10 @@ function DonationImages() {
                   object-cover
                   object-center
                 "
-              />
+            />
 
-              <div
-                className="
+            <div
+              className="
                   pointer-events-none
                   absolute
                   inset-0
@@ -69,15 +60,12 @@ function DonationImages() {
                   via-transparent
                   to-transparent
                 "
-              />
-            </div>
-          )
-        )}
+            />
+          </div>
+        ))}
       </div>
     </aside>
   );
 }
 
-export default memo(
-  DonationImages
-);
+export default memo(DonationImages);

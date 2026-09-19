@@ -1,32 +1,22 @@
+import { memo } from "react";
 import { formatPaymentAmount } from "../../formatPaymentAmount";
-import {
-memo,
-} from "react";
 
 import type {
-DonationCopy,
-ResumePaymentResponse,
+  DonationCopy,
+  ResumePaymentResponse,
 } from "../types/donationTypes";
 
-
 type DonationExistingPaymentProps = {
+  copy: DonationCopy;
 
-  copy:
-    DonationCopy;
+  payment: ResumePaymentResponse;
 
-  payment:
-    ResumePaymentResponse;
+  onContinue: () => void;
 
-  onContinue:
-    () => void;
+  onCancel: () => void;
 
-  onCancel:
-    () => void;
-
-  loading:
-    boolean;
+  loading: boolean;
 };
-
 
 function DonationExistingPayment({
   copy,
@@ -35,54 +25,30 @@ function DonationExistingPayment({
   onCancel,
   loading,
 }: DonationExistingPaymentProps) {
+  const formattedAmount = formatPaymentAmount(payment.amount, payment.currency);
 
-  const formattedAmount =
-    formatPaymentAmount(payment.amount, payment.currency);
-
-
-  const isEventRegistration =
-    payment.action ===
-    "EVENT_REGISTRATION";
-
+  const isEventRegistration = payment.action === "EVENT_REGISTRATION";
 
   const payer =
     isEventRegistration &&
     payment.actionPayload.payer &&
-    typeof payment.actionPayload.payer ===
-      "object"
-      ? payment.actionPayload.payer as {
+    typeof payment.actionPayload.payer === "object"
+      ? (payment.actionPayload.payer as {
           firstName?: unknown;
           lastName?: unknown;
-        }
+        })
       : null;
 
+  const firstName = typeof payer?.firstName === "string" ? payer.firstName : "";
 
-  const firstName =
-    typeof payer?.firstName === "string"
-      ? payer.firstName
-      : "";
+  const lastName = typeof payer?.lastName === "string" ? payer.lastName : "";
 
-
-  const lastName =
-    typeof payer?.lastName === "string"
-      ? payer.lastName
-      : "";
-
-
-  const payerName =
-    `${firstName} ${lastName}`
-      .trim();
-
+  const payerName = `${firstName} ${lastName}`.trim();
 
   const attendeeCount =
-    typeof payment
-      .actionPayload
-      .attendeeCount === "number"
-      ? payment
-          .actionPayload
-          .attendeeCount
+    typeof payment.actionPayload.attendeeCount === "number"
+      ? payment.actionPayload.attendeeCount
       : null;
-
 
   return (
     <div
@@ -97,12 +63,9 @@ function DonationExistingPayment({
         px-5
       "
     >
-
       <section
         role="dialog"
-
         aria-modal="true"
-
         className={`
           w-full
           max-w-md
@@ -114,14 +77,9 @@ function DonationExistingPayment({
           duration-300
           sm:p-8
 
-          ${
-            loading
-              ? "scale-[0.995] opacity-90"
-              : "scale-100 opacity-100"
-          }
+          ${loading ? "scale-[0.995] opacity-90" : "scale-100 opacity-100"}
         `}
       >
-
         <h2
           className="
             text-xl
@@ -132,7 +90,6 @@ function DonationExistingPayment({
           {copy.existingPaymentTitle}
         </h2>
 
-
         <p
           className="
             mt-3
@@ -141,13 +98,10 @@ function DonationExistingPayment({
             text-[#69705c]
           "
         >
-          {
-            isEventRegistration
-              ? copy.existingEventDescription
-              : copy.existingDonationDescription
-          }
+          {isEventRegistration
+            ? copy.existingEventDescription
+            : copy.existingDonationDescription}
         </p>
-
 
         <div
           className="
@@ -157,7 +111,6 @@ function DonationExistingPayment({
             py-4
           "
         >
-
           <div
             className="
               flex
@@ -167,7 +120,6 @@ function DonationExistingPayment({
               text-sm
             "
           >
-
             <span
               className="
                 text-[#69705c]
@@ -181,15 +133,9 @@ function DonationExistingPayment({
                 font-medium
               "
             >
-              {
-                isEventRegistration
-                  ? copy.eventRegistration
-                  : copy.donation
-              }
+              {isEventRegistration ? copy.eventRegistration : copy.donation}
             </span>
-
           </div>
-
 
           <div
             className="
@@ -201,7 +147,6 @@ function DonationExistingPayment({
               text-sm
             "
           >
-
             <span
               className="
                 text-[#69705c]
@@ -217,9 +162,7 @@ function DonationExistingPayment({
             >
               {formattedAmount}
             </span>
-
           </div>
-
 
           <div
             className="
@@ -231,7 +174,6 @@ function DonationExistingPayment({
               text-sm
             "
           >
-
             <span
               className="
                 text-[#69705c]
@@ -249,17 +191,11 @@ function DonationExistingPayment({
             >
               {payment.email}
             </span>
-
           </div>
 
-
-          {
-            isEventRegistration &&
-            payerName &&
-            (
-
-              <div
-                className="
+          {isEventRegistration && payerName && (
+            <div
+              className="
                   mt-3
                   flex
                   items-center
@@ -267,37 +203,28 @@ function DonationExistingPayment({
                   gap-5
                   text-sm
                 "
-              >
-
-                <span
-                  className="
+            >
+              <span
+                className="
                     text-[#69705c]
                   "
-                >
-                  {copy.existingPaymentRegistrant}
-                </span>
+              >
+                {copy.existingPaymentRegistrant}
+              </span>
 
-                <span
-                  className="
+              <span
+                className="
                     font-medium
                   "
-                >
-                  {payerName}
-                </span>
+              >
+                {payerName}
+              </span>
+            </div>
+          )}
 
-              </div>
-
-            )
-          }
-
-
-          {
-            isEventRegistration &&
-            attendeeCount !== null &&
-            (
-
-              <div
-                className="
+          {isEventRegistration && attendeeCount !== null && (
+            <div
+              className="
                   mt-3
                   flex
                   items-center
@@ -305,31 +232,25 @@ function DonationExistingPayment({
                   gap-5
                   text-sm
                 "
-              >
-
-                <span
-                  className="
+            >
+              <span
+                className="
                     text-[#69705c]
                   "
-                >
-                  {copy.existingPaymentAttendees}
-                </span>
+              >
+                {copy.existingPaymentAttendees}
+              </span>
 
-                <span
-                  className="
+              <span
+                className="
                     font-medium
                   "
-                >
-                  {attendeeCount}
-                </span>
-
-              </div>
-
-            )
-          }
-
+              >
+                {attendeeCount}
+              </span>
+            </div>
+          )}
         </div>
-
 
         <div
           className="
@@ -340,18 +261,10 @@ function DonationExistingPayment({
             sm:flex-row
           "
         >
-
           <button
             type="button"
-
-            disabled={
-              loading
-            }
-
-            onClick={
-              onContinue
-            }
-
+            disabled={loading}
+            onClick={onContinue}
             className="
               inline-flex
               flex-1
@@ -373,18 +286,10 @@ function DonationExistingPayment({
             {copy.continueExisting}
           </button>
 
-
           <button
             type="button"
-
-            disabled={
-              loading
-            }
-
-            onClick={
-              onCancel
-            }
-
+            disabled={loading}
+            onClick={onCancel}
             className="
               inline-flex
               flex-1
@@ -406,15 +311,11 @@ function DonationExistingPayment({
               disabled:opacity-70
             "
           >
-            {
-              loading
-                ? (
-                    <>
-
-                      <span
-                        aria-hidden="true"
-
-                        className="
+            {loading ? (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="
                           h-3.5
                           w-3.5
                           shrink-0
@@ -424,27 +325,18 @@ function DonationExistingPayment({
                           border-[#303824]/20
                           border-t-[#303824]
                         "
-                      />
+                />
 
-                      <span>
-                        {copy.cancellingPayment}
-                      </span>
-
-                    </>
-                  )
-                : copy.cancelExisting
-            }
+                <span>{copy.cancellingPayment}</span>
+              </>
+            ) : (
+              copy.cancelExisting
+            )}
           </button>
-
         </div>
-
       </section>
-
     </div>
   );
 }
 
-
-export default memo(
-  DonationExistingPayment
-);
+export default memo(DonationExistingPayment);

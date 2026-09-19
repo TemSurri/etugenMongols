@@ -1,5 +1,5 @@
-import { getGalleryCover } from "../gallery/model/galleryMedia";
 import { galleryEvents } from "../gallery/data/galleryCatalog";
+import { getGalleryCover } from "../gallery/model/galleryMedia";
 import { EVENT_IMAGES } from "./constants";
 
 export function getEventImage(event: (typeof galleryEvents)[number]): string {

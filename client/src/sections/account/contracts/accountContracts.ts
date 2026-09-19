@@ -1,52 +1,51 @@
 export interface ChangeNameRequest {
-    firstName: string;
-    lastName: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface ChangePasswordRequest {
-    currentPassword: string;
-    newPassword: string;
+  currentPassword: string;
+  newPassword: string;
 }
 
 export interface ChangeEmailRequest {
-    newEmail: string;
+  newEmail: string;
 }
 
 export interface UserHistoryItem {
+  type: string;
 
-    type: string;
+  title: string;
 
-    title: string;
+  description: string;
 
-    description: string;
+  status: string | null;
 
-    status: string | null;
+  createdAt: string;
 
-    createdAt: string;
+  resource: string | null;
 
-    resource: string | null;
+  operation: string | null;
 
-    operation: string | null;
+  field: string | null;
 
-    field: string | null;
+  oldValue: string | null;
 
-    oldValue: string | null;
-
-    newValue: string | null;
+  newValue: string | null;
 }
 
 export interface UserHistoryPage {
-    content: UserHistoryItem[];
+  content: UserHistoryItem[];
 
-    totalElements: number;
-    totalPages: number;
+  totalElements: number;
+  totalPages: number;
 
-    size: number;
-    number: number;
+  size: number;
+  number: number;
 
-    first: boolean;
-    last: boolean;
+  first: boolean;
+  last: boolean;
 
-    numberOfElements: number;
-    empty: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }

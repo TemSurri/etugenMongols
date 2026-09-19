@@ -1,6 +1,5 @@
+import type { Lang } from "../../../context/language";
 import type { EventImage } from "../model/galleryCatalogTypes";
-
-type Lang = "en" | "mn";
 
 type GalleryGridProps = {
   title: string;

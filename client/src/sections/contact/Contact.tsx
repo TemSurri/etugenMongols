@@ -1,15 +1,14 @@
-"use client";
+import type { Lang } from "../../context/language";
+import { COPY } from "./content/ContactContent";
 
-import { memo, type ReactNode } from "react";
 import { motion, type Variants } from "framer-motion";
+import { memo, type ReactNode } from "react";
 import {
   FaArrowRight,
   FaEnvelope,
   FaFacebook,
   FaLinkedin,
 } from "react-icons/fa";
-
-type Lang = "en" | "mn";
 
 type ContactProps = {
   lang?: Lang;
@@ -18,74 +17,6 @@ type ContactProps = {
 /* -------------------------------------------------------------------------- */
 /*                                   Copy                                     */
 /* -------------------------------------------------------------------------- */
-
-const COPY = {
-  en: {
-    title: "Get in touch.",
-    description:
-      "Have a question, idea, or want to get involved? We would be glad to hear from you.",
-
-    formTitle: "Send a message",
-    formNotice:
-      "Our contact form is not available yet. For now, please reach out to us directly by email.",
-    nameLabel: "Name",
-    namePlaceholder: "Your name",
-    emailLabel: "Email",
-    emailPlaceholder: "you@example.com",
-    messageLabel: "Message",
-    messagePlaceholder: "How can we help?",
-    submit: "Form coming soon",
-
-    directTitle: "Contact us by email",
-    directBody:
-      "For now, we are accepting inquiries through email. Send us a message and our team will respond when possible.",
-    email: "info@etugen-mongols.ca",
-
-    socialTitle: "Follow us",
-    facebook: "Facebook",
-    facebookAction: "Visit our Facebook",
-    linkedin: "LinkedIn",
-    linkedinAction: "Visit our LinkedIn",
-
-    facebookUrl:
-      "https://www.facebook.com/profile.php?id=61584273744310",
-    linkedinUrl:
-      "https://www.linkedin.com/in/etugen-mongols-nfp-634077424/",
-  },
-
-  mn: {
-    title: "Бидэнтэй холбогдоорой.",
-    description:
-      "Асуух зүйл, санал эсвэл хамтран ажиллах хүсэлтэй байна уу? Бид тантай холбогдохдоо баяртай байх болно.",
-
-    formTitle: "Зурвас илгээх",
-    formNotice:
-      "Манай холбоо барих маягт одоогоор ажиллахгүй байна. Одоохондоо бидэнтэй имэйлээр шууд холбогдоно уу.",
-    nameLabel: "Нэр",
-    namePlaceholder: "Таны нэр",
-    emailLabel: "Имэйл",
-    emailPlaceholder: "you@example.com",
-    messageLabel: "Зурвас",
-    messagePlaceholder: "Бид танд хэрхэн туслах вэ?",
-    submit: "Удахгүй ашиглалтад орно",
-
-    directTitle: "Имэйлээр холбогдох",
-    directBody:
-      "Одоогоор бид хүсэлтүүдийг имэйлээр хүлээн авч байна. Бидэнд зурвас илгээгээрэй, манай баг боломжтой үедээ хариу өгөх болно.",
-    email: "info@etugen-mongols.ca",
-
-    socialTitle: "Биднийг дагаарай",
-    facebook: "Facebook",
-    facebookAction: "Facebook хуудсыг үзэх",
-    linkedin: "LinkedIn",
-    linkedinAction: "LinkedIn хуудсыг үзэх",
-
-    facebookUrl:
-      "https://www.facebook.com/profile.php?id=61584273744310",
-    linkedinUrl:
-      "https://www.linkedin.com/in/etugen-mongols-nfp-634077424/",
-  },
-} as const;
 
 /* -------------------------------------------------------------------------- */
 /*                                Animations                                  */
@@ -249,9 +180,7 @@ function Contact({ lang = "mn" }: ContactProps) {
                 <FaEnvelope size={14} />
               </span>
 
-              <h2 className="mt-6 text-xl font-normal">
-                {copy.directTitle}
-              </h2>
+              <h2 className="mt-6 text-xl font-normal">{copy.directTitle}</h2>
 
               <p className="mt-3 max-w-sm text-sm leading-7 text-[#657054]">
                 {copy.directBody}
@@ -318,12 +247,7 @@ type FormFieldProps = {
   type?: "text" | "email";
 };
 
-function FormField({
-  id,
-  label,
-  placeholder,
-  type = "text",
-}: FormFieldProps) {
+function FormField({ id, label, placeholder, type = "text" }: FormFieldProps) {
   return (
     <div>
       <label htmlFor={id} className="mb-2.5 block text-sm font-medium">
@@ -361,12 +285,7 @@ type SocialLinkProps = {
   subtitle: string;
 };
 
-function SocialLink({
-  href,
-  icon,
-  title,
-  subtitle,
-}: SocialLinkProps) {
+function SocialLink({ href, icon, title, subtitle }: SocialLinkProps) {
   return (
     <a
       href={href}
@@ -393,13 +312,9 @@ function SocialLink({
       </span>
 
       <div>
-        <span className="block text-sm font-medium">
-          {title}
-        </span>
+        <span className="block text-sm font-medium">{title}</span>
 
-        <span className="mt-0.5 block text-xs text-[#717a63]">
-          {subtitle}
-        </span>
+        <span className="mt-0.5 block text-xs text-[#717a63]">{subtitle}</span>
       </div>
 
       <FaArrowRight

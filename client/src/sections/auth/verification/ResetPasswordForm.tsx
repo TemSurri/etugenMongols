@@ -1,81 +1,52 @@
-"use client";
+import { resetPasswordFormMessages } from "../content/ResetPasswordFormMessages";
 
 import { useResetPasswordForm } from "../hooks/useResetPasswordForm";
 
-
-
-
-
-
-import {
-Link
-} from "react-router-dom";
-
-
-
+import { Link } from "react-router-dom";
 
 type ResetPasswordFormProps = {
+  language: "en" | "mn";
 
-    language:
-        | "en"
-        | "mn";
-
-    token: string;
+  token: string;
 };
 
-
 export default function ResetPasswordForm({
-    language,
-    token,
+  language,
+  token,
 }: ResetPasswordFormProps) {
+  const {
+    success,
+    mn,
+    invalidToken,
+    error,
+    handleSubmit,
+    showPassword,
+    password,
+    setPassword,
+    setError,
+    loading,
+    setShowPassword,
+    showConfirmPassword,
+    confirmPassword,
+    setConfirmPassword,
+    setShowConfirmPassword,
+  } = useResetPasswordForm(language, token);
 
-    const { success, mn, invalidToken, error, handleSubmit, showPassword, password, setPassword, setError, loading, setShowPassword, showConfirmPassword, confirmPassword, setConfirmPassword, setShowConfirmPassword } = useResetPasswordForm(language, token);
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-    /*
-     * =====================================================
-     * SUCCESS STATE
-     * =====================================================
-     */
-    if (success) {
-
-        return (
-
-            <div
-                className="
+  /*
+   * =====================================================
+   * SUCCESS STATE
+   * =====================================================
+   */
+  if (success) {
+    return (
+      <div
+        className="
                     py-3
                     text-center
                 "
-            >
-
-                <div
-                    className="
+      >
+        <div
+          className="
                         mx-auto
                         flex
                         h-14
@@ -94,41 +65,37 @@ export default function ResetPasswordForm({
                         font-semibold
                         text-[#27301d]
                     "
-                >
-                    ✓
-                </div>
+        >
+          ✓
+        </div>
 
-
-                <h2
-                    className="
+        <h2
+          className="
                         mt-5
                         text-xl
                         font-semibold
                         text-[#27301d]
                     "
-                >
-                    {mn
-                        ? "Нууц үг шинэчлэгдлээ"
-                        : "Password reset successful"}
-                </h2>
+        >
+          {resetPasswordFormMessages[mn ? "mn" : "en"].passwordResetSuccessful}
+        </h2>
 
-
-                <p
-                    className="
+        <p
+          className="
                         mt-2
                         text-sm
                         leading-6
                         text-[#667056]
                     "
-                >
-                    {mn
-                        ? "Таны нууц үг амжилттай шинэчлэгдлээ."
-                        : "Your password has been updated successfully."}
-                </p>
+        >
+          {
+            resetPasswordFormMessages[mn ? "mn" : "en"]
+              .yourPasswordHasBeenUpdatedSuccessfully
+          }
+        </p>
 
-
-                <p
-                    className="
+        <p
+          className="
                         mt-5
                         text-[10px]
                         font-bold
@@ -136,31 +103,24 @@ export default function ResetPasswordForm({
                         tracking-[0.16em]
                         text-[#667056]
                     "
-                >
-                    {mn
-                        ? "Нэвтрэх хэсэг рүү шилжүүлж байна..."
-                        : "Redirecting to login..."}
-                </p>
+        >
+          {resetPasswordFormMessages[mn ? "mn" : "en"].redirectingToLogin}
+        </p>
+      </div>
+    );
+  }
 
-            </div>
-        );
-    }
-
-
-    /*
-     * =====================================================
-     * INVALID TOKEN STATE
-     * =====================================================
-     */
-    if (invalidToken) {
-
-        return (
-
-            <div>
-
-                <div
-                    role="alert"
-                    className="
+  /*
+   * =====================================================
+   * INVALID TOKEN STATE
+   * =====================================================
+   */
+  if (invalidToken) {
+    return (
+      <div>
+        <div
+          role="alert"
+          className="
                         border-l-2
                         border-[#9a7b26]
 
@@ -173,14 +133,13 @@ export default function ResetPasswordForm({
                         leading-6
                         text-[#667056]
                     "
-                >
-                    {error}
-                </div>
+        >
+          {error}
+        </div>
 
-
-                <Link
-                    to="/auth/forgot-password"
-                    className="
+        <Link
+          to="/auth/forgot-password"
+          className="
                         mt-5
 
                         flex
@@ -205,79 +164,50 @@ export default function ResetPasswordForm({
 
                         hover:bg-[#9a7b26]
                     "
-                >
-                    {mn
-                        ? "Шинэ холбоос авах"
-                        : "Request new reset link"}
-                </Link>
-
-            </div>
-        );
-    }
-
-
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col"
         >
+          {resetPasswordFormMessages[mn ? "mn" : "en"].requestNewResetLink}
+        </Link>
+      </div>
+    );
+  }
 
-            {/* Password */}
-            <div>
-
-                <label
-                    htmlFor="new-password"
-                    className="
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      {/* Password */}
+      <div>
+        <label
+          htmlFor="new-password"
+          className="
                         text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]
                         text-[#27301d]
                     "
-                >
-                    {mn
-                        ? "Шинэ нууц үг"
-                        : "New password"}
-                </label>
+        >
+          {resetPasswordFormMessages[mn ? "mn" : "en"].newPassword}
+        </label>
 
+        <div className="relative mt-2">
+          <input
+            id="new-password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
 
-                <div className="relative mt-2">
-
-                    <input
-                        id="new-password"
-                        name="password"
-
-                        type={
-                            showPassword
-                                ? "text"
-                                : "password"
-                        }
-
-                        value={password}
-
-                        onChange={(event) => {
-
-                            setPassword(
-                                event.target.value
-                            );
-
-                            if (error) {
-                                setError("");
-                            }
-                        }}
-
-                        placeholder={
-                            mn
-                                ? "Шинэ нууц үгээ оруулна уу"
-                                : "Enter your new password"
-                        }
-
-                        autoComplete="new-password"
-
-                        required
-                        disabled={loading}
-
-                        className="
+              if (error) {
+                setError("");
+              }
+            }}
+            placeholder={
+              resetPasswordFormMessages[mn ? "mn" : "en"].enterYourNewPassword
+            }
+            autoComplete="new-password"
+            required
+            disabled={loading}
+            className="
                             h-11
                             w-full
 
@@ -302,21 +232,13 @@ export default function ResetPasswordForm({
                             disabled:cursor-not-allowed
                             disabled:opacity-60
                         "
-                    />
+          />
 
-
-                    <button
-                        type="button"
-
-                        onClick={() =>
-                            setShowPassword(
-                                (visible) => !visible
-                            )
-                        }
-
-                        disabled={loading}
-
-                        className="
+          <button
+            type="button"
+            onClick={() => setShowPassword((visible) => !visible)}
+            disabled={loading}
+            className="
                             absolute
                             right-3
                             top-1/2
@@ -337,81 +259,50 @@ export default function ResetPasswordForm({
                             disabled:cursor-not-allowed
                             disabled:opacity-50
                         "
-                    >
-                        {showPassword
-                            ? (
-                                mn
-                                    ? "Нуух"
-                                    : "Hide"
-                            )
-                            : (
-                                mn
-                                    ? "Харах"
-                                    : "Show"
-                            )}
-                    </button>
+          >
+            {showPassword
+              ? resetPasswordFormMessages[mn ? "mn" : "en"].hide
+              : resetPasswordFormMessages[mn ? "mn" : "en"].show}
+          </button>
+        </div>
+      </div>
 
-                </div>
-
-            </div>
-
-
-            {/* Confirm Password */}
-            <div className="mt-4">
-
-                <label
-                    htmlFor="confirm-new-password"
-                    className="
+      {/* Confirm Password */}
+      <div className="mt-4">
+        <label
+          htmlFor="confirm-new-password"
+          className="
                         text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]
                         text-[#27301d]
                     "
-                >
-                    {mn
-                        ? "Шинэ нууц үгээ баталгаажуулах"
-                        : "Confirm new password"}
-                </label>
+        >
+          {resetPasswordFormMessages[mn ? "mn" : "en"].confirmNewPassword}
+        </label>
 
+        <div className="relative mt-2">
+          <input
+            id="confirm-new-password"
+            name="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
 
-                <div className="relative mt-2">
-
-                    <input
-                        id="confirm-new-password"
-                        name="confirmPassword"
-
-                        type={
-                            showConfirmPassword
-                                ? "text"
-                                : "password"
-                        }
-
-                        value={confirmPassword}
-
-                        onChange={(event) => {
-
-                            setConfirmPassword(
-                                event.target.value
-                            );
-
-                            if (error) {
-                                setError("");
-                            }
-                        }}
-
-                        placeholder={
-                            mn
-                                ? "Шинэ нууц үгээ дахин оруулна уу"
-                                : "Enter your new password again"
-                        }
-
-                        autoComplete="new-password"
-
-                        required
-                        disabled={loading}
-
-                        className="
+              if (error) {
+                setError("");
+              }
+            }}
+            placeholder={
+              resetPasswordFormMessages[mn ? "mn" : "en"]
+                .enterYourNewPasswordAgain
+            }
+            autoComplete="new-password"
+            required
+            disabled={loading}
+            className="
                             h-11
                             w-full
 
@@ -436,21 +327,13 @@ export default function ResetPasswordForm({
                             disabled:cursor-not-allowed
                             disabled:opacity-60
                         "
-                    />
+          />
 
-
-                    <button
-                        type="button"
-
-                        onClick={() =>
-                            setShowConfirmPassword(
-                                (visible) => !visible
-                            )
-                        }
-
-                        disabled={loading}
-
-                        className="
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword((visible) => !visible)}
+            disabled={loading}
+            className="
                             absolute
                             right-3
                             top-1/2
@@ -471,48 +354,35 @@ export default function ResetPasswordForm({
                             disabled:cursor-not-allowed
                             disabled:opacity-50
                         "
-                    >
-                        {showConfirmPassword
-                            ? (
-                                mn
-                                    ? "Нуух"
-                                    : "Hide"
-                            )
-                            : (
-                                mn
-                                    ? "Харах"
-                                    : "Show"
-                            )}
-                    </button>
+          >
+            {showConfirmPassword
+              ? resetPasswordFormMessages[mn ? "mn" : "en"].hide
+              : resetPasswordFormMessages[mn ? "mn" : "en"].show}
+          </button>
+        </div>
+      </div>
 
-                </div>
-
-            </div>
-
-
-            {/* Requirements */}
-            <div
-                className="
+      {/* Requirements */}
+      <div
+        className="
                     mt-3
                     text-xs
                     leading-5
                     text-[#667056]/80
                 "
-            >
-                {mn
-                    ? "Хамгийн багадаа 8 тэмдэгт, нэг том үсэг, нэг жижиг үсэг болон нэг тоо."
-                    : "Use at least 8 characters with an uppercase letter, lowercase letter, and number."}
-            </div>
+      >
+        {
+          resetPasswordFormMessages[mn ? "mn" : "en"]
+            .useAtLeastCharactersWithAnUppercase
+        }
+      </div>
 
-
-            {/* Error */}
-            {error && (
-
-                <div
-                    role="alert"
-                    aria-live="polite"
-
-                    className="
+      {/* Error */}
+      {error && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="
                         mt-4
 
                         border-l-2
@@ -527,19 +397,16 @@ export default function ResetPasswordForm({
                         leading-6
                         text-[#667056]
                     "
-                >
-                    {error}
-                </div>
+        >
+          {error}
+        </div>
+      )}
 
-            )}
-
-
-            {/* Submit */}
-            <button
-                type="submit"
-                disabled={loading}
-
-                className="
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="
                     mt-5
 
                     flex
@@ -567,20 +434,11 @@ export default function ResetPasswordForm({
                     disabled:opacity-60
                     disabled:hover:bg-[#27301d]
                 "
-            >
-                {loading
-                    ? (
-                        mn
-                            ? "Шинэчилж байна..."
-                            : "Resetting password..."
-                    )
-                    : (
-                        mn
-                            ? "Нууц үг шинэчлэх"
-                            : "Reset password"
-                    )}
-            </button>
-
-        </form>
-    );
+      >
+        {loading
+          ? resetPasswordFormMessages[mn ? "mn" : "en"].resettingPassword
+          : resetPasswordFormMessages[mn ? "mn" : "en"].resetPassword}
+      </button>
+    </form>
+  );
 }

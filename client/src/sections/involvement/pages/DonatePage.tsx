@@ -1,8 +1,6 @@
-"use client";
-
 import Footer from "../../../components/navigation/SiteFooter";
 import Header from "../../../components/navigation/SiteHeader";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 import DonateMain from "../Donate";
 
 export default function DonatePage() {

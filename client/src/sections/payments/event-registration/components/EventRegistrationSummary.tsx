@@ -1,149 +1,115 @@
-import {
-memo
-} from "react";
+import { memo } from "react";
 
-import type {
-EventRegistrationCopy
-} from "../copy/eventRegistrationCopy";
-
+import type { EventRegistrationCopy } from "../content/eventRegistrationCopy";
 
 type EventRegistrationSummaryProps = {
+  attendeeCount: number;
 
-    attendeeCount: number;
+  formattedPrice: string;
 
-    formattedPrice: string;
+  formattedTotal: string;
 
-    formattedTotal: string;
+  submitting: boolean;
 
-    submitting: boolean;
+  formComplete: boolean;
 
-    formComplete: boolean;
+  error: string | null;
 
-    error: string | null;
+  onSubmit: () => void;
 
-    onSubmit: () => void;
-
-    copy: EventRegistrationCopy;
+  copy: EventRegistrationCopy;
 };
 
-
 function EventRegistrationSummary({
-    attendeeCount,
-    formattedPrice,
-    formattedTotal,
-    submitting,
-    formComplete,
-    error,
-    onSubmit,
-    copy
+  attendeeCount,
+  formattedPrice,
+  formattedTotal,
+  submitting,
+  formComplete,
+  error,
+  onSubmit,
+  copy,
 }: EventRegistrationSummaryProps) {
-
-    return (
-        <section
-            className="
+  return (
+    <section
+      className="
                 border-t
                 border-[#27301d]/10
                 pt-7
             "
-        >
-
-            <h2
-                className="
+    >
+      <h2
+        className="
                     text-lg
                     font-semibold
                     text-[#27301d]
                 "
-            >
-                {
-                    copy.registrationSummary
-                }
-            </h2>
+      >
+        {copy.registrationSummary}
+      </h2>
 
-
-            <div
-                className="
+      <div
+        className="
                     mt-5
                     space-y-3
                 "
-            >
-
-                <div
-                    className="
+      >
+        <div
+          className="
                         flex
                         items-center
                         justify-between
                         gap-5
                         text-sm
                     "
-                >
-
-                    <span
-                        className="
+        >
+          <span
+            className="
                             text-[#59624a]
                         "
-                    >
-                        {
-                            attendeeCount
-                        }{" "}
-                        {
-                            attendeeCount === 1
-                                ? copy.person
-                                : copy.people
-                        }
-                    </span>
+          >
+            {attendeeCount} {attendeeCount === 1 ? copy.person : copy.people}
+          </span>
 
-
-                    <span
-                        className="
+          <span
+            className="
                             font-medium
                             text-[#27301d]
                         "
-                    >
-                        {
-                            attendeeCount
-                        }
-                    </span>
+          >
+            {attendeeCount}
+          </span>
+        </div>
 
-                </div>
-
-
-                <div
-                    className="
+        <div
+          className="
                         flex
                         items-center
                         justify-between
                         gap-5
                         text-sm
                     "
-                >
-
-                    <span
-                        className="
+        >
+          <span
+            className="
                             text-[#59624a]
                         "
-                    >
-                        {
-                            copy.pricePerGuest
-                        }
-                    </span>
+          >
+            {copy.pricePerGuest}
+          </span>
 
-
-                    <span
-                        className="
+          <span
+            className="
                             font-medium
                             text-[#27301d]
                         "
-                    >
-                        {
-                            formattedPrice
-                        }
-                    </span>
+          >
+            {formattedPrice}
+          </span>
+        </div>
 
-                </div>
-
-
-                <div
-                    className="
+        <div
+          className="
                         mt-4
                         flex
                         items-end
@@ -153,44 +119,33 @@ function EventRegistrationSummary({
                         border-[#27301d]/10
                         pt-4
                     "
-                >
-
-                    <span
-                        className="
+        >
+          <span
+            className="
                             text-sm
                             font-medium
                             text-[#59624a]
                         "
-                    >
-                        {
-                            copy.total
-                        }
-                    </span>
+          >
+            {copy.total}
+          </span>
 
-
-                    <span
-                        className="
+          <span
+            className="
                             text-2xl
                             font-semibold
                             tracking-tight
                             text-[#27301d]
                         "
-                    >
-                        {
-                            formattedTotal
-                        }
-                    </span>
+          >
+            {formattedTotal}
+          </span>
+        </div>
+      </div>
 
-                </div>
-
-            </div>
-
-
-            {
-                error && (
-
-                    <p
-                        className="
+      {error && (
+        <p
+          className="
                             mt-5
                             border-l-2
                             border-red-700/60
@@ -201,29 +156,16 @@ function EventRegistrationSummary({
                             leading-6
                             text-red-800
                         "
-                    >
-                        {
-                            error
-                        }
-                    </p>
+        >
+          {error}
+        </p>
+      )}
 
-                )
-            }
-
-
-            <button
-                type="button"
-
-                onClick={
-                    onSubmit
-                }
-
-                disabled={
-                    submitting ||
-                    !formComplete
-                }
-
-                className="
+      <button
+        type="button"
+        onClick={onSubmit}
+        disabled={submitting || !formComplete}
+        className="
                     mt-6
                     inline-flex
                     w-full
@@ -241,19 +183,11 @@ function EventRegistrationSummary({
                     disabled:cursor-not-allowed
                     disabled:opacity-45
                 "
-            >
-                {
-                    submitting
-                        ? copy.preparingPayment
-                        : copy.continueToPayment
-                }
-            </button>
-
-        </section>
-    );
+      >
+        {submitting ? copy.preparingPayment : copy.continueToPayment}
+      </button>
+    </section>
+  );
 }
 
-
-export default memo(
-    EventRegistrationSummary
-);
+export default memo(EventRegistrationSummary);

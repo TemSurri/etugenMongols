@@ -1,7 +1,15 @@
-import type { PaymentAction, PaymentIntentResult, PaymentIntentResultType, ResumePaymentResponse } from "./contracts/paymentContracts";
+import type {
+  PaymentAction,
+  PaymentIntentResult,
+  PaymentIntentResultType,
+  ResumePaymentResponse,
+} from "./contracts/paymentContracts";
 import type { ActivePayment } from "./paymentSession";
 
-export function paymentFromCheckout(payment: PaymentIntentResult, action: PaymentAction): ActivePayment {
+export function paymentFromCheckout(
+  payment: PaymentIntentResult,
+  action: PaymentAction,
+): ActivePayment {
   return {
     jobId: payment.jobId,
     result: payment.result,
@@ -14,7 +22,10 @@ export function paymentFromCheckout(payment: PaymentIntentResult, action: Paymen
   };
 }
 
-export function paymentFromResume(payment: ResumePaymentResponse, result: PaymentIntentResultType): ActivePayment {
+export function paymentFromResume(
+  payment: ResumePaymentResponse,
+  result: PaymentIntentResultType,
+): ActivePayment {
   return {
     jobId: payment.jobId,
     result,

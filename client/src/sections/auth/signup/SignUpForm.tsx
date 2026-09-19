@@ -1,206 +1,137 @@
-"use client";
+import { signUpFormMessages } from "../content/SignUpFormMessages";
+import { signUpFormCopy } from "../content/SignUpFormCopy";
 
 import { useSignupForm } from "../hooks/useSignupForm";
 
-
-
-
 import { Link } from "react-router-dom";
 
-
-
-import type {
-Language
-} from "./SignUpSection";
-
+import type { Language } from "./SignUpSection";
 
 type SignupFormProps = {
-    language: Language;
-    onAccountCreated: () => void;
+  language: Language;
+  onAccountCreated: () => void;
 };
 
-
 export default function SignupForm({
-    language,
-    onAccountCreated,
+  language,
+  onAccountCreated,
 }: SignupFormProps) {
+  const {
+    handleSubmit,
+    mn,
+    firstName,
+    loading,
+    setFirstName,
+    lastName,
+    setLastName,
+    email,
+    setEmail,
+    showPassword,
+    password,
+    setPassword,
+    setShowPassword,
+    showConfirmPassword,
+    confirmPassword,
+    setConfirmPassword,
+    setShowConfirmPassword,
+    error,
+  } = useSignupForm(language, onAccountCreated);
 
-    const { handleSubmit, mn, firstName, loading, setFirstName, lastName, setLastName, email, setEmail, showPassword, password, setPassword, setShowPassword, showConfirmPassword, confirmPassword, setConfirmPassword, setShowConfirmPassword, error } = useSignupForm(language, onAccountCreated);
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-    
-
-
-    
-
-
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col"
-        >
-
-            {/* Names */}
-            <div
-                className="
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      {/* Names */}
+      <div
+        className="
                     grid
                     grid-cols-1
                     gap-4
                     sm:grid-cols-2
                 "
-            >
+      >
+        <Field
+          id="firstName"
+          label={signUpFormMessages[mn ? "mn" : "en"].firstName}
+          type="text"
+          value={firstName}
+          placeholder={signUpFormMessages[mn ? "mn" : "en"].firstName}
+          autoComplete="given-name"
+          disabled={loading}
+          onChange={setFirstName}
+        />
 
-                <Field
-                    id="firstName"
-                    label={
-                        mn
-                            ? "Нэр"
-                            : "First name"
-                    }
-                    type="text"
-                    value={firstName}
-                    placeholder={
-                        mn
-                            ? "Нэр"
-                            : "First name"
-                    }
-                    autoComplete="given-name"
-                    disabled={loading}
-                    onChange={setFirstName}
-                />
+        <Field
+          id="lastName"
+          label={signUpFormMessages[mn ? "mn" : "en"].lastName}
+          type="text"
+          value={lastName}
+          placeholder={signUpFormMessages[mn ? "mn" : "en"].lastName}
+          autoComplete="family-name"
+          disabled={loading}
+          onChange={setLastName}
+        />
+      </div>
 
+      {/* Email */}
+      <div className="mt-4">
+        <Field
+          id="email"
+          label={signUpFormMessages[mn ? "mn" : "en"].email}
+          type="email"
+          value={email}
+          placeholder="you@example.com"
+          autoComplete="email"
+          disabled={loading}
+          onChange={setEmail}
+        />
+      </div>
 
-                <Field
-                    id="lastName"
-                    label={
-                        mn
-                            ? "Овог"
-                            : "Last name"
-                    }
-                    type="text"
-                    value={lastName}
-                    placeholder={
-                        mn
-                            ? "Овог"
-                            : "Last name"
-                    }
-                    autoComplete="family-name"
-                    disabled={loading}
-                    onChange={setLastName}
-                />
-
-            </div>
-
-
-            {/* Email */}
-            <div className="mt-4">
-
-                <Field
-                    id="email"
-                    label={
-                        mn
-                            ? "Имэйл"
-                            : "Email"
-                    }
-                    type="email"
-                    value={email}
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                    disabled={loading}
-                    onChange={setEmail}
-                />
-
-            </div>
-
-
-            {/* Passwords */}
-            <div
-                className="
+      {/* Passwords */}
+      <div
+        className="
                     mt-4
                     grid
                     grid-cols-1
                     gap-4
                     sm:grid-cols-2
                 "
-            >
+      >
+        <Field
+          id="password"
+          label={signUpFormMessages[mn ? "mn" : "en"].password}
+          type={showPassword ? "text" : "password"}
+          value={password}
+          placeholder={signUpFormMessages[mn ? "mn" : "en"].password}
+          autoComplete="new-password"
+          disabled={loading}
+          onChange={setPassword}
+          passwordToggle
+          passwordVisible={showPassword}
+          onTogglePassword={() => setShowPassword((visible) => !visible)}
+          language={language}
+        />
 
-                <Field
-                    id="password"
-                    label={
-                        mn
-                            ? "Нууц үг"
-                            : "Password"
-                    }
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    placeholder={
-                        mn
-                            ? "Нууц үг"
-                            : "Password"
-                    }
-                    autoComplete="new-password"
-                    disabled={loading}
-                    onChange={setPassword}
-                    passwordToggle
-                    passwordVisible={showPassword}
-                    onTogglePassword={() =>
-                        setShowPassword((visible) => !visible)
-                    }
-                    language={language}
-                />
+        <Field
+          id="confirmPassword"
+          label={signUpFormMessages[mn ? "mn" : "en"].confirmPassword}
+          type={showConfirmPassword ? "text" : "password"}
+          value={confirmPassword}
+          placeholder={signUpFormMessages[mn ? "mn" : "en"].confirmPassword}
+          autoComplete="new-password"
+          disabled={loading}
+          onChange={setConfirmPassword}
+          passwordToggle
+          passwordVisible={showConfirmPassword}
+          onTogglePassword={() => setShowConfirmPassword((visible) => !visible)}
+          language={language}
+        />
+      </div>
 
-
-                <Field
-                    id="confirmPassword"
-                    label={
-                        mn
-                            ? "Нууц үг давтах"
-                            : "Confirm password"
-                    }
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    placeholder={
-                        mn
-                            ? "Нууц үг давтах"
-                            : "Confirm password"
-                    }
-                    autoComplete="new-password"
-                    disabled={loading}
-                    onChange={setConfirmPassword}
-                    passwordToggle
-                    passwordVisible={showConfirmPassword}
-                    onTogglePassword={() =>
-                        setShowConfirmPassword((visible) => !visible)
-                    }
-                    language={language}
-                />
-
-            </div>
-
-
-            {/* Error */}
-            {error && (
-
-                <div
-                    role="alert"
-                    aria-live="polite"
-                    className="
+      {/* Error */}
+      {error && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="
                         mt-4
                         border-l-2
                         border-[#9a7b26]
@@ -211,18 +142,16 @@ export default function SignupForm({
                         leading-6
                         text-[#667056]
                     "
-                >
-                    {error}
-                </div>
+        >
+          {error}
+        </div>
+      )}
 
-            )}
-
-
-            {/* Submit */}
-            <button
-                type="submit"
-                disabled={loading}
-                className="
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="
                     mt-5
 
                     flex
@@ -250,146 +179,109 @@ export default function SignupForm({
                     disabled:opacity-60
                     disabled:hover:bg-[#27301d]
                 "
-            >
-                {loading
-                    ? (
-                        mn
-                            ? "Бүртгэл үүсгэж байна..."
-                            : "Creating account..."
-                    )
-                    : (
-                        mn
-                            ? "Бүртгэл үүсгэх"
-                            : "Create account"
-                    )}
-            </button>
+      >
+        {loading
+          ? signUpFormMessages[mn ? "mn" : "en"].creatingAccount
+          : signUpFormMessages[mn ? "mn" : "en"].createAccount}
+      </button>
 
-
-            {/* Login */}
-            <div
-                className="
+      {/* Login */}
+      <div
+        className="
                     mt-5
                     border-t
                     border-[#27301d]/10
                     pt-4
                     text-center
                 "
-            >
-
-                <p
-                    className="
+      >
+        <p
+          className="
                         text-sm
                         text-[#667056]
                     "
-                >
-                    {mn
-                        ? "Бүртгэлтэй юу? "
-                        : "Already have an account? "}
+        >
+          {signUpFormMessages[mn ? "mn" : "en"].alreadyHaveAnAccount}
 
-                    <Link
-                        to="/auth/login"
-                        className="
+          <Link
+            to="/auth/login"
+            className="
                             font-semibold
                             text-[#27301d]
                             no-underline
                             transition-colors
                             hover:text-[#9a7b26]
                         "
-                    >
-                        {mn
-                            ? "Нэвтрэх"
-                            : "Sign in"}
-                    </Link>
-
-                </p>
-
-            </div>
-
-        </form>
-    );
+          >
+            {signUpFormMessages[mn ? "mn" : "en"].signIn}
+          </Link>
+        </p>
+      </div>
+    </form>
+  );
 }
 
-
 type FieldProps = {
+  id: string;
+  label: string;
 
-    id: string;
-    label: string;
+  type: "text" | "email" | "password";
 
-    type:
-        | "text"
-        | "email"
-        | "password";
+  value: string;
+  placeholder: string;
+  autoComplete: string;
 
-    value: string;
-    placeholder: string;
-    autoComplete: string;
+  disabled: boolean;
 
-    disabled: boolean;
+  onChange: (value: string) => void;
 
-    onChange: (
-        value: string
-    ) => void;
-
-    passwordToggle?: boolean;
-    passwordVisible?: boolean;
-    onTogglePassword?: () => void;
-    language?: Language;
+  passwordToggle?: boolean;
+  passwordVisible?: boolean;
+  onTogglePassword?: () => void;
+  language?: Language;
 };
 
-
 function Field({
-    id,
-    label,
-    type,
-    value,
-    placeholder,
-    autoComplete,
-    disabled,
-    onChange,
-    passwordToggle = false,
-    passwordVisible = false,
-    onTogglePassword,
-    language = "en",
+  id,
+  label,
+  type,
+  value,
+  placeholder,
+  autoComplete,
+  disabled,
+  onChange,
+  passwordToggle = false,
+  passwordVisible = false,
+  onTogglePassword,
+  language = "en",
 }: FieldProps) {
-
-    return (
-        <div>
-
-            <label
-                htmlFor={id}
-                className="
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className="
                     text-[10px]
                     font-bold
                     uppercase
                     tracking-[0.2em]
                     text-[#27301d]
                 "
-            >
-                {label}
-            </label>
+      >
+        {label}
+      </label>
 
-
-            <div className="relative mt-2">
-
-                <input
-                    id={id}
-                    name={id}
-                    type={type}
-                    value={value}
-
-                    onChange={(event) =>
-                        onChange(
-                            event.target.value
-                        )
-                    }
-
-                    placeholder={placeholder}
-                    autoComplete={autoComplete}
-
-                    required
-                    disabled={disabled}
-
-                    className={`
+      <div className="relative mt-2">
+        <input
+          id={id}
+          name={id}
+          type={type}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          required
+          disabled={disabled}
+          className={`
                         h-11
                         w-full
 
@@ -414,28 +306,19 @@ function Field({
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                     `}
-                />
+        />
 
-                {passwordToggle && onTogglePassword && (
-
-                    <button
-                        type="button"
-                        onClick={onTogglePassword}
-                        disabled={disabled}
-                        aria-label={
-                            passwordVisible
-                                ? (
-                                    language === "mn"
-                                        ? "Нууц үгийг нуух"
-                                        : "Hide password"
-                                )
-                                : (
-                                    language === "mn"
-                                        ? "Нууц үгийг харуулах"
-                                        : "Show password"
-                                )
-                        }
-                        className="
+        {passwordToggle && onTogglePassword && (
+          <button
+            type="button"
+            onClick={onTogglePassword}
+            disabled={disabled}
+            aria-label={
+              passwordVisible
+                ? signUpFormCopy[language].hidePassword
+                : signUpFormCopy[language].showPassword
+            }
+            className="
                             absolute
                             right-3
                             top-1/2
@@ -456,24 +339,13 @@ function Field({
                             disabled:cursor-not-allowed
                             disabled:opacity-50
                         "
-                    >
-                        {passwordVisible
-                            ? (
-                                language === "mn"
-                                    ? "Нуух"
-                                    : "Hide"
-                            )
-                            : (
-                                language === "mn"
-                                    ? "Харах"
-                                    : "Show"
-                            )}
-                    </button>
-
-                )}
-
-            </div>
-
-        </div>
-    );
+          >
+            {passwordVisible
+              ? signUpFormCopy[language].hide
+              : signUpFormCopy[language].show}
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }

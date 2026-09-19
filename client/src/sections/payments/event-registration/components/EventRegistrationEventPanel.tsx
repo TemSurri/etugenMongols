@@ -1,44 +1,21 @@
-import {
-memo,
-} from "react";
+import { memo } from "react";
 
-import type {
-ApiEvent,
-} from "../../../events/types";
-
+import type { ApiEvent } from "../../../events/types";
 
 type Props = {
-  event:
-    ApiEvent;
+  event: ApiEvent;
 };
 
+function EventRegistrationEventPanel({ event }: Props) {
+  const date = new Intl.DateTimeFormat("en-CA", {
+    weekday: "long",
 
-function EventRegistrationEventPanel({
-  event,
-}: Props) {
+    year: "numeric",
 
-  const date =
-    new Intl.DateTimeFormat(
-      "en-CA",
-      {
-        weekday:
-          "long",
+    month: "long",
 
-        year:
-          "numeric",
-
-        month:
-          "long",
-
-        day:
-          "numeric",
-      }
-    ).format(
-      new Date(
-        event.startsAt
-      )
-    );
-
+    day: "numeric",
+  }).format(new Date(event.startsAt));
 
   return (
     <aside
@@ -51,33 +28,19 @@ function EventRegistrationEventPanel({
         lg:min-h-screen
       "
     >
-
-      {
-        event.coverImage &&
-        (
-
-          <img
-            src={
-              event.coverImage
-            }
-
-            alt={
-              event.coverImageAltEn ??
-              event.titleEn
-            }
-
-            className="
+      {event.coverImage && (
+        <img
+          src={event.coverImage}
+          alt={event.coverImageAltEn ?? event.titleEn}
+          className="
               absolute
               inset-0
               h-full
               w-full
               object-cover
             "
-          />
-
-        )
-      }
-
+        />
+      )}
 
       <div
         className="
@@ -86,7 +49,6 @@ function EventRegistrationEventPanel({
           bg-[#1c2117]/70
         "
       />
-
 
       <div
         className="
@@ -105,7 +67,6 @@ function EventRegistrationEventPanel({
           lg:pb-16
         "
       >
-
         <p
           className="
             text-[10px]
@@ -117,7 +78,6 @@ function EventRegistrationEventPanel({
         >
           Event Registration
         </p>
-
 
         <h2
           className="
@@ -133,7 +93,6 @@ function EventRegistrationEventPanel({
           {event.titleEn}
         </h2>
 
-
         <p
           className="
             mt-3
@@ -144,7 +103,6 @@ function EventRegistrationEventPanel({
           {event.titleMn}
         </p>
 
-
         <div
           className="
             mt-8
@@ -153,7 +111,6 @@ function EventRegistrationEventPanel({
             pt-6
           "
         >
-
           <p
             className="
               text-sm
@@ -162,7 +119,6 @@ function EventRegistrationEventPanel({
           >
             {date}
           </p>
-
 
           <p
             className="
@@ -173,16 +129,10 @@ function EventRegistrationEventPanel({
           >
             {event.location}
           </p>
-
         </div>
-
       </div>
-
     </aside>
   );
 }
 
-
-export default memo(
-  EventRegistrationEventPanel
-);
+export default memo(EventRegistrationEventPanel);

@@ -1,8 +1,6 @@
 import { memo } from "react";
 
-import type {
-DonationCopy,
-} from "../types/donationTypes";
+import type { DonationCopy } from "../types/donationTypes";
 
 type DonationDetailsProps = {
   copy: DonationCopy;
@@ -16,29 +14,17 @@ type DonationDetailsProps = {
 
   isLoggedIn: boolean;
 
-  onEmailChange: (
-    value: string
-  ) => void;
+  onEmailChange: (value: string) => void;
 
-  onConfirmEmailChange: (
-    value: string
-  ) => void;
+  onConfirmEmailChange: (value: string) => void;
 
-  onFirstNameChange: (
-    value: string
-  ) => void;
+  onFirstNameChange: (value: string) => void;
 
-  onLastNameChange: (
-    value: string
-  ) => void;
+  onLastNameChange: (value: string) => void;
 
-  onAnonymousChange: (
-    value: boolean
-  ) => void;
+  onAnonymousChange: (value: boolean) => void;
 
-  onMessageChange: (
-    value: string
-  ) => void;
+  onMessageChange: (value: string) => void;
 };
 
 function DonationDetails({
@@ -57,15 +43,11 @@ function DonationDetails({
   onAnonymousChange,
   onMessageChange,
 }: DonationDetailsProps) {
-
   const emailsMatch =
-    email.trim().toLowerCase() ===
-    confirmEmail.trim().toLowerCase();
+    email.trim().toLowerCase() === confirmEmail.trim().toLowerCase();
 
   const showEmailMismatch =
-    !isLoggedIn &&
-    confirmEmail.trim().length > 0 &&
-    !emailsMatch;
+    !isLoggedIn && confirmEmail.trim().length > 0 && !emailsMatch;
 
   return (
     <section
@@ -105,14 +87,8 @@ function DonationDetails({
           autoComplete="email"
           required
           value={email}
-          onChange={(event) =>
-            onEmailChange(
-              event.target.value
-            )
-          }
-          placeholder={
-            copy.emailPlaceholder
-          }
+          onChange={(event) => onEmailChange(event.target.value)}
+          placeholder={copy.emailPlaceholder}
           className="
             mt-2
             w-full
@@ -153,23 +129,11 @@ function DonationDetails({
             autoComplete="off"
             required
             value={confirmEmail}
-            onChange={(event) =>
-              onConfirmEmailChange(
-                event.target.value
-              )
-            }
-            placeholder={
-              copy.confirmEmailPlaceholder
-            }
-            aria-invalid={
-              showEmailMismatch
-                ? "true"
-                : "false"
-            }
+            onChange={(event) => onConfirmEmailChange(event.target.value)}
+            placeholder={copy.confirmEmailPlaceholder}
+            aria-invalid={showEmailMismatch ? "true" : "false"}
             aria-describedby={
-              showEmailMismatch
-                ? "donation-confirm-email-error"
-                : undefined
+              showEmailMismatch ? "donation-confirm-email-error" : undefined
             }
             className={`
               mt-2
@@ -238,14 +202,8 @@ function DonationDetails({
             autoComplete="given-name"
             required
             value={firstName}
-            onChange={(event) =>
-              onFirstNameChange(
-                event.target.value
-              )
-            }
-            placeholder={
-              copy.firstNamePlaceholder
-            }
+            onChange={(event) => onFirstNameChange(event.target.value)}
+            placeholder={copy.firstNamePlaceholder}
             className="
               mt-2
               w-full
@@ -283,14 +241,8 @@ function DonationDetails({
             autoComplete="family-name"
             required
             value={lastName}
-            onChange={(event) =>
-              onLastNameChange(
-                event.target.value
-              )
-            }
-            placeholder={
-              copy.lastNamePlaceholder
-            }
+            onChange={(event) => onLastNameChange(event.target.value)}
+            placeholder={copy.lastNamePlaceholder}
             className="
               mt-2
               w-full
@@ -327,11 +279,7 @@ function DonationDetails({
         <input
           type="checkbox"
           checked={anonymous}
-          onChange={(event) =>
-            onAnonymousChange(
-              event.target.checked
-            )
-          }
+          onChange={(event) => onAnonymousChange(event.target.checked)}
           className="
             mt-0.5
             h-4
@@ -340,9 +288,7 @@ function DonationDetails({
           "
         />
 
-        <span>
-          {copy.anonymousLabel}
-        </span>
+        <span>{copy.anonymousLabel}</span>
       </label>
 
       {/* Optional message */}
@@ -362,14 +308,8 @@ function DonationDetails({
         <textarea
           id="donation-message"
           value={message}
-          onChange={(event) =>
-            onMessageChange(
-              event.target.value
-            )
-          }
-          placeholder={
-            copy.messagePlaceholder
-          }
+          onChange={(event) => onMessageChange(event.target.value)}
+          placeholder={copy.messagePlaceholder}
           rows={5}
           maxLength={500}
           className="
@@ -414,6 +354,4 @@ function DonationDetails({
   );
 }
 
-export default memo(
-  DonationDetails
-);
+export default memo(DonationDetails);

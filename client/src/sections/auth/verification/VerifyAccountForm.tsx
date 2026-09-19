@@ -1,115 +1,80 @@
-"use client";
+import { verifyAccountFormMessages } from "../content/VerifyAccountFormMessages";
 
 import { useVerifyAccountForm } from "../hooks/useVerifyAccountForm";
 
-
-
-
-
 import { Link } from "react-router-dom";
 
-
-
-import type {
-Language
-} from "./VerifyAccountSection";
-
+import type { Language } from "./VerifyAccountSection";
 
 type VerifyAccountFormProps = {
-    language: Language;
+  language: Language;
 };
 
-
 export default function VerifyAccountForm({
-    language,
+  language,
 }: VerifyAccountFormProps) {
+  const {
+    handleSubmit,
+    mn,
+    email,
+    setEmail,
+    error,
+    setError,
+    alreadyVerified,
+    setAlreadyVerified,
+    loading,
+    success,
+    sentEmail,
+    cooldown,
+  } = useVerifyAccountForm(language);
 
-    const { handleSubmit, mn, email, setEmail, error, setError, alreadyVerified, setAlreadyVerified, loading, success, sentEmail, cooldown } = useVerifyAccountForm(language);
+  /*
+   * =====================================================
+   * RESEND COOLDOWN
+   * =====================================================
+   *
+   * After a successful request, the user must wait
+   * 60 seconds before sending another verification email.
+   */
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-    
-
-
-    /*
-     * =====================================================
-     * RESEND COOLDOWN
-     * =====================================================
-     *
-     * After a successful request, the user must wait
-     * 60 seconds before sending another verification email.
-     */
-    
-
-
-    
-
-
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col"
-        >
-
-            {/* Email */}
-            <div>
-
-                <label
-                    htmlFor="verification-email"
-                    className="
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      {/* Email */}
+      <div>
+        <label
+          htmlFor="verification-email"
+          className="
                         text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]
                         text-[#27301d]
                     "
-                >
-                    {mn
-                        ? "Имэйл"
-                        : "Email"}
-                </label>
+        >
+          {verifyAccountFormMessages[mn ? "mn" : "en"].email}
+        </label>
 
+        <input
+          id="verification-email"
+          name="email"
+          type="email"
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value);
 
-                <input
-                    id="verification-email"
-                    name="email"
-                    type="email"
+            if (error) {
+              setError("");
+            }
 
-                    value={email}
-
-                    onChange={(event) => {
-
-                        setEmail(
-                            event.target.value
-                        );
-
-                        if (error) {
-                            setError("");
-                        }
-
-                        if (alreadyVerified) {
-                            setAlreadyVerified(false);
-                        }
-                    }}
-
-                    placeholder="you@example.com"
-                    autoComplete="email"
-
-                    required
-                    disabled={loading}
-
-                    className="
+            if (alreadyVerified) {
+              setAlreadyVerified(false);
+            }
+          }}
+          placeholder="you@example.com"
+          autoComplete="email"
+          required
+          disabled={loading}
+          className="
                         mt-2
                         h-11
                         w-full
@@ -134,19 +99,15 @@ export default function VerifyAccountForm({
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                     "
-                />
+        />
+      </div>
 
-            </div>
-
-
-            {/* Success */}
-            {success && (
-
-                <div
-                    role="status"
-                    aria-live="polite"
-
-                    className="
+      {/* Success */}
+      {success && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="
                         mt-4
 
                         border-l-2
@@ -157,75 +118,65 @@ export default function VerifyAccountForm({
                         px-4
                         py-3
                     "
-                >
-
-                    <p
-                        className="
+        >
+          <p
+            className="
                             text-sm
                             font-semibold
                             text-[#27301d]
                         "
-                    >
-                        {mn
-                            ? "Баталгаажуулах имэйл илгээгдлээ"
-                            : "Verification email sent"}
-                    </p>
+          >
+            {verifyAccountFormMessages[mn ? "mn" : "en"].verificationEmailSent}
+          </p>
 
-
-                    <p
-                        className="
+          <p
+            className="
                             mt-1
                             text-sm
                             leading-6
                             text-[#667056]
                         "
-                    >
-                        {mn
-                            ? "Бид баталгаажуулах холбоосыг "
-                            : "We sent a verification link to "}
-                        
-                        <span
-                            className="
+          >
+            {
+              verifyAccountFormMessages[mn ? "mn" : "en"]
+                .weSentAVerificationLinkTo
+            }
+
+            <span
+              className="
                                 font-semibold
                                 text-[#27301d]
                                 break-all
                             "
-                        >
-                            {sentEmail}
-                        </span>
+            >
+              {sentEmail}
+            </span>
 
-                        {mn
-                            ? " хаяг руу илгээлээ."
-                            : "."}
-                    </p>
+            {verifyAccountFormMessages[mn ? "mn" : "en"].message}
+          </p>
 
-
-                    <p
-                        className="
+          <p
+            className="
                             mt-2
                             text-xs
                             leading-5
                             text-[#667056]/80
                         "
-                    >
-                        {mn
-                            ? "Ирсэн имэйл болон spam хавтсаа шалгана уу."
-                            : "Check your inbox and spam folder if you don't see it shortly."}
-                    </p>
+          >
+            {
+              verifyAccountFormMessages[mn ? "mn" : "en"]
+                .checkYourInboxAndSpamFolderIf
+            }
+          </p>
+        </div>
+      )}
 
-                </div>
-
-            )}
-
-
-            {/* Error */}
-            {error && (
-
-                <div
-                    role="alert"
-                    aria-live="polite"
-
-                    className="
+      {/* Error */}
+      {error && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="
                         mt-4
 
                         border-l-2
@@ -240,19 +191,15 @@ export default function VerifyAccountForm({
                         leading-6
                         text-[#667056]
                     "
-                >
+        >
+          {error}
 
-                    {error}
-
-
-                    {alreadyVerified && (
-
-                        <>
-                            {" "}
-
-                            <Link
-                                to="/auth/login"
-                                className="
+          {alreadyVerified && (
+            <>
+              {" "}
+              <Link
+                to="/auth/login"
+                className="
                                     font-semibold
                                     text-[#27301d]
 
@@ -263,30 +210,19 @@ export default function VerifyAccountForm({
 
                                     hover:text-[#9a7b26]
                                 "
-                            >
-                                {mn
-                                    ? "Нэвтрэх"
-                                    : "Sign in"}
-                            </Link>
-                        </>
+              >
+                {verifyAccountFormMessages[mn ? "mn" : "en"].signIn}
+              </Link>
+            </>
+          )}
+        </div>
+      )}
 
-                    )}
-
-                </div>
-
-            )}
-
-
-            {/* Submit / resend */}
-            <button
-                type="submit"
-
-                disabled={
-                    loading ||
-                    cooldown > 0
-                }
-
-                className="
+      {/* Submit / resend */}
+      <button
+        type="submit"
+        disabled={loading || cooldown > 0}
+        className="
                     mt-5
 
                     flex
@@ -314,38 +250,19 @@ export default function VerifyAccountForm({
                     disabled:opacity-60
                     disabled:hover:bg-[#27301d]
                 "
-            >
-
-                {loading
-                    ? (
-                        mn
-                            ? "Илгээж байна..."
-                            : "Sending..."
-                    )
-                    : cooldown > 0
-                        ? (
-                            mn
-                                ? `${cooldown} секундийн дараа дахин илгээх`
-                                : `Resend in ${cooldown}s`
-                        )
-                        : success
-                            ? (
-                                mn
-                                    ? "Баталгаажуулах имэйлийг дахин илгээх"
-                                    : "Resend verification email"
-                            )
-                            : (
-                                mn
-                                    ? "Баталгаажуулах имэйл илгээх"
-                                    : "Send verification email"
-                            )
-                }
-
-            </button>
-
-
-            
-
-        </form>
-    );
+      >
+        {loading
+          ? verifyAccountFormMessages[mn ? "mn" : "en"].sending
+          : cooldown > 0
+            ? mn
+              ? `${cooldown} секундийн дараа дахин илгээх`
+              : `Resend in ${cooldown}s`
+            : success
+              ? verifyAccountFormMessages[mn ? "mn" : "en"]
+                  .resendVerificationEmail
+              : verifyAccountFormMessages[mn ? "mn" : "en"]
+                  .sendVerificationEmail}
+      </button>
+    </form>
+  );
 }

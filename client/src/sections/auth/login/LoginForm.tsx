@@ -1,100 +1,58 @@
-"use client";
+import { loginFormMessages } from "../content/LoginFormMessages";
 
 import { useLoginForm } from "../hooks/useLoginForm";
 
+import { Link } from "react-router-dom";
 
-
-
-
-import {
-Link
-} from "react-router-dom";
-
-
-
-import type {
-Language
-} from "./LoginSection";
-
+import type { Language } from "./LoginSection";
 
 type LoginFormProps = {
-    language: Language;
+  language: Language;
 };
 
+export default function LoginForm({ language }: LoginFormProps) {
+  const {
+    handleSubmit,
+    mn,
+    email,
+    setEmail,
+    loading,
+    showPassword,
+    password,
+    setPassword,
+    setShowPassword,
+    error,
+    needsVerification,
+  } = useLoginForm(language);
 
-export default function LoginForm({
-    language,
-}: LoginFormProps) {
-
-    const { handleSubmit, mn, email, setEmail, loading, showPassword, password, setPassword, setShowPassword, error, needsVerification } = useLoginForm(language);
-
-    
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-    
-
-
-    
-
-
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col"
-        >
-
-            {/* Email */}
-            <div>
-
-                <label
-                    htmlFor="email"
-                    className="
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      {/* Email */}
+      <div>
+        <label
+          htmlFor="email"
+          className="
                         text-[10px]
                         font-bold
                         uppercase
                         tracking-[0.2em]
                         text-[#27301d]
                     "
-                >
-                    {mn
-                        ? "Имэйл"
-                        : "Email"}
-                </label>
+        >
+          {loginFormMessages[mn ? "mn" : "en"].email}
+        </label>
 
-
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-
-                    value={email}
-
-                    onChange={(event) =>
-                        setEmail(
-                            event.target.value
-                        )
-                    }
-
-                    placeholder="you@example.com"
-                    autoComplete="email"
-
-                    required
-                    disabled={loading}
-
-                    className="
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@example.com"
+          autoComplete="email"
+          required
+          disabled={loading}
+          className="
                         mt-2
                         h-11
                         w-full
@@ -119,42 +77,35 @@ export default function LoginForm({
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                     "
-                />
+        />
+      </div>
 
-            </div>
-
-
-            {/* Password */}
-            <div className="mt-4">
-
-                <div
-                    className="
+      {/* Password */}
+      <div className="mt-4">
+        <div
+          className="
                         flex
                         items-center
                         justify-between
                         gap-4
                     "
-                >
-
-                    <label
-                        htmlFor="password"
-                        className="
+        >
+          <label
+            htmlFor="password"
+            className="
                             text-[10px]
                             font-bold
                             uppercase
                             tracking-[0.2em]
                             text-[#27301d]
                         "
-                    >
-                        {mn
-                            ? "Нууц үг"
-                            : "Password"}
-                    </label>
+          >
+            {loginFormMessages[mn ? "mn" : "en"].password}
+          </label>
 
-
-                    <Link
-                        to="/auth/forgot-password"
-                        className="
+          <Link
+            to="/auth/forgot-password"
+            className="
                             text-xs
                             font-medium
                             text-[#667056]
@@ -164,46 +115,23 @@ export default function LoginForm({
 
                             hover:text-[#9a7b26]
                         "
-                    >
-                        {mn
-                            ? "Нууц үгээ мартсан уу?"
-                            : "Forgot password?"}
-                    </Link>
+          >
+            {loginFormMessages[mn ? "mn" : "en"].forgotPassword}
+          </Link>
+        </div>
 
-                </div>
-
-
-                <div className="relative mt-2">
-
-                    <input
-                        id="password"
-                        name="password"
-                        type={
-                            showPassword
-                                ? "text"
-                                : "password"
-                        }
-
-                        value={password}
-
-                        onChange={(event) =>
-                            setPassword(
-                                event.target.value
-                            )
-                        }
-
-                        placeholder={
-                            mn
-                                ? "Нууц үгээ оруулна уу"
-                                : "Enter your password"
-                        }
-
-                        autoComplete="current-password"
-
-                        required
-                        disabled={loading}
-
-                        className="
+        <div className="relative mt-2">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={loginFormMessages[mn ? "mn" : "en"].enterYourPassword}
+            autoComplete="current-password"
+            required
+            disabled={loading}
+            className="
                             h-11
                             w-full
 
@@ -228,33 +156,18 @@ export default function LoginForm({
                             disabled:cursor-not-allowed
                             disabled:opacity-60
                         "
-                    />
+          />
 
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            setShowPassword(
-                                (visible) => !visible
-                            )
-                        }
-                        disabled={loading}
-
-                        aria-label={
-                            showPassword
-                                ? (
-                                    mn
-                                        ? "Нууц үгийг нуух"
-                                        : "Hide password"
-                                )
-                                : (
-                                    mn
-                                        ? "Нууц үгийг харуулах"
-                                        : "Show password"
-                                )
-                        }
-
-                        className="
+          <button
+            type="button"
+            onClick={() => setShowPassword((visible) => !visible)}
+            disabled={loading}
+            aria-label={
+              showPassword
+                ? loginFormMessages[mn ? "mn" : "en"].hidePassword
+                : loginFormMessages[mn ? "mn" : "en"].showPassword
+            }
+            className="
                             absolute
                             right-3
                             top-1/2
@@ -275,33 +188,20 @@ export default function LoginForm({
                             disabled:cursor-not-allowed
                             disabled:opacity-50
                         "
-                    >
-                        {showPassword
-                            ? (
-                                mn
-                                    ? "Нуух"
-                                    : "Hide"
-                            )
-                            : (
-                                mn
-                                    ? "Харах"
-                                    : "Show"
-                            )}
-                    </button>
+          >
+            {showPassword
+              ? loginFormMessages[mn ? "mn" : "en"].hide
+              : loginFormMessages[mn ? "mn" : "en"].show}
+          </button>
+        </div>
+      </div>
 
-                </div>
-
-            </div>
-
-
-            {/* Error */}
-            {error && (
-
-                <div
-                    role="alert"
-                    aria-live="polite"
-
-                    className="
+      {/* Error */}
+      {error && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="
                         mt-4
 
                         border-l-2
@@ -316,19 +216,15 @@ export default function LoginForm({
                         leading-6
                         text-[#667056]
                     "
-                >
+        >
+          {error}
 
-                    {error}
-
-
-                    {needsVerification && (
-
-                        <>
-                            {" "}
-
-                            <Link
-                                to="/auth/verify-account"
-                                className="
+          {needsVerification && (
+            <>
+              {" "}
+              <Link
+                to="/auth/verify-account"
+                className="
                                     font-semibold
                                     text-[#27301d]
 
@@ -339,27 +235,19 @@ export default function LoginForm({
 
                                     hover:text-[#9a7b26]
                                 "
-                            >
-                                {mn
-                                    ? "Бүртгэлээ баталгаажуулах"
-                                    : "Verify account"}
-                            </Link>
+              >
+                {loginFormMessages[mn ? "mn" : "en"].verifyAccount}
+              </Link>
+            </>
+          )}
+        </div>
+      )}
 
-                        </>
-
-                    )}
-
-                </div>
-
-            )}
-
-
-            {/* Submit */}
-            <button
-                type="submit"
-                disabled={loading}
-
-                className="
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="
                     mt-5
 
                     flex
@@ -387,24 +275,15 @@ export default function LoginForm({
                     disabled:opacity-60
                     disabled:hover:bg-[#27301d]
                 "
-            >
-                {loading
-                    ? (
-                        mn
-                            ? "Нэвтэрч байна..."
-                            : "Signing in..."
-                    )
-                    : (
-                        mn
-                            ? "Нэвтрэх"
-                            : "Sign in"
-                    )}
-            </button>
+      >
+        {loading
+          ? loginFormMessages[mn ? "mn" : "en"].signingIn
+          : loginFormMessages[mn ? "mn" : "en"].signIn}
+      </button>
 
-
-            {/* Signup */}
-            <div
-                className="
+      {/* Signup */}
+      <div
+        className="
                     mt-5
 
                     border-t
@@ -413,22 +292,18 @@ export default function LoginForm({
                     pt-4
                     text-center
                 "
-            >
-
-                <p
-                    className="
+      >
+        <p
+          className="
                         text-sm
                         text-[#667056]
                     "
-                >
-                    {mn
-                        ? "Бүртгэл байхгүй юу? "
-                        : "Don't have an account? "}
+        >
+          {loginFormMessages[mn ? "mn" : "en"].donTHaveAnAccount}
 
-
-                    <Link
-                        to="/auth/signup"
-                        className="
+          <Link
+            to="/auth/signup"
+            className="
                             font-semibold
                             text-[#27301d]
 
@@ -437,16 +312,11 @@ export default function LoginForm({
 
                             hover:text-[#9a7b26]
                         "
-                    >
-                        {mn
-                            ? "Бүртгэл үүсгэх"
-                            : "Create one"}
-                    </Link>
-
-                </p>
-
-            </div>
-
-        </form>
-    );
+          >
+            {loginFormMessages[mn ? "mn" : "en"].createOne}
+          </Link>
+        </p>
+      </div>
+    </form>
+  );
 }

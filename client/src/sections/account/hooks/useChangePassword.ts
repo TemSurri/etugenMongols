@@ -1,135 +1,75 @@
 import axios from "axios";
 import { useState } from "react";
+import { isValidPassword } from "../utils/isValidPassword";
 
 import { changePassword } from "../api/accountApi";
 
-import type {
-ChangePasswordFormData
-} from "../types/accountTypes";
+import type { ChangePasswordFormData } from "../types/accountTypes";
 
 interface UseChangePasswordOptions {
-    passwordMismatchMessage: string;
-    weakPasswordMessage: string;
-    incorrectPasswordMessage: string;
-    genericErrorMessage: string;
-}
-
-function isValidPassword(
-    password: string
-): boolean {
-
-    const hasMinLength =
-        password.length >= 8;
-
-    const hasUppercase =
-        /[A-Z]/.test(password);
-
-    const hasNumberOrSpecial =
-        /[0-9]|[^A-Za-z0-9]/.test(password);
-
-    return (
-        hasMinLength &&
-        hasUppercase &&
-        hasNumberOrSpecial
-    );
+  passwordMismatchMessage: string;
+  weakPasswordMessage: string;
+  incorrectPasswordMessage: string;
+  genericErrorMessage: string;
 }
 
 export function useChangePassword({
-    passwordMismatchMessage,
-    weakPasswordMessage,
-    incorrectPasswordMessage,
-    genericErrorMessage
+  passwordMismatchMessage,
+  weakPasswordMessage,
+  incorrectPasswordMessage,
+  genericErrorMessage,
 }: UseChangePasswordOptions) {
+  const [loading, setLoading] = useState(false);
 
-    const [loading, setLoading] =
-        useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const [error, setError] =
-        useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-    const [success, setSuccess] =
-        useState(false);
+  const submit = async (form: ChangePasswordFormData): Promise<boolean> => {
+    setError(null);
+    setSuccess(false);
 
-    const submit = async (
-        form: ChangePasswordFormData
-    ): Promise<boolean> => {
+    if (form.newPassword !== form.confirmPassword) {
+      setError(passwordMismatchMessage);
 
-        setError(null);
-        setSuccess(false);
+      return false;
+    }
 
-        if (
-            form.newPassword !==
-            form.confirmPassword
-        ) {
+    if (!isValidPassword(form.newPassword)) {
+      setError(weakPasswordMessage);
 
-            setError(
-                passwordMismatchMessage
-            );
+      return false;
+    }
 
-            return false;
-        }
+    setLoading(true);
 
-        if (
-            !isValidPassword(
-                form.newPassword
-            )
-        ) {
+    try {
+      await changePassword({
+        currentPassword: form.currentPassword,
 
-            setError(
-                weakPasswordMessage
-            );
+        newPassword: form.newPassword,
+      });
 
-            return false;
-        }
+      setSuccess(true);
 
-        setLoading(true);
+      return true;
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
+        setError(incorrectPasswordMessage);
+      } else {
+        setError(genericErrorMessage);
+      }
 
-        try {
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            await changePassword({
-                currentPassword:
-                    form.currentPassword,
-
-                newPassword:
-                    form.newPassword
-            });
-
-            setSuccess(true);
-
-            return true;
-
-        } catch (err) {
-
-            if (
-                axios.isAxiosError(err) &&
-                err.response?.status === 400
-            ) {
-
-                setError(
-                    incorrectPasswordMessage
-                );
-
-            } else {
-
-                setError(
-                    genericErrorMessage
-                );
-
-            }
-
-            return false;
-
-        } finally {
-
-            setLoading(false);
-
-        }
-    };
-
-    return {
-        submit,
-        loading,
-        error,
-        success
-    };
+  return {
+    submit,
+    loading,
+    error,
+    success,
+  };
 }

@@ -3,12 +3,9 @@ export type PaymentIntentResultType =
   | "EXISTING_DUPLICATE"
   | "CONFIRM_EXISTING";
 
-export type PaymentAction =
-  | "DONATION"
-  | "EVENT_REGISTRATION";
+export type PaymentAction = "DONATION" | "EVENT_REGISTRATION";
 
 export type PaymentIntentResult = {
-
   jobId: string;
 
   result: PaymentIntentResultType;
@@ -23,7 +20,6 @@ export type PaymentIntentResult = {
 };
 
 export type ResumePaymentResponse = {
-
   jobId: string;
 
   client_secret: string | null;
@@ -36,6 +32,5 @@ export type ResumePaymentResponse = {
 
   email: string;
 
-  actionPayload:
-    Record<string, unknown>;
+  actionPayload: Record<string, unknown>;
 };

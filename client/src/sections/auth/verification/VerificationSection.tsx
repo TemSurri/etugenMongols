@@ -1,367 +1,225 @@
-"use client";
+import type { Lang } from "../../../context/language";
+import { verificationSectionCopy } from "../content/VerificationSectionCopy";
 
 import { verifyToken as submitVerificationToken } from "../api/authApi";
 import AuthBackground from "../components/AuthBackground";
 import { authMedia } from "../media";
 
+import { memo, useEffect, useRef, useState } from "react";
 
-import {
-memo,
-useEffect,
-useRef,
-useState,
-} from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
-import {
-Link,
-useNavigate,
-useSearchParams,
-} from "react-router-dom";
-
-import {
-cubicBezier,
-motion,
-type Variants,
-} from "framer-motion";
+import { cubicBezier, motion, type Variants } from "framer-motion";
 
 import { api } from "../../../api/client";
 
+export type { Lang as Language } from "../../../context/language";
+type Language = Lang;
 
-export type Language =
-    | "en"
-    | "mn";
-
-
-type VerificationStatus =
-    | "verifying"
-    | "success"
-    | "error";
-
+type VerificationStatus = "verifying" | "success" | "error";
 
 export interface VerificationCopy {
+  verifyingTitle: string;
+  verifyingDescription: string;
 
-    verifyingTitle: string;
-    verifyingDescription: string;
+  successTitle: string;
+  successDescription: string;
 
-    successTitle: string;
-    successDescription: string;
+  errorTitle: string;
+  errorDescription: string;
 
-    errorTitle: string;
-    errorDescription: string;
+  redirectingText: string;
 
-    redirectingText: string;
-
-    errorButtonText: string;
-
+  errorButtonText: string;
 }
-
 
 interface VerificationSectionProps {
+  endpoint: string;
 
-    endpoint: string;
+  successRedirect: string;
 
-    successRedirect: string;
+  errorRedirect?: string;
 
-    errorRedirect?: string;
+  english: VerificationCopy;
 
-    english: VerificationCopy;
+  mongolian: VerificationCopy;
 
-    mongolian: VerificationCopy;
-
-    redirectDelay?: number;
-
+  redirectDelay?: number;
 }
 
-
-const easeOut =
-    cubicBezier(
-        0.22,
-        1,
-        0.36,
-        1
-    );
-
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const entranceMotion: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+  },
 
-    hidden: {
-        opacity: 0,
-        y: 14,
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.5,
+      ease: easeOut,
     },
-
-    show: {
-        opacity: 1,
-        y: 0,
-
-        transition: {
-            duration: 0.5,
-            ease: easeOut,
-        },
-    },
-
+  },
 };
 
-
 function VerificationSection({
+  endpoint,
 
-    endpoint,
+  successRedirect,
 
-    successRedirect,
+  errorRedirect = "/",
 
-    errorRedirect = "/",
+  english,
 
-    english,
+  mongolian,
 
-    mongolian,
-
-    redirectDelay = 1800,
-
+  redirectDelay = 1800,
 }: VerificationSectionProps) {
+  const navigate = useNavigate();
 
-    const navigate =
-        useNavigate();
+  const [searchParams] = useSearchParams();
 
+  const [language, setLanguage] = useState<Language>("en");
 
-    const [searchParams] =
-        useSearchParams();
+  const [status, setStatus] = useState<VerificationStatus>(() =>
+    searchParams.get("token") ? "verifying" : "error",
+  );
 
+  /*
+   * Prevent duplicate verification requests
+   * during React StrictMode in development.
+   */
+  const verificationStarted = useRef(false);
 
-    const [language, setLanguage] =
-        useState<Language>("en");
+  const [background] = useState(() => {
+    const index = Math.floor(Math.random() * authMedia.backgrounds.length);
 
+    return authMedia.backgrounds[index];
+  });
 
-    const [status, setStatus] =
-        useState<VerificationStatus>(
-            "verifying"
-        );
+  useEffect(() => {
+    if (verificationStarted.current) {
+      return;
+    }
 
+    verificationStarted.current = true;
+
+    const token = searchParams.get("token");
 
     /*
-     * Prevent duplicate verification requests
-     * during React StrictMode in development.
+     * Missing verification token.
      */
-    const verificationStarted =
-        useRef(false);
+    if (!token) {
+      return;
+    }
 
+    let redirectTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const [background] =
-        useState(() => {
+    async function verifyToken() {
+      try {
+        /*
+         * =====================================================
+         * INITIALIZE CSRF
+         * =====================================================
+         *
+         * The verification page can mount before AuthProvider
+         * has finished fetching the CSRF token.
+         *
+         * Fetch it here so the verification POST is guaranteed
+         * to include X-XSRF-TOKEN.
+         */
+        const csrfResponse = await api.get("/csrf");
 
-            const index =
-                Math.floor(
-                    Math.random() *
-                    authMedia.backgrounds.length
-                );
-
-            return authMedia.backgrounds[
-                index
-            ];
-
-        });
-
-
-    useEffect(() => {
-
-        if (
-            verificationStarted.current
-        ) {
-            return;
-        }
-
-
-        verificationStarted.current =
-            true;
-
-
-        const token =
-            searchParams.get(
-                "token"
-            );
-
+        api.defaults.headers.common["X-XSRF-TOKEN"] = csrfResponse.data.token;
 
         /*
-         * Missing verification token.
+         * =====================================================
+         * VERIFY TOKEN
+         * =====================================================
          */
-        if (!token) {
+        await submitVerificationToken(endpoint, token);
 
-            setStatus(
-                "error"
-            );
+        setStatus("success");
 
-            return;
-        }
+        redirectTimer = setTimeout(() => {
+          navigate(successRedirect, {
+            replace: true,
+          });
+        }, redirectDelay);
+      } catch (error) {
+        console.error("Verification failed:", error);
 
+        setStatus("error");
+      }
+    }
 
-        let redirectTimer:
-            ReturnType<typeof setTimeout>
-            | undefined;
+    void verifyToken();
 
+    return () => {
+      if (redirectTimer) {
+        clearTimeout(redirectTimer);
+      }
+    };
+  }, [endpoint, navigate, redirectDelay, searchParams, successRedirect]);
 
-        async function verifyToken() {
+  const copy = language === "en" ? english : mongolian;
 
-            try {
+  const title = (() => {
+    switch (status) {
+      case "verifying":
+        return copy.verifyingTitle;
 
-                /*
-                 * =====================================================
-                 * INITIALIZE CSRF
-                 * =====================================================
-                 *
-                 * The verification page can mount before AuthProvider
-                 * has finished fetching the CSRF token.
-                 *
-                 * Fetch it here so the verification POST is guaranteed
-                 * to include X-XSRF-TOKEN.
-                 */
-                const csrfResponse =
-                    await api.get(
-                        "/csrf"
-                    );
+      case "success":
+        return copy.successTitle;
 
+      case "error":
+        return copy.errorTitle;
+    }
+  })();
 
-                api.defaults.headers.common[
-                    "X-XSRF-TOKEN"
-                ] = csrfResponse.data.token;
+  const description = (() => {
+    switch (status) {
+      case "verifying":
+        return copy.verifyingDescription;
 
+      case "success":
+        return copy.successDescription;
 
-                /*
-                 * =====================================================
-                 * VERIFY TOKEN
-                 * =====================================================
-                 */
-                await submitVerificationToken(endpoint, token);
+      case "error":
+        return copy.errorDescription;
+    }
+  })();
 
-
-                setStatus(
-                    "success"
-                );
-
-
-                redirectTimer =
-                    setTimeout(() => {
-
-                        navigate(
-                            successRedirect,
-                            {
-                                replace: true,
-                            }
-                        );
-
-                    }, redirectDelay);
-
-
-            } catch (error) {
-
-                console.error(
-                    "Verification failed:",
-                    error
-                );
-
-
-                setStatus(
-                    "error"
-                );
-
-            }
-
-        }
-
-
-        void verifyToken();
-
-
-        return () => {
-
-            if (redirectTimer) {
-
-                clearTimeout(
-                    redirectTimer
-                );
-
-            }
-
-        };
-
-    }, [
-        endpoint,
-        navigate,
-        redirectDelay,
-        searchParams,
-        successRedirect,
-    ]);
-
-
-    const copy =
-        language === "en"
-            ? english
-            : mongolian;
-
-
-    const title = (() => {
-
-        switch (status) {
-
-            case "verifying":
-                return copy.verifyingTitle;
-
-            case "success":
-                return copy.successTitle;
-
-            case "error":
-                return copy.errorTitle;
-
-        }
-
-    })();
-
-
-    const description = (() => {
-
-        switch (status) {
-
-            case "verifying":
-                return copy.verifyingDescription;
-
-            case "success":
-                return copy.successDescription;
-
-            case "error":
-                return copy.errorDescription;
-
-        }
-
-    })();
-
-
-    return (
-
-        <main
-            className="
+  return (
+    <main
+      className="
                 relative
                 min-h-screen
                 overflow-hidden
                 bg-[#27301d]
                 text-[#27301d]
             "
-        >
+    >
+      {/* Background */}
+      <AuthBackground background={background} />
 
-            {/* Background */}
-            <AuthBackground background={background} />
-
-
-            {/* Dark overlay */}
-            <div
-                className="
+      {/* Dark overlay */}
+      <div
+        className="
                     pointer-events-none
                     absolute
                     inset-0
                     bg-[#182010]/58
                 "
-            />
+      />
 
-
-            {/* Gradient */}
-            <div
-                className="
+      {/* Gradient */}
+      <div
+        className="
                     pointer-events-none
                     absolute
                     inset-0
@@ -370,12 +228,11 @@ function VerificationSection({
                     via-transparent
                     to-black/35
                 "
-            />
+      />
 
-
-            {/* Verification area */}
-            <section
-                className="
+      {/* Verification area */}
+      <section
+        className="
                     relative
                     z-10
 
@@ -392,24 +249,20 @@ function VerificationSection({
                     md:pb-12
                     md:pt-24
                 "
-            >
-
-                <motion.div
-                    variants={
-                        entranceMotion
-                    }
-                    initial="hidden"
-                    animate="show"
-                    className="
+      >
+        <motion.div
+          variants={entranceMotion}
+          initial="hidden"
+          animate="show"
+          className="
                         relative
                         w-full
                         max-w-[29rem]
                     "
-                >
-
-                    {/* Top controls */}
-                    <div
-                        className="
+        >
+          {/* Top controls */}
+          <div
+            className="
                             absolute
                             -top-9
                             left-0
@@ -419,11 +272,10 @@ function VerificationSection({
                             items-center
                             justify-between
                         "
-                    >
-
-                        <Link
-                            to="/"
-                            className="
+          >
+            <Link
+              to="/"
+              className="
                                 text-[10px]
                                 font-bold
                                 uppercase
@@ -435,16 +287,13 @@ function VerificationSection({
 
                                 hover:text-white
                             "
-                        >
-                            {language === "en"
-                                ? "Back to home"
-                                : "Нүүр хуудас"}
-                        </Link>
+            >
+              {verificationSectionCopy[language].backToHome}
+            </Link>
 
-
-                        {/* Language */}
-                        <div
-                            className="
+            {/* Language */}
+            <div
+              className="
                                 flex
                                 items-center
 
@@ -453,59 +302,40 @@ function VerificationSection({
                                 uppercase
                                 tracking-[0.16em]
                             "
-                        >
+            >
+              <button
+                type="button"
+                onClick={() => setLanguage("en")}
+                className={verificationSectionCopy[language].textWhite}
+              >
+                EN
+              </button>
 
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    setLanguage(
-                                        "en"
-                                    )
-                                }
-                                className={
-                                    language === "en"
-                                        ? "text-white"
-                                        : "text-white/45 transition-colors hover:text-white"
-                                }
-                            >
-                                EN
-                            </button>
-
-
-                            <span
-                                className="
+              <span
+                className="
                                     mx-2
                                     text-white/25
                                 "
-                            >
-                                |
-                            </span>
+              >
+                |
+              </span>
 
+              <button
+                type="button"
+                onClick={() => setLanguage("mn")}
+                className={
+                  verificationSectionCopy[language]
+                    .textWhite45TransitionColorsHoverText
+                }
+              >
+                MN
+              </button>
+            </div>
+          </div>
 
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    setLanguage(
-                                        "mn"
-                                    )
-                                }
-                                className={
-                                    language === "mn"
-                                        ? "text-white"
-                                        : "text-white/45 transition-colors hover:text-white"
-                                }
-                            >
-                                MN
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    {/* Card */}
-                    <div
-                        className="
+          {/* Card */}
+          <div
+            className="
                             border
                             border-white/20
                             bg-[#f7f7f4]
@@ -513,10 +343,9 @@ function VerificationSection({
                             shadow-2xl
                             shadow-black/25
                         "
-                    >
-
-                        <div
-                            className="
+          >
+            <div
+              className="
                                 bg-white
 
                                 px-7
@@ -527,11 +356,10 @@ function VerificationSection({
                                 md:px-9
                                 md:py-11
                             "
-                        >
-
-                            {/* Status icon */}
-                            <div
-                                className="
+            >
+              {/* Status icon */}
+              <div
+                className="
                                     mx-auto
                                     mb-6
 
@@ -548,13 +376,10 @@ function VerificationSection({
 
                                     bg-[#f7f7f4]
                                 "
-                            >
-
-                                {status ===
-                                    "verifying" && (
-
-                                    <div
-                                        className="
+              >
+                {status === "verifying" && (
+                  <div
+                    className="
                                             h-6
                                             w-6
 
@@ -566,61 +391,49 @@ function VerificationSection({
                                             border-[#27301d]/20
                                             border-t-[#27301d]
                                         "
-                                    />
+                  />
+                )}
 
-                                )}
-
-
-                                {status ===
-                                    "success" && (
-
-                                    <span
-                                        className="
+                {status === "success" && (
+                  <span
+                    className="
                                             text-2xl
                                             font-semibold
                                             text-[#27301d]
                                         "
-                                    >
-                                        ✓
-                                    </span>
+                  >
+                    ✓
+                  </span>
+                )}
 
-                                )}
-
-
-                                {status ===
-                                    "error" && (
-
-                                    <span
-                                        className="
+                {status === "error" && (
+                  <span
+                    className="
                                             text-2xl
                                             font-semibold
                                             text-[#27301d]
                                         "
-                                    >
-                                        !
-                                    </span>
+                  >
+                    !
+                  </span>
+                )}
+              </div>
 
-                                )}
-
-                            </div>
-
-
-                            {/* Title */}
-                            <h1
-                                className="
+              {/* Title */}
+              <h1
+                className="
                                     text-3xl
                                     font-semibold
                                     leading-tight
                                     text-[#27301d]
                                 "
-                            >
-                                {title}
-                            </h1>
+              >
+                {title}
+              </h1>
 
-
-                            {/* Description */}
-                            <p
-                                className="
+              {/* Description */}
+              <p
+                className="
                                     mx-auto
                                     mt-3
                                     max-w-sm
@@ -629,17 +442,14 @@ function VerificationSection({
                                     leading-6
                                     text-[#667056]
                                 "
-                            >
-                                {description}
-                            </p>
+              >
+                {description}
+              </p>
 
-
-                            {/* Success */}
-                            {status ===
-                                "success" && (
-
-                                <p
-                                    className="
+              {/* Success */}
+              {status === "success" && (
+                <p
+                  className="
                                         mt-6
 
                                         text-[10px]
@@ -648,32 +458,23 @@ function VerificationSection({
                                         tracking-[0.16em]
                                         text-[#667056]
                                     "
-                                >
-                                    {
-                                        copy.redirectingText
-                                    }
-                                </p>
+                >
+                  {copy.redirectingText}
+                </p>
+              )}
 
-                            )}
-
-
-                            {/* Error */}
-                            {status ===
-                                "error" && (
-
-                                <div
-                                    className="
+              {/* Error */}
+              {status === "error" && (
+                <div
+                  className="
                                         mt-7
                                         flex
                                         justify-center
                                     "
-                                >
-
-                                    <Link
-                                        to={
-                                            errorRedirect
-                                        }
-                                        className="
+                >
+                  <Link
+                    to={errorRedirect}
+                    className="
                                             border
                                             border-[#27301d]
 
@@ -693,31 +494,17 @@ function VerificationSection({
                                             hover:bg-[#27301d]
                                             hover:text-white
                                         "
-                                    >
-                                        {
-                                            copy.errorButtonText
-                                        }
-                                    </Link>
-
-                                </div>
-
-                            )}
-
-                        </div>
-
-                    </div>
-
-                </motion.div>
-
-            </section>
-
-        </main>
-
-    );
-
+                  >
+                    {copy.errorButtonText}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </section>
+    </main>
+  );
 }
 
-
-export default memo(
-    VerificationSection
-);
+export default memo(VerificationSection);

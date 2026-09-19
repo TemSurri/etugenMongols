@@ -1,110 +1,23 @@
-"use client";
+import { COPY } from "../content/EventViewContent";
+import { eventViewCopy } from "../content/EventViewCopy";
 
-import {
-  memo,
-  type ReactNode
-} from "react";
+import { memo, type ReactNode } from "react";
 
-import {
-  Link
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import {
-  cubicBezier,
-  motion,
-  type Variants
-} from "framer-motion";
+import { cubicBezier, motion, type Variants } from "framer-motion";
 
-import type {
-  ApiEvent,
-  Lang
-} from "../types";
 import { EVENT_IMAGES } from "../constants";
-
+import type { ApiEvent, Lang } from "../types";
 
 type EventViewProps = {
   event: ApiEvent;
   lang: Lang;
 };
 
-
-type EventViewCopy = {
-  back: string;
-
-  about: string;
-
-  date: string;
-  time: string;
-  location: string;
-
-  maps: string;
-
-  registration: string;
-  register: string;
-  free: string;
-  unavailable: string;
-};
-
-
-const COPY = {
-
-  en: {
-    back: "Back to Events",
-
-    about: "About",
-
-    date: "Date",
-    time: "Time",
-    location: "Location",
-
-    maps: "Open in Google Maps",
-
-    registration: "Registration",
-    register: "Register",
-    free: "Free",
-
-    unavailable:
-      "This event is not currently available for registration.",
-  },
-
-  mn: {
-    back:
-      "Арга хэмжээнүүд рүү буцах",
-
-    about: "Тухай",
-
-    date: "Огноо",
-    time: "Цаг",
-    location: "Байршил",
-
-    maps:
-      "Google Maps дээр нээх",
-
-    registration: "Бүртгэл",
-    register: "Бүртгүүлэх",
-    free: "Үнэгүй",
-
-    unavailable:
-      "Энэ арга хэмжээнд одоогоор бүртгүүлэх боломжгүй байна.",
-  },
-
-} as const satisfies Record<
-  Lang,
-  EventViewCopy
->;
-
-
-const easeOut =
-  cubicBezier(
-    0.22,
-    1,
-    0.36,
-    1
-  );
-
+const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const containerMotion: Variants = {
-
   hidden: {},
 
   show: {
@@ -115,9 +28,7 @@ const containerMotion: Variants = {
   },
 };
 
-
 const itemMotion: Variants = {
-
   hidden: {
     opacity: 0,
     y: 16,
@@ -134,9 +45,7 @@ const itemMotion: Variants = {
   },
 };
 
-
 const softItemMotion: Variants = {
-
   hidden: {
     opacity: 0,
     y: 10,
@@ -153,15 +62,10 @@ const softItemMotion: Variants = {
   },
 };
 
-
-function getGoogleMapsUrl(
-  location?: string | null
-) {
-
+function getGoogleMapsUrl(location?: string | null) {
   if (!location) {
     return null;
   }
-
 
   return (
     "https://www.google.com/maps/search/?api=1&query=" +
@@ -169,125 +73,53 @@ function getGoogleMapsUrl(
   );
 }
 
-
-function formatDate(
-  value: string,
-  lang: Lang
-) {
-
-  return new Intl.DateTimeFormat(
-    lang === "mn"
-      ? "mn-MN"
-      : "en-CA",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  ).format(
-    new Date(value)
-  );
+function formatDate(value: string, lang: Lang) {
+  return new Intl.DateTimeFormat(eventViewCopy[lang].enCa, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(value));
 }
 
+function formatTime(startsAt: string, endsAt: string | null, lang: Lang) {
+  const formatter = new Intl.DateTimeFormat(eventViewCopy[lang].enCa, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
 
-function formatTime(
-  startsAt: string,
-  endsAt: string | null,
-  lang: Lang
-) {
-
-  const formatter =
-    new Intl.DateTimeFormat(
-      lang === "mn"
-        ? "mn-MN"
-        : "en-CA",
-      {
-        hour: "numeric",
-        minute: "2-digit",
-      }
-    );
-
-
-  const start =
-    formatter.format(
-      new Date(startsAt)
-    );
-
+  const start = formatter.format(new Date(startsAt));
 
   if (!endsAt) {
     return start;
   }
 
-
-  const end =
-    formatter.format(
-      new Date(endsAt)
-    );
-
+  const end = formatter.format(new Date(endsAt));
 
   return `${start} – ${end}`;
 }
 
+function EventView({ event, lang }: EventViewProps) {
+  const copy = COPY[lang];
 
-function EventView({
-  event,
-  lang
-}: EventViewProps) {
+  const title = lang === "mn" ? event.titleMn : event.titleEn;
 
-  const copy =
-    COPY[lang];
+  const description = lang === "mn" ? event.descriptionMn : event.descriptionEn;
 
+  const backgroundImage = event.coverImage ?? EVENT_IMAGES.fallback;
 
-  const title =
-    lang === "mn"
-      ? event.titleMn
-      : event.titleEn;
+  const date = formatDate(event.startsAt, lang);
 
+  const time = formatTime(event.startsAt, event.endsAt, lang);
 
-  const description =
-    lang === "mn"
-      ? event.descriptionMn
-      : event.descriptionEn;
+  const googleMapsUrl = getGoogleMapsUrl(event.location);
 
-
-  const backgroundImage =
-    event.coverImage ??
-    EVENT_IMAGES.fallback;
-
-
-  const date =
-    formatDate(
-      event.startsAt,
-      lang
-    );
-
-
-  const time =
-    formatTime(
-      event.startsAt,
-      event.endsAt,
-      lang
-    );
-
-
-  const googleMapsUrl =
-    getGoogleMapsUrl(
-      event.location
-    );
-
-
-  const registrationText =
-    event.registerable
-      ? event.registrationCost === 0
-        ? copy.free
-        : event.registrationCost !== null
-          ? `$${(
-              event.registrationCost /
-              100
-            ).toFixed(2)}`
-          : null
-      : null;
-
+  const registrationText = event.registerable
+    ? event.registrationCost === 0
+      ? copy.free
+      : event.registrationCost !== null
+        ? `$${(event.registrationCost / 100).toFixed(2)}`
+        : null
+    : null;
 
   return (
     <main
@@ -297,7 +129,6 @@ function EventView({
         text-[#27301d]
       "
     >
-
       <section
         className="
           relative
@@ -306,7 +137,6 @@ function EventView({
           bg-[#182010]
         "
       >
-
         <motion.img
           src={backgroundImage}
           alt=""
@@ -315,22 +145,18 @@ function EventView({
           fetchPriority="high"
           decoding="async"
           draggable={false}
-
           initial={{
             opacity: 0,
             scale: 1.025,
           }}
-
           animate={{
             opacity: 1,
             scale: 1,
           }}
-
           transition={{
             duration: 0.9,
             ease: easeOut,
           }}
-
           className="
             absolute
             inset-0
@@ -344,21 +170,17 @@ function EventView({
           "
         />
 
-
         <motion.div
           initial={{
             opacity: 0,
           }}
-
           animate={{
             opacity: 1,
           }}
-
           transition={{
             duration: 0.7,
             ease: easeOut,
           }}
-
           className="
             pointer-events-none
             absolute
@@ -366,7 +188,6 @@ function EventView({
             bg-[#11180c]/68
           "
         />
-
 
         <div
           className="
@@ -380,16 +201,10 @@ function EventView({
           "
         />
 
-
         <motion.div
-          variants={
-            containerMotion
-          }
-
+          variants={containerMotion}
           initial="hidden"
-
           animate="show"
-
           className="
             relative
             z-10
@@ -403,13 +218,7 @@ function EventView({
             lg:px-8
           "
         >
-
-          <motion.div
-            variants={
-              itemMotion
-            }
-          >
-
+          <motion.div variants={itemMotion}>
             <Link
               to="/events"
               className="
@@ -424,9 +233,7 @@ function EventView({
             >
               ← {copy.back}
             </Link>
-
           </motion.div>
-
 
           <div
             className="
@@ -434,12 +241,8 @@ function EventView({
               max-w-3xl
             "
           >
-
             <motion.h1
-              variants={
-                itemMotion
-              }
-
+              variants={itemMotion}
               className="
                 text-4xl
                 font-semibold
@@ -453,12 +256,8 @@ function EventView({
               {title}
             </motion.h1>
 
-
             <motion.div
-              variants={
-                itemMotion
-              }
-
+              variants={itemMotion}
               className="
                 mt-8
                 max-w-2xl
@@ -468,12 +267,8 @@ function EventView({
                 sm:pl-6
               "
             >
-
               <motion.div
-                variants={
-                  containerMotion
-                }
-
+                variants={containerMotion}
                 className="
                   grid
                   gap-x-10
@@ -481,55 +276,27 @@ function EventView({
                   sm:grid-cols-2
                 "
               >
-
-                <motion.div
-                  variants={
-                    softItemMotion
-                  }
-                >
-
-                  <Info
-                    label={copy.date}
-                    value={date}
-                  />
-
+                <motion.div variants={softItemMotion}>
+                  <Info label={copy.date} value={date} />
                 </motion.div>
 
-
-                <motion.div
-                  variants={
-                    softItemMotion
-                  }
-                >
-
-                  <Info
-                    label={copy.time}
-                    value={time}
-                  />
-
+                <motion.div variants={softItemMotion}>
+                  <Info label={copy.time} value={time} />
                 </motion.div>
-
               </motion.div>
 
-
               {event.location && (
-
                 <motion.div
-                  variants={
-                    softItemMotion
-                  }
-
+                  variants={softItemMotion}
                   className="
                     mt-5
                   "
                 >
-
                   <Info
                     label={copy.location}
                     value={
                       <>
                         {event.location}
-
 
                         {googleMapsUrl && (
                           <>
@@ -553,24 +320,15 @@ function EventView({
                             </a>
                           </>
                         )}
-
                       </>
                     }
                   />
-
                 </motion.div>
-
               )}
 
-
-              {event.registerable &&
-              registrationText ? (
-
+              {event.registerable && registrationText ? (
                 <motion.div
-                  variants={
-                    softItemMotion
-                  }
-
+                  variants={softItemMotion}
                   className="
                     mt-7
                     flex
@@ -582,9 +340,7 @@ function EventView({
                     pt-5
                   "
                 >
-
                   <div>
-
                     <p
                       className="
                         text-[10px]
@@ -597,7 +353,6 @@ function EventView({
                       {copy.registration}
                     </p>
 
-
                     <p
                       className="
                         mt-1
@@ -608,29 +363,21 @@ function EventView({
                     >
                       {registrationText}
                     </p>
-
                   </div>
-
 
                   <motion.div
                     whileHover={{
                       y: -2,
                     }}
-
                     whileTap={{
                       scale: 0.98,
                     }}
-
                     transition={{
                       duration: 0.16,
                     }}
                   >
-
                     <Link
-                      to={
-                        `/events/${event.slug}/register`
-                      }
-
+                      to={`/events/${event.slug}/register`}
                       className="
                         inline-flex
                         shrink-0
@@ -649,18 +396,11 @@ function EventView({
                     >
                       {copy.register}
                     </Link>
-
                   </motion.div>
-
                 </motion.div>
-
               ) : (
-
                 <motion.div
-                  variants={
-                    softItemMotion
-                  }
-
+                  variants={softItemMotion}
                   className="
                     mt-7
                     border-t
@@ -668,7 +408,6 @@ function EventView({
                     pt-5
                   "
                 >
-
                   <p
                     className="
                       text-sm
@@ -678,46 +417,34 @@ function EventView({
                   >
                     {copy.unavailable}
                   </p>
-
                 </motion.div>
-
               )}
-
             </motion.div>
-
           </div>
-
         </motion.div>
-
       </section>
-
 
       <motion.section
         initial={{
           opacity: 0,
           y: 18,
         }}
-
         whileInView={{
           opacity: 1,
           y: 0,
         }}
-
         viewport={{
           once: true,
           amount: 0.2,
         }}
-
         transition={{
           duration: 0.55,
           ease: easeOut,
         }}
-
         className="
           bg-white
         "
       >
-
         <div
           className="
             mx-auto
@@ -729,17 +456,12 @@ function EventView({
             lg:py-16
           "
         >
-
           <div
             className="
               max-w-3xl
             "
           >
-
-            <SectionTitle>
-              {copy.about}
-            </SectionTitle>
-
+            <SectionTitle>{copy.about}</SectionTitle>
 
             <p
               className="
@@ -752,24 +474,14 @@ function EventView({
             >
               {description}
             </p>
-
           </div>
-
         </div>
-
       </motion.section>
-
     </main>
   );
 }
 
-
-function SectionTitle({
-  children
-}: {
-  children: ReactNode;
-}) {
-
+function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <h2
       className="
@@ -785,18 +497,9 @@ function SectionTitle({
   );
 }
 
-
-function Info({
-  label,
-  value
-}: {
-  label: string;
-  value: ReactNode;
-}) {
-
+function Info({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div>
-
       <p
         className="
           text-[10px]
@@ -809,7 +512,6 @@ function Info({
         {label}
       </p>
 
-
       <div
         className="
           mt-1
@@ -821,12 +523,8 @@ function Info({
       >
         {value}
       </div>
-
     </div>
   );
 }
 
-
-export default memo(
-  EventView
-);
+export default memo(EventView);

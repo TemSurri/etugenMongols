@@ -1,8 +1,6 @@
-"use client";
-
 import { memo } from "react";
-import { Link } from "react-router-dom";
 import { FaFacebookF, FaYoutube } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { siteMedia } from "../../media/siteMedia";
 
 const SOCIAL_LINKS = [

@@ -1,7 +1,5 @@
-export type { EventRegistrationStatus,RegistrationEvent,UserEventRegistration } from "../contracts/registrationContracts";
-
-
-
-
-
-
+export type {
+EventRegistrationStatus,
+RegistrationEvent,
+UserEventRegistration
+} from "../contracts/registrationContracts";

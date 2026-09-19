@@ -1,59 +1,29 @@
-"use client";
+import type { Lang } from "../../../context/language";
+import { COPY } from "../content/GalleryViewContent";
 
+import { IMAGES_PER_PAGE, useGalleryDetail } from "../hooks/useGalleryDetail";
 import { getGalleryCover } from "../model/galleryMedia";
-import { IMAGES_PER_PAGE,useGalleryDetail } from "../hooks/useGalleryDetail";
-
 
 import type { Variants } from "framer-motion";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import type {
-GalleryEvent
-} from "../model/galleryCatalogTypes";
+import type { GalleryEvent } from "../model/galleryCatalogTypes";
 
 import GalleryGrid from "./GalleryGrid";
 import GalleryHeader from "./GalleryHeader";
 import GalleryInfoCard from "./GalleryInfoCard";
 import GalleryLightbox from "./GalleryLightbox";
 
-type Lang = "en" | "mn";
-
-
 type GalleryViewProps = {
   event: GalleryEvent;
   lang: Lang;
 };
 
-
-
-const COPY = {
-  en: {
-    back: "Back",
-    overview: "Event Overview",
-    general: "General",
-    performances: "Performances",
-    behindTheScenes: "Behind the Scenes",
-    noMedia: "No media has been added for this section yet.",
-    galleryUnavailable: "Gallery not available.",
-  },
-  mn: {
-    back: "Буцах",
-    overview: "Арга хэмжээний тойм",
-    general: "Ерөнхий",
-    performances: "Тоглолтууд",
-    behindTheScenes: "Ар тал",
-    noMedia: "Энэ хэсэгт одоогоор зураг, бичлэг нэмэгдээгүй байна.",
-    galleryUnavailable: "Цомог одоогоор байхгүй байна.",
-  },
-} as const;
-
 const pageFade: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { duration: 0.22, ease: "easeOut" } },
 };
-
-
 
 function useSmartBack(fallbackPath = "/gallery") {
   const navigate = useNavigate();
@@ -92,42 +62,45 @@ export default function GalleryView({ event, lang }: GalleryViewProps) {
     );
   }
 
-  const gallery = event.gallery;
-  const { availableSections, activeSectionKey, setActiveSectionKey, activePerformance, activeStaticSection, images, activeIndex, setActiveIndex, page, setPage, pageCount, pagedImages, next, prev, closeLightbox, performances, setActivePerformanceId } = useGalleryDetail(gallery);
-  
+  return (
+    <GalleryContent
+      event={event}
+      gallery={event.gallery}
+      lang={lang}
+      goBack={goBack}
+    />
+  );
+}
 
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+function GalleryContent({
+  event,
+  gallery,
+  lang,
+  goBack,
+}: GalleryViewProps & {
+  gallery: NonNullable<GalleryEvent["gallery"]>;
+  goBack: () => void;
+}) {
+  const copy = COPY[lang];
+  const {
+    availableSections,
+    activeSectionKey,
+    setActiveSectionKey,
+    activePerformance,
+    activeStaticSection,
+    images,
+    activeIndex,
+    setActiveIndex,
+    page,
+    setPage,
+    pageCount,
+    pagedImages,
+    next,
+    prev,
+    closeLightbox,
+    performances,
+    setActivePerformanceId,
+  } = useGalleryDetail(gallery);
 
   const bgImage = getGalleryCover(event.coverImage);
 

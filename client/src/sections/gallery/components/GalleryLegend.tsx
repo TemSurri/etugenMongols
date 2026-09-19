@@ -9,14 +9,31 @@ type Props = {
   items: GalleryCardItem[];
 };
 
-export const GalleryLegend = memo(function GalleryLegend({ copy, query, setQuery, items }: Props) {
+export const GalleryLegend = memo(function GalleryLegend({
+  copy,
+  query,
+  setQuery,
+  items,
+}: Props) {
   const searchId = useId();
 
   return (
-    <aside aria-label={copy.index} className="w-full border border-[#d8caa5]/65 bg-[#fffaf0]/96 p-4 text-[#27301d] shadow-[0_16px_42px_rgba(0,0,0,0.22)] backdrop-blur-sm sm:p-5">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a762f]">{copy.index}</p>
-      <form role="search" className="mt-4 sm:mt-5" onSubmit={(event) => event.preventDefault()}>
-        <label htmlFor={searchId} className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4e593c]/70">
+    <aside
+      aria-label={copy.index}
+      className="w-full border border-[#d8caa5]/65 bg-[#fffaf0]/96 p-4 text-[#27301d] shadow-[0_16px_42px_rgba(0,0,0,0.22)] backdrop-blur-sm sm:p-5"
+    >
+      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a762f]">
+        {copy.index}
+      </p>
+      <form
+        role="search"
+        className="mt-4 sm:mt-5"
+        onSubmit={(event) => event.preventDefault()}
+      >
+        <label
+          htmlFor={searchId}
+          className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4e593c]/70"
+        >
           {copy.search}
         </label>
         <input
@@ -31,12 +48,26 @@ export const GalleryLegend = memo(function GalleryLegend({ copy, query, setQuery
       </form>
       <div className="mt-5 border-t border-[#d8caa5]/65 pt-4 sm:mt-6 sm:pt-5">
         <div className="flex max-h-[20rem] flex-col gap-3 overflow-y-auto overscroll-contain pr-1 lg:max-h-[22rem]">
-          {items.length > 0 ? items.map((item) => (
-            <Link key={item.id} to={item.link} className="group text-sm leading-5 text-[#4e593c]/80 transition-colors hover:text-[#27301d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7b844e]/45">
-              <span className="block font-medium">{item.title}</span>
-              {item.year && <span className="mt-0.5 block text-xs text-[#7d784f]">{item.year}</span>}
-            </Link>
-          )) : <p className="text-sm leading-6 text-[#4e593c]/60">{copy.noResults}</p>}
+          {items.length > 0 ? (
+            items.map((item) => (
+              <Link
+                key={item.id}
+                to={item.link}
+                className="group text-sm leading-5 text-[#4e593c]/80 transition-colors hover:text-[#27301d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7b844e]/45"
+              >
+                <span className="block font-medium">{item.title}</span>
+                {item.year && (
+                  <span className="mt-0.5 block text-xs text-[#7d784f]">
+                    {item.year}
+                  </span>
+                )}
+              </Link>
+            ))
+          ) : (
+            <p className="text-sm leading-6 text-[#4e593c]/60">
+              {copy.noResults}
+            </p>
+          )}
         </div>
       </div>
     </aside>

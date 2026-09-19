@@ -1,127 +1,51 @@
-import {
-useCallback,
-useState
-} from "react";
+import { useCallback, useState } from "react";
 import { getAdminRegistrations } from "../api/adminApi";
 
-
-
-import type {
-AdminRegistration
-} from "../types";
-
+import type { AdminRegistration } from "../types";
 
 export function useEventRegistrations() {
+  const [registrations, setRegistrations] = useState<AdminRegistration[]>([]);
 
-    const [
-        registrations,
-        setRegistrations
-    ] =
-        useState<
-            AdminRegistration[]
-        >([]);
+  const [loading, setLoading] = useState(false);
 
+  const [error, setError] = useState(false);
 
-    const [
-        loading,
-        setLoading
-    ] =
-        useState(false);
+  const load = useCallback(async (eventId: string) => {
+    try {
+      setLoading(true);
 
+      setError(false);
 
-    const [
-        error,
-        setError
-    ] =
-        useState(false);
+      const response = await getAdminRegistrations(eventId);
 
+      setRegistrations(response.data);
 
-    const load =
-        useCallback(
-            async (
-                eventId:
-                    string
-            ) => {
+      return response.data;
+    } catch (error) {
+      console.error("Failed to load event registrations:", error);
 
-                try {
+      setError(true);
 
-                    setLoading(
-                        true
-                    );
+      setRegistrations([]);
 
-                    setError(
-                        false
-                    );
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  const clear = useCallback(() => {
+    setRegistrations([]);
 
-                    const response =
-                        await getAdminRegistrations(eventId);
+    setError(false);
+  }, []);
 
+  return {
+    registrations,
+    loading,
+    error,
 
-                    setRegistrations(
-                        response.data
-                    );
-
-
-                    return response.data;
-
-                } catch (error) {
-
-                    console.error(
-                        "Failed to load event registrations:",
-                        error
-                    );
-
-
-                    setError(
-                        true
-                    );
-
-
-                    setRegistrations(
-                        []
-                    );
-
-
-                    return [];
-
-                } finally {
-
-                    setLoading(
-                        false
-                    );
-
-                }
-
-            },
-            []
-        );
-
-
-    const clear =
-        useCallback(
-            () => {
-
-                setRegistrations(
-                    []
-                );
-
-                setError(
-                    false
-                );
-
-            },
-            []
-        );
-
-
-    return {
-
-        registrations,
-        loading,
-        error,
-
-        load,
-        clear
-    };
+    load,
+    clear,
+  };
 }

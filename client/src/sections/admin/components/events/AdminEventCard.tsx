@@ -1,131 +1,63 @@
-"use client";
+import { adminEventCardCopy } from "../../content/AdminEventCardCopy";
 
-import {
-    useState
-} from "react";
+import { useState } from "react";
 
-import axios
-    from "axios";
+import axios from "axios";
 
-import EventRegistrantsModal
-    from "./EventRegistrantsModal";
+import EventRegistrantsModal from "./EventRegistrantsModal";
 
-import type {
-    ApiEvent,
-    EventUpdateType
-} from "../../types";
-
+import type { ApiEvent, EventUpdateType } from "../../types";
 
 type Props = {
+  event: ApiEvent;
 
-    event:
-        ApiEvent;
+  onEdit: () => void;
 
-    onEdit:
-        () => void;
+  updateEvent: (
+    eventId: string,
+    type: EventUpdateType,
+    value: string | null,
+  ) => Promise<ApiEvent>;
 
-    updateEvent:
-        (
-            eventId:
-                string,
-            type:
-                EventUpdateType,
-            value:
-                string | null
-        ) => Promise<ApiEvent>;
-
-    lang:
-        "en" | "mn";
+  lang: "en" | "mn";
 };
 
-
 export default function AdminEventCard({
-    event,
-    onEdit,
-    updateEvent,
-    lang
+  event,
+  onEdit,
+  updateEvent,
+  lang,
 }: Props) {
+  const [registrantsOpen, setRegistrantsOpen] = useState(false);
 
-    const [
-        registrantsOpen,
-        setRegistrantsOpen
-    ] =
-        useState(false);
+  const [changingPublished, setChangingPublished] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
 
-    const [
-        changingPublished,
-        setChangingPublished
-    ] =
-        useState(false);
-
-
-    const [
-        error,
-        setError
-    ] =
-        useState<string | null>(
-            null
-        );
-
-
-    async function togglePublished() {
-
-        if (
-            changingPublished
-        ) {
-            return;
-        }
-
-
-        try {
-
-            setChangingPublished(
-                true
-            );
-
-            setError(
-                null
-            );
-
-
-            await updateEvent(
-                event.id,
-                "PUBLISHED",
-                String(
-                    !event.published
-                )
-            );
-
-        } catch (error) {
-
-            console.error(
-                error
-            );
-
-
-            setError(
-                getErrorMessage(
-                    error,
-                    lang
-                )
-            );
-
-        } finally {
-
-            setChangingPublished(
-                false
-            );
-
-        }
+  async function togglePublished() {
+    if (changingPublished) {
+      return;
     }
 
+    try {
+      setChangingPublished(true);
 
-    return (
-        <>
+      setError(null);
 
-            <article
-                className="
+      await updateEvent(event.id, "PUBLISHED", String(!event.published));
+    } catch (error) {
+      console.error(error);
+
+      setError(getErrorMessage(error, lang));
+    } finally {
+      setChangingPublished(false);
+    }
+  }
+
+  return (
+    <>
+      <article
+        className="
                     group
                     overflow-hidden
                     rounded-2xl
@@ -135,18 +67,16 @@ export default function AdminEventCard({
                     shadow-lg
                     shadow-black/10
                 "
-            >
-
-                <div
-                    className="
+      >
+        <div
+          className="
                         grid
 
                         lg:grid-cols-[280px_minmax(0,1fr)]
                     "
-                >
-
-                    <div
-                        className="
+        >
+          <div
+            className="
                             relative
                             min-h-[195px]
                             overflow-hidden
@@ -154,22 +84,16 @@ export default function AdminEventCard({
 
                             lg:min-h-[230px]
                         "
-                    >
-
-                        {event.coverImage ? (
-
-                            <img
-                                src={
-                                    event.coverImage
-                                }
-                                alt={
-                                    lang === "mn"
-                                        ? event.coverImageAltMn ??
-                                          event.titleMn
-                                        : event.coverImageAltEn ??
-                                          event.titleEn
-                                }
-                                className="
+          >
+            {event.coverImage ? (
+              <img
+                src={event.coverImage}
+                alt={
+                  lang === "mn"
+                    ? (event.coverImageAltMn ?? event.titleMn)
+                    : (event.coverImageAltEn ?? event.titleEn)
+                }
+                className="
                                     absolute
                                     inset-0
                                     h-full
@@ -180,12 +104,10 @@ export default function AdminEventCard({
                                     ease-out
                                     group-hover:scale-[1.025]
                                 "
-                            />
-
-                        ) : (
-
-                            <div
-                                className="
+              />
+            ) : (
+              <div
+                className="
                                     flex
                                     h-full
                                     min-h-[195px]
@@ -194,17 +116,13 @@ export default function AdminEventCard({
                                     text-sm
                                     text-white/50
                                 "
-                            >
-                                {lang === "mn"
-                                    ? "Зураг алга"
-                                    : "No cover image"}
-                            </div>
+              >
+                {adminEventCardCopy[lang].noCoverImage}
+              </div>
+            )}
 
-                        )}
-
-
-                        <div
-                            className="
+            <div
+              className="
                                 absolute
                                 inset-0
                                 bg-gradient-to-t
@@ -212,11 +130,10 @@ export default function AdminEventCard({
                                 via-transparent
                                 to-transparent
                             "
-                        />
+            />
 
-
-                        <span
-                            className={`
+            <span
+              className={`
                                 absolute
                                 left-4
                                 top-4
@@ -228,38 +145,30 @@ export default function AdminEventCard({
                                 shadow-sm
 
                                 ${
-                                    event.published
-                                        ? "bg-[#27301d]/90 text-white"
-                                        : "bg-white/90 text-[#59634c]"
+                                  event.published
+                                    ? "bg-[#27301d]/90 text-white"
+                                    : "bg-white/90 text-[#59634c]"
                                 }
                             `}
-                        >
-                            {event.published
-                                ? lang === "mn"
-                                    ? "Нийтлэгдсэн"
-                                    : "Published"
-                                : lang === "mn"
-                                    ? "Ноорог"
-                                    : "Draft"}
-                        </span>
+            >
+              {event.published
+                ? adminEventCardCopy[lang].published
+                : adminEventCardCopy[lang].draft}
+            </span>
+          </div>
 
-                    </div>
-
-
-                    <div
-                        className="
+          <div
+            className="
                             flex
                             min-w-0
                             flex-col
                             justify-between
                             p-6
                         "
-                    >
-
-                        <div>
-
-                            <div
-                                className="
+          >
+            <div>
+              <div
+                className="
                                     flex
                                     flex-col
                                     gap-4
@@ -268,59 +177,47 @@ export default function AdminEventCard({
                                     xl:items-start
                                     xl:justify-between
                                 "
-                            >
-
-                                <div
-                                    className="
+              >
+                <div
+                  className="
                                         min-w-0
                                         flex-1
                                     "
-                                >
-
-                                    <h3
-                                        className="
+                >
+                  <h3
+                    className="
                                             text-xl
                                             font-semibold
                                             tracking-tight
                                             text-[#27301d]
                                         "
-                                    >
-                                        {lang === "mn"
-                                            ? event.titleMn
-                                            : event.titleEn}
-                                    </h3>
+                  >
+                    {lang === "mn" ? event.titleMn : event.titleEn}
+                  </h3>
 
-
-                                    <p
-                                        className="
+                  <p
+                    className="
                                             mt-1
                                             text-sm
                                             text-[#667056]
                                         "
-                                    >
-                                        {lang === "mn"
-                                            ? event.titleEn
-                                            : event.titleMn}
-                                    </p>
+                  >
+                    {lang === "mn" ? event.titleEn : event.titleMn}
+                  </p>
+                </div>
 
-                                </div>
-
-
-                                <div
-                                    className="
+                <div
+                  className="
                                         flex
                                         shrink-0
                                         flex-wrap
                                         gap-2
                                     "
-                                >
-
-                                    <button
-                                        type="button"
-                                        onClick={
-                                            onEdit
-                                        }
-                                        className="
+                >
+                  <button
+                    type="button"
+                    onClick={onEdit}
+                    className="
                                             rounded-lg
                                             border
                                             border-[#27301d]/15
@@ -335,22 +232,15 @@ export default function AdminEventCard({
                                             hover:border-[#9a7b26]/45
                                             hover:bg-[#f2ecdf]
                                         "
-                                    >
-                                        {lang === "mn"
-                                            ? "Засах"
-                                            : "Edit"}
-                                    </button>
+                  >
+                    {adminEventCardCopy[lang].edit}
+                  </button>
 
-
-                                    <button
-                                        type="button"
-                                        disabled={
-                                            changingPublished
-                                        }
-                                        onClick={
-                                            togglePublished
-                                        }
-                                        className="
+                  <button
+                    type="button"
+                    disabled={changingPublished}
+                    onClick={togglePublished}
+                    className="
                                             rounded-lg
                                             bg-[#27301d]
                                             px-4
@@ -364,117 +254,67 @@ export default function AdminEventCard({
                                             disabled:cursor-not-allowed
                                             disabled:opacity-50
                                         "
-                                    >
-                                        {
-                                            changingPublished
-                                                ? lang === "mn"
-                                                    ? "Хадгалж байна..."
-                                                    : "Saving..."
-                                                : event.published
-                                                    ? lang === "mn"
-                                                        ? "Нуух"
-                                                        : "Unpublish"
-                                                    : lang === "mn"
-                                                        ? "Нийтлэх"
-                                                        : "Publish"
-                                        }
-                                    </button>
+                  >
+                    {changingPublished
+                      ? adminEventCardCopy[lang].saving
+                      : event.published
+                        ? adminEventCardCopy[lang].unpublish
+                        : adminEventCardCopy[lang].publish}
+                  </button>
+                </div>
+              </div>
 
-                                </div>
-
-                            </div>
-
-
-                            <div
-                                className="
+              <div
+                className="
                                     mt-6
                                     grid
                                     gap-4
 
                                     sm:grid-cols-3
                                 "
-                            >
+              >
+                <Detail
+                  label={adminEventCardCopy[lang].date}
+                  value={formatDate(event.startsAt, lang)}
+                />
 
-                                <Detail
-                                    label={
-                                        lang === "mn"
-                                            ? "Огноо"
-                                            : "Date"
-                                    }
-                                    value={
-                                        formatDate(
-                                            event.startsAt,
-                                            lang
-                                        )
-                                    }
-                                />
+                <Detail
+                  label={adminEventCardCopy[lang].location}
+                  value={event.location}
+                />
 
+                <Detail
+                  label={adminEventCardCopy[lang].registration}
+                  value={getRegistrationText(event, lang)}
+                />
+              </div>
+            </div>
 
-                                <Detail
-                                    label={
-                                        lang === "mn"
-                                            ? "Байршил"
-                                            : "Location"
-                                    }
-                                    value={
-                                        event.location
-                                    }
-                                />
-
-
-                                <Detail
-                                    label={
-                                        lang === "mn"
-                                            ? "Бүртгэл"
-                                            : "Registration"
-                                    }
-                                    value={
-                                        getRegistrationText(
-                                            event,
-                                            lang
-                                        )
-                                    }
-                                />
-
-                            </div>
-
-                        </div>
-
-
-                        {error && (
-
-                            <p
-                                className="
+            {error && (
+              <p
+                className="
                                     mt-4
                                     text-sm
                                     text-[#8b4a42]
                                 "
-                            >
-                                {error}
-                            </p>
+              >
+                {error}
+              </p>
+            )}
 
-                        )}
-
-
-                        {event.registerable && (
-
-                            <div
-                                className="
+            {event.registerable && (
+              <div
+                className="
                                     mt-5
                                     border-t
                                     border-[#27301d]/10
                                     pt-4
                                 "
-                            >
-
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setRegistrantsOpen(
-                                            true
-                                        )
-                                    }
-                                    className="
+              >
+                <button
+                  type="button"
+                  onClick={() => setRegistrantsOpen(true)}
+                  className="
                                         rounded-md
                                         px-1
                                         py-1
@@ -485,176 +325,90 @@ export default function AdminEventCard({
                                         duration-150
                                         hover:text-[#27301d]
                                     "
-                                >
-                                    {lang === "mn"
-                                        ? "Бүртгүүлсэн хүмүүсийг харах →"
-                                        : "View registrants →"}
-                                </button>
+                >
+                  {adminEventCardCopy[lang].viewRegistrants}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </article>
 
-                            </div>
-
-                        )}
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <EventRegistrantsModal
-                event={
-                    event
-                }
-                open={
-                    registrantsOpen
-                }
-                onClose={() =>
-                    setRegistrantsOpen(
-                        false
-                    )
-                }
-                lang={
-                    lang
-                }
-            />
-
-        </>
-    );
+      <EventRegistrantsModal
+        event={event}
+        open={registrantsOpen}
+        onClose={() => setRegistrantsOpen(false)}
+        lang={lang}
+      />
+    </>
+  );
 }
 
-
 function Detail({
-    label,
-    value
+  label,
+  value,
 }: {
-    label:
-        string;
+  label: string;
 
-    value:
-        string;
+  value: string;
 }) {
-
-    return (
-        <div className="min-w-0">
-
-            <p
-                className="
+  return (
+    <div className="min-w-0">
+      <p
+        className="
                     text-[10px]
                     font-semibold
                     uppercase
                     tracking-[0.1em]
                     text-[#9a7b26]
                 "
-            >
-                {label}
-            </p>
+      >
+        {label}
+      </p>
 
-
-            <p
-                className="
+      <p
+        className="
                     mt-1
                     break-words
                     text-sm
                     leading-6
                     text-[#667056]
                 "
-            >
-                {value}
-            </p>
-
-        </div>
-    );
+      >
+        {value}
+      </p>
+    </div>
+  );
 }
 
+function getRegistrationText(event: ApiEvent, lang: "en" | "mn") {
+  if (!event.registerable) {
+    return adminEventCardCopy[lang].disabled;
+  }
 
-function getRegistrationText(
-    event:
-        ApiEvent,
-    lang:
-        "en" | "mn"
-) {
+  if (event.registrationCost === 0) {
+    return adminEventCardCopy[lang].free;
+  }
 
-    if (
-        !event.registerable
-    ) {
-        return lang === "mn"
-            ? "Хаалттай"
-            : "Disabled";
-    }
+  if (event.registrationCost !== null) {
+    return `$${(event.registrationCost / 100).toFixed(2)} CAD`;
+  }
 
-
-    if (
-        event.registrationCost === 0
-    ) {
-        return lang === "mn"
-            ? "Үнэгүй"
-            : "Free";
-    }
-
-
-    if (
-        event.registrationCost !== null
-    ) {
-
-        return `$${(
-            event.registrationCost /
-            100
-        ).toFixed(2)} CAD`;
-    }
-
-
-    return lang === "mn"
-        ? "Нээлттэй"
-        : "Open";
+  return adminEventCardCopy[lang].open;
 }
 
-
-function formatDate(
-    value:
-        string,
-    lang:
-        "en" | "mn"
-) {
-
-    return new Intl.DateTimeFormat(
-        lang === "mn"
-            ? "mn-MN"
-            : "en-CA",
-        {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
-        }
-    ).format(
-        new Date(
-            value
-        )
-    );
+function formatDate(value: string, lang: "en" | "mn") {
+  return new Intl.DateTimeFormat(adminEventCardCopy[lang].enCa, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(value));
 }
 
+function getErrorMessage(error: unknown, lang: "en" | "mn") {
+  if (axios.isAxiosError(error) && error.response?.status === 403) {
+    return adminEventCardCopy[lang].youDoNotHavePermissionToMake;
+  }
 
-function getErrorMessage(
-    error:
-        unknown,
-    lang:
-        "en" | "mn"
-) {
-
-    if (
-        axios.isAxiosError(
-            error
-        ) &&
-        error.response?.status === 403
-    ) {
-
-        return lang === "mn"
-            ? "Танд энэ өөрчлөлтийг хийх эрх байхгүй."
-            : "You do not have permission to make this change.";
-    }
-
-
-    return lang === "mn"
-        ? "Арга хэмжээг шинэчилж чадсангүй."
-        : "Could not update the event.";
+  return adminEventCardCopy[lang].couldNotUpdateTheEvent;
 }

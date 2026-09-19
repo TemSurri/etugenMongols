@@ -1,10 +1,10 @@
+import { useCallback, useMemo, useState } from "react";
 import { getGalleryCover } from "../model/galleryMedia";
-import { useCallback,useMemo,useState } from "react";
 
-import { GALLERY_COPY } from "../copy";
+import { GALLERY_COPY } from "../content/galleryCopy";
 import { galleryEvents } from "../data/galleryCatalog";
-import { getYearFromDate,normalizeSearchValue } from "../helpers";
-import type { GalleryCardItem,Lang,ViewMode } from "../types";
+import { getYearFromDate, normalizeSearchValue } from "../helpers";
+import type { GalleryCardItem, Lang, ViewMode } from "../types";
 
 function getEventImage(event: (typeof galleryEvents)[number]): string {
   return getGalleryCover(event.coverImage);
@@ -46,7 +46,9 @@ export function useGallery(lang: Lang | undefined) {
   const filteredItems = useMemo(() => {
     const normalizedQuery = normalizeSearchValue(query);
     if (!normalizedQuery) return galleryItems;
-    return galleryItems.filter((item) => item.searchText.includes(normalizedQuery));
+    return galleryItems.filter((item) =>
+      item.searchText.includes(normalizedQuery),
+    );
   }, [galleryItems, query]);
 
   const showGrid = useCallback(() => setViewMode("grid"), []);

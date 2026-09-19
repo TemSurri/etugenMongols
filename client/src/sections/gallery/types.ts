@@ -1,4 +1,5 @@
-export type Lang = "en" | "mn";
+import type { Lang } from "../../context/language";
+export type { Lang } from "../../context/language";
 export type ViewMode = "grid" | "timeline";
 
 export type GalleryShowcaseProps = {

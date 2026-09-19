@@ -1,47 +1,45 @@
 export interface RegistrationEvent {
-    id: string;
-    slug: string;
+  id: string;
+  slug: string;
 
-    titleEn: string;
-    titleMn: string;
+  titleEn: string;
+  titleMn: string;
 
-    descriptionEn: string;
-    descriptionMn: string;
+  descriptionEn: string;
+  descriptionMn: string;
 
-    startsAt: string;
-    endsAt: string | null;
+  startsAt: string;
+  endsAt: string | null;
 
-    location: string;
+  location: string;
 
-    published: boolean;
-    registerable: boolean;
+  published: boolean;
+  registerable: boolean;
 
-    registrationCost: number | null;
+  registrationCost: number | null;
 
-    coverImage: string | null;
-    coverImageAltEn: string | null;
-    coverImageAltMn: string | null;
+  coverImage: string | null;
+  coverImageAltEn: string | null;
+  coverImageAltMn: string | null;
 
-    contactEmail: string | null;
-    contactPhone: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
 }
 
-export type EventRegistrationStatus =
-    | "REGISTERED"
-    | "CANCELLED";
+export type EventRegistrationStatus = "REGISTERED" | "CANCELLED";
 
 export interface UserEventRegistration {
-    id: string;
+  id: string;
 
-    userId: number | null;
+  userId: number | null;
 
-    firstName: string;
-    lastName: string;
-    email: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 
-    status: EventRegistrationStatus;
+  status: EventRegistrationStatus;
 
-    createdAt: string;
+  createdAt: string;
 
-    event: RegistrationEvent;
+  event: RegistrationEvent;
 }

@@ -1,5 +1,4 @@
 export type DonationCheckoutRequest = {
-
   amount: number;
 
   email: string;

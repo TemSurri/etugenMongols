@@ -1,109 +1,77 @@
-import {
-memo
-} from "react";
+import { memo } from "react";
 
-import type {
-RegistrationPerson
-} from "../types/eventRegistrationTypes";
+import type { RegistrationPerson } from "../types/eventRegistrationTypes";
 
-import type {
-EventRegistrationCopy
-} from "../copy/eventRegistrationCopy";
-
+import type { EventRegistrationCopy } from "../content/eventRegistrationCopy";
 
 type EventRegistrationPeopleProps = {
+  people: RegistrationPerson[];
 
-    people: RegistrationPerson[];
+  onAdd: () => void;
 
+  onRemove: (id: string) => void;
 
-    onAdd: () => void;
+  onUpdate: (
+    id: string,
 
+    field: "firstName" | "lastName",
 
-    onRemove: (
-        id: string
-    ) => void;
+    value: string,
+  ) => void;
 
-
-    onUpdate: (
-        id: string,
-
-        field:
-            | "firstName"
-            | "lastName",
-
-        value: string
-    ) => void;
-
-
-    copy: EventRegistrationCopy;
+  copy: EventRegistrationCopy;
 };
 
-
 function EventRegistrationPeople({
-    people,
-    onAdd,
-    onRemove,
-    onUpdate,
-    copy
+  people,
+  onAdd,
+  onRemove,
+  onUpdate,
+  copy,
 }: EventRegistrationPeopleProps) {
-
-    return (
-        <section
-            className="
+  return (
+    <section
+      className="
                 border-t
                 border-[#27301d]/10
                 pt-7
             "
-        >
-
-            <div
-                className="
+    >
+      <div
+        className="
                     flex
                     items-start
                     justify-between
                     gap-5
                 "
-            >
-
-                <div>
-
-                    <h2
-                        className="
+      >
+        <div>
+          <h2
+            className="
                             text-lg
                             font-semibold
                             text-[#27301d]
                         "
-                    >
-                        {
-                            copy.additionalGuests
-                        }
-                    </h2>
+          >
+            {copy.additionalGuests}
+          </h2>
 
-
-                    <p
-                        className="
+          <p
+            className="
                             mt-1
                             text-sm
                             leading-6
                             text-[#59624a]
                         "
-                    >
-                        {
-                            copy.additionalGuestsDescription
-                        }
-                    </p>
+          >
+            {copy.additionalGuestsDescription}
+          </p>
+        </div>
 
-                </div>
-
-
-                <button
-                    type="button"
-
-                    onClick={
-                        onAdd
-                    }
-
-                    className="
+        <button
+          type="button"
+          onClick={onAdd}
+          className="
                         shrink-0
                         border
                         border-[#303824]
@@ -117,101 +85,64 @@ function EventRegistrationPeople({
                         hover:bg-[#303824]
                         hover:text-white
                     "
-                >
-                    + {
-                        copy.addPerson
-                    }
-                </button>
+        >
+          + {copy.addPerson}
+        </button>
+      </div>
 
-            </div>
-
-
-            {
-                people.length === 0
-                    ? (
-
-                        <p
-                            className="
+      {people.length === 0 ? (
+        <p
+          className="
                                 mt-5
                                 text-sm
                                 text-[#59624a]/75
                             "
-                        >
-                            {
-                                copy.noAdditionalGuests
-                            }
-                        </p>
-
-                    )
-                    : (
-
-                        <div
-                            className="
+        >
+          {copy.noAdditionalGuests}
+        </p>
+      ) : (
+        <div
+          className="
                                 mt-6
                                 space-y-6
                             "
-                        >
-
-                            {
-                                people.map(
-                                    (
-                                        person,
-                                        index
-                                    ) => (
-
-                                        <div
-                                            key={
-                                                person.id
-                                            }
-
-                                            className="
+        >
+          {people.map((person, index) => (
+            <div
+              key={person.id}
+              className="
                                                 border-t
                                                 border-[#27301d]/10
                                                 pt-5
                                                 first:border-t-0
                                                 first:pt-0
                                             "
-                                        >
-
-                                            <div
-                                                className="
+            >
+              <div
+                className="
                                                     mb-3
                                                     flex
                                                     items-center
                                                     justify-between
                                                     gap-4
                                                 "
-                                            >
-
-                                                <p
-                                                    className="
+              >
+                <p
+                  className="
                                                         text-xs
                                                         font-semibold
                                                         uppercase
                                                         tracking-[0.13em]
                                                         text-[#8e742d]
                                                     "
-                                                >
-                                                    {
-                                                        copy.guest
-                                                    }{" "}
-                                                    {
-                                                        index + 1
-                                                    }
-                                                </p>
+                >
+                  {copy.guest} {index + 1}
+                </p>
 
-
-                                                <button
-                                                    type="button"
-
-                                                    onClick={
-                                                        () =>
-                                                            onRemove(
-                                                                person.id
-                                                            )
-                                                    }
-
-                                                    className="
+                <button
+                  type="button"
+                  onClick={() => onRemove(person.id)}
+                  className="
                                                         text-xs
                                                         font-medium
                                                         text-[#7a604d]
@@ -220,59 +151,39 @@ function EventRegistrationPeople({
                                                         transition-colors
                                                         hover:text-[#27301d]
                                                     "
-                                                >
-                                                    {
-                                                        copy.remove
-                                                    }
-                                                </button>
+                >
+                  {copy.remove}
+                </button>
+              </div>
 
-                                            </div>
-
-
-                                            <div
-                                                className="
+              <div
+                className="
                                                     grid
                                                     gap-4
                                                     sm:grid-cols-2
                                                 "
-                                            >
-
-                                                <label>
-
-                                                    <span
-                                                        className="
+              >
+                <label>
+                  <span
+                    className="
                                                             mb-1.5
                                                             block
                                                             text-xs
                                                             font-medium
                                                             text-[#4e593c]
                                                         "
-                                                    >
-                                                        {
-                                                            copy.firstName
-                                                        }
-                                                    </span>
+                  >
+                    {copy.firstName}
+                  </span>
 
-
-                                                    <input
-                                                        type="text"
-
-                                                        value={
-                                                            person.firstName
-                                                        }
-
-                                                        onChange={
-                                                            event =>
-                                                                onUpdate(
-                                                                    person.id,
-                                                                    "firstName",
-                                                                    event.target.value
-                                                                )
-                                                        }
-
-                                                        autoComplete="off"
-
-                                                        className="
+                  <input
+                    type="text"
+                    value={person.firstName}
+                    onChange={(event) =>
+                      onUpdate(person.id, "firstName", event.target.value)
+                    }
+                    autoComplete="off"
+                    className="
                                                             w-full
                                                             border
                                                             border-[#cfcfca]
@@ -288,47 +199,30 @@ function EventRegistrationPeople({
                                                             focus:ring-2
                                                             focus:ring-[#7e895d]/15
                                                         "
-                                                    />
+                  />
+                </label>
 
-                                                </label>
-
-
-                                                <label>
-
-                                                    <span
-                                                        className="
+                <label>
+                  <span
+                    className="
                                                             mb-1.5
                                                             block
                                                             text-xs
                                                             font-medium
                                                             text-[#4e593c]
                                                         "
-                                                    >
-                                                        {
-                                                            copy.lastName
-                                                        }
-                                                    </span>
+                  >
+                    {copy.lastName}
+                  </span>
 
-
-                                                    <input
-                                                        type="text"
-
-                                                        value={
-                                                            person.lastName
-                                                        }
-
-                                                        onChange={
-                                                            event =>
-                                                                onUpdate(
-                                                                    person.id,
-                                                                    "lastName",
-                                                                    event.target.value
-                                                                )
-                                                        }
-
-                                                        autoComplete="off"
-
-                                                        className="
+                  <input
+                    type="text"
+                    value={person.lastName}
+                    onChange={(event) =>
+                      onUpdate(person.id, "lastName", event.target.value)
+                    }
+                    autoComplete="off"
+                    className="
                                                             w-full
                                                             border
                                                             border-[#cfcfca]
@@ -344,28 +238,15 @@ function EventRegistrationPeople({
                                                             focus:ring-2
                                                             focus:ring-[#7e895d]/15
                                                         "
-                                                    />
-
-                                                </label>
-
-                                            </div>
-
-                                        </div>
-
-                                    )
-                                )
-                            }
-
-                        </div>
-
-                    )
-            }
-
-        </section>
-    );
+                  />
+                </label>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
 
-
-export default memo(
-    EventRegistrationPeople
-);
+export default memo(EventRegistrationPeople);

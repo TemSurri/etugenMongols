@@ -1,192 +1,91 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-useCallback,
-useEffect,
-useMemo,
-useState
-} from "react";
-import { createAdminEvent,getAdminEvents,updateAdminEvent,updateAdminRegistration } from "../api/adminApi";
+  createAdminEvent,
+  getAdminEvents,
+  updateAdminEvent,
+  updateAdminRegistration,
+} from "../api/adminApi";
 
-
-
-import type {
-ApiEvent,
-EventCreateRequest,
-EventUpdateType
-} from "../types";
-
+import type { ApiEvent, EventCreateRequest, EventUpdateType } from "../types";
 
 export function useAdminEvents() {
+  const [events, setEvents] = useState<ApiEvent[]>([]);
 
-  const [
-    events,
-    setEvents
-  ] =
-    useState<ApiEvent[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState(false);
 
-  const [
-    loading,
-    setLoading
-  ] =
-    useState(true);
+  const loadEvents = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(false);
 
+      const response = await getAdminEvents();
 
-  const [
-    error,
-    setError
-  ] =
-    useState(false);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Failed to load admin events:", error);
 
-
-  const loadEvents =
-    useCallback(
-      async () => {
-
-        try {
-
-          setLoading(true);
-          setError(false);
-
-
-          const response =
-            await getAdminEvents();
-
-
-          setEvents(
-            response.data
-          );
-
-        } catch (error) {
-
-          console.error(
-            "Failed to load admin events:",
-            error
-          );
-
-          setError(true);
-
-        } finally {
-
-          setLoading(false);
-
-        }
-
-      },
-      []
-    );
-
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-
     void loadEvents();
-
   }, [loadEvents]);
 
+  const createEvent = useCallback(async (request: EventCreateRequest) => {
+    const response = await createAdminEvent(request);
 
-  const createEvent =
-    useCallback(
-      async (
-        request:
-          EventCreateRequest
-      ) => {
+    setEvents((current) => [response.data, ...current]);
 
-        const response =
-          await createAdminEvent(request);
+    return response.data;
+  }, []);
 
+  const updateEvent = useCallback(
+    async (eventId: string, type: EventUpdateType, value: string | null) => {
+      const response = await updateAdminEvent(eventId, type, value);
 
-        setEvents(
-          current => [
-            response.data,
-            ...current
-          ]
-        );
+      setEvents((current) =>
+        current.map((event) => (event.id === eventId ? response.data : event)),
+      );
 
+      return response.data;
+    },
+    [],
+  );
 
-        return response.data;
+  const updateRegistration = useCallback(
+    async (
+      eventId: string,
+      registerable: boolean,
+      registrationCost: number | null,
+    ) => {
+      const response = await updateAdminRegistration(
+        eventId,
+        registerable,
+        registrationCost,
+      );
 
-      },
-      []
-    );
+      setEvents((current) =>
+        current.map((event) => (event.id === eventId ? response.data : event)),
+      );
 
+      return response.data;
+    },
+    [],
+  );
 
-  const updateEvent =
-    useCallback(
-      async (
-        eventId: string,
-        type: EventUpdateType,
-        value: string | null
-      ) => {
+  const publishedCount = useMemo(
+    () => events.filter((event) => event.published).length,
+    [events],
+  );
 
-        const response =
-          await updateAdminEvent(eventId, type, value);
-
-
-        setEvents(
-          current =>
-            current.map(
-              event =>
-                event.id === eventId
-                  ? response.data
-                  : event
-            )
-        );
-
-
-        return response.data;
-
-      },
-      []
-    );
-
-
-  const updateRegistration =
-    useCallback(
-      async (
-        eventId: string,
-        registerable: boolean,
-        registrationCost: number | null
-      ) => {
-
-        const response =
-          await updateAdminRegistration(eventId, registerable, registrationCost);
-
-
-        setEvents(
-          current =>
-            current.map(
-              event =>
-                event.id === eventId
-                  ? response.data
-                  : event
-            )
-        );
-
-
-        return response.data;
-
-      },
-      []
-    );
-
-
-  const publishedCount =
-    useMemo(
-      () =>
-        events.filter(
-          event =>
-            event.published
-        ).length,
-      [events]
-    );
-
-
-  const draftCount =
-    events.length -
-    publishedCount;
-
+  const draftCount = events.length - publishedCount;
 
   return {
-
     events,
 
     loading,
@@ -199,7 +98,6 @@ export function useAdminEvents() {
     updateEvent,
     updateRegistration,
 
-    reload:
-      loadEvents
+    reload: loadEvents,
   };
 }

@@ -1,28 +1,17 @@
-"use client";
-
 import Header from "../../../components/navigation/SiteHeader";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 import RegistrationsMain from "../registrations/RegistrationsMain";
 
 export default function RegistrationsPage() {
+  const { lang, setLang } = useLanguage();
 
-    const {
-        lang,
-        setLang
-    } = useLanguage();
+  return (
+    <>
+      <Header lang={lang} setLang={setLang} />
 
-    return (
-        <>
-            <Header
-                lang={lang}
-                setLang={setLang}
-            />
-
-            <main>
-                <RegistrationsMain
-                    lang={lang}
-                />
-            </main>
-        </>
-    );
+      <main>
+        <RegistrationsMain lang={lang} />
+      </main>
+    </>
+  );
 }

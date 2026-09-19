@@ -1,6 +1,4 @@
-"use client";
-
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/useLanguage";
 
 import Footer from "../../../components/navigation/SiteFooter";
 import Header from "../../../components/navigation/SiteHeader";

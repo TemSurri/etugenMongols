@@ -1,22 +1,9 @@
-import {
-  loadStripe,
-} from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
-
-const publishableKey =
-  import.meta.env
-    .VITE_STRIPE_PUBLISHABLE_KEY;
-
+const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 if (!publishableKey) {
-
-  throw new Error(
-    "VITE_STRIPE_PUBLISHABLE_KEY is not configured"
-  );
+  throw new Error("VITE_STRIPE_PUBLISHABLE_KEY is not configured");
 }
 
-
-export const stripePromise =
-  loadStripe(
-    publishableKey
-  );
+export const stripePromise = loadStripe(publishableKey);

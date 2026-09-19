@@ -1,119 +1,89 @@
+import { registrationEventCardCopy } from "../../content/RegistrationEventCardCopy";
 // src/sections/users/registrations/components/RegistrationEventCard.tsx
 
-import {
-useState
-} from "react";
+import { useState } from "react";
 
-import type {
-UserEventRegistration
-} from "../types/registrationTypes";
+import type { UserEventRegistration } from "../types/registrationTypes";
 
 interface RegistrationCopy {
-    attendees: string;
-    registration: string;
-    registrations: string;
-    registered: string;
-    cancelled: string;
-    eventDate: string;
-    location: string;
+  attendees: string;
+  registration: string;
+  registrations: string;
+  registered: string;
+  cancelled: string;
+  eventDate: string;
+  location: string;
 
-    showMore?: string;
-    showLess?: string;
+  showMore?: string;
+  showLess?: string;
 }
 
 interface RegistrationEventCardProps {
-    registrations:
-        UserEventRegistration[];
+  registrations: UserEventRegistration[];
 
-    copy:
-        RegistrationCopy;
+  copy: RegistrationCopy;
 
-    lang:
-        "en" |
-        "mn";
+  lang: "en" | "mn";
 }
 
 export function RegistrationEventCard({
-    registrations,
-    copy,
-    lang
+  registrations,
+  copy,
+  lang,
 }: RegistrationEventCardProps) {
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
 
-    const [
-        descriptionOpen,
-        setDescriptionOpen
-    ] =
-        useState(false);
+  const event = registrations[0].event;
 
-    const event =
-        registrations[0].event;
+  const eventTitle = lang === "mn" ? event.titleMn : event.titleEn;
 
-    const eventTitle =
-        lang === "mn"
-            ? event.titleMn
-            : event.titleEn;
+  const eventDescription =
+    lang === "mn" ? event.descriptionMn : event.descriptionEn;
 
-    const eventDescription =
-        lang === "mn"
-            ? event.descriptionMn
-            : event.descriptionEn;
+  const imageAlt =
+    lang === "mn"
+      ? (event.coverImageAltMn ?? eventTitle)
+      : (event.coverImageAltEn ?? eventTitle);
 
-    const imageAlt =
-        lang === "mn"
-            ? (
-                event.coverImageAltMn ??
-                eventTitle
-            )
-            : (
-                event.coverImageAltEn ??
-                eventTitle
-            );
-
-    return (
-        <article
-            className="
+  return (
+    <article
+      className="
                 overflow-hidden
                 rounded-xl
                 border
                 border-[#27301d]/10
                 bg-[#f7f6f1]
             "
-        >
-
-            {event.coverImage && (
-                <div
-                    className="
+    >
+      {event.coverImage && (
+        <div
+          className="
                         h-48
                         w-full
                         overflow-hidden
                         bg-[#27301d]/5
                     "
-                >
-                    <img
-                        src={
-                            event.coverImage
-                        }
-                        alt={
-                            imageAlt
-                        }
-                        className="
+        >
+          <img
+            src={event.coverImage}
+            alt={imageAlt}
+            className="
                             h-full
                             w-full
                             object-cover
                         "
-                    />
-                </div>
-            )}
+          />
+        </div>
+      )}
 
-            <div
-                className="
+      <div
+        className="
                     p-5
                     sm:p-6
                 "
-            >
-
-                <div
-                    className="
+      >
+        <div
+          className="
                         flex
                         flex-col
                         gap-4
@@ -121,59 +91,46 @@ export function RegistrationEventCard({
                         sm:items-start
                         sm:justify-between
                     "
-                >
-
-                    <div
-                        className="
+        >
+          <div
+            className="
                             min-w-0
                             flex-1
                         "
-                    >
-
-                        <h3
-                            className="
+          >
+            <h3
+              className="
                                 text-xl
                                 font-semibold
                                 text-[#27301d]
                             "
-                        >
-                            {eventTitle}
-                        </h3>
+            >
+              {eventTitle}
+            </h3>
 
-                        {eventDescription && (
-                            <div
-                                className="
+            {eventDescription && (
+              <div
+                className="
                                     mt-2
                                 "
-                            >
-
-                                <p
-                                    className={`
+              >
+                <p
+                  className={`
                                         max-w-2xl
                                         text-sm
                                         leading-6
                                         text-[#667056]
 
-                                        ${
-                                            descriptionOpen
-                                                ? ""
-                                                : "line-clamp-2"
-                                        }
+                                        ${descriptionOpen ? "" : "line-clamp-2"}
                                     `}
-                                >
-                                    {eventDescription}
-                                </p>
+                >
+                  {eventDescription}
+                </p>
 
-                                <button
-                                    type="button"
-                                    onClick={
-                                        () =>
-                                            setDescriptionOpen(
-                                                current =>
-                                                    !current
-                                            )
-                                    }
-                                    className="
+                <button
+                  type="button"
+                  onClick={() => setDescriptionOpen((current) => !current)}
+                  className="
                                         mt-1.5
                                         text-xs
                                         font-semibold
@@ -183,35 +140,19 @@ export function RegistrationEventCard({
 
                                         hover:text-[#5f4d16]
                                     "
-                                >
-                                    {
-                                        descriptionOpen
-                                            ? (
-                                                copy.showLess ??
-                                                (
-                                                    lang === "mn"
-                                                        ? "Хураах"
-                                                        : "Show less"
-                                                )
-                                            )
-                                            : (
-                                                copy.showMore ??
-                                                (
-                                                    lang === "mn"
-                                                        ? "Дэлгэрэнгүй"
-                                                        : "Show more"
-                                                )
-                                            )
-                                    }
-                                </button>
+                >
+                  {descriptionOpen
+                    ? (copy.showLess ??
+                      registrationEventCardCopy[lang].showLess)
+                    : (copy.showMore ??
+                      registrationEventCardCopy[lang].showMore)}
+                </button>
+              </div>
+            )}
+          </div>
 
-                            </div>
-                        )}
-
-                    </div>
-
-                    <div
-                        className="
+          <div
+            className="
                             shrink-0
                             rounded-lg
                             border
@@ -223,19 +164,16 @@ export function RegistrationEventCard({
                             font-semibold
                             text-[#7c651f]
                         "
-                    >
-                        {registrations.length}{" "}
-                        {
-                            registrations.length === 1
-                                ? copy.registration
-                                : copy.registrations
-                        }
-                    </div>
+          >
+            {registrations.length}{" "}
+            {registrations.length === 1
+              ? copy.registration
+              : copy.registrations}
+          </div>
+        </div>
 
-                </div>
-
-                <div
-                    className="
+        <div
+          className="
                         mt-5
                         grid
                         gap-3
@@ -244,101 +182,89 @@ export function RegistrationEventCard({
                         pt-5
                         sm:grid-cols-2
                     "
-                >
-
-                    <div>
-                        <p
-                            className="
+        >
+          <div>
+            <p
+              className="
                                 text-xs
                                 font-semibold
                                 uppercase
                                 tracking-[0.12em]
                                 text-[#9a7b26]
                             "
-                        >
-                            {copy.eventDate}
-                        </p>
+            >
+              {copy.eventDate}
+            </p>
 
-                        <p
-                            className="
+            <p
+              className="
                                 mt-1
                                 text-sm
                                 font-medium
                                 text-[#27301d]
                             "
-                        >
-                            {
-                                formatEventDate(
-                                    event.startsAt,
-                                    lang
-                                )
-                            }
-                        </p>
-                    </div>
+            >
+              {formatEventDate(event.startsAt, lang)}
+            </p>
+          </div>
 
-                    <div>
-                        <p
-                            className="
+          <div>
+            <p
+              className="
                                 text-xs
                                 font-semibold
                                 uppercase
                                 tracking-[0.12em]
                                 text-[#9a7b26]
                             "
-                        >
-                            {copy.location}
-                        </p>
+            >
+              {copy.location}
+            </p>
 
-                        <p
-                            className="
+            <p
+              className="
                                 mt-1
                                 text-sm
                                 font-medium
                                 text-[#27301d]
                             "
-                        >
-                            {event.location}
-                        </p>
-                    </div>
+            >
+              {event.location}
+            </p>
+          </div>
+        </div>
 
-                </div>
-
-                <div
-                    className="
+        <div
+          className="
                         mt-5
                         border-t
                         border-[#27301d]/10
                         pt-5
                     "
-                >
-
-                    <p
-                        className="
+        >
+          <p
+            className="
                             text-xs
                             font-semibold
                             uppercase
                             tracking-[0.12em]
                             text-[#9a7b26]
                         "
-                    >
-                        {copy.attendees}
-                    </p>
+          >
+            {copy.attendees}
+          </p>
 
-                    <div
-                        className="
+          <div
+            className="
                             mt-3
                             divide-y
                             divide-[#27301d]/10
                         "
-                    >
-
-                        {registrations.map(
-                            registration => (
-                                <div
-                                    key={
-                                        registration.id
-                                    }
-                                    className="
+          >
+            {registrations.map((registration) => (
+              <div
+                key={registration.id}
+                className="
                                         flex
                                         flex-col
                                         gap-2
@@ -349,91 +275,65 @@ export function RegistrationEventCard({
                                         sm:items-center
                                         sm:justify-between
                                     "
-                                >
-
-                                    <div
-                                        className="
+              >
+                <div
+                  className="
                                             min-w-0
                                         "
-                                    >
-                                        <p
-                                            className="
+                >
+                  <p
+                    className="
                                                 truncate
                                                 text-sm
                                                 font-semibold
                                                 text-[#27301d]
                                             "
-                                        >
-                                            {
-                                                registration.firstName
-                                            }{" "}
-                                            {
-                                                registration.lastName
-                                            }
-                                        </p>
+                  >
+                    {registration.firstName} {registration.lastName}
+                  </p>
 
-                                        <p
-                                            className="
+                  <p
+                    className="
                                                 mt-0.5
                                                 truncate
                                                 text-xs
                                                 text-[#667056]
                                             "
-                                        >
-                                            {
-                                                registration.email
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <RegistrationStatus
-                                        status={
-                                            registration.status
-                                        }
-                                        registeredCopy={
-                                            copy.registered
-                                        }
-                                        cancelledCopy={
-                                            copy.cancelled
-                                        }
-                                    />
-
-                                </div>
-                            )
-                        )}
-
-                    </div>
-
+                  >
+                    {registration.email}
+                  </p>
                 </div>
 
-            </div>
-
-        </article>
-    );
+                <RegistrationStatus
+                  status={registration.status}
+                  registeredCopy={copy.registered}
+                  cancelledCopy={copy.cancelled}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
 }
 
 function RegistrationStatus({
-    status,
-    registeredCopy,
-    cancelledCopy
+  status,
+  registeredCopy,
+  cancelledCopy,
 }: {
-    status:
-        "REGISTERED" |
-        "CANCELLED";
+  status: "REGISTERED" | "CANCELLED";
 
-    registeredCopy:
-        string;
+  registeredCopy: string;
 
-    cancelledCopy:
-        string;
+  cancelledCopy: string;
 }) {
+  const registered = status === "REGISTERED";
 
-    const registered =
-        status === "REGISTERED";
-
-    return (
-        <span
-            className={`
+  return (
+    <span
+      className={`
                 inline-flex
                 w-fit
                 shrink-0
@@ -444,48 +344,23 @@ function RegistrationStatus({
                 font-semibold
 
                 ${
-                    registered
-                        ? "bg-[#e7ecdf] text-[#556247]"
-                        : "bg-[#f2e4e1] text-[#8b4a42]"
+                  registered
+                    ? "bg-[#e7ecdf] text-[#556247]"
+                    : "bg-[#f2e4e1] text-[#8b4a42]"
                 }
             `}
-        >
-            {
-                registered
-                    ? registeredCopy
-                    : cancelledCopy
-            }
-        </span>
-    );
+    >
+      {registered ? registeredCopy : cancelledCopy}
+    </span>
+  );
 }
 
-function formatEventDate(
-    value:
-        string,
-    lang:
-        "en" |
-        "mn"
-) {
-
-    return new Intl.DateTimeFormat(
-        lang === "mn"
-            ? "mn-MN"
-            : "en-CA",
-        {
-            year:
-                "numeric",
-            month:
-                "long",
-            day:
-                "numeric",
-            hour:
-                "numeric",
-            minute:
-                "2-digit"
-        }
-    ).format(
-        new Date(
-            value
-        )
-    );
+function formatEventDate(value: string, lang: "en" | "mn") {
+  return new Intl.DateTimeFormat(registrationEventCardCopy[lang].enCa, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
 }

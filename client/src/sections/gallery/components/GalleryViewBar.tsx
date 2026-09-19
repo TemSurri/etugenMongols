@@ -1,6 +1,6 @@
 import { memo, type ReactNode } from "react";
-import { GridIcon, TimelineIcon } from "./GalleryIcons";
 import type { GalleryCopy, ViewMode } from "../types";
+import { GridIcon, TimelineIcon } from "./GalleryIcons";
 
 type Props = {
   copy: GalleryCopy;
@@ -9,25 +9,54 @@ type Props = {
   showTimeline: () => void;
 };
 
-export const GalleryViewBar = memo(function GalleryViewBar({ copy, viewMode, showGrid, showTimeline }: Props) {
+export const GalleryViewBar = memo(function GalleryViewBar({
+  copy,
+  viewMode,
+  showGrid,
+  showTimeline,
+}: Props) {
   return (
     <div className="flex items-center justify-between gap-5 border-y border-[#fffaf0]/18 bg-[#fffaf0]/8 px-4 py-3.5 backdrop-blur-md sm:px-5 sm:py-4">
       <h2 className="text-2xl font-semibold tracking-tight text-[#fffaf0] md:text-3xl">
         {copy.pastEventsTitle}
       </h2>
-      <div className="inline-flex border border-[#fffaf0]/20 bg-black/10 p-1" role="group" aria-label={copy.view}>
-        <ViewButton active={viewMode === "grid"} onClick={showGrid} controls="gallery-results">
-          <GridIcon />{copy.grid}
+      <div
+        className="inline-flex border border-[#fffaf0]/20 bg-black/10 p-1"
+        role="group"
+        aria-label={copy.view}
+      >
+        <ViewButton
+          active={viewMode === "grid"}
+          onClick={showGrid}
+          controls="gallery-results"
+        >
+          <GridIcon />
+          {copy.grid}
         </ViewButton>
-        <ViewButton active={viewMode === "timeline"} onClick={showTimeline} controls="gallery-results">
-          <TimelineIcon />{copy.timeline}
+        <ViewButton
+          active={viewMode === "timeline"}
+          onClick={showTimeline}
+          controls="gallery-results"
+        >
+          <TimelineIcon />
+          {copy.timeline}
         </ViewButton>
       </div>
     </div>
   );
 });
 
-function ViewButton({ active, onClick, controls, children }: { active: boolean; onClick: () => void; controls: string; children: ReactNode }) {
+function ViewButton({
+  active,
+  onClick,
+  controls,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  controls: string;
+  children: ReactNode;
+}) {
   return (
     <button
       type="button"
@@ -36,7 +65,9 @@ function ViewButton({ active, onClick, controls, children }: { active: boolean; 
       aria-controls={controls}
       className={[
         "flex min-h-10 items-center justify-center gap-2 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.17em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fffaf0]/60 lg:px-5",
-        active ? "bg-[#fffaf0] text-[#27301d] shadow-sm" : "text-[#f3ead2]/75 hover:bg-[#fffaf0]/10 hover:text-[#fffaf0]",
+        active
+          ? "bg-[#fffaf0] text-[#27301d] shadow-sm"
+          : "text-[#f3ead2]/75 hover:bg-[#fffaf0]/10 hover:text-[#fffaf0]",
       ].join(" ")}
     >
       {children}
