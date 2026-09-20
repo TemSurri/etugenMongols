@@ -5,7 +5,6 @@ import {
   type ImpactItem,
   type Lang,
 } from "./content/OurImpactMainContent";
-
 import { cubicBezier, motion, type Variants } from "framer-motion";
 import { memo } from "react";
 import { Link } from "react-router-dom";
@@ -134,11 +133,10 @@ const FeaturedImpact = memo(function FeaturedImpact({
           <TextLink to={item.href}>{viewMore}</TextLink>
         </div>
 
-        <ImageBlock
-          images={aboutMedia.impact[item.imageKey]}
+        <ImageVideoBlock
+          image={aboutMedia.impact[item.imageKey][0]}
+          youtubeUrl={item.youtubeUrl}
           alt={item.title}
-          tall
-          layout="featured-left"
         />
       </motion.article>
     </section>
@@ -156,6 +154,10 @@ const PerformanceBand = memo(function PerformanceBand({
   label: string;
   viewMore: string;
 }) {
+  const videoId = item.youtubeUrl
+    ? getYouTubeVideoId(item.youtubeUrl)
+    : null;
+
   return (
     <section className="bg-[#f7f7f4] px-6 py-16 md:px-10 md:py-20">
       <motion.article
@@ -165,32 +167,23 @@ const PerformanceBand = memo(function PerformanceBand({
         viewport={{ once: true, amount: 0.18 }}
         className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
       >
-        {item.youtubeUrl && (
-          <a
-            href={item.youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Watch ${item.title} on YouTube`}
-            className="group relative block h-[24rem] overflow-hidden bg-[#27301d] lg:h-[34rem]"
+        {videoId && (
+          <motion.div
+            variants={imageMotion}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            className="h-[24rem] overflow-hidden bg-[#27301d] p-2 sm:h-[30rem] lg:h-[34rem]"
           >
-            <img
-              src={aboutMedia.impact[item.imageKey][0]}
-              alt={item.title}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title={`${item.title} video`}
+              className="h-full w-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
             />
-
-            <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
-
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 text-[#27301d] shadow-xl transition-transform duration-300 group-hover:scale-105">
-                <span className="ml-1 text-3xl" aria-hidden="true">
-                  ▶
-                </span>
-              </div>
-            </div>
-          </a>
+          </motion.div>
         )}
 
         <div className="max-w-xl lg:justify-self-end">
@@ -213,7 +206,58 @@ const PerformanceBand = memo(function PerformanceBand({
   );
 });
 
-const CultureSection = memo(function CultureSection({ copy }: { copy: Copy }) {
+const ImageVideoBlock = memo(function ImageVideoBlock({
+  image,
+  youtubeUrl,
+  alt,
+}: {
+  image: string;
+  youtubeUrl?: string;
+  alt: string;
+}) {
+  const videoId = youtubeUrl
+    ? getYouTubeVideoId(youtubeUrl)
+    : null;
+
+  return (
+    <motion.div
+      variants={imageMotion}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
+      className="grid h-[34rem] grid-rows-2 gap-2 overflow-hidden bg-[#27301d] p-2 md:h-[26rem] md:grid-cols-2 md:grid-rows-1 lg:h-[36rem]"
+    >
+      <div className="relative min-h-0 overflow-hidden">
+        <img
+          src={image}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
+
+      {videoId && (
+        <div className="min-h-0 overflow-hidden bg-black">
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title={`${alt} video`}
+            className="h-full w-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
+      )}
+    </motion.div>
+  );
+});
+
+const CultureSection = memo(function CultureSection({
+  copy,
+}: {
+  copy: Copy;
+}) {
   return (
     <section className="bg-white">
       <div className="px-6 py-16 text-center md:px-10 md:py-20">
@@ -301,7 +345,11 @@ const CultureActivityRow = memo(function CultureActivityRow({
           tall={large}
           reverse={reverse}
           layout={
-            reverse ? "featured-right" : large ? "featured-left" : "staggered"
+            reverse
+              ? "featured-right"
+              : large
+                ? "featured-left"
+                : "staggered"
           }
         />
       </motion.article>
@@ -350,7 +398,7 @@ const YouthBlock = memo(function YouthBlock({
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-          className="overflow-hidden bg-[#27301d] p-2 h-[26rem] lg:h-[36rem]"
+          className="h-[26rem] overflow-hidden bg-[#27301d] p-2 lg:h-[36rem]"
         >
           <img
             src={aboutMedia.impact[item.imageKey][0]}
@@ -459,19 +507,11 @@ function getCollageGrid(layout: CollageLayout) {
   }
 }
 
-function getCollageItemClass(layout: CollageLayout, index: number) {
+function getCollageItemClass(
+  layout: CollageLayout,
+  index: number,
+) {
   switch (layout) {
-    /*
-      Layout 1
-
-      ┌──────────────────────────┬─────────────┐
-      │                          │      2      │
-      │                          ├─────────────┤
-      │            1             │      3      │
-      │                          ├─────────────┤
-      │                          │      4      │
-      └──────────────────────────┴─────────────┘
-    */
     case "featured-left":
       if (index === 0) {
         return "col-span-2 row-span-3";
@@ -479,17 +519,6 @@ function getCollageItemClass(layout: CollageLayout, index: number) {
 
       return "col-span-1 row-span-1";
 
-    /*
-      Layout 2
-
-      ┌─────────────┬──────────────────────────┐
-      │      2      │                          │
-      ├─────────────┤                          │
-      │      3      │            1             │
-      ├─────────────┤                          │
-      │      4      │                          │
-      └─────────────┴──────────────────────────┘
-    */
     case "featured-right":
       if (index === 0) {
         return "col-span-2 row-span-3 col-start-2 row-start-1";
@@ -505,22 +534,6 @@ function getCollageItemClass(layout: CollageLayout, index: number) {
 
       return "col-span-1 row-span-1 col-start-1 row-start-3";
 
-    /*
-  Staggered layout — 3 images
-
-  ┌──────────────────────────┬─────────────┐
-  │                          │      2      │
-  │                          │             │
-  │            1             ├─────────────┤
-  │                          │      3      │
-  │                          │             │
-  └──────────────────────────┴─────────────┘
-
-  Grid:
-  - Photo 1: large highlighted image on the left
-  - Photo 2: square image on the top-right
-  - Photo 3: square image on the bottom-right
-*/
     case "staggered":
       if (index === 0) {
         return "col-span-2 row-span-2 col-start-1 row-start-1";
@@ -531,8 +544,41 @@ function getCollageItemClass(layout: CollageLayout, index: number) {
       }
 
       return "col-span-1 row-span-1 col-start-3 row-start-2";
+
     default:
       return "col-span-1 row-span-1";
+  }
+}
+
+function getYouTubeVideoId(url: string) {
+  try {
+    const parsed = new URL(url);
+
+    if (
+      parsed.hostname === "youtu.be" ||
+      parsed.hostname === "www.youtu.be"
+    ) {
+      return parsed.pathname.slice(1).split("/")[0] ?? "";
+    }
+
+    if (
+      parsed.hostname === "youtube.com" ||
+      parsed.hostname === "www.youtube.com"
+    ) {
+      if (parsed.pathname.startsWith("/embed/")) {
+        return parsed.pathname.split("/embed/")[1]?.split("/")[0] ?? "";
+      }
+
+      if (parsed.pathname.startsWith("/shorts/")) {
+        return parsed.pathname.split("/shorts/")[1]?.split("/")[0] ?? "";
+      }
+
+      return parsed.searchParams.get("v") ?? "";
+    }
+
+    return "";
+  } catch {
+    return "";
   }
 }
 
@@ -552,13 +598,20 @@ function Quote({ children }: { children: string }) {
   );
 }
 
-function TextLink({ to, children }: { to: string; children: string }) {
+function TextLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: string;
+}) {
   return (
     <Link
       to={to}
       className="mt-7 inline-flex bg-[#27301d] px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
     >
       {children}
+
       <span className="ml-3" aria-hidden="true">
         →
       </span>

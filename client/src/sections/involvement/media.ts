@@ -1,10 +1,10 @@
 export const involvementMedia = {
   volunteer: {
-    topLeft: "/involv/volunteer/1.webp",
-    bottomRight: "/involv/volunteer/2.webp",
+    topLeft: "/images/site/involv/volunteer/1.png",
+    bottomRight: "/images/site/involv/volunteer/2.jpg",
   },
   donate: {
-    topRight: "/involv/donate/1.webp",
-    bottomLeft: "/involv/donate/2.webp",
+    topRight: "/images/site/involv/donate/1.webp",
+    bottomLeft: "/images/site/involv/donate/2.png",
   },
 } as const;

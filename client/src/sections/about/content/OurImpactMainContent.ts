@@ -97,6 +97,7 @@ export const COPY = {
         body: "A shared celebration connecting Calgary’s Stampede Breakfast spirit with Mongolian Naadam.",
         imageKey: "stampedeNaadam",
         href: "/events",
+        youtubeUrl: "https://www.youtube.com/watch?v=a-yKYFF08eo",
       },
       {
         id: "community-performance",
@@ -172,6 +173,7 @@ export const COPY = {
         body: "Calgary Stampede Breakfast-ийн уур амьсгалыг Монгол Наадамтай холбосон хамтын баяр.",
         imageKey: "stampedeNaadam",
         href: "/events",
+        youtubeUrl: "https://www.youtube.com/watch?v=a-yKYFF08eo",
       },
       {
         id: "community-performance",

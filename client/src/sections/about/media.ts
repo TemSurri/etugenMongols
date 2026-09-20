@@ -39,17 +39,12 @@ export const aboutMedia = {
       "/images/site/impact/dance/3.webp",
     ],
     stampedeNaadam: [
-      "/images/site/impact/stampede-naadam.webp",
-      "/images/site/impact/stampede-naadam-2.webp",
-      "/images/site/impact/stampede-naadam-3.webp",
-      "/images/site/impact/stampede-naadam-4.webp",
+      "/images/site/impact/stampede/1.png",
+      
     ],
     performanceCover: ["/images/site/impact/perf.JPG"],
     youthCulture: [
       "/images/site/impact/youth/1.webp",
-      "/images/site/impact/youth/2.webp",
-      "/images/site/impact/youth/3.webp",
-      "/images/site/impact/youth/4.webp",
     ],
   },
   teamPlaceholder: siteMedia.landing,

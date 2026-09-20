@@ -4,57 +4,66 @@ GalleryEvent
 import { imageRange,img,text } from "../model/galleryMedia";
 
 
-
-
-
-
-
 export const galleryEvents: GalleryEvent[] = [
+ 
   {
-    id: "naadam2026",
-    status: "upcoming",
+    id: "naadam-2026",
+    status: "past",
 
-    title: text("Naadam 2026", "Наадам 2026"),
+    title: text("Winter Party 2026", "Өвлийн баяр 2026"),
 
     description: text(
-      "An upcoming Mongolian cultural celebration featuring performances, food, community gathering, and traditional activities.",
-      "Уламжлалт тоглолт, хоол, олон нийтийн уулзалт, соёлын үйл ажиллагаа бүхий удахгүй болох Монгол соёлын баяр."
+      "A winter community celebration with music, food, performances, and shared moments.",
+      "Дуу хөгжим, хоол, тоглолт, хамтын дурсамжтай өвлийн баяр."
     ),
 
-    date: "September 20, 2026",
+    date: "January 2026",
     location: "Calgary, Alberta",
 
     coverImage: img(
-      "/upcoming_event_assets/naadam2026-cover.png",
-      "/upcoming_event_assets/naadam2026-cover.png",
-      text("Naadam 2026 event cover", "Наадам 2026 арга хэмжээний зураг")
+      "/gallery/winter-party-2026/cover.webp",
+      "/gallery/winter-party-2026/cover-low.webp",
+      text("Winter Party 2026 cover image", "Өвлийн баяр 2026 нүүр зураг")
     ),
 
-    upcoming: {
-      time: "6:30 PM - 9:30 PM",
+    gallery: {
+      sections: {
+        general: {
+          title: text("Community Moments", "Хамтын мөчүүд"),
+          description: text(
+            "Families, food, conversations, and shared winter celebration moments.",
+            "Гэр бүл, хоол, яриа хөөрөө, өвлийн баярын хамтын мөчүүд."
+          ),
+          images: imageRange(
+            "winter-party-2026/general",
+            12,
+            text("Winter Party 2026 community photo", "Өвлийн баяр 2026 хамт олны зураг")
+          ),
+        },
 
-      actions: [
-        {
-          type: "payment",
-          enabled: true,
-          label: text("Buy Ticket", "Тасалбар авах"),
-          price: 20,
+        performances: {
+          title: text("Performances", "Тоглолтууд"),
+          description: text(
+            "Music and cultural performances from the winter celebration.",
+            "Өвлийн баярын дуу хөгжим, соёлын тоглолтууд."
+          ),
+          items: [
+            {
+              id: "dance-performance",
+              title: text("Dance Performance", "Бүжгийн тоглолт"),
+              description: text(
+                "A cultural dance performance from the event program.",
+                "Арга хэмжээний хөтөлбөрийн соёлын бүжгийн тоглолт."
+              ),
+              images: imageRange(
+                "winter-party-2026/performances/dance-performance",
+                4,
+                text("Winter Party 2026 dance performance", "Өвлийн баяр 2026 бүжгийн тоглолт")
+              ),
+              videos: [],
+            },
+          ],
         },
-        {
-          type: "registration",
-          enabled: true,
-          label: text("Register", "Бүртгүүлэх"),
-        },
-        {
-          type: "donation",
-          enabled: true,
-          label: text("Donate", "Хандив өгөх"),
-        },
-      ],
-
-      contact: {
-        email: "calgarymongolians@gmail.com",
-        phone: ["587-435-4494"],
       },
     },
   },
