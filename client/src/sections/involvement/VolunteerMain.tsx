@@ -6,6 +6,7 @@ import {
 
 import { cubicBezier, motion, type Variants } from "framer-motion";
 import { Link } from "react-router-dom";
+import StableImageReveal from "../../components/media/StableImageReveal";
 import { involvementMedia } from "./media";
 
 /* -------------------------------------------------------------------------- */
@@ -50,49 +51,17 @@ const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
 const pageMotion: Variants = {
   hidden: {},
-
-  show: {
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
+  show: {},
 };
 
 const sectionMotion: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 16,
-  },
-
-  show: {
-    opacity: 1,
-    y: 0,
-
-    transition: {
-      duration: 0.55,
-      ease: easeOut,
-    },
-  },
+  hidden: {},
+  show: {},
 };
 
-/*
- * Fade images in without scaling the entire grid section.
- * Scaling full-width sections can temporarily extend beyond
- * the viewport and create horizontal scrollbar/layout shifts.
- */
 const imageMotion: Variants = {
-  hidden: {
-    opacity: 0,
-  },
-
-  show: {
-    opacity: 1,
-
-    transition: {
-      duration: 0.7,
-      ease: easeOut,
-    },
-  },
+  hidden: {},
+  show: {},
 };
 
 const listingMotion: Variants = {
@@ -160,7 +129,7 @@ function Volunteer({ lang }: VolunteerProps) {
             lg:min-h-[95vh]
           "
         >
-          <img
+          <StableImageReveal
             src={involvementMedia.volunteer.topLeft}
             alt=""
             loading="eager"
@@ -504,7 +473,7 @@ function Volunteer({ lang }: VolunteerProps) {
             lg:min-h-[75vh]
           "
         >
-          <img
+          <StableImageReveal
             src={involvementMedia.volunteer.bottomRight}
             alt=""
             loading="lazy"

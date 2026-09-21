@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { MotionConfig } from "framer-motion";
 
 import { LanguageProvider } from "../context/LanguageContext";
 import { AuthProvider } from "../sections/auth/context/AuthProvider";
@@ -12,7 +13,9 @@ export default function AppProviders({ children }: AppProvidersProps) {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <EventsProvider>{children}</EventsProvider>
+        <EventsProvider>
+          <MotionConfig reducedMotion="user">{children}</MotionConfig>
+        </EventsProvider>
       </AuthProvider>
     </LanguageProvider>
   );

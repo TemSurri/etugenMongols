@@ -38,12 +38,9 @@ function EventInformation({ copy }: { copy: EventsCopy }) {
       className="order-3 flex bg-[#303824] px-6 py-16 text-[#fffaf0] sm:px-8 sm:py-20 md:px-10 lg:order-4 lg:px-14 lg:py-20 xl:px-20"
     >
       <div className="mx-auto w-full max-w-[660px]">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#d6ba72]">
-          {copy.yearlyEyebrow}
-        </p>
         <h2
           id="yearly-events-title"
-          className="mt-3 text-2xl font-normal leading-tight tracking-tight md:text-3xl"
+          className="text-2xl font-normal leading-tight tracking-tight md:text-3xl"
         >
           {copy.yearlyTitle}
         </h2>

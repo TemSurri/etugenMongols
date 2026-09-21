@@ -4,6 +4,8 @@ export type { Lang } from "../../../context/language";
 
 export type ProgramsCopy = {
   title: string;
+  statusTitle: string;
+  statusBody: string;
   introTitle: string;
   introBody: string;
 
@@ -19,6 +21,11 @@ export type ProgramsCopy = {
 export const COPY = {
   en: {
     title: "Programs",
+
+    statusTitle: "Programs are in development",
+
+    statusBody:
+      "These programs are not currently open for registration. Details and launch dates will be shared once planning is complete.",
 
     introTitle: "Learning, practicing, and passing on our culture",
 
@@ -56,6 +63,11 @@ export const COPY = {
 
   mn: {
     title: "Хөтөлбөрүүд",
+
+    statusTitle: "Хөтөлбөрүүд хөгжүүлэлтийн шатандаа байна",
+
+    statusBody:
+      "Эдгээр хөтөлбөрийн бүртгэл одоогоор нээгдээгүй байна. Төлөвлөлт дуусмагц дэлгэрэнгүй мэдээлэл болон эхлэх хугацааг нийтэлнэ.",
 
     introTitle: "Соёлоо сурч, давтаж, дараагийн үедээ өвлүүлэх нь",
 

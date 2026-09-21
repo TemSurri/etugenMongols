@@ -139,11 +139,7 @@ function GalleryContent({
             location={event.location}
           />
 
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
-            {copy.overview}
-          </p>
-
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-[#4e593c]/85 md:text-[15px] md:leading-8">
+          <p className="max-w-3xl text-sm leading-7 text-[#4e593c]/85 md:text-[15px] md:leading-8">
             {event.description[lang]}
           </p>
         </section>
@@ -205,11 +201,7 @@ function GalleryContent({
           <section className="min-w-0 space-y-8">
             {activeSectionKey === "performances" && activePerformance && (
               <div className="border border-[#d8caa5]/70 bg-[#fffaf0]/92 p-5 shadow-[0_14px_38px_rgba(88,72,38,0.08)]">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
-                  {copy.performances}
-                </p>
-
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+                <h2 className="text-2xl font-semibold tracking-tight">
                   {activePerformance.title[lang]}
                 </h2>
 

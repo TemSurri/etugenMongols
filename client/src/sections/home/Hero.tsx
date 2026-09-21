@@ -62,7 +62,7 @@ function Hero({ lang }: HeroProps) {
           variants={fadeIn}
           initial="hidden"
           animate="show"
-          className="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-center px-6 py-6 text-center md:px-10"
+          className="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-start px-6 pb-8 pt-5 text-center md:justify-center md:px-10 md:py-6"
         >
           <div className="flex justify-center gap-3">
             <img
@@ -83,10 +83,6 @@ function Hero({ lang }: HeroProps) {
               className="h-7 w-auto md:h-9"
             />
           </div>
-
-          <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.32em] text-[#9a7b26]">
-            {copy.brand}
-          </p>
 
           <h1 className="mx-auto mt-4 max-w-3xl text-lg font-semibold leading-tight text-[#27301d] md:text-2xl">
             {copy.intro}
@@ -212,7 +208,7 @@ function HeroSlowScroll({
   };
 
   return (
-    <div className="relative h-[43vh] min-h-[21rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
+    <div className="relative h-[36vh] min-h-[17.5rem] overflow-hidden bg-[#27301d] md:h-[49vh] md:min-h-[25rem]">
       <style>
         {`
           @keyframes etugenHeroScroll {
@@ -269,7 +265,9 @@ function HeroSlowScroll({
               alt=""
               width={1280}
               height={850}
-              loading={index === 0 || index === 1 ? "eager" : "lazy"}
+              loading={
+                index < homeMedia.slideshow.length ? "eager" : "lazy"
+              }
               fetchPriority={index === 0 || index === 1 ? "high" : "auto"}
               decoding="async"
               draggable={false}

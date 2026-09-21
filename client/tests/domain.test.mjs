@@ -8,6 +8,7 @@ import { buildRegistrationRequest } from "../src/sections/payments/event-registr
 import { buildEventChanges } from "../src/sections/admin/model/buildEventChanges.ts";
 import { isValidPassword } from "../src/sections/account/utils/isValidPassword.ts";
 import { isUserHistoryPage } from "../src/sections/account/contracts/accountGuards.ts";
+import { getRecentGalleries } from "../src/sections/gallery/model/recentGalleries.ts";
 
 export const event = {
   id: "event-1", slug: "naadam", titleEn: "Naadam", titleMn: "Наадам",
@@ -83,4 +84,46 @@ test("account history guards preserve empty Spring page responses", () => {
   assert.equal(isUserHistoryPage(page),true);
   assert.equal(isUserHistoryPage({...page,content:[{}]}),false);
   assert.equal(isUserHistoryPage({...page,number:"0"}),false);
+});
+
+test("recent gallery selection uses catalog order and caps at four", () => {
+  const gallery = {
+    sections: {
+      general: {
+        title: { en: "", mn: "" },
+        description: { en: "", mn: "" },
+        images: [],
+      },
+    },
+  };
+  const makeGallery = (id, status = "past", hasGallery = true) => ({
+    id,
+    status,
+    title: { en: id, mn: id },
+    description: { en: "", mn: "" },
+    date: id,
+    coverImage: {
+      highRes: `${id}.webp`,
+      lowRes: `${id}-low.webp`,
+      alt: { en: id, mn: id },
+    },
+    ...(hasGallery ? { gallery } : {}),
+  });
+  const source = [
+    makeGallery("newest"),
+    makeGallery("upcoming", "upcoming"),
+    makeGallery("no-album", "past", false),
+    makeGallery("second"),
+    makeGallery("third"),
+    makeGallery("fourth"),
+    makeGallery("fifth"),
+  ];
+  assert.deepEqual(
+    getRecentGalleries(source).map(({ id }) => id),
+    ["newest", "second", "third", "fourth"],
+  );
+  assert.deepEqual(
+    getRecentGalleries(source.slice(0, 4)).map(({ id }) => id),
+    ["newest", "second"],
+  );
 });

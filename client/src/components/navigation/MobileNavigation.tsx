@@ -1,7 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
+import type { Lang } from "../../context/language";
 import type { useAuth } from "../../sections/auth/hooks/useAuth";
 import {
-  NAV_ITEMS,
+  getNavigationItems,
   isParentActive,
   isRouteActive,
   type UserMenuItem,
@@ -10,6 +11,7 @@ type Props = Pick<
   ReturnType<typeof useAuth>,
   "user" | "isLoggedIn" | "loading" | "logout"
 > & {
+  lang: Lang;
   userMenuItems: UserMenuItem[];
   currentPath: string;
   openMobileGroup: string | null;
@@ -18,6 +20,7 @@ type Props = Pick<
   handleNavClick: (to: string) => void;
 };
 export default function MobileNavigation({
+  lang,
   user,
   isLoggedIn,
   loading,
@@ -38,7 +41,7 @@ export default function MobileNavigation({
         className="mx-auto flex max-w-7xl flex-col gap-1"
         aria-label="Mobile navigation"
       >
-        {NAV_ITEMS.map((item) => {
+        {getNavigationItems(lang).map((item) => {
           const hasDropdown = Boolean(item.children?.length);
 
           const isOpen = openMobileGroup === item.label;
@@ -132,7 +135,7 @@ export default function MobileNavigation({
               <div>
                 <div className="px-1 pb-3">
                   <p className="text-sm font-semibold text-[#27301d]">
-                    Hi, {user.firstName}
+                    {lang === "mn" ? "Сайн байна уу" : "Hi"}, {user.firstName}
                   </p>
                 </div>
 
@@ -157,7 +160,7 @@ export default function MobileNavigation({
                     }}
                     className="flex min-h-12 w-full items-center justify-center bg-[#27301d] px-5 text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#9a7b26]"
                   >
-                    Logout
+                    {lang === "mn" ? "Гарах" : "Logout"}
                   </button>
                 </div>
               </div>
@@ -168,7 +171,7 @@ export default function MobileNavigation({
                   onClick={closeMenu}
                   className="flex min-h-12 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] px-4 text-[11px] font-bold uppercase tracking-[0.16em] text-[#27301d] no-underline transition-colors hover:bg-white"
                 >
-                  Login
+                  {lang === "mn" ? "Нэвтрэх" : "Login"}
                 </Link>
 
                 <Link
@@ -176,7 +179,7 @@ export default function MobileNavigation({
                   onClick={closeMenu}
                   className="flex min-h-12 items-center justify-center bg-[#27301d] px-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
                 >
-                  Sign Up
+                  {lang === "mn" ? "Бүртгүүлэх" : "Sign Up"}
                 </Link>
               </div>
             )}

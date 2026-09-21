@@ -1,9 +1,10 @@
 import type { Lang } from "../../context/language";
 import { COPY } from "./content/DonateContent";
 
-import { cubicBezier, motion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import StableImageReveal from "../../components/media/StableImageReveal";
 import { involvementMedia } from "./media";
 
 type DonateProps = {
@@ -32,56 +33,19 @@ const COLORS = {
 /*                                Animation                                   */
 /* -------------------------------------------------------------------------- */
 
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
-
 const pageMotion: Variants = {
   hidden: {},
-
-  show: {
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
+  show: {},
 };
 
 const sectionMotion: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 16,
-  },
-
-  show: {
-    opacity: 1,
-    y: 0,
-
-    transition: {
-      duration: 0.55,
-      ease: easeOut,
-    },
-  },
+  hidden: {},
+  show: {},
 };
 
-/*
- * Images only fade in.
- *
- * We intentionally don't scale the section anymore.
- * Scaling a full-width grid section can temporarily make
- * its painted area wider than the viewport and cause
- * scrollbar/layout-shift artifacts.
- */
 const imageMotion: Variants = {
-  hidden: {
-    opacity: 0,
-  },
-
-  show: {
-    opacity: 1,
-
-    transition: {
-      duration: 0.7,
-      ease: easeOut,
-    },
-  },
+  hidden: {},
+  show: {},
 };
 
 /* -------------------------------------------------------------------------- */
@@ -203,7 +167,7 @@ function Donate({ lang }: DonateProps) {
             lg:min-h-[65vh]
           "
         >
-          <img
+          <StableImageReveal
             src={involvementMedia.donate.topRight}
             alt=""
             loading="eager"
@@ -236,7 +200,7 @@ function Donate({ lang }: DonateProps) {
             lg:min-h-[70vh]
           "
         >
-          <img
+          <StableImageReveal
             src={involvementMedia.donate.bottomLeft}
             alt=""
             loading="lazy"

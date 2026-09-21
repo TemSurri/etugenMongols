@@ -25,13 +25,9 @@ function UpcomingEventsSection({ events, loading, error, copy }: Props) {
       className="order-1 flex min-h-[560px] bg-[#fffaf0] px-6 pb-14 pt-38 text-[#303824] sm:px-8 sm:pb-16 sm:pt-36 md:px-10 lg:h-full lg:min-h-0 lg:items-center lg:px-14 lg:pb-12 lg:pt-24 xl:px-20"
     >
       <div className="mx-auto w-full max-w-[680px]">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#8a7a45]">
-          {copy.eyebrow}
-        </p>
-
         <h1
           id="upcoming-events-title"
-          className="mt-3 text-3xl font-normal leading-[1.08] tracking-tight sm:text-4xl md:text-5xl"
+          className="text-3xl font-normal leading-[1.08] tracking-tight sm:text-4xl md:text-5xl"
         >
           {copy.title}
         </h1>

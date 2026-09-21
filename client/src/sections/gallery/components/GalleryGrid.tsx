@@ -57,7 +57,7 @@ const GalleryCard = memo(function GalleryCard({
     >
       <article>
         <div
-          className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_16px_46px_rgba(0,0,0,0.24)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_60px_rgba(0,0,0,0.3)]`}
+          className={`${frame} relative overflow-hidden bg-[#27301d]/25 shadow-[0_16px_46px_rgba(0,0,0,0.24)] transition duration-300 motion-safe:group-hover:-translate-y-1 group-hover:shadow-[0_22px_60px_rgba(0,0,0,0.3)]`}
         >
           <img
             src={item.imageSrc}

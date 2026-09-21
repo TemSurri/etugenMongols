@@ -54,7 +54,7 @@ export default function GalleryGrid({
               type="button"
               onClick={() => onOpenImage(realIndex)}
               aria-label={`Open image ${realIndex + 1} of ${images.length}`}
-              className={`group relative overflow-hidden border border-[#d8caa5]/70 bg-[#fffaf0] p-1 shadow-[0_12px_30px_rgba(88,72,38,0.12)] transition-transform duration-200 hover:-translate-y-0.5 ${pattern}`}
+              className={`group relative overflow-hidden border border-[#d8caa5]/70 bg-[#fffaf0] p-1 shadow-[0_12px_30px_rgba(88,72,38,0.12)] transition-transform duration-200 motion-safe:hover:-translate-y-0.5 ${pattern}`}
             >
               <img
                 src={img.lowRes || img.highRes}
@@ -62,7 +62,7 @@ export default function GalleryGrid({
                 loading={realIndex < 6 ? "eager" : "lazy"}
                 decoding="async"
                 draggable={false}
-                className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.025]"
+                className="h-full w-full object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.025]"
               />
             </button>
           );

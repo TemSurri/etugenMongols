@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { galleryEvents } from "../../gallery/data/galleryCatalog";
+import { getRecentGalleries } from "../../gallery/model/recentGalleries";
 
 import { EVENT_IMAGES } from "../constants";
 
@@ -16,8 +17,7 @@ export function useEvents(lang: Lang) {
   const copy = EVENTS_COPY[safeLang];
 
   const slideshowImages = useMemo<SlideshowImage[]>(() => {
-    const images = galleryEvents
-      .filter((event) => event.status === "past")
+    const images = getRecentGalleries(galleryEvents, 4)
       .map((event) => ({
         id: event.id,
 

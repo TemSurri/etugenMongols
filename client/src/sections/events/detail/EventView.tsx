@@ -147,11 +147,9 @@ function EventView({ event, lang }: EventViewProps) {
           draggable={false}
           initial={{
             opacity: 0,
-            scale: 1.025,
           }}
           animate={{
             opacity: 1,
-            scale: 1,
           }}
           transition={{
             duration: 0.9,

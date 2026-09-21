@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
+import type { Lang } from "../../context/language";
 import type { useAuth } from "../../sections/auth/hooks/useAuth";
 import type { UserMenuItem } from "./navigationConfig";
 type Props = Pick<
   ReturnType<typeof useAuth>,
   "user" | "isLoggedIn" | "loading" | "logout"
-> & { userMenuItems: UserMenuItem[] };
+> & { lang: Lang; userMenuItems: UserMenuItem[] };
 export default function DesktopAccountControls({
+  lang,
   user,
   isLoggedIn,
   loading,
@@ -30,8 +32,8 @@ export default function DesktopAccountControls({
                 type="button"
                 className="
                       inline-flex
-                      h-11
-                      min-w-[10.5rem]
+                      h-10
+                      min-w-[9rem]
                       items-center
                       justify-between
                       gap-3
@@ -41,7 +43,7 @@ export default function DesktopAccountControls({
 
                       bg-[#fffaf0]
 
-                      px-4
+                      px-3
 
                       text-[11px]
                       font-bold
@@ -62,7 +64,7 @@ export default function DesktopAccountControls({
                         truncate
                       "
                 >
-                  Hi, {user.firstName}
+                  {lang === "mn" ? "Сайн уу" : "Hi"}, {user.firstName}
                 </span>
 
                 <svg
@@ -178,7 +180,7 @@ export default function DesktopAccountControls({
                         hover:text-[#9a7b26]
                       "
                 >
-                  Logout
+                  {lang === "mn" ? "Гарах" : "Logout"}
                 </button>
               </div>
             </div>
@@ -186,16 +188,16 @@ export default function DesktopAccountControls({
             <div className="hidden items-center gap-2 xl:flex">
               <Link
                 to="/auth/login"
-                className="inline-flex h-11 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] px-4 text-[11px] font-bold uppercase tracking-[0.12em] text-[#27301d] no-underline transition-colors hover:border-[#d8caa5] hover:bg-white"
+                className="inline-flex h-10 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-[#27301d] no-underline transition-colors hover:border-[#d8caa5] hover:bg-white sm:h-11 sm:px-4 sm:text-[11px]"
               >
-                Login
+                {lang === "mn" ? "Нэвтрэх" : "Login"}
               </Link>
 
               <Link
                 to="/auth/signup"
-                className="inline-flex h-11 items-center justify-center bg-[#27301d] px-4 text-[11px] font-bold uppercase tracking-[0.12em] text-white no-underline transition-colors hover:bg-[#9a7b26]"
+                className="inline-flex h-10 items-center justify-center bg-[#27301d] px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white no-underline transition-colors hover:bg-[#9a7b26] sm:h-11 sm:px-4 sm:text-[11px]"
               >
-                Sign Up
+                {lang === "mn" ? "Бүртгүүлэх" : "Sign Up"}
               </Link>
             </div>
           )}

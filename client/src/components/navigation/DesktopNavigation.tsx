@@ -1,17 +1,27 @@
 import { NavLink } from "react-router-dom";
-import { NAV_ITEMS, isParentActive, isRouteActive } from "./navigationConfig";
+import type { Lang } from "../../context/language";
+import {
+  getNavigationItems,
+  isParentActive,
+  isRouteActive,
+} from "./navigationConfig";
 
-type Props = { currentPath: string; handleNavClick: (to: string) => void };
+type Props = {
+  lang: Lang;
+  currentPath: string;
+  handleNavClick: (to: string) => void;
+};
 export default function DesktopNavigation({
+  lang,
   currentPath,
   handleNavClick,
 }: Props) {
   return (
     <nav
-      className="hidden min-w-0 flex-1 items-center justify-center gap-5 xl:flex 2xl:gap-8"
+      className="hidden min-w-0 flex-1 items-center justify-center gap-5 xl:flex 2xl:gap-7"
       aria-label="Primary navigation"
     >
-      {NAV_ITEMS.map((item) => {
+      {getNavigationItems(lang).map((item) => {
         const hasDropdown = Boolean(item.children?.length);
 
         const parentActive = isParentActive(currentPath, item);
@@ -25,7 +35,7 @@ export default function DesktopNavigation({
               to={item.to}
               onClick={() => handleNavClick(item.to)}
               className={[
-                "whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.12em] no-underline transition-colors focus-visible:rounded-sm 2xl:text-[13px] 2xl:tracking-[0.16em]",
+                "whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.1em] no-underline transition-colors focus-visible:rounded-sm 2xl:text-[12px] 2xl:tracking-[0.12em]",
 
                 itemActive
                   ? "text-[#9a7b26]"
@@ -42,7 +52,7 @@ export default function DesktopNavigation({
             <button
               type="button"
               className={[
-                "inline-flex cursor-default items-center gap-1.5 whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.12em] transition-colors focus-visible:rounded-sm 2xl:text-[13px] 2xl:tracking-[0.16em]",
+                "inline-flex cursor-default items-center gap-1 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.1em] transition-colors focus-visible:rounded-sm 2xl:text-[12px] 2xl:tracking-[0.12em]",
 
                 parentActive
                   ? "text-[#9a7b26]"
@@ -66,7 +76,7 @@ export default function DesktopNavigation({
               </svg>
             </button>
 
-            <div className="invisible absolute left-1/2 top-full z-50 mt-5 w-64 -translate-x-1/2 border border-[#efe7d4] bg-white p-2 opacity-0 shadow-[0_20px_48px_rgba(39,48,29,0.12)] transition-all duration-150 group-hover:visible group-hover:mt-4 group-hover:opacity-100 group-focus-within:visible group-focus-within:mt-4 group-focus-within:opacity-100">
+            <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-60 -translate-x-1/2 border border-[#efe7d4] bg-white p-2 opacity-0 shadow-[0_20px_48px_rgba(39,48,29,0.12)] transition-all duration-150 group-hover:visible group-hover:mt-3 group-hover:opacity-100 group-focus-within:visible group-focus-within:mt-3 group-focus-within:opacity-100">
               <div className="absolute -top-4 left-0 h-4 w-full" />
 
               {item.children?.map((child) => {

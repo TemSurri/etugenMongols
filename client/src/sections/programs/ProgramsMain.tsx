@@ -1,7 +1,7 @@
 import { COPY, type Lang } from "./content/ProgramsMainContent";
 
-import { cubicBezier, motion, type Variants } from "framer-motion";
 import { memo } from "react";
+import StableImageReveal from "../../components/media/StableImageReveal";
 import { programsMedia } from "./media";
 
 type ProgramsMainProps = {
@@ -11,44 +11,6 @@ type ProgramsMainProps = {
 /* =========================================================
    COPY
 ========================================================= */
-
-/* =========================================================
-   MOTION
-========================================================= */
-
-const easeOut = cubicBezier(0.22, 1, 0.36, 1);
-
-const reveal: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 14,
-  },
-
-  show: {
-    opacity: 1,
-    y: 0,
-
-    transition: {
-      duration: 0.5,
-      ease: easeOut,
-    },
-  },
-};
-
-const imageReveal: Variants = {
-  hidden: {
-    opacity: 0,
-  },
-
-  show: {
-    opacity: 1,
-
-    transition: {
-      duration: 0.7,
-      ease: easeOut,
-    },
-  },
-};
 
 /* =========================================================
    MAIN
@@ -86,10 +48,7 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
             IMAGE
         ================================================= */}
 
-        <motion.div
-          variants={imageReveal}
-          initial="hidden"
-          animate="show"
+        <div
           className="
             relative
             min-h-[380px]
@@ -101,7 +60,7 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
             lg:min-h-0
           "
         >
-          <img
+          <StableImageReveal
             src={programsMedia.feature}
             alt=""
             aria-hidden="true"
@@ -120,17 +79,14 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
             "
           />
 
-          <div className="absolute inset-0 bg-black/8" />
-        </motion.div>
+          <div className="absolute inset-0 z-20 bg-black/8" />
+        </div>
 
         {/* =================================================
             INTRO
         ================================================= */}
 
-        <motion.div
-          variants={reveal}
-          initial="hidden"
-          animate="show"
+        <div
           className="
             flex
             bg-[#fffaf0]
@@ -164,6 +120,18 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
             >
               {copy.title}
             </h1>
+
+            <div
+              role="status"
+              className="mt-7 border-l-2 border-[#9a7b26] bg-white/55 px-5 py-4"
+            >
+              <p className="text-base font-semibold text-[#303824]">
+                {copy.statusTitle}
+              </p>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-[#59604d]">
+                {copy.statusBody}
+              </p>
+            </div>
 
             <div
               className="
@@ -202,7 +170,7 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* =====================================================
@@ -227,14 +195,7 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
           xl:px-20
         "
       >
-        <motion.div
-          variants={reveal}
-          initial="hidden"
-          whileInView="show"
-          viewport={{
-            once: true,
-            amount: 0.12,
-          }}
+        <div
           className="
             mx-auto
             max-w-6xl
@@ -338,21 +299,14 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
               </article>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* =====================================================
           IMAGE BELT
       ===================================================== */}
 
-      <motion.section
-        variants={imageReveal}
-        initial="hidden"
-        whileInView="show"
-        viewport={{
-          once: true,
-          amount: 0.1,
-        }}
+      <section
         className="
           grid
           grid-cols-2
@@ -371,7 +325,7 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
                 md:aspect-[5/4]
               "
           >
-            <img
+            <StableImageReveal
               src={src}
               alt=""
               aria-hidden="true"
@@ -385,18 +339,13 @@ function ProgramsMain({ lang }: ProgramsMainProps) {
                   object-cover
                   object-center
 
-                  transition-transform
-                  duration-700
-                  ease-out
-
-                  hover:scale-[1.025]
                 "
             />
 
-            <div className="absolute inset-0 bg-black/[0.04]" />
+            <div className="absolute inset-0 z-20 bg-black/[0.04]" />
           </div>
         ))}
-      </motion.section>
+      </section>
     </main>
   );
 }

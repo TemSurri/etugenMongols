@@ -3,6 +3,7 @@ import { COPY, type Lang } from "./content/OurStoryMainContent";
 import { cubicBezier, motion, type Variants } from "framer-motion";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import { mediaReveal } from "./animations";
 import { aboutMedia } from "./media";
 
 type OurStoryMainProps = {
@@ -35,15 +36,6 @@ const rowMotion: Variants = {
   },
 };
 
-const imageMotion: Variants = {
-  hidden: { opacity: 0, scale: 1.025 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 1, ease: easeOut },
-  },
-};
-
 function OurStoryMain({ lang }: OurStoryMainProps) {
   const copy = COPY[lang];
   const mainStoryRows = copy.story.slice(0, 4);
@@ -61,11 +53,7 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
           animate="show"
           className="mx-auto max-w-4xl"
         >
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            {copy.brand}
-          </p>
-
-          <h1 className="mt-4 text-4xl font-semibold leading-tight text-[#27301d] md:text-6xl">
+          <h1 className="text-4xl font-semibold leading-tight text-[#27301d] md:text-6xl">
             {copy.storyTitle}
           </h1>
         </motion.div>
@@ -101,10 +89,10 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
           </div>
 
           <motion.div
-            variants={imageMotion}
+            variants={mediaReveal}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.25 }}
+            viewport={{ once: true, amount: 0.2 }}
             className="relative h-[22rem] overflow-hidden sm:h-[28rem] lg:h-full"
           >
             <img
@@ -129,11 +117,7 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
           viewport={{ once: true, amount: 0.35 }}
           className="mx-auto max-w-4xl"
         >
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#9a7b26]">
-            {copy.brand}
-          </p>
-
-          <h2 className="mt-5 text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
+          <h2 className="text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
             {copy.closing}
           </h2>
 
@@ -186,10 +170,10 @@ const StoryRow = memo(function StoryRow({
         </div>
 
         <motion.div
-          variants={imageMotion}
+          variants={mediaReveal}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.25 }}
+          viewport={{ once: true, amount: 0.2 }}
           className={`relative h-[22rem] overflow-hidden sm:h-[28rem] lg:h-full ${
             reverse ? "lg:order-1" : "lg:order-2"
           }`}

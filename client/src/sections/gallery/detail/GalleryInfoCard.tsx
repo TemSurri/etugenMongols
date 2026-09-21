@@ -33,12 +33,8 @@ export default function GalleryInfoCard({
 
   return (
     <div className="border border-[#d8caa5]/70 bg-[#fffaf0]/95 p-4 shadow-[0_12px_32px_rgba(88,72,38,0.09)] sm:p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
-        {copy.section}
-      </p>
-
       {sectionTitle && (
-        <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#27301d]">
+        <h2 className="text-xl font-semibold tracking-tight text-[#27301d]">
           {sectionTitle}
         </h2>
       )}
@@ -51,9 +47,9 @@ export default function GalleryInfoCard({
 
       {montageVideo && sectionKey === "general" && (
         <div className="mt-6 border-t border-[#d8caa5]/70 pt-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+          <h3 className="text-sm font-semibold text-[#27301d]">
             {copy.montage}
-          </p>
+          </h3>
 
           <div className="mt-3 aspect-video overflow-hidden border border-[#d8caa5]/70 bg-black">
             <iframe
@@ -69,9 +65,9 @@ export default function GalleryInfoCard({
 
       {sectionKey === "performances" && performances.length > 0 && (
         <div className="mt-6 border-t border-[#d8caa5]/70 pt-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+          <h3 className="text-sm font-semibold text-[#27301d]">
             {copy.performances}
-          </p>
+          </h3>
 
           <div className="mt-3 space-y-2">
             {performances.map((performance) => {
@@ -102,9 +98,9 @@ export default function GalleryInfoCard({
         performanceVideos &&
         performanceVideos.length > 0 && (
           <div className="mt-6 border-t border-[#d8caa5]/70 pt-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+            <h3 className="text-sm font-semibold text-[#27301d]">
               {copy.videos}
-            </p>
+            </h3>
 
             <div className="mt-3 space-y-3">
               {performanceVideos.map((video) => (
@@ -127,9 +123,9 @@ export default function GalleryInfoCard({
 
       {thankYouVideo && (
         <div className="mt-6 border-t border-[#d8caa5]/70 pt-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9a7b26]">
+          <h3 className="text-sm font-semibold text-[#27301d]">
             {copy.appreciation}
-          </p>
+          </h3>
 
           <div className="mt-3 aspect-video overflow-hidden border border-[#d8caa5]/70 bg-black">
             <iframe

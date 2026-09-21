@@ -1,7 +1,10 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import Home from "../sections/home/pages/HomePage";
+import EventsPage from "../sections/events/pages/EventsPage";
+import DonatePage from "../sections/involvement/pages/DonatePage";
+import VolunteerPage from "../sections/involvement/pages/VolunteerPage";
 
 const MeetTeamPage = lazy(() => import("../sections/about/pages/MeetTeamPage"));
 const OurImpactPage = lazy(
@@ -34,17 +37,10 @@ const Contact = lazy(() => import("../sections/contact/pages/ContactPage"));
 const EventDetailPage = lazy(
   () => import("../sections/events/pages/EventDetailPage"),
 );
-const EventsPage = lazy(() => import("../sections/events/pages/EventsPage"));
 const GalleryDetailPage = lazy(
   () => import("../sections/gallery/pages/GalleryDetailPage"),
 );
 const Gallery = lazy(() => import("../sections/gallery/pages/GalleryPage"));
-const DonatePage = lazy(
-  () => import("../sections/involvement/pages/DonatePage"),
-);
-const VolunteerPage = lazy(
-  () => import("../sections/involvement/pages/VolunteerPage"),
-);
 const DonateMoneyPage = lazy(
   () => import("../sections/payments/donation/pages/DonateMoneyPage"),
 );
@@ -60,7 +56,7 @@ const ProgramsPage = lazy(
 
 export default function AppRoutes() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about/story" element={<StoryPage />} />
@@ -95,5 +91,22 @@ export default function AppRoutes() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
+  );
+}
+
+function RouteFallback() {
+  const { pathname } = useLocation();
+  const usesLightBackground =
+    pathname.startsWith("/about/") ||
+    pathname === "/programs" ||
+    pathname === "/contact";
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`min-h-screen ${
+        usesLightBackground ? "bg-[#fffaf0]" : "bg-[#303824]"
+      }`}
+    />
   );
 }

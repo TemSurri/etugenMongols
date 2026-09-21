@@ -13,6 +13,7 @@ import {
 import { cubicBezier, motion, type Variants } from "framer-motion";
 import { memo, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { mediaReveal } from "./animations";
 
 type MeetTeamMainProps = {
   lang: Lang;
@@ -35,23 +36,12 @@ const fadeUp: Variants = {
   },
 };
 
-const staggerContainer: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.03,
-    },
-  },
-};
-
 function MeetTeamMain({ lang }: MeetTeamMainProps) {
   const copy = COPY[lang];
 
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">
       <SectionIntro
-        eyebrow={copy.eyebrow}
         title={copy.boardTitle}
         body={copy.boardBody}
         large
@@ -62,7 +52,6 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
       <ContentSection>
         <SectionIntro
-          eyebrow={copy.eyebrow}
           title={copy.creativeTitle}
           body={copy.creativeBody}
           embedded
@@ -78,7 +67,6 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
       <ContentSection muted>
         <SectionIntro
-          eyebrow={copy.appreciationEyebrow}
           title={copy.contributorsTitle}
           body={copy.contributorsBody}
           embedded
@@ -119,21 +107,17 @@ function ContentSection({
 }
 
 function SectionIntro({
-  eyebrow,
   title,
   body,
   large = false,
   first = false,
   embedded = false,
-  hideEyebrow = false,
 }: {
-  eyebrow?: string;
   title: string;
   body: string;
   large?: boolean;
   first?: boolean;
   embedded?: boolean;
-  hideEyebrow?: boolean;
 }) {
   return (
     <section
@@ -152,16 +136,9 @@ function SectionIntro({
         }}
         className="mx-auto max-w-3xl text-center"
       >
-        {!hideEyebrow && eyebrow ? (
-          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#9a7b26] sm:text-[11px]">
-            {eyebrow}
-          </p>
-        ) : null}
-
         <h1
           className={[
             "font-semibold leading-[1.08] tracking-[-0.025em] text-[#27301d]",
-            hideEyebrow ? "mt-0" : "mt-4",
             large
               ? "text-4xl sm:text-5xl md:text-6xl"
               : "text-3xl sm:text-4xl md:text-5xl",
@@ -196,13 +173,10 @@ function MemberGrid({
       }
     >
       <motion.div
-        variants={staggerContainer}
+        variants={mediaReveal}
         initial="hidden"
-        whileInView="visible"
-        viewport={{
-          once: true,
-          amount: 0.1,
-        }}
+        whileInView="show"
+        viewport={{ once: true, amount: 0.08 }}
         className={[
           "mx-auto grid max-w-7xl gap-x-8 gap-y-14 md:gap-x-10 md:gap-y-16",
           getGridColumns(layout, members.length),
@@ -239,10 +213,7 @@ const MemberCard = memo(function MemberCard({
   lang: Lang;
 }) {
   return (
-    <motion.article
-      variants={fadeUp}
-      className="group mx-auto flex w-full max-w-[16rem] flex-col items-center text-center"
-    >
+    <article className="group mx-auto flex w-full max-w-[16rem] flex-col items-center text-center">
       <div className="relative aspect-square w-full overflow-hidden rounded-full bg-[#27301d] shadow-[0_14px_36px_rgba(39,48,29,0.12)] ring-1 ring-[#27301d]/10">
         <img
           src={member.image}
@@ -257,7 +228,7 @@ const MemberCard = memo(function MemberCard({
 
         <div
           className={[
-            "absolute inset-0 bg-[#27301d]/0",
+            "absolute inset-0 z-20 bg-[#27301d]/0",
             "transition-colors duration-300",
             "ease-[cubic-bezier(0.22,1,0.36,1)]",
             "group-hover:bg-[#27301d]/82",
@@ -266,7 +237,7 @@ const MemberCard = memo(function MemberCard({
 
         <div
           className={[
-            "absolute inset-0 flex items-center justify-center p-7",
+            "absolute inset-0 z-30 flex items-center justify-center p-7",
             "opacity-0",
             "transition-opacity duration-300",
             "ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -278,15 +249,15 @@ const MemberCard = memo(function MemberCard({
       </div>
 
       <div className="mt-6">
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9a7b26]">
-          {member.role[lang]}
-        </p>
-
-        <h3 className="mt-2 text-xl font-semibold leading-tight tracking-[-0.015em] text-[#27301d]">
+        <h3 className="text-xl font-semibold leading-tight tracking-[-0.015em] text-[#27301d]">
           {member.name}
         </h3>
+
+        <p className="mt-2 text-sm font-medium leading-5 text-[#68705c]">
+          {member.role[lang]}
+        </p>
       </div>
-    </motion.article>
+    </article>
   );
 });
 
@@ -297,18 +268,14 @@ function CommunityGallery({ copy, lang }: { copy: Copy; lang: Lang }) {
         <SectionIntro
           title={copy.communityTitle}
           body={copy.communityBody}
-          hideEyebrow
           embedded
         />
 
         <motion.div
-          variants={staggerContainer}
+          variants={mediaReveal}
           initial="hidden"
-          whileInView="visible"
-          viewport={{
-            once: true,
-            amount: 0.12,
-          }}
+          whileInView="show"
+          viewport={{ once: true, amount: 0.08 }}
           className="mt-14 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-12"
         >
           {COMMUNITY_IMAGES.map((image, index) => (
@@ -340,8 +307,7 @@ function CommunityImageCard({
     index === 0 ? "h-[24rem] md:h-[41rem]" : "h-[20rem] md:h-[20rem]";
 
   return (
-    <motion.figure
-      variants={fadeUp}
+    <figure
       className={["relative overflow-hidden bg-[#27301d]", layout, height].join(
         " ",
       )}
@@ -358,7 +324,7 @@ function CommunityImageCard({
       />
 
       <div className="absolute inset-0 bg-linear-to-t from-[#27301d]/20 via-transparent to-transparent" />
-    </motion.figure>
+    </figure>
   );
 }
 
