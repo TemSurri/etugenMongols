@@ -52,12 +52,19 @@ function UpcomingEventsSection({ events, loading, error, copy }: Props) {
         ) : events.length > 0 ? (
           <div className={`mt-8 ${getEventGridClass(events.length)}`}>
             {events.map((event, index) => (
-              <UpcomingEventCard
+              <motion.div
                 key={event.id}
-                event={event}
-                copy={copy}
-                index={index}
-              />
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.18 }}
+                transition={{ duration: 0.42, delay: index * 0.06 }}
+              >
+                <UpcomingEventCard
+                  event={event}
+                  copy={copy}
+                  index={index}
+                />
+              </motion.div>
             ))}
           </div>
         ) : (

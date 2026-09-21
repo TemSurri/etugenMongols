@@ -25,7 +25,7 @@ function UpcomingEventCard({ event, copy, index }: Props) {
     <Link
       to={event.href}
       aria-label={`${copy.viewEvent}: ${event.title}`}
-      className="group relative block aspect-square w-full overflow-hidden bg-[#303824] transition duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(48,56,36,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#687255]/40"
+      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#303824] transition duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(48,56,36,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#687255]/40"
     >
       <img
         src={event.imageSrc}
