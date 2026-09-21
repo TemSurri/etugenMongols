@@ -25,30 +25,30 @@ function UpcomingEventCard({ event, copy, index }: Props) {
     <Link
       to={event.href}
       aria-label={`${copy.viewEvent}: ${event.title}`}
-      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#303824] transition duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(48,56,36,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#687255]/40"
+      className="group block w-full overflow-hidden border border-[#303824] bg-white transition duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(48,56,36,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#687255]/40"
     >
-      <img
-        src={event.imageSrc}
-        alt={event.imageAlt}
-        width={760}
-        height={760}
-        loading={index === 0 ? "eager" : "lazy"}
-        decoding="async"
-        fetchPriority={index === 0 ? "high" : "auto"}
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.025]"
-      />
+      <div className="relative aspect-[16/10] overflow-hidden bg-[#303824]">
+        <img
+          src={event.imageSrc}
+          alt={event.imageAlt}
+          width={760}
+          height={475}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={index === 0 ? "high" : "auto"}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.025]"
+        />
 
-      <div className="absolute inset-0 bg-black/12" />
+        <div className="absolute inset-0 bg-black/8" />
+      </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/15 to-transparent" />
-
-      <div className="absolute inset-x-0 bottom-0 p-5 text-[#fffaf0] sm:p-6">
-        <p className="text-[10px] font-medium leading-5 text-[#eee0b7]">
+      <div className="p-5 text-[#303824] sm:p-6">
+        <p className="text-[10px] font-semibold leading-5 text-[#9a7b26]">
           {event.date}
 
           {event.time && (
             <>
-              <span className="mx-2 text-[#eee0b7]/45">·</span>
+              <span className="mx-2 text-[#9a7b26]/45">·</span>
 
               {event.time}
             </>
@@ -60,18 +60,18 @@ function UpcomingEventCard({ event, copy, index }: Props) {
         </h2>
 
         {event.location && (
-          <p className="mt-2 line-clamp-1 text-[11px] leading-5 text-[#fffaf0]/72">
+          <p className="mt-2 line-clamp-1 text-[11px] leading-5 text-[#59604d]">
             {event.location}
           </p>
         )}
 
         {registrationText && (
-          <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.12em] text-[#eee0b7]">
+          <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9a7b26]">
             {registrationText}
           </p>
         )}
 
-        <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.16em]">
+        <p className="mt-5 text-[9px] font-semibold uppercase tracking-[0.16em]">
           {copy.viewEvent}
 
           <span

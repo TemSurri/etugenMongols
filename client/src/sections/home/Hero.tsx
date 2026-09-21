@@ -62,7 +62,7 @@ function Hero({ lang }: HeroProps) {
           variants={fadeIn}
           initial="hidden"
           animate="show"
-          className="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-start px-6 pb-8 pt-10 text-center md:justify-center md:px-10 md:py-6"
+          className="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-start px-6 pb-8 pt-[4.5rem] text-center md:justify-center md:px-10 md:py-6"
         >
           <div className="flex justify-center gap-3">
             <img
