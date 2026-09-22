@@ -85,12 +85,12 @@ function Header({ lang, setLang }: HeaderProps) {
             decoding="async"
           />
 
-          <div className="hidden w-[10.5rem] leading-none sm:block lg:w-[11rem]">
-            <p className="truncate text-lg font-semibold tracking-wide text-[#27301d] lg:text-xl">
+          <div className="hidden w-[10.5rem] sm:block lg:w-[11rem]">
+            <p className="whitespace-nowrap overflow-visible text-[1.2rem] font-semibold leading-[1.2] tracking-wide text-[#27301d] lg:text-[1.35rem]">
               Etugen Mongols
             </p>
 
-            <p className="mt-2 truncate text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26]">
+            <p className="mt-3 truncate text-[9px] font-bold uppercase leading-none tracking-[0.2em] text-[#9a7b26]">
               Not For Profit
             </p>
           </div>

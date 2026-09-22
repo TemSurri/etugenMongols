@@ -16,7 +16,7 @@ type ActionLink = {
   to: string;
 };
 
-const FEATURED_VIDEO_ID = "SW_iujvUAzQ";
+const FEATURED_VIDEO_ID = "NcmXN1s5kS8";
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 

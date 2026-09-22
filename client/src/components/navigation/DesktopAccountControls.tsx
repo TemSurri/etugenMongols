@@ -45,7 +45,7 @@ export default function DesktopAccountControls({
 
                       px-3
 
-                      text-[11px]
+                      text-[12px]
                       font-bold
                       uppercase
                       tracking-[0.12em]
@@ -188,14 +188,14 @@ export default function DesktopAccountControls({
             <div className="hidden items-center gap-2 xl:flex">
               <Link
                 to="/auth/login"
-                className="inline-flex h-10 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-[#27301d] no-underline transition-colors hover:border-[#d8caa5] hover:bg-white sm:h-11 sm:px-4 sm:text-[11px]"
+                className="inline-flex h-10 items-center justify-center border border-[#e6dcc3] bg-[#fffaf0] px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#27301d] no-underline transition-colors hover:border-[#d8caa5] hover:bg-white sm:h-11 sm:px-4 sm:text-[12px]"
               >
                 {lang === "mn" ? "Нэвтрэх" : "Login"}
               </Link>
 
               <Link
                 to="/auth/signup"
-                className="inline-flex h-10 items-center justify-center bg-[#27301d] px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white no-underline transition-colors hover:bg-[#9a7b26] sm:h-11 sm:px-4 sm:text-[11px]"
+                className="inline-flex h-10 items-center justify-center bg-[#27301d] px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-white no-underline transition-colors hover:bg-[#9a7b26] sm:h-11 sm:px-4 sm:text-[12px]"
               >
                 {lang === "mn" ? "Бүртгүүлэх" : "Sign Up"}
               </Link>

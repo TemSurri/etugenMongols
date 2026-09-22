@@ -35,7 +35,7 @@ export default function DesktopNavigation({
               to={item.to}
               onClick={() => handleNavClick(item.to)}
               className={[
-                "whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.1em] no-underline transition-colors focus-visible:rounded-sm 2xl:text-[12px] 2xl:tracking-[0.12em]",
+                "whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.1em] no-underline transition-colors focus-visible:rounded-sm 2xl:text-[13px] 2xl:tracking-[0.12em]",
 
                 itemActive
                   ? "text-[#9a7b26]"
@@ -52,7 +52,7 @@ export default function DesktopNavigation({
             <button
               type="button"
               className={[
-                "inline-flex cursor-default items-center gap-1 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.1em] transition-colors focus-visible:rounded-sm 2xl:text-[12px] 2xl:tracking-[0.12em]",
+                "inline-flex cursor-default items-center gap-1 whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.1em] transition-colors focus-visible:rounded-sm 2xl:text-[13px] 2xl:tracking-[0.12em]",
 
                 parentActive
                   ? "text-[#9a7b26]"

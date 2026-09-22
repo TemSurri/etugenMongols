@@ -22,10 +22,10 @@ export const COPY = {
   en: {
     title: "Programs",
 
-    statusTitle: "Programs are in development",
+    statusTitle: "Programs coming soon",
 
     statusBody:
-      "These programs are not currently open for registration. Details and launch dates will be shared once planning is complete.",
+      "We are preparing these programs now. Details and launch dates will be shared as they become available.",
 
     introTitle: "Learning, practicing, and passing on our culture",
 
@@ -64,10 +64,10 @@ export const COPY = {
   mn: {
     title: "Хөтөлбөрүүд",
 
-    statusTitle: "Хөтөлбөрүүд хөгжүүлэлтийн шатандаа байна",
+    statusTitle: "Хөтөлбөрүүд удахгүй",
 
     statusBody:
-      "Эдгээр хөтөлбөрийн бүртгэл одоогоор нээгдээгүй байна. Төлөвлөлт дуусмагц дэлгэрэнгүй мэдээлэл болон эхлэх хугацааг нийтэлнэ.",
+      "Бид эдгээр хөтөлбөрийг бэлтгэж байна. Дэлгэрэнгүй мэдээлэл болон эхлэх хугацааг бэлэн болмогц нийтэлнэ.",
 
     introTitle: "Соёлоо сурч, давтаж, дараагийн үедээ өвлүүлэх нь",
 
