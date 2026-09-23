@@ -10,42 +10,42 @@ export const galleryEvents: GalleryEvent[] = [
     id: "naadam-2026",
     status: "past",
 
-    title: text("Winter Party 2026", "Өвлийн баяр 2026"),
+    title: text("Naadam 2026", "Наадам 2026"),
 
     description: text(
-      "A winter community celebration with music, food, performances, and shared moments.",
-      "Дуу хөгжим, хоол, тоглолт, хамтын дурсамжтай өвлийн баяр."
+      "A community celebration of Mongolian culture featuring traditional activities, performances, food, and shared moments.",
+      "Уламжлалт үйл ажиллагаа, тоглолт, хоол, хамтын дурсамжийг багтаасан Монгол соёлын баяр."
     ),
 
-    date: "January 2026",
+    date: "July 2026",
     location: "Calgary, Alberta",
 
     coverImage: img(
-      "/gallery/winter-party-2026/cover.webp",
-      "/gallery/winter-party-2026/cover-low.webp",
-      text("Winter Party 2026 cover image", "Өвлийн баяр 2026 нүүр зураг")
+      "/images/gallery/naadam2026/cover.webp",
+      "/images/gallery/naadam2026/cover-low.webp",
+      text("Naadam 2026 cover image", "Наадам 2026 нүүр зураг")
     ),
 
     gallery: {
       sections: {
         general: {
-          title: text("Community Moments", "Хамтын мөчүүд"),
+          title: text("Naadam Moments", "Наадмын мөчүүд"),
           description: text(
-            "Families, food, conversations, and shared winter celebration moments.",
-            "Гэр бүл, хоол, яриа хөөрөө, өвлийн баярын хамтын мөчүүд."
+            "Families, traditions, food, activities, and shared moments from Naadam 2026.",
+            "Наадам 2026-ын гэр бүл, уламжлал, хоол, үйл ажиллагаа, хамтын мөчүүд."
           ),
           images: imageRange(
-            "winter-party-2026/general",
+            "naadam-2026/general",
             12,
-            text("Winter Party 2026 community photo", "Өвлийн баяр 2026 хамт олны зураг")
+            text("Naadam 2026 community photo", "Наадам 2026 хамт олны зураг")
           ),
         },
 
         performances: {
-          title: text("Performances", "Тоглолтууд"),
+          title: text("Cultural Performances", "Соёлын тоглолтууд"),
           description: text(
-            "Music and cultural performances from the winter celebration.",
-            "Өвлийн баярын дуу хөгжим, соёлын тоглолтууд."
+            "Music, dance, and cultural performances from the Naadam celebration.",
+            "Наадмын баярын дуу хөгжим, бүжиг, соёлын тоглолтууд."
           ),
           items: [
             {
@@ -56,9 +56,9 @@ export const galleryEvents: GalleryEvent[] = [
                 "Арга хэмжээний хөтөлбөрийн соёлын бүжгийн тоглолт."
               ),
               images: imageRange(
-                "winter-party-2026/performances/dance-performance",
+                "naadam-2026/performances/dance-performance",
                 4,
-                text("Winter Party 2026 dance performance", "Өвлийн баяр 2026 бүжгийн тоглолт")
+                text("Naadam 2026 dance performance", "Наадам 2026 бүжгийн тоглолт")
               ),
               videos: [],
             },
@@ -83,8 +83,8 @@ export const galleryEvents: GalleryEvent[] = [
     location: "Calgary, Alberta",
 
     coverImage: img(
-      "/gallery/winter-party-2026/cover.webp",
-      "/gallery/winter-party-2026/cover-low.webp",
+      "/images/gallery/winter2026/cover.webp",
+      "/images/gallery/winter2026/cover-low.webp",
       text("Winter Party 2026 cover image", "Өвлийн баяр 2026 нүүр зураг")
     ),
 
@@ -146,7 +146,7 @@ export const galleryEvents: GalleryEvent[] = [
 
     coverImage: img(
       "/gallery/winter-party-2025/cover.webp",
-      "/gallery/winter-party-2025/cover-low.webp",
+      "/images/gallery/winter2025/cover-low.webp",
       text("Winter Party 2025 cover image", "Өвлийн баяр 2025 нүүр зураг")
     ),
 
@@ -182,68 +182,6 @@ export const galleryEvents: GalleryEvent[] = [
   },
 
   {
-    id: "childrens-christmas-party-2024",
-    status: "past",
-
-    title: text("Children’s Christmas Party 2024", "Хүүхдийн шинэ жилийн баяр 2024"),
-
-    description: text(
-      "A children-focused Christmas celebration with games, performances, gifts, and family activities.",
-      "Тоглоом, тоглолт, бэлэг, гэр бүлийн үйл ажиллагаа бүхий хүүхдийн шинэ жилийн баяр."
-    ),
-
-    date: "December 2024",
-    location: "Calgary, Alberta",
-
-    coverImage: img(
-      "/gallery/childrens-christmas-party-2024/cover.webp",
-      "/gallery/childrens-christmas-party-2024/cover-low.webp",
-      text("Children’s Christmas Party 2024 cover image", "Хүүхдийн шинэ жилийн баяр 2024 нүүр зураг")
-    ),
-
-    gallery: {
-      sections: {
-        general: {
-          title: text("Christmas Moments", "Шинэ жилийн мөчүүд"),
-          description: text(
-            "Children, families, gifts, games, and celebration moments from the Christmas party.",
-            "Хүүхдүүд, гэр бүлүүд, бэлэг, тоглоом, шинэ жилийн баярын мөчүүд."
-          ),
-          images: imageRange(
-            "childrens-christmas-party-2024/general",
-            12,
-            text("Children’s Christmas Party 2024 photo", "Хүүхдийн шинэ жилийн баяр 2024 зураг")
-          ),
-        },
-
-        performances: {
-          title: text("Children’s Performances", "Хүүхдийн тоглолтууд"),
-          description: text(
-            "Performances and program moments from the children’s Christmas celebration.",
-            "Хүүхдийн шинэ жилийн баярын тоглолт болон хөтөлбөрийн мөчүүд."
-          ),
-          items: [
-            {
-              id: "children-performance",
-              title: text("Children’s Performance", "Хүүхдийн тоглолт"),
-              description: text(
-                "A children’s performance from the Christmas party program.",
-                "Хүүхдийн шинэ жилийн баярын хөтөлбөрийн тоглолт."
-              ),
-              images: imageRange(
-                "childrens-christmas-party-2024/performances/children-performance",
-                4,
-                text("Children’s Christmas Party 2024 performance", "Хүүхдийн шинэ жилийн баяр 2024 тоглолт")
-              ),
-              videos: [],
-            },
-          ],
-        },
-      },
-    },
-  },
-
-  {
     id: "naadam2022",
     status: "past",
 
@@ -259,7 +197,7 @@ export const galleryEvents: GalleryEvent[] = [
 
     coverImage: img(
       "/gallery/naadam2022/cover.webp",
-      "/gallery/naadam2022/cover-low.webp",
+      "/images/gallery/naadam2022/cover-low.webp",
       text("Naadam Celebration 2022 cover image", "Наадам 2022 арга хэмжээний нүүр зураг")
     ),
 

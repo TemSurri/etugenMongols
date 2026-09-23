@@ -5,6 +5,7 @@ import Home from "../sections/home/pages/HomePage";
 import EventsPage from "../sections/events/pages/EventsPage";
 import DonatePage from "../sections/involvement/pages/DonatePage";
 import VolunteerPage from "../sections/involvement/pages/VolunteerPage";
+import GalleryDetailPage from "../sections/gallery/pages/GalleryDetailPage";
 
 const MeetTeamPage = lazy(() => import("../sections/about/pages/MeetTeamPage"));
 const OurImpactPage = lazy(
@@ -36,9 +37,6 @@ const SignupPage = lazy(() => import("../sections/auth/pages/signup"));
 const Contact = lazy(() => import("../sections/contact/pages/ContactPage"));
 const EventDetailPage = lazy(
   () => import("../sections/events/pages/EventDetailPage"),
-);
-const GalleryDetailPage = lazy(
-  () => import("../sections/gallery/pages/GalleryDetailPage"),
 );
 const Gallery = lazy(() => import("../sections/gallery/pages/GalleryPage"));
 const DonateMoneyPage = lazy(

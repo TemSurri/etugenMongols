@@ -1,4 +1,4 @@
-import { AnimatePresence, cubicBezier, motion } from "framer-motion";
+import { cubicBezier, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
 import type { Lang } from "../context/language";
@@ -102,54 +102,48 @@ export default function ContentAvailabilityNotice({
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [dismiss, isOpen]);
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`availability-notice-${kind}`}
-          tabIndex={-1}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[70] flex items-center justify-center bg-[#27301d]/60 px-5 py-8 backdrop-blur-[2px]"
-          onClick={dismiss}
+  return isOpen ? (
+    <motion.div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`availability-notice-${kind}`}
+      tabIndex={-1}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-[#27301d]/60 px-5 py-8"
+      onClick={dismiss}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 12, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.2, ease: easeOut }}
+        className="w-full max-w-md border border-[#27301d] bg-[#fffaf0] p-7 shadow-2xl shadow-black/25 sm:p-8"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26]">
+          {copy.label}
+        </p>
+
+        <h2
+          id={`availability-notice-${kind}`}
+          className="mt-4 text-2xl font-semibold leading-tight text-[#27301d]"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 12, scale: 0.985 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.985 }}
-            transition={{ duration: 0.2, ease: easeOut }}
-            className="w-full max-w-md border border-[#27301d] bg-[#fffaf0] p-7 shadow-2xl shadow-black/25 sm:p-8"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9a7b26]">
-              {copy.label}
-            </p>
+          {copy.title}
+        </h2>
 
-            <h2
-              id={`availability-notice-${kind}`}
-              className="mt-4 text-2xl font-semibold leading-tight text-[#27301d]"
-            >
-              {copy.title}
-            </h2>
+        <p className="mt-4 text-sm leading-7 text-[#59604d]">
+          {copy.body}
+        </p>
 
-            <p className="mt-4 text-sm leading-7 text-[#59604d]">
-              {copy.body}
-            </p>
-
-            <button
-              type="button"
-              onClick={dismiss}
-              className="mt-7 bg-[#27301d] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#9a7b26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9a7b26] focus-visible:ring-offset-2"
-            >
-              {copy.dismiss}
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+        <button
+          type="button"
+          onClick={dismiss}
+          className="mt-7 bg-[#27301d] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#9a7b26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9a7b26] focus-visible:ring-offset-2"
+        >
+          {copy.dismiss}
+        </button>
+      </motion.div>
+    </motion.div>
+  ) : null;
 }

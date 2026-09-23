@@ -16,7 +16,7 @@ type ActionLink = {
   to: string;
 };
 
-const FEATURED_VIDEO_ID = "NcmXN1s5kS8";
+const FEATURED_VIDEO_ID = "wXDK5h4F30U";
 
 const easeOut = cubicBezier(0.22, 1, 0.36, 1);
 
@@ -448,7 +448,7 @@ function FeaturedVideo({ className = "" }: { className?: string }) {
               height={720}
               loading="lazy"
               decoding="async"
-              className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+              className="h-full w-full scale-[1.08] object-cover opacity-90 transition-opacity group-hover:opacity-100"
               onError={(event) => {
                 event.currentTarget.src = homeMedia.feature;
               }}

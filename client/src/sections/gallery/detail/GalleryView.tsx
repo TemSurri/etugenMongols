@@ -4,8 +4,6 @@ import { COPY } from "../content/GalleryViewContent";
 import { IMAGES_PER_PAGE, useGalleryDetail } from "../hooks/useGalleryDetail";
 import { getGalleryCover } from "../model/galleryMedia";
 
-import type { Variants } from "framer-motion";
-import { motion } from "framer-motion";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { GalleryEvent } from "../model/galleryCatalogTypes";
@@ -18,11 +16,6 @@ import GalleryLightbox from "./GalleryLightbox";
 type GalleryViewProps = {
   event: GalleryEvent;
   lang: Lang;
-};
-
-const pageFade: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.22, ease: "easeOut" } },
 };
 
 function useSmartBack(fallbackPath = "/gallery") {
@@ -105,12 +98,7 @@ function GalleryContent({
   const bgImage = getGalleryCover(event.coverImage);
 
   return (
-    <motion.article
-      variants={pageFade}
-      initial="hidden"
-      animate="show"
-      className="relative min-h-screen bg-[#f4ecd9] pt-20 text-[#27301d]"
-    >
+    <article className="relative min-h-screen bg-[#f4ecd9] pt-20 text-[#27301d]">
       <img
         src={bgImage}
         alt=""
@@ -244,6 +232,6 @@ function GalleryContent({
         onPrev={prev}
         onNext={next}
       />
-    </motion.article>
+    </article>
   );
 }
