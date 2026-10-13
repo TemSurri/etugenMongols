@@ -3,8 +3,6 @@ export type {
   ChangeEmailRequest,
   ChangeNameRequest,
   ChangePasswordRequest,
-  UserHistoryItem,
-  UserHistoryPage,
 } from "../contracts/accountContracts";
 
 export interface ChangeNameFormData {

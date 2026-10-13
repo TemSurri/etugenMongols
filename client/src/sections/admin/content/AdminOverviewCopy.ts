@@ -6,6 +6,7 @@ export const adminOverviewCopy = {
     drafts: "Drafts",
     activity: "Activity",
     recentUpdates: "Recent Updates",
+    historyUnavailable: "Event update history is currently unavailable.",
     theMostRecentAdministrativeChangesMadeTo:
       "The most recent administrative changes made to events.",
     couldNotLoadRecentUpdates: "Could not load recent updates.",
@@ -21,6 +22,7 @@ export const adminOverviewCopy = {
     drafts: "Ноорог",
     activity: "Үйл ажиллагаа",
     recentUpdates: "Сүүлийн өөрчлөлтүүд",
+    historyUnavailable: "Арга хэмжээний өөрчлөлтийн түүх одоогоор боломжгүй байна.",
     theMostRecentAdministrativeChangesMadeTo:
       "Хамгийн сүүлийн арга хэмжээний админ өөрчлөлтүүд.",
     couldNotLoadRecentUpdates: "Сүүлийн өөрчлөлтүүдийг ачаалж чадсангүй.",

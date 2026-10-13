@@ -74,6 +74,16 @@ export const accountCopy = {
 
     history: {
       title: "History",
+      account: "Account History",
+      participation: "Participation History",
+      refresh: "Refresh",
+      loading: "Loading history...",
+      error: "Unable to load your history.",
+      retry: "Try again",
+      previous: "Previous",
+      next: "Next",
+      page: "Page",
+      end: "End of history",
       emptyTitle: "No activity yet",
       emptyBody: "Your recent account activity will appear here.",
     },
@@ -156,6 +166,16 @@ export const accountCopy = {
 
     history: {
       title: "Түүх",
+      account: "Бүртгэлийн түүх",
+      participation: "Оролцооны түүх",
+      refresh: "Шинэчлэх",
+      loading: "Түүхийг ачаалж байна...",
+      error: "Түүхийг ачаалж чадсангүй.",
+      retry: "Дахин оролдох",
+      previous: "Өмнөх",
+      next: "Дараах",
+      page: "Хуудас",
+      end: "Түүхийн төгсгөл",
       emptyTitle: "Одоогоор үйл ажиллагаа алга",
       emptyBody: "Таны сүүлийн бүртгэлийн үйл ажиллагаа энд харагдана.",
     },

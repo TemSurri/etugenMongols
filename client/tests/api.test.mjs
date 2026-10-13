@@ -1,3 +1,4 @@
+import { getActivityHistory } from "../src/sections/account/api/activityApi.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -108,9 +109,18 @@ test("account mutation helpers retain their exact payloads",async()=>{
 test("public events, registrations and history keep reads and pagination parameters",async()=>{
   const events=await capture(getPublicEvents,{data:[event]});assert.equal(events.config.url,"/events");assert.equal(events.config.method,"get");
   const registrations=await capture(getUserRegistrations,{data:[]});assert.equal(registrations.config.url,"/event-registrations/user");assert.deepEqual(registrations.result,[]);
-  const page={content:[],totalElements:0,totalPages:0,size:6,number:2,first:false,last:true,numberOfElements:0,empty:true};
-  const history=await capture(()=>account.getUserHistory(2,6),{data:page});assert.equal(history.config.url,"/auth/user/history");assert.deepEqual(history.config.params,{page:2,size:6});assert.deepEqual(history.result,page);
-});
+  const page={activities:[],nextCursorTime:null,nextCursorId:null};
+  for (const category of ["account","participation"]) {
+    const first=await capture(()=>getActivityHistory(category),{data:page});
+    assert.equal(first.config.url,`/activity/history/${category}`);
+    assert.equal(first.config.method,"get");
+    assert.equal(first.config.withCredentials,true);
+    assert.equal(first.config.params,undefined);
+    const cursor={cursorTime:"2026-10-12T19:24:56.596090Z",cursorId:"reserved-id"};
+    const next=await capture(()=>getActivityHistory(category,cursor),{data:page});
+    assert.deepEqual(next.config.params,cursor);
+    assert.deepEqual(next.result,page);
+  }});
 test("admin requests keep PATCH shapes, event response wrappers and registration read route",async()=>{
   const list=await capture(admin.getAdminEvents,{data:[event]});assert.equal(list.config.url,"/events/admin");assert.deepEqual(list.result.data,[event]);
   const create=await capture(()=>admin.createAdminEvent({slug:"new"}),{data:event});assert.equal(create.config.url,"/events");assert.equal(create.config.method,"post");assert.deepEqual(payloadOf(create.config),{slug:"new"});

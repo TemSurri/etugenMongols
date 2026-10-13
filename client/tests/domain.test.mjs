@@ -7,7 +7,7 @@ import { paymentFromCheckout, paymentFromResume } from "../src/sections/payments
 import { buildRegistrationRequest } from "../src/sections/payments/event-registration/utils/buildRegistrationRequest.ts";
 import { buildEventChanges } from "../src/sections/admin/model/buildEventChanges.ts";
 import { isValidPassword } from "../src/sections/account/utils/isValidPassword.ts";
-import { isUserHistoryPage } from "../src/sections/account/contracts/accountGuards.ts";
+import { isActivityHistoryResponse } from "../src/sections/account/contracts/accountGuards.ts";
 import { getRecentGalleries } from "../src/sections/gallery/model/recentGalleries.ts";
 
 export const event = {
@@ -79,13 +79,14 @@ test("account password policy remains distinct from reset policy", () => {
   assert.equal(isValidPassword("Abcdefgh"),false);
   assert.equal(isValidPassword("Abcd1!"),false);
 });
-test("account history guards preserve empty Spring page responses", () => {
-  const page={content:[],totalElements:0,totalPages:0,size:6,number:0,first:true,last:true,numberOfElements:0,empty:true};
-  assert.equal(isUserHistoryPage(page),true);
-  assert.equal(isUserHistoryPage({...page,content:[{}]}),false);
-  assert.equal(isUserHistoryPage({...page,number:"0"}),false);
+test("activity history guards accept future enums and reject incomplete cursors", () => {
+  const page={activities:[],nextCursorTime:null,nextCursorId:null};
+  assert.equal(isActivityHistoryResponse(page),true);
+  assert.equal(isActivityHistoryResponse({...page,activities:[{}]}),false);
+  assert.equal(isActivityHistoryResponse({...page,nextCursorId:"id"}),false);
+  assert.equal(isActivityHistoryResponse({...page,nextCursorTime:"2026-10-12T19:24:56.596090Z"}),false);
+  assert.equal(isActivityHistoryResponse({...page,activities:[{id:"id",type:"FUTURE",status:"FUTURE",description:"Server text",createdAt:"2026-10-12T19:24:56.596090Z"}]}),true);
 });
-
 test("recent gallery selection uses catalog order and caps at four", () => {
   const gallery = {
     sections: {

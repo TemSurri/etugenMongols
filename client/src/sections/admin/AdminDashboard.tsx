@@ -14,8 +14,6 @@ import AdminEvents from "./components/events/AdminEvents";
 
 import { useAdminEvents } from "./hooks/useAdminEvents";
 
-import { useAdminActivity } from "./hooks/useAdminActivity";
-
 import { adminBackgrounds } from "./media";
 import type { AdminSection } from "./types";
 
@@ -29,8 +27,6 @@ export default function AdminDashboard() {
   );
 
   const adminEvents = useAdminEvents();
-
-  const adminActivity = useAdminActivity();
 
   return (
     <main
@@ -189,9 +185,6 @@ export default function AdminDashboard() {
                     publishedCount={adminEvents.publishedCount}
                     draftCount={adminEvents.draftCount}
                     eventsLoading={adminEvents.loading}
-                    activity={adminActivity.activity}
-                    activityLoading={adminActivity.loading}
-                    activityError={adminActivity.error}
                     lang={lang}
                   />
                 )}

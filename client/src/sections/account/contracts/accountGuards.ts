@@ -1,42 +1,22 @@
-import type { UserHistoryItem, UserHistoryPage } from "./accountContracts";
+import type { ActivityDTO, ActivityHistoryResponse } from "./activityContracts";
 
-function isHistoryItem(value: unknown): value is UserHistoryItem {
+function isActivity(value: unknown): value is ActivityDTO {
   if (typeof value !== "object" || value === null) return false;
-  const item = value as Partial<UserHistoryItem>;
-  return (
-    [item.type, item.title, item.description, item.createdAt].every(
-      (v) => typeof v === "string",
-    ) &&
-    [
-      item.status,
-      item.resource,
-      item.operation,
-      item.field,
-      item.oldValue,
-      item.newValue,
-    ].every((v) => v === null || typeof v === "string")
-  );
+  const item = value as Partial<ActivityDTO>;
+  return [item.id, item.type, item.description, item.status, item.createdAt].every(v => typeof v === "string")
+    && Number.isFinite(Date.parse(item.createdAt!));
 }
 
-export function isUserHistoryPage(value: unknown): value is UserHistoryPage {
+export function isActivityHistoryResponse(value: unknown): value is ActivityHistoryResponse {
   if (typeof value !== "object" || value === null) return false;
-  const page = value as Partial<UserHistoryPage>;
-  return (
-    Array.isArray(page.content) &&
-    page.content.every(isHistoryItem) &&
-    [
-      page.totalElements,
-      page.totalPages,
-      page.size,
-      page.number,
-      page.numberOfElements,
-    ].every((v) => typeof v === "number") &&
-    [page.first, page.last, page.empty].every((v) => typeof v === "boolean")
-  );
+  const page = value as Partial<ActivityHistoryResponse>;
+  return Array.isArray(page.activities) && page.activities.every(isActivity)
+    && ((page.nextCursorTime === null && page.nextCursorId === null)
+      || (typeof page.nextCursorTime === "string" && page.nextCursorTime.length > 0
+        && typeof page.nextCursorId === "string" && page.nextCursorId.length > 0));
 }
 
-export function requireUserHistoryPage(value: unknown): UserHistoryPage {
-  if (!isUserHistoryPage(value))
-    throw new Error("Invalid user history response");
+export function requireActivityHistoryResponse(value: unknown): ActivityHistoryResponse {
+  if (!isActivityHistoryResponse(value)) throw new Error("Invalid activity history response");
   return value;
 }
