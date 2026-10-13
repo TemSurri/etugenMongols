@@ -1,17 +1,14 @@
+import { TeamSection } from "./team/components/TeamSection";
 import {
-  BOARD_MEMBERS,
   COMMUNITY_IMAGES,
   COPY,
-  CREATIVE_TEAM,
-  MAJOR_CONTRIBUTORS,
   type CommunityImage,
   type Copy,
   type Lang,
-  type TeamMember,
 } from "./content/MeetTeamMainContent";
 
 import { cubicBezier, motion, type Variants } from "framer-motion";
-import { memo, type ReactNode } from "react";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { mediaReveal } from "./animations";
 
@@ -41,68 +38,12 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
 
   return (
     <main className="overflow-hidden bg-white text-[#27301d]">
-      <SectionIntro
-        title={copy.boardTitle}
-        body={copy.boardBody}
-        large
-        first
-      />
-
-      <MemberGrid members={BOARD_MEMBERS} lang={lang} layout="board" />
-
-      <ContentSection>
-        <SectionIntro
-          title={copy.creativeTitle}
-          body={copy.creativeBody}
-          embedded
-        />
-
-        <MemberGrid
-          members={CREATIVE_TEAM}
-          lang={lang}
-          layout="standard"
-          embedded
-        />
-      </ContentSection>
-
-      <ContentSection muted>
-        <SectionIntro
-          title={copy.contributorsTitle}
-          body={copy.contributorsBody}
-          embedded
-        />
-
-        <MemberGrid
-          members={MAJOR_CONTRIBUTORS}
-          lang={lang}
-          layout="contributors"
-          embedded
-        />
-      </ContentSection>
+      <TeamSection lang={lang} />
 
       <CommunityGallery copy={copy} lang={lang} />
 
       <ImpactSection copy={copy} />
     </main>
-  );
-}
-
-function ContentSection({
-  children,
-  muted = false,
-}: {
-  children: ReactNode;
-  muted?: boolean;
-}) {
-  return (
-    <section
-      className={[
-        "px-5 py-20 sm:px-6 md:px-10 md:py-28",
-        muted ? "bg-[#f6f5ef]" : "bg-white",
-      ].join(" ")}
-    >
-      <div className="mx-auto max-w-7xl">{children}</div>
-    </section>
   );
 }
 
@@ -154,112 +95,6 @@ function SectionIntro({
     </section>
   );
 }
-
-function MemberGrid({
-  members,
-  lang,
-  layout,
-  embedded = false,
-}: {
-  members: TeamMember[];
-  lang: Lang;
-  layout: "board" | "standard" | "contributors";
-  embedded?: boolean;
-}) {
-  return (
-    <section
-      className={
-        embedded ? "mt-14 md:mt-16" : "px-5 pb-20 sm:px-6 md:px-10 md:pb-28"
-      }
-    >
-      <motion.div
-        variants={mediaReveal}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.08 }}
-        className={[
-          "mx-auto grid max-w-7xl gap-x-8 gap-y-14 md:gap-x-10 md:gap-y-16",
-          getGridColumns(layout, members.length),
-        ].join(" ")}
-      >
-        {members.map((member) => (
-          <MemberCard key={member.id} member={member} lang={lang} />
-        ))}
-      </motion.div>
-    </section>
-  );
-}
-
-function getGridColumns(
-  layout: "board" | "standard" | "contributors",
-  count: number,
-) {
-  if (layout === "board") {
-    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5";
-  }
-
-  if (layout === "contributors" && count === 3) {
-    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
-  }
-
-  return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
-}
-
-const MemberCard = memo(function MemberCard({
-  member,
-  lang,
-}: {
-  member: TeamMember;
-  lang: Lang;
-}) {
-  return (
-    <article className="group mx-auto flex w-full max-w-[16rem] flex-col items-center text-center">
-      <div className="relative aspect-square w-full overflow-hidden rounded-full bg-[#27301d] shadow-[0_14px_36px_rgba(39,48,29,0.12)] ring-1 ring-[#27301d]/10">
-        <img
-          src={member.image}
-          alt={member.name}
-          loading="lazy"
-          decoding="async"
-          style={{
-            objectPosition: member.imagePosition ?? "center",
-          }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-
-        <div
-          className={[
-            "absolute inset-0 z-20 bg-[#27301d]/0",
-            "transition-colors duration-300",
-            "ease-[cubic-bezier(0.22,1,0.36,1)]",
-            "group-hover:bg-[#27301d]/82",
-          ].join(" ")}
-        />
-
-        <div
-          className={[
-            "absolute inset-0 z-30 flex items-center justify-center p-7",
-            "opacity-0",
-            "transition-opacity duration-300",
-            "ease-[cubic-bezier(0.22,1,0.36,1)]",
-            "group-hover:opacity-100",
-          ].join(" ")}
-        >
-          <p className="text-sm leading-6 text-white">{member.bio[lang]}</p>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <h3 className="text-xl font-semibold leading-tight tracking-[-0.015em] text-[#27301d]">
-          {member.name}
-        </h3>
-
-        <p className="mt-2 text-sm font-medium leading-5 text-[#68705c]">
-          {member.role[lang]}
-        </p>
-      </div>
-    </article>
-  );
-});
 
 function CommunityGallery({ copy, lang }: { copy: Copy; lang: Lang }) {
   return (

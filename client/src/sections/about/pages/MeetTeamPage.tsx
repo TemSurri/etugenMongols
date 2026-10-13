@@ -13,9 +13,7 @@ export default function MeetTeamPage() {
       <Header lang={lang} setLang={setLang} />
       <ContentAvailabilityNotice kind="team" lang={lang} />
 
-      <main>
-        <MeetTeamMain lang={lang} />
-      </main>
+      <MeetTeamMain lang={lang} />
 
       <Footer />
     </>
