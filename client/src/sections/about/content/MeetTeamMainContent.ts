@@ -11,13 +11,6 @@ export type TeamMember = {
   imagePosition?: string;
 };
 
-export type CommunityImage = {
-  id: string;
-  src: string;
-  alt: LocalizedText;
-  imagePosition?: string;
-};
-
 export type Copy = {
   eyebrow: string;
 
@@ -30,9 +23,6 @@ export type Copy = {
   appreciationEyebrow: string;
   contributorsTitle: string;
   contributorsBody: string;
-
-  communityTitle: string;
-  communityBody: string;
 
   impactTitle: string;
   impactBody: string;
@@ -58,10 +48,6 @@ export const COPY = {
     contributorsBody:
       "We recognize the people whose time, knowledge, care, and dedication have made a lasting contribution to our work and community.",
 
-    communityTitle: "The Wider Community",
-    communityBody:
-      "Etugen Mongols is built by everyone who attends, volunteers, performs, organizes, supports, and celebrates with us.",
-
     impactTitle: "See the impact we have made together",
     impactBody:
       "Explore the programs, events, initiatives, and shared experiences made possible by our community.",
@@ -84,10 +70,6 @@ export const COPY = {
     contributorsTitle: "Онцгой хувь нэмэр оруулагчид",
     contributorsBody:
       "Манай ажил болон хамт олонд үнэтэй цаг, мэдлэг, сэтгэл, тууштай хөдөлмөрөө зориулсан хүмүүстээ талархал илэрхийлье.",
-
-    communityTitle: "Өргөн хамт олон",
-    communityBody:
-      "Этүгэн Монголчууд нь оролцож, сайн дураар ажиллаж, тоглож, зохион байгуулж, дэмжиж, хамтдаа баярладаг хүн бүрийн хүчээр бүрддэг.",
 
     impactTitle: "Хамтдаа бий болгосон үр нөлөөгөө харна уу",
     impactBody:
@@ -152,36 +134,6 @@ export const MAJOR_CONTRIBUTORS: TeamMember[] = [
       mn: "Этүгэн Монголчуудын хүмүүс, хөтөлбөр, арга хэмжээ болон соёлын ажлыг тогтмол дэмжсэн.",
     },
     image: aboutMedia.teamPlaceholder,
-    imagePosition: "center",
-  },
-];
-
-export const COMMUNITY_IMAGES: CommunityImage[] = [
-  {
-    id: "community-1",
-    src: aboutMedia.teamPlaceholder,
-    alt: {
-      en: "Etugen Mongols community gathering",
-      mn: "Этүгэн Монголчуудын хамтын цугларалт",
-    },
-    imagePosition: "center",
-  },
-  {
-    id: "community-2",
-    src: aboutMedia.teamPlaceholder,
-    alt: {
-      en: "Families attending a community event",
-      mn: "Олон нийтийн арга хэмжээнд оролцож буй гэр бүлүүд",
-    },
-    imagePosition: "center",
-  },
-  {
-    id: "community-3",
-    src: aboutMedia.teamPlaceholder,
-    alt: {
-      en: "Etugen Mongols community group photo",
-      mn: "Этүгэн Монголчуудын хамтын зураг",
-    },
     imagePosition: "center",
   },
 ];
