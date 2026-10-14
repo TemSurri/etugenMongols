@@ -1,0 +1,51 @@
+/* Static, ornamental edge artwork; independent of member data and interactions. */
+.team-background {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(180deg, #faf8f3 0%, #f7f4ed 55%, #faf8f3 100%);
+}
+
+.team-background::before,
+.team-background::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  /* Keep the ornaments outside the content column, even on smaller laptops. */
+  width: max(16px, calc((100% - 1280px) / 2 + 12px));
+  height: auto;
+  background-image: url("./ornament.svg"), url("./ornament.svg");
+  background-repeat: no-repeat;
+  background-size: 380px 380px, 220px 220px;
+  opacity: .11;
+}
+
+.team-background::before {
+  top: 100px;
+  bottom: 48px;
+  left: 0;
+  background-position: right 0 top 0, right 24px bottom 12%;
+}
+
+.team-background::after {
+  right: 0;
+  top: 64px;
+  bottom: 64px;
+  background-position: left 0 bottom 0, left 20px top 22%;
+}
+
+@media (max-width: 767px) {
+  /* A single cropped ornament stays in the empty space above the heading. */
+  .team-background::before { display: none; }
+  .team-background::after {
+    top: 0;
+    bottom: auto;
+    width: 120px;
+    height: 64px;
+    background-image: url("./ornament.svg");
+    background-size: 140px 140px;
+    background-position: left 20px bottom 0;
+    opacity: .09;
+  }
+}

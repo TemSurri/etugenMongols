@@ -26,26 +26,6 @@ export const BOARD_MEMBERS: TeamMember[] = [
     imagePosition: "center top"
   },
   {
-    id: "board-2",
-    name: {
-      en: "Chimgee",
-      mn: "Чимгээ"
-    },
-    role: {
-      en: "Secretary – Corporate",
-      mn: "Байгууллагын хэрэг хариуцсан нарийн бичгийн дарга"
-    },
-    biography: {
-      en: "",
-      mn: ""
-    },
-    images: {
-      default: "/images/site/team/board-2/1.webp",
-      hover: "/images/site/team/board-2/2.webp"
-    },
-    imagePosition: "center top"
-  },
-  {
     id: "board-3",
     name: {
       en: "Achitmaa",
@@ -86,6 +66,26 @@ export const BOARD_MEMBERS: TeamMember[] = [
     imagePosition: "center top"
   },
   {
+    id: "board-2",
+    name: {
+      en: "Chimgee",
+      mn: "Чимгээ"
+    },
+    role: {
+      en: "Secretary – Corporate",
+      mn: "Байгууллагын хэрэг хариуцсан нарийн бичгийн дарга"
+    },
+    biography: {
+      en: "",
+      mn: ""
+    },
+    images: {
+      default: "/images/site/team/board-2/1.webp",
+      hover: "/images/site/team/board-2/2.webp"
+    },
+    imagePosition: "center top"
+  },
+  {
     id: "board-5",
     name: {
       en: "Leah",
@@ -109,46 +109,6 @@ export const BOARD_MEMBERS: TeamMember[] = [
 
 export const CREATIVE_TEAM: TeamMember[] = [
   {
-    id: "creative-1",
-    name: {
-      en: "Tutka",
-      mn: "Тутка"
-    },
-    role: {
-      en: "Fundraising & Sponsorship Coordinator",
-      mn: "Хандив, ивээн тэтгэлэг хариуцсан зохицуулагч"
-    },
-    biography: {
-      en: "As a first-generation Mongolian immigrant and parent living in Calgary, Tutka values the traditions that shaped her upbringing, including resilience, adaptability, hospitality, and respect for nature.\n\nThrough Etugen Mongols, she hopes to share Mongolia's cultural heritage through stories, music, traditions, and community experiences. She is passionate about helping younger generations see their heritage as a living part of their identity while creating opportunities for people from all backgrounds to connect with Mongolian culture.",
-      mn: "Калгарид амьдардаг, Монголын анхны үеийн цагаач, хүүхэдтэй ээжийн хувьд Тутка өөрийн өсөж хүмүүжсэн орчны уламжлал, тэр дундаа тэсвэр хатуужил, дасан зохицох чадвар, зочломтгой зан, байгаль дэлхийгээ хүндэтгэх үзлийг эрхэмлэдэг.\n\nТэрээр Этүгэн Монголчуудаар дамжуулан түүх, хөгжим, уламжлал болон хамтын үйл ажиллагаагаар Монголын соёлын өвийг хуваалцахыг хүсдэг. Залуу үед өв соёлоо өөрийн мөн чанарын амьд хэсэг гэж ойлгоход нь туслахын зэрэгцээ өөр өөр гарал, соёлтой хүмүүст монгол соёлтой танилцаж, холбогдох боломж бүрдүүлэхийн төлөө сэтгэл гарган ажиллахыг зорьдог."
-    },
-    images: {
-      default: "/images/site/team/creative-1/1.webp",
-      hover: "/images/site/team/creative-1/2.webp"
-    },
-    imagePosition: "center top"
-  },
-  {
-    id: "creative-2",
-    name: {
-      en: "Tugso Batjargal",
-      mn: "Төгсөө Батжаргал"
-    },
-    role: {
-      en: "Newcomer Engagement Coordinator",
-      mn: "Шинээр ирэгсдийн оролцоог хариуцсан зохицуулагч"
-    },
-    biography: {
-      en: "Tugso moved to Canada in 2000 and experienced the challenges of adapting to a new language, educational system, and cultural environment. She graduated from Western Canada High School and later from the University of Calgary in 2015.\n\nThrough Etugen Mongols, she hopes to preserve and pass down Mongolian culture, traditions, language, and values to future generations. She believes that strong community connections are essential to helping Mongolian families maintain their cultural identity.",
-      mn: "Төгсөө 2000 онд Канадад нүүж ирж, шинэ хэл, боловсролын тогтолцоо, соёлын орчинд дасан зохицох бэрхшээлүүдийг туулсан. Тэрээр Western Canada High School-ийг төгсөж, дараа нь 2015 онд Калгарийн их сургуулийг төгссөн.\n\nТэрээр Этүгэн Монголчуудаар дамжуулан монгол соёл, уламжлал, хэл, үнэт зүйлсийг хадгалж, хойч үедээ өвлүүлэхийг хүсдэг. Монгол гэр бүлүүд соёлын онцлогоо хадгалахад хамт олны бат бөх холбоо харилцаа нэн чухал гэж үздэг."
-    },
-    images: {
-      default: "/images/site/team/creative-2/1.webp",
-      hover: "/images/site/team/creative-2/2.webp"
-    },
-    imagePosition: "center top"
-  },
-  {
     id: "creative-3",
     name: {
       en: "Amarjargal (Amar) Erdenetuya",
@@ -165,26 +125,6 @@ export const CREATIVE_TEAM: TeamMember[] = [
     images: {
       default: "/images/site/team/creative-3/1.webp",
       hover: "/images/site/team/creative-3/2.webp"
-    },
-    imagePosition: "center top"
-  },
-  {
-    id: "creative-4",
-    name: {
-      en: "Oyuna (Mandaa)",
-      mn: "Оюунаа (Мандаа)"
-    },
-    role: {
-      en: "Community Outreach & Volunteer Coordinator",
-      mn: "Олон нийттэй харилцах, сайн дурынхны зохицуулагч"
-    },
-    biography: {
-      en: "Oyuna moved to Calgary in 2014 after previously living in Europe. Her experiences across different cultures strengthened her appreciation for community, belonging, and cultural connection.\n\nAs Etugen Mongols' Community Outreach & Volunteer Coordinator, she connects community members, supports volunteers, and promotes programs that celebrate Mongolian heritage.\n\nShe hopes to help build an inclusive and welcoming community where Mongolian culture is preserved, shared, and passed down to future generations.",
-      mn: "Оюунаа өмнө нь Европт амьдарч байгаад 2014 онд Калгарид нүүж ирсэн. Өөр өөр соёлын орчинд амьдарсан туршлага нь түүнд хамт олон, харьяалагдах мэдрэмж, соёлын холбоо харилцааны үнэ цэнийг улам гүнзгий ойлгуулсан.\n\nЭтүгэн Монголчуудын Олон нийттэй харилцах, сайн дурынхны зохицуулагчийн хувьд тэрээр хамт олны гишүүдийг холбож, сайн дурынхныг дэмжин, монгол өв соёлыг таниулан тэмдэглэдэг хөтөлбөрүүдийг сурталчилдаг.\n\nТэрээр монгол соёлыг хадгалж, хуваалцаж, хойч үедээ өвлүүлэх, хүн бүрийг багтаасан, халуун дотно хамт олныг бий болгоход хувь нэмрээ оруулахыг хүсдэг."
-    },
-    images: {
-      default: "/images/site/team/creative-4/1.webp",
-      hover: "/images/site/team/creative-4/2.webp"
     },
     imagePosition: "center top"
   },
@@ -209,6 +149,46 @@ export const CREATIVE_TEAM: TeamMember[] = [
     imagePosition: "center top"
   },
   {
+    id: "creative-8",
+    name: {
+      en: "Narangerel (Naraa) Batbyamba",
+      mn: "Нарангэрэл (Нараа) Батбямба"
+    },
+    role: {
+      en: "Community & Organizational Partnerships Coordinator",
+      mn: "Олон нийт, байгууллагын түншлэл хариуцсан зохицуулагч"
+    },
+    biography: {
+      en: "Naraa moved to Canada in 2013 and currently works as a Purchasing Coordinator at Mark's, part of Canadian Tire Corporation.\n\nAs a mother of three, she is passionate about preserving Mongolian language, traditions, and cultural heritage. She believes Mongolian children and youth should have opportunities to build friendships, stay connected to their roots, and develop a strong cultural identity.\n\nThrough Etugen Mongols, she hopes to strengthen relationships among Mongolian families and support initiatives that create a welcoming, connected, and culturally vibrant community.",
+      mn: "Нараа 2013 онд Канадад нүүж ирсэн бөгөөд одоо Canadian Tire Corporation-ийн бүрэлдэхүүнд багтдаг Mark's компанид Худалдан авалтын зохицуулагчаар ажилладаг.\n\nГурван хүүхдийн ээжийн хувьд тэрээр монгол хэл, уламжлал, соёлын өвийг хадгалах чин хүсэлтэй. Монгол хүүхэд, залуус нөхөрлөл бий болгох, язгуур үндэстэйгээ холбоотой байх, соёлын онцлогоо бататгах боломжтой байх ёстой гэж үздэг.\n\nТэрээр Этүгэн Монголчуудаар дамжуулан монгол гэр бүлүүдийн хоорондын харилцааг бэхжүүлж, хүн бүрийг халуун дотноор хүлээн авдаг, нягт холбоотой, соёлын баялаг амьдралтай хамт олныг бий болгох санаачилгуудыг дэмжихийг хүсдэг."
+    },
+    images: {
+      default: "/images/site/team/creative-8/1.webp",
+      hover: "/images/site/team/creative-8/2.webp"
+    },
+    imagePosition: "center top"
+  },
+  {
+    id: "creative-4",
+    name: {
+      en: "Oyuna (Mandaa)",
+      mn: "Оюунаа (Мандаа)"
+    },
+    role: {
+      en: "Community Outreach & Volunteer Coordinator",
+      mn: "Олон нийттэй харилцах, сайн дурынхны зохицуулагч"
+    },
+    biography: {
+      en: "Oyuna moved to Calgary in 2014 after previously living in Europe. Her experiences across different cultures strengthened her appreciation for community, belonging, and cultural connection.\n\nAs Etugen Mongols' Community Outreach & Volunteer Coordinator, she connects community members, supports volunteers, and promotes programs that celebrate Mongolian heritage.\n\nShe hopes to help build an inclusive and welcoming community where Mongolian culture is preserved, shared, and passed down to future generations.",
+      mn: "Оюунаа өмнө нь Европт амьдарч байгаад 2014 онд Калгарид нүүж ирсэн. Өөр өөр соёлын орчинд амьдарсан туршлага нь түүнд хамт олон, харьяалагдах мэдрэмж, соёлын холбоо харилцааны үнэ цэнийг улам гүнзгий ойлгуулсан.\n\nЭтүгэн Монголчуудын Олон нийттэй харилцах, сайн дурынхны зохицуулагчийн хувьд тэрээр хамт олны гишүүдийг холбож, сайн дурынхныг дэмжин, монгол өв соёлыг таниулан тэмдэглэдэг хөтөлбөрүүдийг сурталчилдаг.\n\nТэрээр монгол соёлыг хадгалж, хуваалцаж, хойч үедээ өвлүүлэх, хүн бүрийг багтаасан, халуун дотно хамт олныг бий болгоход хувь нэмрээ оруулахыг хүсдэг."
+    },
+    images: {
+      default: "/images/site/team/creative-4/1.webp",
+      hover: "/images/site/team/creative-4/2.webp"
+    },
+    imagePosition: "center top"
+  },
+  {
     id: "creative-6",
     name: {
       en: "Sara",
@@ -229,6 +209,46 @@ export const CREATIVE_TEAM: TeamMember[] = [
     imagePosition: "center top"
   },
   {
+    id: "creative-2",
+    name: {
+      en: "Tugso Batjargal",
+      mn: "Төгсөө Батжаргал"
+    },
+    role: {
+      en: "Newcomer Engagement Coordinator",
+      mn: "Шинээр ирэгсдийн оролцоог хариуцсан зохицуулагч"
+    },
+    biography: {
+      en: "Tugso moved to Canada in 2000 and experienced the challenges of adapting to a new language, educational system, and cultural environment. She graduated from Western Canada High School and later from the University of Calgary in 2015.\n\nThrough Etugen Mongols, she hopes to preserve and pass down Mongolian culture, traditions, language, and values to future generations. She believes that strong community connections are essential to helping Mongolian families maintain their cultural identity.",
+      mn: "Төгсөө 2000 онд Канадад нүүж ирж, шинэ хэл, боловсролын тогтолцоо, соёлын орчинд дасан зохицох бэрхшээлүүдийг туулсан. Тэрээр Western Canada High School-ийг төгсөж, дараа нь 2015 онд Калгарийн их сургуулийг төгссөн.\n\nТэрээр Этүгэн Монголчуудаар дамжуулан монгол соёл, уламжлал, хэл, үнэт зүйлсийг хадгалж, хойч үедээ өвлүүлэхийг хүсдэг. Монгол гэр бүлүүд соёлын онцлогоо хадгалахад хамт олны бат бөх холбоо харилцаа нэн чухал гэж үздэг."
+    },
+    images: {
+      default: "/images/site/team/creative-2/1.webp",
+      hover: "/images/site/team/creative-2/2.webp"
+    },
+    imagePosition: "center top"
+  },
+  {
+    id: "creative-1",
+    name: {
+      en: "Tutka",
+      mn: "Тутка"
+    },
+    role: {
+      en: "Fundraising & Sponsorship Coordinator",
+      mn: "Хандив, ивээн тэтгэлэг хариуцсан зохицуулагч"
+    },
+    biography: {
+      en: "As a first-generation Mongolian immigrant and parent living in Calgary, Tutka values the traditions that shaped her upbringing, including resilience, adaptability, hospitality, and respect for nature.\n\nThrough Etugen Mongols, she hopes to share Mongolia's cultural heritage through stories, music, traditions, and community experiences. She is passionate about helping younger generations see their heritage as a living part of their identity while creating opportunities for people from all backgrounds to connect with Mongolian culture.",
+      mn: "Калгарид амьдардаг, Монголын анхны үеийн цагаач, хүүхэдтэй ээжийн хувьд Тутка өөрийн өсөж хүмүүжсэн орчны уламжлал, тэр дундаа тэсвэр хатуужил, дасан зохицох чадвар, зочломтгой зан, байгаль дэлхийгээ хүндэтгэх үзлийг эрхэмлэдэг.\n\nТэрээр Этүгэн Монголчуудаар дамжуулан түүх, хөгжим, уламжлал болон хамтын үйл ажиллагаагаар Монголын соёлын өвийг хуваалцахыг хүсдэг. Залуу үед өв соёлоо өөрийн мөн чанарын амьд хэсэг гэж ойлгоход нь туслахын зэрэгцээ өөр өөр гарал, соёлтой хүмүүст монгол соёлтой танилцаж, холбогдох боломж бүрдүүлэхийн төлөө сэтгэл гарган ажиллахыг зорьдог."
+    },
+    images: {
+      default: "/images/site/team/creative-1/1.webp",
+      hover: "/images/site/team/creative-1/2.webp"
+    },
+    imagePosition: "center top"
+  },
+  {
     id: "creative-7",
     name: {
       en: "Uranzul (Zulaa) Batsuuri",
@@ -245,26 +265,6 @@ export const CREATIVE_TEAM: TeamMember[] = [
     images: {
       default: "/images/site/team/creative-7/1.webp",
       hover: "/images/site/team/creative-7/2.webp"
-    },
-    imagePosition: "center top"
-  },
-  {
-    id: "creative-8",
-    name: {
-      en: "Narangerel (Naraa) Batbyamba",
-      mn: "Нарангэрэл (Нараа) Батбямба"
-    },
-    role: {
-      en: "Community & Organizational Partnerships Coordinator",
-      mn: "Олон нийт, байгууллагын түншлэл хариуцсан зохицуулагч"
-    },
-    biography: {
-      en: "Naraa moved to Canada in 2013 and currently works as a Purchasing Coordinator at Mark's, part of Canadian Tire Corporation.\n\nAs a mother of three, she is passionate about preserving Mongolian language, traditions, and cultural heritage. She believes Mongolian children and youth should have opportunities to build friendships, stay connected to their roots, and develop a strong cultural identity.\n\nThrough Etugen Mongols, she hopes to strengthen relationships among Mongolian families and support initiatives that create a welcoming, connected, and culturally vibrant community.",
-      mn: "Нараа 2013 онд Канадад нүүж ирсэн бөгөөд одоо Canadian Tire Corporation-ийн бүрэлдэхүүнд багтдаг Mark's компанид Худалдан авалтын зохицуулагчаар ажилладаг.\n\nГурван хүүхдийн ээжийн хувьд тэрээр монгол хэл, уламжлал, соёлын өвийг хадгалах чин хүсэлтэй. Монгол хүүхэд, залуус нөхөрлөл бий болгох, язгуур үндэстэйгээ холбоотой байх, соёлын онцлогоо бататгах боломжтой байх ёстой гэж үздэг.\n\nТэрээр Этүгэн Монголчуудаар дамжуулан монгол гэр бүлүүдийн хоорондын харилцааг бэхжүүлж, хүн бүрийг халуун дотноор хүлээн авдаг, нягт холбоотой, соёлын баялаг амьдралтай хамт олныг бий болгох санаачилгуудыг дэмжихийг хүсдэг."
-    },
-    images: {
-      default: "/images/site/team/creative-8/1.webp",
-      hover: "/images/site/team/creative-8/2.webp"
     },
     imagePosition: "center top"
   }

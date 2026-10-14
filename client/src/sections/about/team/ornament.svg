@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none">
+  <!-- A geometric, interlaced knot study inspired by Ulzii ornamentation. -->
+  <g transform="rotate(45 160 160)" stroke="#977b4d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100 40H220V100H280V220H220V280H100V220H40V100H100Z"/>
+    <path d="M120 60H200V120H260V200H200V260H120V200H60V120H120Z"/>
+    <path d="M100 100H220V220H100Z M120 120H200V200H120Z"/>
+    <path d="M100 40V88M100 112V148M100 172V208M100 232V280
+             M220 40V88M220 112V148M220 172V208M220 232V280
+             M40 160H148M172 160H280 M160 40V148M160 172V280"/>
+    <path d="M140 80H180V140H240V180H180V240H140V180H80V140H140Z"/>
+  </g>
+</svg>
