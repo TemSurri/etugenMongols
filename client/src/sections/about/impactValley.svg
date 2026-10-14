@@ -1,5 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 560" preserveAspectRatio="none" fill="none">
   <path fill="#303d27" d="M0 80C160 95 230 240 410 335C560 415 655 430 720 430C850 430 940 370 1050 305C1210 205 1280 95 1440 65V560H0Z"/>
   <path fill="#35442c" d="M0 205C165 190 240 325 420 402C545 455 645 473 730 470C870 465 970 410 1090 348C1225 279 1315 190 1440 180V560H0Z"/>
+  <!-- One ger and a small herd sit along the foreground ridge. Painting the
+       unchanged ground last tucks their bases into the curve, without gaps. -->
+  <defs>
+    <g id="ger" fill="#46583b">
+      <path d="M0 24Q18 8 36 4Q54 8 72 24L68 51Q36 40 4 39Z"/>
+      <path d="M30 3Q36 0 42 3V6H30Z"/>
+      <path fill="#35442c" d="M31 28Q36 25 41 28V46H31Z"/>
+      <path d="M5 25Q36 30 67 25" stroke="#35442c" stroke-width="1.5"/>
+    </g>
+    <g id="horse" fill="#46583b">
+      <path d="M12 17Q25 11 43 17L49 10L48 3L52 7L55 3L57 11L65 17Q67 22 62 23L54 20L48 29L45 49H41L41 31L33 31L27 49H23L26 30L17 28L12 47H8L11 25Q5 24 4 34L1 35Q0 19 12 17Z"/>
+    </g>
+  </defs>
+  <path d="M106 291C97 281 114 275 108 266C103 259 109 251 114 247"
+        stroke="#637357" stroke-opacity=".4" stroke-width="2.5" stroke-linecap="round"/>
+  <use href="#ger" transform="translate(70 291)"/>
+  <use href="#horse" transform="translate(1230 341) skewY(-20) scale(.8)"/>
+  <use href="#horse" transform="translate(1300 322) skewY(-16) scale(.67)"/>
+  <use href="#horse" transform="translate(1370 310) skewY(-6) scale(.6)"/>
   <path fill="#3c4c32" d="M0 335C180 302 285 414 445 470C555 508 650 528 745 524C890 518 997 477 1130 418C1260 361 1360 324 1440 335V560H0Z"/>
 </svg>
