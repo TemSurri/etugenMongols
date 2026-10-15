@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Lang } from "../context/language";
 import { useDialogFocus } from "./useDialogFocus";
 
-type NoticeKind = "story" | "team" | "gallery";
+type NoticeKind = "story" | "gallery";
 
 type NoticeCopy = {
   label: string;
@@ -23,12 +23,6 @@ const NOTICE_COPY: Record<Lang, Record<NoticeKind, NoticeCopy>> = {
       body: "We are still selecting the photographs that will accompany this story.",
       dismiss: "Continue",
     },
-    team: {
-      label: "A quick note",
-      title: "Team photos are coming soon",
-      body: "We are still selecting the photographs that will introduce our team and community.",
-      dismiss: "Continue",
-    },
     gallery: {
       label: "A quick note",
       title: "Our gallery is being prepared",
@@ -41,12 +35,6 @@ const NOTICE_COPY: Record<Lang, Record<NoticeKind, NoticeCopy>> = {
       label: "Товч мэдээлэл",
       title: "Түүхийн зургууд удахгүй нэмэгдэнэ",
       body: "Бид энэ түүхэнд оруулах гэрэл зургуудыг сонгож байна.",
-      dismiss: "Үргэлжлүүлэх",
-    },
-    team: {
-      label: "Товч мэдээлэл",
-      title: "Багийн зургууд удахгүй нэмэгдэнэ",
-      body: "Бид баг болон хамт олноо танилцуулах гэрэл зургуудыг сонгож байна.",
       dismiss: "Үргэлжлүүлэх",
     },
     gallery: {

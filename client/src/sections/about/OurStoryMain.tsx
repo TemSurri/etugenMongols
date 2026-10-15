@@ -118,8 +118,11 @@ function OurStoryMain({ lang }: OurStoryMainProps) {
           className="mx-auto max-w-4xl"
         >
           <h2 className="text-3xl font-semibold leading-tight text-[#27301d] md:text-5xl">
-            {copy.closing}
+            {copy.purposeTitle}
           </h2>
+          <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-[#59604d] md:text-2xl">
+            {copy.closing}
+          </p>
 
           <div className="mt-9 flex flex-wrap justify-center gap-4">
             <Link

@@ -8,7 +8,6 @@ import {
 import { cubicBezier, motion, type Variants } from "framer-motion";
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import impactValley from "./impactValley.svg";
 
 type MeetTeamMainProps = {
   lang: Lang;
@@ -38,45 +37,28 @@ function MeetTeamMain({ lang }: MeetTeamMainProps) {
     <main className="overflow-hidden bg-white text-[#27301d]">
       <TeamSection lang={lang} />
 
-      <ImpactSection copy={copy} />
+      <ImpactSection copy={copy} lang={lang} />
     </main>
   );
 }
 
-function ImpactSection({ copy }: { copy: Copy }) {
+function ImpactSection({ copy, lang }: { copy: Copy; lang: Lang }) {
   return (
-    <section className="relative isolate overflow-hidden bg-[#27301d] px-5 py-24 text-center sm:px-6 md:px-10 md:py-32">
-      <img
-        src={impactValley}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 h-full w-full select-none object-fill"
-      />
-
+    <section className="team-mission" aria-label={copy.impactButton} lang={lang}>
       <motion.div
+        className="team-impact-container relative z-10"
         variants={fadeUp}
         initial="hidden"
         whileInView="visible"
-        viewport={{
-          once: true,
-          amount: 0.25,
-        }}
-        className="mx-auto max-w-3xl"
+        viewport={{ once: true, amount: 0.25 }}
       >
-        <h2 className="text-3xl font-semibold leading-[1.1] tracking-[-0.025em] text-white sm:text-4xl md:text-5xl">
-          {copy.impactTitle}
-        </h2>
-
-        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-7 text-[#d3d8ca] md:text-base md:leading-8">
-          {copy.impactBody}
-        </p>
-
+        <p className="mb-8 text-xl leading-relaxed text-[#e0e4d8] md:text-2xl lg:whitespace-nowrap">{copy.impactIntro}</p>
         <Link
           to="/about/impact"
           className={[
-            "mt-9 inline-flex min-h-12 items-center justify-center",
-            "border border-white bg-white px-8 py-3.5",
-            "text-[10px] font-bold uppercase tracking-[0.22em] text-[#27301d]",
+            "inline-flex min-h-14 items-center justify-center",
+            "border border-white bg-white px-10 py-5",
+            "text-xs font-bold uppercase tracking-[0.22em] text-[#27301d]",
             "no-underline",
             "transition-colors duration-300",
             "hover:bg-transparent hover:text-white",

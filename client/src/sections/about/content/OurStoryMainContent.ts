@@ -8,6 +8,7 @@ export type Copy = {
   viewEvents: string;
   viewPrograms: string;
   meetTeam: string;
+  purposeTitle: string;
   closing: string;
   story: readonly StoryItem[];
 };
@@ -26,8 +27,9 @@ export const COPY = {
     viewEvents: "View Events",
     viewPrograms: "View Programs",
     meetTeam: "Meet the Team",
+    purposeTitle: "Our Purpose",
     closing:
-      "We officially host events and programs for the Mongolian community in Calgary.",
+      "To preserve Mongolian culture and empower youth and women in Calgary through heritage, connection, and community.",
     story: [
       {
         body: "We are first-generation immigrant parents from Mongolia. A few of us arrived in Calgary, Alberta, in 2006, drawn here in part because it felt familiar — a similar climate, mountains and rivers that remind us of our homeland, and vast open fields dotted with livestock that echo our nomadic roots. Above all, it is a country that welcomes not only people from every corner of the world, but the cultures and traditions they bring with them. Here we found our footing, grew our careers, and raised our families far from the land where we were born.",
@@ -57,8 +59,9 @@ export const COPY = {
     viewEvents: "Арга хэмжээнүүд",
     viewPrograms: "Хөтөлбөрүүд",
     meetTeam: "Багтай танилцах",
+    purposeTitle: "Бидний зорилго",
     closing:
-      "Бид Калгари дахь Монгол хамт олонд зориулсан арга хэмжээ, хөтөлбөрүүдийг албан ёсоор зохион байгуулдаг.",
+      "Монгол соёлоо хадгалж, өв уламжлал, харилцаа холбоо, хамт олны дэмжлэгээр Калгари дахь залуус, эмэгтэйчүүдийг хүчирхэгжүүлэх.",
     story: [
       {
         body: "“Амьдралын жигүүр үндэснээс эхтэй гэдгийг үр хүүхдийнхээ ухамсарт оршоохыг бид хүссэн.” Бид бол алс холын Монгол Улсаас амьдралынхаа шинэ хуудсыг нээхээр зорин ирсэн анхны үеийн Канадын монголчууд билээ. 2006 оны тэр нэгэн өдөр Алберта мужийн Калгари хотод анхны цөөн хэдэн монголчууд хөл тавихад эх орныг маань санагдуулам өндөр сүрлэг уул нурууд, өргөн тунгалаг гол мөрөн, нүүдэлчин ахуйн цуурай мэт өргөн уудам тал нутаг найрсаг дулаанаар угтсан юм. Хамгийн гол нь Канад Улс дэлхийн өнцөг булан бүрээс ирсэн хүмүүст элгэмсүү ханддагаас гадна өв соёлыг нь гүнээ хүндэтгэдэг нь бидэнд өрх гэрээ энэ сайхан нутагт шинээр цогцлоох урам зоригийг өгсөн. Энд л бид ажил амьдралынхаа гарааг эхэлж, өсөн дэвжиж ирлээ.",

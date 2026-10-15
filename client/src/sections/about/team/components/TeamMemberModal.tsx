@@ -1,3 +1,4 @@
+import { teamDisplayName } from "../data/teamDisplayName";
 import { X } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -12,8 +13,8 @@ export function TeamMemberModal({ member, lang, onClose }: {
   const pointerStartedOutside = useRef(false);
   const [failedImages, setFailedImages] = useState<string[]>([]);
   const image = [member.images.hover, member.images.default].find((src) => !failedImages.includes(src));
-  const name = member.name[lang] || member.name.en || (lang === "en" ? "To be announced" : "Удахгүй зарлана");
-  const description = member.biography[lang] || (lang === "en" ? "Biography coming soon." : "Намтрыг удахгүй нэмнэ.");
+  const name = teamDisplayName(member.name, lang);
+  const biography = member.biography[lang];
   function outside(clientX: number, clientY: number) {
     const rect = dialogRef.current?.getBoundingClientRect();
     return !!rect && (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom);
@@ -39,9 +40,12 @@ export function TeamMemberModal({ member, lang, onClose }: {
             <span className="team-placeholder" aria-hidden="true">{name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span>}
         </div>
         <div className="team-modal-details" tabIndex={0} role="region" aria-labelledby={titleId}>
-        <h2 id={titleId} lang={member.name[lang] ? lang : "en"}>{name}</h2>
-        <p className="team-modal-role" lang={member.role[lang] ? lang : "en"}>{member.role[lang] || member.role.en}</p>
-        <p className="team-modal-biography">{description}</p>
+        <h2 id={titleId} lang={lang}>{name}</h2>
+        <p className="team-modal-role" lang={lang}>{member.role[lang]}</p>
+        <h3 className="team-modal-section-title">{lang === "en" ? "Role Description" : "Үүрэг хариуцлага"}</h3>
+        <p className="team-modal-summary">{member.roleDescription[lang]}</p>
+        <h3 className="team-modal-section-title">{lang === "en" ? "Biography" : "Намтар"}</h3>
+        <p className="team-modal-biography">{biography}</p>
         </div>
       </div>
     </dialog>, document.body,
